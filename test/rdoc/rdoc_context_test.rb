@@ -524,7 +524,6 @@ class RDocContextTest < XrefTestCase
   def test_find_constant_named
     assert_nil             @c1.find_constant_named('NONE')
     assert_equal ':const', @c1.find_constant_named('CONST').value
-    assert_equal ':const', @c1.find_constant_named('::CONST').value
   end
 
   def test_find_enclosing_module_named

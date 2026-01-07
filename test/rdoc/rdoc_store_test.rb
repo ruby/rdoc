@@ -163,7 +163,7 @@ class RDocStoreTest < XrefTestCase
 
   def test_all_classes_and_modules
     expected = %w[
-      C1 C10 C10::C11 C11 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C9 C9::A C9::B
+      C1 C10 C10::C11 C11 C12 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C9 C9::A C9::B
       Child
       M1 M1::M2
       Object
@@ -219,7 +219,7 @@ class RDocStoreTest < XrefTestCase
 
   def test_classes
     expected = %w[
-      C1 C10 C10::C11 C11 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C9 C9::A C9::B
+      C1 C10 C10::C11 C11 C12 C2 C2::C3 C2::C3::H1 C3 C3::H1 C3::H2 C4 C4::C4 C5 C5::C1 C6 C7 C8 C9 C9::A C9::B
       Child
       Object
       Parent

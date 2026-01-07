@@ -137,13 +137,19 @@ class RDoc::CrossReference
   # nil otherwise.
   #
   # For example, this method would decompose name = 'A::CONSTANT' into a
-  # container object A and a symbol object ::CONSTANT, and it would try
-  # to find ::CONSTANT in A.
+  # container object A and a symbol 'CONSTANT', and it would try to find
+  # 'CONSTANT' in A.
 
   def resolve_local_symbol(name)
     ref = nil
+    type = nil
+    container = nil
 
-    if /#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o =~ name then
+    case name
+    when /#{CLASS_REGEXP_STR}::([A-Z]\w*)\z/o then
+      symbol = $2
+      container = @context.find_symbol_module($1)
+    when /#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o then
       type = $2
       if '.' == type # will find either #method or ::method
         symbol = $3
@@ -151,7 +157,7 @@ class RDoc::CrossReference
         symbol = "#{type}#{$3}"
       end
       container = @context.find_symbol_module($1)
-    elsif /^([.#]|::)#{METHOD_REGEXP_STR}/o =~ name then
+    when /^([.#]|::)#{METHOD_REGEXP_STR}/o then
       type = $1
       if '.' == type
         symbol = $2
@@ -159,9 +165,6 @@ class RDoc::CrossReference
         symbol = "#{type}#{$2}"
       end
       container = @context
-    else
-      type = nil
-      container = nil
     end
 
     if container then
