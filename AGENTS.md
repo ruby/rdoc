@@ -321,15 +321,12 @@ When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
 
 1. **Generate documentation**: Run `bundle exec rake rerdoc` to create baseline
 2. **Start HTTP server**: Run `cd _site && python3 -m http.server 8000` (use different port if 8000 is in use)
-3. **Investigate with sub-agent**: Use Task tool to launch a general-purpose agent to inspect the documentation with Browser MCP
-   - The agent will connect browser to `http://localhost:8000`, navigate pages, and take screenshots
-   - Agent reports findings back (styling issues, layout problems, etc.)
-   - This saves context in main conversation
+3. **Investigate with Playwright**: Ask the AI assistant to take screenshots and inspect the documentation visually
+   - Example: "Navigate to the docs at localhost:8000 and screenshot the RDoc module page"
+   - See "Playwright MCP for Testing Generated Documentation" section below for details
 4. **Make changes**: Edit files in `lib/rdoc/generator/template/<theme>/` as needed
 5. **Regenerate**: Run `bundle exec rake rerdoc` to rebuild documentation with changes
-6. **Verify with sub-agent**: Use Task tool again to launch agent that uses Browser MCP to verify fixes
-   - Agent takes screenshots and compares to original issues
-   - Agent reports back whether issues are resolved
+6. **Verify with Playwright**: Take new screenshots and compare to original issues
 7. **Lint changes** (if modified):
    - ERB templates: `npx @herb-tools/linter "lib/rdoc/generator/template/**/*.rhtml"`
    - CSS files: `npm run lint:css -- --fix`
@@ -349,23 +346,47 @@ When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
 5. **Verify generated files** with `rake verify_generated`
 6. **Don't edit generated files** directly (in `lib/rdoc/markdown/` and `lib/rdoc/rd/`)
 
-## Browser MCP for Testing Generated Documentation
+## Playwright MCP for Testing Generated Documentation
 
-Browser MCP allows AI agents to visually inspect and interact with the generated HTML documentation. This is useful for verifying CSS styling, layout issues, and overall appearance.
+The Playwright MCP server enables visual inspection and interaction with generated HTML documentation. This is useful for verifying CSS styling, layout issues, and overall appearance.
 
-**Repository:** <https://github.com/BrowserMCP/mcp>
+**MCP Server:** `@playwright/mcp` (Microsoft's official browser automation server)
 
 ### Setup
 
-If Browser MCP is not already installed, users should:
+The Playwright MCP server can be used with any MCP-compatible AI tool (Claude Code, Cursor, GitHub Copilot, OpenAI Agents, etc.).
 
-1. Install the BrowserMCP Chrome extension from the Chrome Web Store
-2. Run: `claude mcp add --scope user browsermcp npx @browsermcp/mcp@latest`
-3. Connect a browser tab by clicking the BrowserMCP extension icon and selecting "Connect"
+**Claude Code:**
+
+```bash
+/plugin playwright
+```
+
+**Other MCP-compatible tools:**
+
+```bash
+npx @playwright/mcp@latest
+```
+
+Configure your tool to connect to this MCP server. Playwright launches its own browser instance automatically - no manual browser setup or extensions required.
+
+### Troubleshooting: Chrome Remote Debugging Blocked
+
+If you encounter `DevTools remote debugging is disallowed by the system admin`, Chrome's debugging is blocked by the machine's policy. Use Firefox instead:
+
+```bash
+# Install Firefox for Playwright
+npx playwright install firefox
+
+# Add Playwright MCP with Firefox to your project (creates/updates .mcp.json)
+claude mcp add playwright --scope project -- npx -y @playwright/mcp@latest --browser firefox
+```
+
+Restart Claude Code after running these commands.
 
 ### Testing Generated Documentation
 
-To test the generated documentation with Browser MCP:
+To test the generated documentation:
 
 ```bash
 # Generate documentation
@@ -377,6 +398,11 @@ cd _site && python3 -m http.server 8000
 
 If port 8000 is already in use, try another port (e.g., `python3 -m http.server 9000`).
 
-Then navigate to the appropriate URL (e.g., `http://localhost:8000`) in your connected browser tab and ask Claude to use browser MCP tools (e.g., "use browser MCP to navigate to <http://localhost:8000> and take a screenshot").
+Then ask the AI assistant to inspect the documentation. It will use the appropriate Playwright tools (`browser_navigate`, `browser_snapshot`, `browser_take_screenshot`, etc.) based on your request.
 
-**Note:** Browser MCP requires a proper HTTP server (not `file://` URLs) for full functionality. The generated documentation must be served via HTTP/HTTPS.
+**Example requests:**
+
+- "Navigate to `http://localhost:8000` and take a screenshot"
+- "Take a screenshot of the RDoc module page"
+- "Check if code blocks are rendering properly on the Markup page"
+- "Compare the index page before and after my CSS changes"
