@@ -51,6 +51,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @in_list_entry = nil
     @list = nil
     @th = nil
+    @in_tidylink_label = false
     @hard_break = "<br>\n"
 
     init_regexp_handlings
@@ -86,6 +87,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     when /^rdoc-ref:/
       CGI.escapeHTML($')
     when /^rdoc-label:/
+      return CGI.escapeHTML(url) if in_tidylink_label?
       text = $'
 
       text = case text
@@ -163,6 +165,12 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @inline_output << text
   end
 
+  # Returns true if we are processing inside a tidy link label.
+
+  def in_tidylink_label?
+    @in_tidylink_label
+  end
+
   # Special handling for tidy link labels.
   # When a tidy link is <tt>{rdoc-image:path/to/image.jpg:alt text}[http://example.com]</tt>,
   # label part is normally considered RDOCLINK <tt>rdoc-image:path/to/image.jpg:alt</tt> and a text <tt>" text"</tt>
@@ -170,7 +178,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # TODO: reconsider this workaround.
 
   def apply_tidylink_label_special_regexp_handling(label)
-
     @markup.regexp_handlings.each do |pattern, name|
       if (pattern =~ label) == 0
         # Prefix of a label matches to regexp handling, pass the whole label to it.
@@ -192,7 +199,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
     if label_part.size == 1 && String === label_part[0]
       raw_label = label_part[0]
+
+      @in_tidylink_label = true
       special = apply_tidylink_label_special_regexp_handling(raw_label)
+      @in_tidylink_label = false
+
       special ||= raw_label[1..] if raw_label.match?(/\A[*^]\d+\z/)
       if special
         tag = gen_url(CGI.escapeHTML(url), special)
@@ -207,7 +218,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     open_tag, close_tag = tag.split(/(?=<\/a>)/, 2)
     valid_tag = open_tag && close_tag
     emit_inline(open_tag) if valid_tag
+    @in_tidylink_label = true
     traverse_inline_nodes(label_part)
+    @in_tidylink_label = false
     emit_inline(close_tag) if valid_tag
   end
 
@@ -232,8 +245,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   #   Reference to a local file relative to the output directory.
 
   def handle_regexp_HYPERLINK(text)
-    url = CGI.escapeHTML(text)
+    return convert_string(text) if in_tidylink_label?
 
+    url = CGI.escapeHTML(text)
     gen_url url, url
   end
 

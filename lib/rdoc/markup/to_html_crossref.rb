@@ -79,7 +79,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # because we look for it in module Markup first.
 
   def handle_regexp_CROSSREF(name)
-    return convert_string(name) if @in_tidylink
+    return convert_string(name) if in_tidylink_label?
     return name if @options.autolink_excluded_words&.include?(name)
 
     return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
@@ -99,7 +99,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # handle other schemes.
 
   def handle_regexp_HYPERLINK(url)
-    return convert_string(url) if @in_tidylink
+    return convert_string(url) if in_tidylink_label?
 
     case url
     when /\Ardoc-ref:/
@@ -118,11 +118,13 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # {the superclass}[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK]
 
   def handle_regexp_RDOCLINK(url)
-    return convert_string(url) if @in_tidylink
-
     case url
     when /\Ardoc-ref:/
-      cross_reference $', rdoc_ref: true
+      if in_tidylink_label?
+        convert_string(url)
+      else
+        cross_reference $', rdoc_ref: true
+      end
     else
       super
     end
@@ -205,7 +207,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
   def tt_cross_reference(code)
-    return if @in_tidylink
+    return if in_tidylink_label?
 
     crossref_regexp = @options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
     match = crossref_regexp.match(code)

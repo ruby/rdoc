@@ -1049,6 +1049,29 @@ EXPECTED
     assert_equal "\n<p><a href=\"#hello\">link</a></p>\n", result
   end
 
+  def test_convert_hyperlink_disabled_inside_tidylink
+    result = @to.convert '{See http://example.com}[README.txt] http://example.com'
+    assert_equal "\n<p><a href=\"README.txt\">See http://example.com</a> <a href=\"http://example.com\">example.com</a></p>\n", result
+  end
+
+  def test_convert_rdoc_image_inside_tidylink
+    result = @to.convert '{See rdoc-image:image.png:text}[url] rdoc-image:image.jpg:text'
+    assert_equal "\n<p><a href=\"url\">See <img src=\"image.png\" alt=\"text\"></a> <img src=\"image.jpg\" alt=\"text\"></p>\n", result
+
+    # When `label =~ regexp_handling == 0`, label is handled specially in RDoc::Markup::ToHTML#apply_tidylink_label_special_regexp_handling
+    result = @to.convert '{rdoc-image:image.png:text}[url] rdoc-image:image.jpg:text'
+    assert_equal "\n<p><a href=\"url\"><img src=\"image.png\" alt=\"text\"></a> <img src=\"image.jpg\" alt=\"text\"></p>\n", result
+  end
+
+  def test_convert_rdoc_label_disabled_inside_tidylink
+    result = @to.convert '{See rdoc-label:label}[url] rdoc-label:label'
+    assert_equal "\n<p><a href=\"url\">See rdoc-label:label</a> <a href=\"#label\">label</a></p>\n", result
+
+    # When `label =~ regexp_handling == 0`, label is handled specially in RDoc::Markup::ToHTML#apply_tidylink_label_special_regexp_handling
+    result = @to.convert '{rdoc-label:label}[url] rdoc-label:label'
+    assert_equal "\n<p><a href=\"url\">rdoc-label:label</a> <a href=\"#label\">label</a></p>\n", result
+  end
+
   def assert_escaped(unexpected, code)
     result = @to.convert(code)
     assert_not_include result, unexpected

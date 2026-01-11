@@ -101,8 +101,9 @@ class RDoc::Markup::Formatter
       matched_name = matched_text = nil
       @markup.regexp_handlings.each do |pattern, name|
         m = text.match(pattern, start)
-        idx = m && m[1] ? 1 : 0
-        if m && m.begin(idx) < pos
+        next unless m
+        idx = m[1] ? 1 : 0
+        if m.begin(idx) < pos
           pos = m.begin(idx)
           matched_text = m[idx]
           matched_name = name
@@ -205,7 +206,6 @@ class RDoc::Markup::Formatter
   # Parses inline +text+, traverse the resulting nodes, and calls the appropriate handler methods.
 
   def handle_inline(text)
-    @in_tidylink = false
     nodes = RDoc::Markup::InlineParser.new(text).parse
     traverse_inline_nodes(nodes)
   end
@@ -218,9 +218,7 @@ class RDoc::Markup::Formatter
       next handle_TEXT(node) if String === node
       case node[:type]
       when :TIDYLINK
-        @in_tidylink = true
         handle_TIDYLINK(node[:children], node[:url])
-        @in_tidylink = false
       when :HARD_BREAK
         handle_HARD_BREAK
       when :BOLD
