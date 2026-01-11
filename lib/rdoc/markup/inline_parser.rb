@@ -58,8 +58,13 @@ class RDoc::Markup::InlineParser
     @pos = 0
     @scan_failure_cache = Set.new
     @stack = []
-    @current = nil
     @delimiters = {}
+  end
+
+  # Return the current parsing node on <tt>@stack</tt>.
+
+  def current
+    @stack.last
   end
 
   # Parse and return an array of nodes.
@@ -78,7 +83,7 @@ class RDoc::Markup::InlineParser
       tidylink_url = nil
       case type
       when :node
-        @current[:children] << value
+        current[:children] << value
         invalidate_open_tidylinks if value[:type] == :TIDYLINK
       when :eof
         close = :root
@@ -91,14 +96,14 @@ class RDoc::Markup::InlineParser
         else
           # Tidylink closing brace without URL part. Treat opening and closing braces as normal text
           # `{labelnodes}...` case.
-          @current[:children] << token
+          current[:children] << token
         end
       when :invalidated_tidylink_close
         # `{...{label}[url]...}` case. Nested tidylink invalidates outer one. The last `}` closes the invalidated tidylink.
-        @current[:children] << token
+        current[:children] << token
         close = :invalidated_tidylink
       when :text
-        @current[:children] << token
+        current[:children] << token
       when :open
         stack_push(value, token)
       when :close
@@ -106,36 +111,36 @@ class RDoc::Markup::InlineParser
           close = value
         else
           # closing tag without matching opening tag. Treat as normal text.
-          @current[:children] << token
+          current[:children] << token
         end
       end
 
       next unless close
 
-      while @current[:delimiter] != close
-        children = @current[:children]
-        open_token = @current[:token]
+      while current[:delimiter] != close
+        children = current[:children]
+        open_token = current[:token]
         stack_pop
-        @current[:children] << open_token if open_token
-        @current[:children].concat(children)
+        current[:children] << open_token if open_token
+        current[:children].concat(children)
       end
 
-      token = @current[:token]
-      children = compact_string(@current[:children])
+      token = current[:token]
+      children = compact_string(current[:children])
       stack_pop
 
       return children if close == :root
 
       if close == :tidylink || close == :invalidated_tidylink
         if tidylink_url
-          @current[:children] << { type: :TIDYLINK, children: children, url: tidylink_url }
+          current[:children] << { type: :TIDYLINK, children: children, url: tidylink_url }
           invalidate_open_tidylinks
         else
-          @current[:children] << token
-          @current[:children].concat(children)
+          current[:children] << token
+          current[:children].concat(children)
         end
       else
-        @current[:children] << { type: TAGS[close], children: children }
+        current[:children] << { type: TAGS[close], children: children }
       end
     end
   end
@@ -158,19 +163,18 @@ class RDoc::Markup::InlineParser
   # Pop the top node off the stack when node is closed by a closing delimiter or an error.
 
   def stack_pop
-    delimiter = @current[:delimiter]
+    delimiter = current[:delimiter]
     @delimiters[delimiter].pop
     @delimiters.delete(delimiter) if @delimiters[delimiter].empty?
     @stack.pop
-    @current = @stack.last
   end
 
   # Push a new node onto the stack when encountering an opening delimiter.
 
   def stack_push(delimiter, token)
-    @current = { delimiter: delimiter, token: token, children: [] }
+    node = { delimiter: delimiter, token: token, children: [] }
     (@delimiters[delimiter] ||= []) << @stack.size
-    @stack << @current
+    @stack << node
   end
 
   # Compacts adjacent strings in +nodes+ into a single string.
