@@ -26,9 +26,14 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
     STRIKE: 9
   }
 
-  def change_attribute(before, after)
-    before, after = [before, after].map do |attrs|
-      attrs.map { |attr| ANSI_STYLE_CODES[attr] }.compact
+  # Apply the given attributes by emitting ANSI sequences.
+  # Emitting attribute changes are deferred until new text is added and applied in batch.
+  # This method computes the necessary ANSI codes to transition from the
+  # current set of applied attributes to the new set of +attributes+.
+
+  def apply_attributes(attributes)
+    before, after = [@applied_attributes, attributes].map do |attrs|
+      attrs.map { |attr| ANSI_STYLE_CODES[attr] }.compact.sort
     end
     return if before == after
 
@@ -39,22 +44,22 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
     else
       emit_inline("\e[#{[0, after].join(';')}m")
     end
+    @applied_attributes = attributes
   end
 
   def add_text(text)
     attrs = @attributes.keys
-    if @current_attributes != attrs && @current_attributes != attrs.sort!
-      change_attribute(@current_attributes, attrs)
-      @current_attributes = attrs
+    if @applied_attributes != attrs
+      apply_attributes(attrs)
     end
     emit_inline(text)
   end
 
   def handle_inline(text)
-    @current_attributes = []
+    @applied_attributes = []
     res = super
-    res << "\e[m" unless @current_attributes.empty?
-    @current_attributes = nil
+    res << "\e[m" unless @applied_attributes.empty?
+    @applied_attributes = []
     res
   end
 
