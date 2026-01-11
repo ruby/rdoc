@@ -53,6 +53,9 @@ class RDoc::Markup::InlineParser
       |\s+|[a-zA-Z0-9\.]+|.
     )/x # :nodoc:
 
+  # Characters that can be escaped with backslash.
+  ESCAPING_CHARS = '\\*_+`{}[]<>' # :nodoc:
+
   def initialize(string)
     @string = string
     @pos = 0
@@ -198,7 +201,9 @@ class RDoc::Markup::InlineParser
 
   def read(len)
     s = @string[@pos, len]
-    @pos += len if s
+    return if s.nil? || s.empty?
+
+    @pos += len
     s
   end
 
@@ -261,10 +266,18 @@ class RDoc::Markup::InlineParser
         [:text, token, nil]
       end
     when :escape
-      crossref = scan_string(/\G[a-zA-Z#][a-zA-Z\d_.:#]*[!?=]?/)
-      # Escaped crossref: keep backslash
-      # Other escaped characters: remove backslash
-      [:text, crossref ? "\\#{crossref}" : read(1) || '\\', nil]
+      next_char = read(1)
+      if next_char.nil?
+        # backslash at end of string
+        [:text, '\\', nil]
+      elsif next_char && ESCAPING_CHARS.include?(next_char)
+        # escaped character
+        [:text, next_char, nil]
+      else
+        # If next_char not an escaping character, it is treated as text token with backslash + next_char
+        # For example, backslash of `\Ruby` (suppressed crossref) remains.
+        [:text, "\\#{next_char}", nil]
+      end
     else
       if token.nil?
         [:eof, nil, nil]

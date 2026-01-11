@@ -1040,6 +1040,11 @@ EXPECTED
     assert_include(res[%r<<td[^<>]*>C1</td>>], 'C1')
   end
 
+  def test_suppressed_crossref_and_backslashes
+    result = @to.convert('\\1 \\n \\Ruby \\::new \\')
+    assert_equal "\n<p>\\1 \\n Ruby ::new \\</p>\n", result
+  end
+
   def test_gen_url_markdown_anchor
     assert_equal '<a href="#hello-world">link</a>', @to.gen_url('#hello-world', 'link')
   end

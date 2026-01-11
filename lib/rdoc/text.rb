@@ -220,9 +220,6 @@ module RDoc::Text
         html << s.matched
       when s.scan(/<[^>]+\/?s*>/) then # skip HTML tags
         html << s.matched
-      when s.scan(/\\(\S)/) then # unhandled suppressed crossref
-        html << s[1]
-        after_word = nil
       when s.scan(/\.\.\.(\.?)/) then
         html << s[1] << encoded[:ellipsis]
         after_word = nil

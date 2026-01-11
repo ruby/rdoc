@@ -258,6 +258,12 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para("<strong>#{crossref}</strong> <strong>C1</strong> <em>C1</em> <em>#{crossref}</em>"), result
   end
 
+  def test_suppressed_crossref
+    result = @to.convert '<b>C1</b> <b>\C1</b> <b>\CC1</b>'
+    crossref = '<a href="C1.html"><code>C1</code></a>'
+    assert_equal para("<strong>#{crossref}</strong> <strong>C1</strong> <strong>CC1</strong>"), result
+  end
+
   def test_handle_regexp_HYPERLINK_rdoc
     readme = @store.add_file 'README.txt'
     readme.parser = RDoc::Parser::Simple

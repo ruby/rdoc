@@ -71,6 +71,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     # external links
     @markup.add_regexp_handling(/(?:link:|https?:|mailto:|ftp:|irc:|www\.)#{URL_CHARACTERS_REGEXP_STR}+\w/,
                                 :HYPERLINK)
+    @markup.add_regexp_handling(/\\[#:A-Z]/, :SUPPRESSED_CROSSREF)
 
     init_link_notation_regexp_handlings
   end
@@ -230,6 +231,12 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     out = @inline_output
     @inline_output = nil
     out
+  end
+
+  # Converts suppressed cross-reference +text+ to HTML by removing the leading backslash.
+
+  def handle_regexp_SUPPRESSED_CROSSREF(text)
+    convert_string(text.delete_prefix('\\'))
   end
 
   ##

@@ -41,11 +41,12 @@ class RDocMarkupInlineParserTest < RDoc::TestCase
   end
 
   def test_escape
-    # Backslash to suppress crossref remains, other backslashes are removed
-    assert_equal(['\\', bold_node('\\Array'), bold_node('\\#to_s')], parse('\\\\<b>\\Array</b><b>\\#to_s</b>'))
-    assert_equal(['_a_ +a+ <b>b</b> 1 \\abc \\ABC'], parse('\\_a_ \\+a+ \\<b>b\\</b> \\1 \\abc \\ABC'))
+    # Escaping backslash are removed, other backslashes (suppressed crossref) remains
+    assert_equal(['\\', bold_node('\\Array'), bold_node('\\#to_s'), bold_node('\\::new')], parse('\\\\<b>\\Array</b><b>\\#to_s</b><b>\\::new</b>'))
+    assert_equal(['_a_ +a+ <b>b</b> \\n \\ABC'], parse('\\_a_ \\+a+ \\<b>b\\</b> \\n \\ABC'))
     assert_equal([bold_node('</b>')], parse('<b>\\</b></b>'))
     assert_equal([em_node('</i>')], parse('<i>\\</i></i>'))
+    assert_equal(['a\\'], parse('a\\'))
     assert_equal([tidylink_node(['<b></b>'], 'url')], parse('{\\<b>\\</b>}[url]'))
     # Unescape \\ and \< in code blocks
     assert_equal([tt_node('p(%(<b></b>\\)+"\\a\\n")')], parse('<tt>p(%(\\<b>\\</b>\\\\)+"\\a\\n")</tt>'))
