@@ -998,7 +998,7 @@ EXPECTED
   end
 
   def test_to_html
-    assert_equal "\n<p><code>--</code></p>\n", util_format("<tt>--</tt>")
+    assert_equal "\n<p><code>--</code><code>\\\\</code></p>\n", util_format("<tt>--</tt><tt>\\\\\\\\</tt>")
   end
 
   def util_format(text)

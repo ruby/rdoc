@@ -214,7 +214,7 @@ module RDoc::Text
     until s.eos? do
       case
       when s.scan(/<(tt|code)>.*?<\/\1>/) then # skip contents of tt
-        html << s.matched.gsub('\\\\', '\\')
+        html << s.matched
       when s.scan(/<(tt|code)>.*?/) then
         warn "mismatched <#{s[1]}> tag" # TODO signal file/line
         html << s.matched
