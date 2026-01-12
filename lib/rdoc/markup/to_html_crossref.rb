@@ -206,6 +206,17 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     emit_inline(tt_cross_reference(code) || "<code>#{CGI.escapeHTML code}</code>")
   end
 
+  # Applies additional special handling on top of the one defined in ToHtml.
+  # When a tidy link is <tt>{Foo}[rdoc-ref:Foo]</tt>, the label part is surrounded by <tt><code></code></tt>.
+  # TODO: reconsider this workaround.
+  def apply_tidylink_label_special_handling(label, url)
+    if url == "rdoc-ref:#{label}" && cross_reference(label).include?('<code>')
+      "<code>#{convert_string(label)}</code>"
+    else
+      super
+    end
+  end
+
   def tt_cross_reference(code)
     return if in_tidylink_label?
 

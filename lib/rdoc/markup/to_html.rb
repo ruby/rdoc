@@ -176,16 +176,15 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # When a tidy link is <tt>{rdoc-image:path/to/image.jpg:alt text}[http://example.com]</tt>,
   # label part is normally considered RDOCLINK <tt>rdoc-image:path/to/image.jpg:alt</tt> and a text <tt>" text"</tt>
   # but RDoc's test code expects the whole label part to be treated as RDOCLINK only in tidy link label.
+  # When a tidy link is <tt>{^1}[url]</tt> or <tt>{*1}[url]</tt>, the label part needs to drop leading * or ^.
   # TODO: reconsider this workaround.
 
-  def apply_tidylink_label_special_regexp_handling(label)
-    @markup.regexp_handlings.each do |pattern, name|
-      if (pattern =~ label) == 0
-        # Prefix of a label matches to regexp handling, pass the whole label to it.
-        return public_send(:"handle_regexp_#{name}", label)
-      end
-    end
-    nil
+  def apply_tidylink_label_special_handling(label, url)
+    # ^1 *1 will be converted to just 1 in tidy link label.
+    return label[1..] if label.match?(/\A[*^]\d+\z/)
+
+    # rdoc-image in label specially allows spaces in alt text.
+    return handle_RDOCLINK(label) if label.start_with?('rdoc-image:')
   end
 
   def handle_TIDYLINK(label_part, url)
@@ -202,10 +201,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
       raw_label = label_part[0]
 
       @in_tidylink_label = true
-      special = apply_tidylink_label_special_regexp_handling(raw_label)
+      special = apply_tidylink_label_special_handling(raw_label, url)
       @in_tidylink_label = false
 
-      special ||= raw_label[1..] if raw_label.match?(/\A[*^]\d+\z/)
       if special
         tag = gen_url(CGI.escapeHTML(url), special)
         unless tag.empty?
