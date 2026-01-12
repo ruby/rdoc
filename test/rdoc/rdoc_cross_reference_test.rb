@@ -157,6 +157,12 @@ class RDocCrossReferenceTest < XrefTestCase
     assert_ref @c2_c3_m, '::C2::C3#m(*)'
   end
 
+  def test_resolve_constant
+    assert_ref @c1_const, 'CONST'
+    assert_ref @c1_const, 'C1::CONST'
+    assert_ref @c1_const, 'C12::CONST'
+  end
+
   def test_resolve_the_same_name_in_instance_and_class_method
     assert_ref @c9_a_i_foo, 'C9::A#foo'
     assert_ref @c9_a_c_bar, 'C9::A::bar'
