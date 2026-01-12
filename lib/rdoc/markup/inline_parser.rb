@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'set'
+require 'strscan'
 
 # Parses inline markup in RDoc text.
 # THis parser handles em, bold, strike, tt, hard break, and tidylink.
@@ -31,11 +32,13 @@ class RDoc::Markup::InlineParser
 
   STANDALONE_TAGS = { 'br' => :HARD_BREAK } # :nodoc:
 
+  CODEBLOCK_TAGS = %w[tt code] # :nodoc:
+
   TOKENS = {
     **WORD_PAIRS.transform_values { [:word_pair, nil] },
     **TAGS.keys.to_h {|tag| ["<#{tag}>", [:open_tag, tag]] },
     **TAGS.keys.to_h {|tag| ["</#{tag}>", [:close_tag, tag]] },
-    **%w[tt code].to_h {|tag| ["<#{tag}>", [:code_start, tag]] },
+    **CODEBLOCK_TAGS.to_h {|tag| ["<#{tag}>", [:code_start, tag]] },
     **STANDALONE_TAGS.keys.to_h {|tag| ["<#{tag}>", [:standalone_tag, tag]] },
     '{' => [:tidylink_start, nil],
     '}' => [:tidylink_mid, nil],
@@ -47,7 +50,7 @@ class RDoc::Markup::InlineParser
   token_starts_regexp = TOKENS.keys.map {|s| s[0] }.uniq.map {|s| Regexp.escape(s) }.join
 
   SCANNER_REGEXP =
-    /\G(?:
+    /(?:
       #{multi_char_tokens_regexp}
       |[^#{token_starts_regexp}\sa-zA-Z0-9\.]+ # chunk of normal text
       |\s+|[a-zA-Z0-9\.]+|.
@@ -56,10 +59,30 @@ class RDoc::Markup::InlineParser
   # Characters that can be escaped with backslash.
   ESCAPING_CHARS = '\\*_+`{}[]<>' # :nodoc:
 
+  # Pattern to match code block content until <code></tt></code> or <tt></code></tt>.
+  CODEBLOCK_REGEXPS = CODEBLOCK_TAGS.to_h {|name| [name, /((?:\\.|[^\\])*?)<\/#{name}>/] } # :nodoc:
+
+  # Word contains alphanumeric and <tt>_./:[]-</tt> characters.
+  # Word may start with <tt>#</tt> and may end with any non-space character. (e.g. <tt>#eql?</tt>).
+  # Underscore delimiter have special rules.
+  WORD_REGEXPS = {
+    # Words including _, longest match.
+    # Example: `_::A_` `_-42_` `_A::B::C.foo_bar[baz]_` `_kwarg:_`
+    # Content must not include _ followed by non-alphanumeric character
+    # Example: `_host_:_port_` will be `_host_` + `:` + `_port_`
+    '_' => /#?([a-zA-Z0-9.\/:\[\]-]|_+[a-zA-Z0-9])+[^\s]?_(?=[^a-zA-Z0-9_]|\z)/,
+    # Words allowing _ but not allowing __
+    '__' => /#?[a-zA-Z0-9.\/:\[\]-]*(_[a-zA-Z0-9.\/:\[\]-]+)*[^\s]?__(?=[^a-zA-Z0-9]|\z)/,
+    **%w[* ** + ++ ` ``].to_h do |s|
+      # normal words that can be used within +word+ or *word*
+      [s, /#?[a-zA-Z0-9_.\/:\[\]-]+[^\s]?#{Regexp.escape(s)}(?=[^a-zA-Z0-9]|\z)/]
+    end
+  } # :nodoc:
+
   def initialize(string)
-    @string = string
-    @pos = 0
-    @scan_failure_cache = Set.new
+    @scanner = StringScanner.new(string)
+    @last_match = nil
+    @scanner_negative_cache = Set.new
     @stack = []
     @delimiters = {}
   end
@@ -188,63 +211,49 @@ class RDoc::Markup::InlineParser
     end
   end
 
-  # Scan from the current position with a regexp that starts with \G.
+  # Scan from StringScanner with +pattern+
+  # If +negative_cache+ is true, caches scan failure result. <tt>scan(pattern, negative_cache: true)</tt> return nil when it is called again after a failure.
+  # Be careful to use +negative_cache+ with a pattern and position that does not match after previous failure.
 
-  def scan_string(pattern)
-    if (res = @string.match(pattern, @pos))
-      @pos = res.end(0)
-      res[0]
-    end
-  end
+  def strscan(pattern, negative_cache: false)
+    return if negative_cache && @scanner_negative_cache.include?(pattern)
 
-  # Read +len+ characters from the current position.
-
-  def read(len)
-    s = @string[@pos, len]
-    return if s.nil? || s.empty?
-
-    @pos += len
-    s
-  end
-
-  # Match +pattern+ from the current position.
-  # Returns nil if not found, and caches the failure.
-  # Be careful to use a pair of pattern and position that is cache-safe.
-
-  def failure_cached_match(pattern)
-    # Cache notfound information to avoid O(N^2) search of missing closing tags
-    return if @scan_failure_cache.include?(pattern)
-
-    match = @string.match(pattern, @pos)
-    @scan_failure_cache << pattern unless match
-    match
+    string = @scanner.scan(pattern)
+    @last_match = string if string
+    @scanner_negative_cache << pattern if !string && negative_cache
+    string
   end
 
   # Scan and return the next token for parsing.
   # Returns <tt>[token_type, token_string_or_nil, extra_info]</tt>
 
   def scan_token
-    token = scan_string(SCANNER_REGEXP)
+    last_match = @last_match
+    token = strscan(SCANNER_REGEXP)
     type, name = TOKENS[token]
+
     case type
     when :word_pair
-      pair = read_word_pair(token)
-      pair ? [:node, nil, { type: WORD_PAIRS[token], children: [pair]}] : [:text, token]
+      # If the character before word pair delimiter is alphanumeric, do not treat as word pair.
+      word_pair = strscan(WORD_REGEXPS[token]) unless /[a-zA-Z0-9]\z/.match?(last_match)
+
+      if word_pair.nil?
+        [:text, token, nil]
+      elsif token == '__' && word_pair.match?(/\A[a-zA-Z]+__\z/)
+        # Special exception: __FILE__, __LINE__, __send__ should be treated as normal text.
+        [:text, "#{token}#{word_pair}", nil]
+      else
+        [:node, nil, { type: WORD_PAIRS[token], children: [word_pair.delete_suffix(token)] }]
+      end
     when :open_tag
       [:open, token, name]
     when :close_tag
       [:close, token, name]
     when :code_start
-      if name == 'tt'
-        close_pattern = /\G((?:\\.|[^\\])*?)<\/tt>/
-      else
-        close_pattern = /\G((?:\\.|[^\\])*?)<\/code>/
-      end
-      if (match = failure_cached_match(close_pattern))
-        @pos = match.end(0)
+      if (codeblock = strscan(CODEBLOCK_REGEXPS[name], negative_cache: true))
         # Need to unescape `\\` and `\<`.
         # RDoc also unescapes backslash + word separators, but this is not really necessary.
-        content = match[1].gsub(/\\(.)/) { '\\<*+_`'.include?($1) ? $1 : $& }
+        content = codeblock.delete_suffix("</#{name}>").gsub(/\\(.)/) { '\\<*+_`'.include?($1) ? $1 : $& }
         [:node, nil, { type: :TT, children: content.empty? ? [] : [content] }]
       else
         [:text, token, nil]
@@ -266,7 +275,7 @@ class RDoc::Markup::InlineParser
         [:text, token, nil]
       end
     when :escape
-      next_char = read(1)
+      next_char = strscan(/./)
       if next_char.nil?
         # backslash at end of string
         [:text, '\\', nil]
@@ -296,43 +305,7 @@ class RDoc::Markup::InlineParser
   # Example: <tt>[http://example.com/?q=\[\]]</tt> represents <tt>http://example.com/?q=[]</tt>.
 
   def read_tidylink_url
-    bracketed_url = scan_string(/\G\[([^\s\[\]\\]|\\[\[\]\\])+\]/)
+    bracketed_url = strscan(/\[([^\s\[\]\\]|\\[\[\]\\])+\]/)
     bracketed_url[1...-1].gsub(/\\(.)/, '\1') if bracketed_url
-  end
-
-  # Word contains alphanumeric and <tt>_./:[]-</tt> characters.
-  # Word may start with <tt>#</tt> and may end with any non-space character. (e.g. <tt>#eql?</tt>).
-  # Underscore delimiter have special rules.
-
-  WORD_REGEXPS = {
-    # Words including _, longest match.
-    # Example: `_::A_` `_-42_` `_A::B::C.foo_bar[baz]_` `_kwarg:_`
-    # Content must not include _ followed by non-alphanumeric character
-    # Example: `_host_:_port_` will be `_host_` + `:` + `_port_`
-    '_' => /\G#?([a-zA-Z0-9.\/:\[\]-]|_+[a-zA-Z0-9])+[^\s]?(?=_[^a-zA-Z0-9_]|_\z)/,
-    # Words allowing _ but not allowing __
-    '__' => /\G#?[a-zA-Z0-9.\/:\[\]-]*(_[a-zA-Z0-9.\/:\[\]-]+)*[^\s]?(?=__)/,
-    **%w[* ** + ++ ` ``].to_h do |s|
-      # normal words that can be used within +word+ or *word*
-      [s, /\G#?[a-zA-Z0-9_.\/:\[\]-]+[^\s]?(?=#{Regexp.escape(s)})/]
-    end
-  } # :nodoc:
-
-  # Read a word surrounded by +delimiter+ from the current position.
-
-  def read_word_pair(delimiter)
-    invalid_adjascent_char_pattern = /[a-zA-Z0-9]/
-    return if @pos != delimiter.size && invalid_adjascent_char_pattern.match?(@string[@pos - delimiter.size - 1])
-    return unless (m = @string.match(WORD_REGEXPS[delimiter], @pos))
-
-    word = m[0]
-    # Special exception: __FILE__, __LINE__, __send__ should not be treated as emphasis
-    return if delimiter == '__' && word.match?(/\A[a-zA-Z]+\z/)
-
-    pos = m.end(0)
-    unless invalid_adjascent_char_pattern.match?(@string[pos + delimiter.size])
-      @pos = pos + delimiter.size
-      word
-    end
   end
 end

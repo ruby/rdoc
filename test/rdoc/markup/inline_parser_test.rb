@@ -55,6 +55,7 @@ class RDocMarkupInlineParserTest < RDoc::TestCase
   def test_bold
     assert_equal([bold_node()], parse('<b></b>'))
     assert_equal(['*a b*'], parse('*a b*'))
+    assert_equal(['x*a* *b*x'], parse('x*a* *b*x'))
     assert_equal([bold_word('bold')], parse('*bold*'))
     assert_equal([bold_word('bold')], parse('**bold**'))
     assert_equal([bold_node('bo ld')], parse('<b>bo ld</b>'))
@@ -68,6 +69,7 @@ class RDocMarkupInlineParserTest < RDoc::TestCase
   def test_em
     assert_equal([em_node()], parse('<em></em>'))
     assert_equal(['_a b_'], parse('_a b_'))
+    assert_equal(['x_a_ _b_x'], parse('x_a_ _b_x'))
     assert_equal([em_word('em')], parse('_em_'))
     assert_equal([em_word('F1LE')], parse('__F1LE__'))
     assert_equal(['_foo_bar_baz'], parse('_foo_bar_baz'))
@@ -112,6 +114,7 @@ class RDocMarkupInlineParserTest < RDoc::TestCase
   def test_tt
     assert_equal([tt_node()], parse('<tt></tt>'))
     assert_equal(['`a b`'], parse('`a b`'))
+    assert_equal(['x`a` `b`x'], parse('x`a` `b`x'))
     assert_equal([tt_node('code')], parse('`code`'))
     assert_equal([tt_node('code')], parse('+code+'))
     assert_equal([tt_node('code')], parse('++code++'))
