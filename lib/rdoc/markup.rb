@@ -16,7 +16,7 @@
 #
 # - +rdoc+:
 #   the +RDoc+ markup format;
-#   see RDoc::MarkupReference.
+#   see {RDoc Markup Reference}[rdoc-ref:doc/markup_reference/rdoc.rdoc]
 # - +markdown+:
 #   The +markdown+ markup format as described in
 #   the {Markdown Guide}[https://www.markdownguide.org];
@@ -102,7 +102,7 @@
 #
 # = \RDoc Markup Reference
 #
-# See RDoc::MarkupReference.
+# See {RDoc Markup Reference}[rdoc-ref:doc/markup_reference/rdoc.rdoc]
 #
 #--
 # Original Author:: Dave Thomas,  dave@pragmaticprogrammer.com
