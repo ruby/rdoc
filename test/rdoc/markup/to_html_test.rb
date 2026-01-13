@@ -1041,8 +1041,8 @@ EXPECTED
   end
 
   def test_suppressed_crossref_and_backslashes
-    result = @to.convert('\\1 \\n \\Ruby \\::new \\')
-    assert_equal "\n<p>\\1 \\n Ruby ::new \\</p>\n", result
+    result = @to.convert('\\1 \\n \\Ruby \\::new \\foo_bar \\')
+    assert_equal "\n<p>\\1 \\n Ruby ::new foo_bar \\</p>\n", result
   end
 
   def test_gen_url_markdown_anchor

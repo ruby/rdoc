@@ -71,7 +71,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     # external links
     @markup.add_regexp_handling(/(?:link:|https?:|mailto:|ftp:|irc:|www\.)#{URL_CHARACTERS_REGEXP_STR}+\w/,
                                 :HYPERLINK)
-    @markup.add_regexp_handling(/\\[#:A-Z]/, :SUPPRESSED_CROSSREF)
+
+    # suppress crossref: \#method \::method \ClassName \method_with_underscores
+    @markup.add_regexp_handling(/\\(?:[#:A-Z]|[a-z]+_[a-z0-9])/, :SUPPRESSED_CROSSREF)
 
     init_link_notation_regexp_handlings
   end
