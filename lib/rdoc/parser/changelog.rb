@@ -286,7 +286,7 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
             end
             # repo#PR, repo@HASH
             #   ruby/ruby#15791 -> [ruby/ruby#15791](https://github.com/ruby/ruby/pull/15791)
-            #   ruby/ruby@a8a989b6 -> [ruby/ruby@a8a989b6](https://github.com/ruby/net-http/commit/a8a989b6)
+            #   ruby/ruby@a8a989b6 -> [ruby/ruby@a8a989b6](https://github.com/ruby/ruby/commit/a8a989b6)
             # ref in branckets is not extended
             #   [ruby/net-imap#543][ruby/ruby#15791] -> [ruby/net-imap#543][ruby/ruby#15791]
             contents.gsub!(%r[(?<![-\w#/@]|\]\[)([-\w]+/[-\w]+)(?:@(\h{8,40})|\#(\d+))(?![-\w#/@]|\]\[)]) do
