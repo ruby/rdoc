@@ -274,6 +274,27 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
       def initialize(base, commit, author, email, date, contents)
         case contents
         when String
+          if base&.match(%r[\A([^:/]+:/+[^/]+/)[^/]+/[^/]+/])
+            repo, host = $&, $1
+            contents = contents.dup
+            # base: https://github.com/ruby/ruby/
+            #   Fix #15791 -> Fix [#15791](https://github.com/ruby/ruby/pull/15791)
+            #   GH-15791 -> [GH-15791](https://github.com/ruby/ruby/pull/15791)
+            #   (#15791) -> ([#15791](https://github.com/ruby/ruby/pull/15791))
+            contents.gsub!(/\b(?:(?i:fix(?:e[sd])?) +)\K\#(\d+\b)|\bGH-(\d+)\b|\(\K\#(\d+)(?=\))/) do
+              "[#{$&}](#{repo}pull/#{$1 || $2 || $3})"
+            end
+            # repo#PR, repo@HASH
+            #   ruby/ruby#15791 -> [ruby/ruby#15791](https://github.com/ruby/ruby/pull/15791)
+            #   ruby/ruby@a8a989b6 -> [ruby/ruby@a8a989b6](https://github.com/ruby/ruby/commit/a8a989b6)
+            # ref in branckets is not extended
+            #   [ruby/net-imap#543][ruby/ruby#15791] -> [ruby/net-imap#543][ruby/ruby#15791]
+            contents.gsub!(%r[(?<![-\w#/@]|\]\[)([-\w]+/[-\w]+)(?:@(\h{8,40})|\#(\d+))(?![-\w#/@]|\]\[)]) do
+              path = defined?($2) ? "commit/#{$2}" : "pull/#{$3}"
+              "[#{$&}](#{host}#{$1}/#{path})"
+            end
+          end
+
           contents = RDoc::Markdown.parse(contents).parts.each do |body|
             case body
             when RDoc::Markup::Heading
