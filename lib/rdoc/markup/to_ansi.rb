@@ -19,11 +19,18 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
   ##
   # Maps attributes to ANSI sequences
 
-  ANSI_STYLE_CODES = {
+  ANSI_STYLE_CODES_ON = {
     BOLD: 1,
     TT: 7,
     EM: 4,
     STRIKE: 9
+  }
+
+  ANSI_STYLE_CODES_OFF = {
+    BOLD: 22,
+    TT: 27,
+    EM: 24,
+    STRIKE: 29
   }
 
   # Apply the given attributes by emitting ANSI sequences.
@@ -32,17 +39,19 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
   # current set of applied attributes to the new set of +attributes+.
 
   def apply_attributes(attributes)
-    before, after = [@applied_attributes, attributes].map do |attrs|
-      attrs.map { |attr| ANSI_STYLE_CODES[attr] }.compact.sort
-    end
+    before = @applied_attributes
+    after = attributes.sort
     return if before == after
 
     if after.empty?
       emit_inline("\e[m")
-    elsif (before - after).empty?
-      emit_inline("\e[#{(after - before).join(';')}m")
+    elsif !before.empty? && before.size > (before & after).size + 1
+      codes = after.map {|attr| ANSI_STYLE_CODES_ON[attr] }.compact
+      emit_inline("\e[#{[0, *codes].join(';')}m")
     else
-      emit_inline("\e[#{[0, after].join(';')}m")
+      off_codes = (before - after).map {|attr| ANSI_STYLE_CODES_OFF[attr] }.compact
+      on_codes = (after - before).map {|attr| ANSI_STYLE_CODES_ON[attr] }.compact
+      emit_inline("\e[#{(off_codes + on_codes).join(';')}m")
     end
     @applied_attributes = attributes
   end
