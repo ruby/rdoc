@@ -4,7 +4,7 @@ require 'set'
 require 'strscan'
 
 # Parses inline markup in RDoc text.
-# THis parser handles em, bold, strike, tt, hard break, and tidylink.
+# This parser handles em, bold, strike, tt, hard break, and tidylink.
 # Block-level constructs are handled in RDoc::Markup::Parser.
 
 class RDoc::Markup::InlineParser

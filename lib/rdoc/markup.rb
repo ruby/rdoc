@@ -110,8 +110,8 @@
 
 class RDoc::Markup
 
-  ##
-  # An AttributeManager which handles inline markup.
+  # Array of regexp handling pattern and its name. A regexp handling
+  # sequence is something like a WikiWord
 
   attr_reader :regexp_handlings
 
