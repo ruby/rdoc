@@ -6,7 +6,7 @@
 # Each comment may have a different markup format set by #format=.  By default
 # 'rdoc' is used.  The :markup: directive tells RDoc which format to use.
 #
-# See RDoc::MarkupReference@Directive+for+Specifying+RDoc+Source+Format.
+# See {RDoc Markup Reference}[rdoc-ref:doc/markup_reference/rdoc.rdoc@Directive+for+Specifying+RDoc+Source+Format].
 
 
 class RDoc::Comment
