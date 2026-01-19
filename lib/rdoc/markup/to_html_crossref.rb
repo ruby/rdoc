@@ -50,8 +50,6 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     # will be processed as a tidylink first and will be broken.
     crossref_re = @options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
     @markup.add_regexp_handling crossref_re, :CROSSREF
-
-    add_regexp_handling_TIDYLINK
   end
 
   ##
@@ -80,9 +78,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # example, ToHtml is found, even without the <tt>RDoc::Markup::</tt> prefix,
   # because we look for it in module Markup first.
 
-  def handle_regexp_CROSSREF(target)
-    name = target.text
-
+  def handle_regexp_CROSSREF(name)
+    return convert_string(name) if in_tidylink_label?
     return name if @options.autolink_excluded_words&.include?(name)
 
     return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
@@ -101,8 +98,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # Handles <tt>rdoc-ref:</tt> scheme links and allows RDoc::Markup::ToHtml to
   # handle other schemes.
 
-  def handle_regexp_HYPERLINK(target)
-    url = target.text
+  def handle_regexp_HYPERLINK(url)
+    return convert_string(url) if in_tidylink_label?
 
     case url
     when /\Ardoc-ref:/
@@ -120,12 +117,14 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # All other contents are handled by
   # {the superclass}[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK]
 
-  def handle_regexp_RDOCLINK(target)
-    url = target.text
-
+  def handle_regexp_RDOCLINK(url)
     case url
     when /\Ardoc-ref:/
-      cross_reference $', rdoc_ref: true
+      if in_tidylink_label?
+        convert_string(url)
+      else
+        cross_reference $', rdoc_ref: true
+      end
     else
       super
     end
@@ -203,73 +202,30 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     end
   end
 
-  def convert_flow(flow_items, &block)
-    res = []
-
-    i = 0
-    while i < flow_items.size
-      item = flow_items[i]
-
-      case item
-      when RDoc::Markup::AttrChanger
-        if !tidy_link_capturing? && (text = convert_tt_crossref(flow_items, i))
-          text = block.call(text, res) if block
-          append_flow_fragment res, text
-          i += 3
-          next
-        end
-
-        off_tags res, item
-        on_tags  res, item
-        i += 1
-      when String
-        text = convert_string(item)
-        text = block.call(text, res) if block
-        append_flow_fragment res, text
-        i += 1
-      when RDoc::Markup::RegexpHandling
-        text = convert_regexp_handling(item)
-        text = block.call(text, res) if block
-        append_flow_fragment res, text
-        i += 1
-      else
-        raise "Unknown flow element: #{item.inspect}"
-      end
-    end
-
-    res.join('')
+  def handle_TT(code)
+    emit_inline(tt_cross_reference(code) || "<code>#{CGI.escapeHTML code}</code>")
   end
 
-  private
+  # Applies additional special handling on top of the one defined in ToHtml.
+  # When a tidy link is <tt>{Foo}[rdoc-ref:Foo]</tt>, the label part is surrounded by <tt><code></code></tt>.
+  # TODO: reconsider this workaround.
+  def apply_tidylink_label_special_handling(label, url)
+    if url == "rdoc-ref:#{label}" && cross_reference(label).include?('<code>')
+      "<code>#{convert_string(label)}</code>"
+    else
+      super
+    end
+  end
 
-  ##
-  # Detects <tt>...</tt> spans that contain a single cross-reference candidate.
-  # When the candidate occupies the whole span (aside from trailing
-  # punctuation), the tt markup is replaced by the resolved cross-reference.
-
-  def convert_tt_crossref(flow_items, index)
-    opener = flow_items[index]
-    return unless tt_tag?(opener.turn_on)
-
-    string = flow_items[index + 1]
-    closer = flow_items[index + 2]
-
-    return unless String === string
-    return unless RDoc::Markup::AttrChanger === closer
-    return unless tt_tag?(closer.turn_off, true)
+  def tt_cross_reference(code)
+    return if in_tidylink_label?
 
     crossref_regexp = @options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
-    match = crossref_regexp.match(string)
-    return unless match
-    return unless match.begin(1).zero?
+    match = crossref_regexp.match(code)
+    return unless match && match.begin(1).zero?
+    return unless match.post_match.match?(/\A[[:punct:]\s]*\z/)
 
-    trailing = match.post_match
-    # Only convert when the remainder is punctuation/whitespace so other tt text stays literal.
-    return unless trailing.match?(/\A[[:punct:]\s]*\z/)
-
-    text = cross_reference(string)
-    return if text == string
-
-    text
+    ref = cross_reference(code)
+    ref if ref != code
   end
 end

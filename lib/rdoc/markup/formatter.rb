@@ -10,6 +10,8 @@
 # RDoc::Markup::FormatterTestCase.  If you're writing a text-output formatter
 # use RDoc::Markup::TextFormatterTestCase which provides extra test cases.
 
+require 'rdoc/markup/inline_parser'
+
 class RDoc::Markup::Formatter
 
   ##
@@ -17,6 +19,7 @@ class RDoc::Markup::Formatter
   # +off+ triggers.
 
   InlineTag = Struct.new(:bit, :on, :off)
+
 
   ##
   # Converts a target url to one that is relative to a given path
@@ -49,17 +52,7 @@ class RDoc::Markup::Formatter
     @options = options
 
     @markup = markup || RDoc::Markup.new
-    @am     = @markup.attribute_manager
-    @am.add_regexp_handling(/<br>/, :HARD_BREAK)
 
-    @attributes = @am.attributes
-
-    @attr_tags = []
-
-    @in_tt = 0
-    @tt_bit = @attributes.bitmap_for :TT
-
-    @hard_break = ''
     @from_path = '.'
   end
 
@@ -85,29 +78,6 @@ class RDoc::Markup::Formatter
   end
 
   ##
-  # Adds a regexp handling for links of the form {<text>}[<url>] and
-  # <word>[<url>]
-
-  def add_regexp_handling_TIDYLINK
-    @markup.add_regexp_handling(/(?:
-                                  \{[^{}]*\} | # multi-word label
-                                  \b[^\s{}]+? # single-word label
-                                 )
-
-                                 \[\S+?\]     # link target
-                                /x, :TIDYLINK)
-  end
-
-  ##
-  # Add a new set of tags for an attribute. We allow separate start and end
-  # tags for flexibility
-
-  def add_tag(name, start, stop)
-    attr = @attributes.bitmap_for name
-    @attr_tags << InlineTag.new(attr, start, stop)
-  end
-
-  ##
   # Allows +tag+ to be decorated with additional information.
 
   def annotate(tag)
@@ -121,53 +91,150 @@ class RDoc::Markup::Formatter
     @markup.convert content, self
   end
 
-  ##
-  # Converts flow items +flow+
+  # Applies regexp handling to +text+ and returns an array of [text, converted?] pairs.
 
-  def convert_flow(flow)
-    res = []
-
-    flow.each do |item|
-      case item
-      when String then
-        res << convert_string(item)
-      when RDoc::Markup::AttrChanger then
-        off_tags res, item
-        on_tags res, item
-      when RDoc::Markup::RegexpHandling then
-        res << convert_regexp_handling(item)
-      else
-        raise "Unknown flow element: #{item.inspect}"
+  def apply_regexp_handling(text)
+    output = []
+    start = 0
+    loop do
+      pos = text.size
+      matched_name = matched_text = nil
+      @markup.regexp_handlings.each do |pattern, name|
+        m = text.match(pattern, start)
+        next unless m
+        idx = m[1] ? 1 : 0
+        if m.begin(idx) < pos
+          pos = m.begin(idx)
+          matched_text = m[idx]
+          matched_name = name
+        end
       end
+      output << [text[start...pos], false] if pos > start
+      if matched_name
+        handled = public_send(:"handle_regexp_#{matched_name}", matched_text)
+        output << [handled, true]
+        start = pos + matched_text.size
+      else
+        start = pos
+      end
+      break if pos == text.size
     end
-
-    res.join
+    output
   end
 
-  ##
-  # Converts added regexp handlings. See RDoc::Markup#add_regexp_handling
+  # Called when processing plain text while traversing inline nodes from handle_inline.
+  # +text+ may need proper escaping.
 
-  def convert_regexp_handling(target)
-    return target.text if in_tt?
+  def handle_PLAIN_TEXT(text)
+  end
 
-    handled = false
+  # Called when processing regexp-handling-processed text while traversing inline nodes from handle_inline.
+  # +text+ may contain markup tags.
 
-    @attributes.each_name_of target.type do |name|
-      method_name = "handle_regexp_#{name}"
+  def handle_REGEXP_HANDLING_TEXT(text)
+  end
 
-      if respond_to? method_name then
-        target.text = public_send method_name, target
-        handled = true
+  # Called when processing text node while traversing inline nodes from handle_inline.
+  # Apply regexp handling and dispatch to the appropriate handler: handle_REGEXP_HANDLING_TEXT or handle_PLAIN_TEXT.
+
+  def handle_TEXT(text)
+    apply_regexp_handling(text).each do |part, converted|
+      if converted
+        handle_REGEXP_HANDLING_TEXT(part)
+      else
+        handle_PLAIN_TEXT(part)
       end
     end
+  end
 
-    unless handled then
-      target_name = @attributes.as_string target.type
+  # Called when processing a hard break while traversing inline nodes from handle_inline.
 
-      raise RDoc::Error, "Unhandled regexp handling #{target_name}: #{target}"
+  def handle_HARD_BREAK
+  end
+
+  # Called when processing bold nodes while traversing inline nodes from handle_inline.
+  # Traverse the children nodes and dispatch to the appropriate handlers.
+
+  def handle_BOLD(nodes)
+    traverse_inline_nodes(nodes)
+  end
+
+  # Called when processing emphasis nodes while traversing inline nodes from handle_inline.
+  # Traverse the children nodes and dispatch to the appropriate handlers.
+
+  def handle_EM(nodes)
+    traverse_inline_nodes(nodes)
+  end
+
+  # Called when processing bold word nodes while traversing inline nodes from handle_inline.
+  # +word+ may need proper escaping.
+
+  def handle_BOLD_WORD(word)
+    handle_PLAIN_TEXT(word)
+  end
+
+  # Called when processing emphasis word nodes while traversing inline nodes from handle_inline.
+  # +word+ may need proper escaping.
+
+  def handle_EM_WORD(word)
+    handle_PLAIN_TEXT(word)
+  end
+
+  # Called when processing tt nodes while traversing inline nodes from handle_inline.
+  # +code+ may need proper escaping.
+
+  def handle_TT(code)
+    handle_PLAIN_TEXT(code)
+  end
+
+  # Called when processing strike nodes while traversing inline nodes from handle_inline.
+  # Traverse the children nodes and dispatch to the appropriate handlers.
+
+  def handle_STRIKE(nodes)
+    traverse_inline_nodes(nodes)
+  end
+
+  # Called when processing tidylink nodes while traversing inline nodes from handle_inline.
+  # +label_part+ is an array of strings or nodes representing the link label.
+  # +url+ is the link URL.
+  # Traverse the label_part nodes and dispatch to the appropriate handlers.
+
+  def handle_TIDYLINK(label_part, url)
+    traverse_inline_nodes(label_part)
+  end
+
+  # Parses inline +text+, traverse the resulting nodes, and calls the appropriate handler methods.
+
+  def handle_inline(text)
+    nodes = RDoc::Markup::InlineParser.new(text).parse
+    traverse_inline_nodes(nodes)
+  end
+
+  # Traverses +nodes+ and calls the appropriate handler methods
+  # Nodes formats are described in RDoc::Markup::InlineParser#parse
+
+  def traverse_inline_nodes(nodes)
+    nodes.each do |node|
+      next handle_TEXT(node) if String === node
+      case node[:type]
+      when :TIDYLINK
+        handle_TIDYLINK(node[:children], node[:url])
+      when :HARD_BREAK
+        handle_HARD_BREAK
+      when :BOLD
+        handle_BOLD(node[:children])
+      when :BOLD_WORD
+        handle_BOLD_WORD(node[:children][0] || '')
+      when :EM
+        handle_EM(node[:children])
+      when :EM_WORD
+        handle_EM_WORD(node[:children][0] || '')
+      when :TT
+        handle_TT(node[:children][0] || '')
+      when :STRIKE
+        handle_STRIKE(node[:children])
+      end
     end
-
-    target.text
   end
 
   ##
@@ -186,50 +253,6 @@ class RDoc::Markup::Formatter
   #   alias accept_raw ignore
 
   def ignore *node
-  end
-
-  ##
-  # Are we currently inside tt tags?
-
-  def in_tt?
-    @in_tt > 0
-  end
-
-  def tt_tag?(attr_mask, reverse = false)
-    each_attr_tag(attr_mask, reverse) do |tag|
-      return true if tt? tag
-    end
-    false
-  end
-
-  ##
-  # Turns on tags for +item+ on +res+
-
-  def on_tags(res, item)
-    each_attr_tag(item.turn_on) do |tag|
-      res << annotate(tag.on)
-      @in_tt += 1 if tt? tag
-    end
-  end
-
-  ##
-  # Turns off tags for +item+ on +res+
-
-  def off_tags(res, item)
-    each_attr_tag(item.turn_off, true) do |tag|
-      @in_tt -= 1 if tt? tag
-      res << annotate(tag.off)
-    end
-  end
-
-  def each_attr_tag(attr_mask, reverse = false)
-    return if attr_mask.zero?
-
-    @attr_tags.public_send(reverse ? :reverse_each : :each) do |tag|
-      if attr_mask & tag.bit != 0 then
-        yield tag
-      end
-    end
   end
 
   ##

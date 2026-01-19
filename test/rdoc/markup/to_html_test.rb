@@ -907,7 +907,7 @@ EXPECTED
   end
 
   def test_handle_regexp_HYPERLINK_link
-    target = RDoc::Markup::RegexpHandling.new 0, 'link:README.txt'
+    target = 'link:README.txt'
 
     link = @to.handle_regexp_HYPERLINK target
 
@@ -915,7 +915,7 @@ EXPECTED
   end
 
   def test_handle_regexp_HYPERLINK_irc
-    target = RDoc::Markup::RegexpHandling.new 0, 'irc://irc.freenode.net/#ruby-lang'
+    target = 'irc://irc.freenode.net/#ruby-lang'
 
     link = @to.handle_regexp_HYPERLINK target
 
@@ -998,7 +998,7 @@ EXPECTED
   end
 
   def test_to_html
-    assert_equal "\n<p><code>--</code></p>\n", util_format("<tt>--</tt>")
+    assert_equal "\n<p><code>--</code><code>\\\\</code></p>\n", util_format("<tt>--</tt><tt>\\\\\\\\</tt>")
   end
 
   def util_format(text)
@@ -1040,6 +1040,11 @@ EXPECTED
     assert_include(res[%r<<td[^<>]*>C1</td>>], 'C1')
   end
 
+  def test_suppressed_crossref_and_backslashes
+    result = @to.convert('\\1 \\n \\Ruby \\::new \\foo_bar \\')
+    assert_equal "\n<p>\\1 \\n Ruby ::new foo_bar \\</p>\n", result
+  end
+
   def test_gen_url_markdown_anchor
     assert_equal '<a href="#hello-world">link</a>', @to.gen_url('#hello-world', 'link')
   end
@@ -1047,6 +1052,29 @@ EXPECTED
   def test_convert_tidy_link_markdown_anchor
     result = @to.convert('{link}[#hello]')
     assert_equal "\n<p><a href=\"#hello\">link</a></p>\n", result
+  end
+
+  def test_convert_hyperlink_disabled_inside_tidylink
+    result = @to.convert '{See http://example.com}[README.txt] http://example.com'
+    assert_equal "\n<p><a href=\"README.txt\">See http://example.com</a> <a href=\"http://example.com\">example.com</a></p>\n", result
+  end
+
+  def test_convert_rdoc_image_inside_tidylink
+    result = @to.convert '{See rdoc-image:image.png:text}[url] rdoc-image:image.jpg:text'
+    assert_equal "\n<p><a href=\"url\">See <img src=\"image.png\" alt=\"text\"></a> <img src=\"image.jpg\" alt=\"text\"></p>\n", result
+
+    # When `label =~ regexp_handling == 0`, label is handled specially in RDoc::Markup::ToHTML#apply_tidylink_label_special_regexp_handling
+    result = @to.convert '{rdoc-image:image.png:text}[url] rdoc-image:image.jpg:text'
+    assert_equal "\n<p><a href=\"url\"><img src=\"image.png\" alt=\"text\"></a> <img src=\"image.jpg\" alt=\"text\"></p>\n", result
+  end
+
+  def test_convert_rdoc_label_disabled_inside_tidylink
+    result = @to.convert '{See rdoc-label:label}[url] rdoc-label:label'
+    assert_equal "\n<p><a href=\"url\">See rdoc-label:label</a> <a href=\"#label\">label</a></p>\n", result
+
+    # When `label =~ regexp_handling == 0`, label is handled specially in RDoc::Markup::ToHTML#apply_tidylink_label_special_regexp_handling
+    result = @to.convert '{rdoc-label:label}[url] rdoc-label:label'
+    assert_equal "\n<p><a href=\"url\">rdoc-label:label</a> <a href=\"#label\">label</a></p>\n", result
   end
 
   def assert_escaped(unexpected, code)

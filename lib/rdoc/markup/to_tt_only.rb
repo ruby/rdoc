@@ -20,8 +20,6 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
 
   def initialize(markup = nil)
     super nil, markup
-
-    add_tag :TT, nil, nil
   end
 
   ##
@@ -82,22 +80,18 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
   # Extracts tt sections from +text+
 
   def tt_sections(text)
-    flow = @am.flow text.dup
-
-    flow.each do |item|
-      case item
-      when String then
-        @res << item if in_tt?
-      when RDoc::Markup::AttrChanger then
-        off_tags res, item
-        on_tags res, item
-      when RDoc::Markup::RegexpHandling then
-        @res << convert_regexp_handling(item) if in_tt? # TODO can this happen?
+    parsed = RDoc::Markup::InlineParser.new(text).parse
+    traverse = -> node {
+      next if String === node
+      if node[:type] == :TT
+        res << nil
+        res << node[:children][0] || ''
+        res << nil
       else
-        raise "Unknown flow element: #{item.inspect}"
+        node[:children].each(&traverse)
       end
-    end
-
+    }
+    parsed.each(&traverse)
     res
   end
 

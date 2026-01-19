@@ -41,26 +41,6 @@ the time
     assert_equal expected, out
   end
 
-  def test_convert_custom_markup
-    str = <<-STR
-{stricken}
-    STR
-
-    m = RDoc::Markup.new
-    m.add_word_pair '{', '}', :STRIKE
-
-    tt = RDoc::Markup::ToTest.new nil, m
-    tt.add_tag :STRIKE, 'STRIKE ', ' STRIKE'
-
-    out = m.convert str, tt
-
-    expected = [
-      "STRIKE stricken STRIKE",
-    ]
-
-    assert_equal expected, out
-  end
-
   def test_convert_document
     doc = RDoc::Markup::Parser.parse <<-STR
 now is

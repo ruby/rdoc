@@ -51,11 +51,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @in_list_entry = nil
     @list = nil
     @th = nil
+    @in_tidylink_label = false
     @hard_break = "<br>\n"
 
     init_regexp_handlings
-
-    init_tags
   end
 
   # :section: Regexp Handling
@@ -72,6 +71,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     # external links
     @markup.add_regexp_handling(/(?:link:|https?:|mailto:|ftp:|irc:|www\.)#{URL_CHARACTERS_REGEXP_STR}+\w/,
                                 :HYPERLINK)
+
+    # suppress crossref: \#method \::method \ClassName \method_with_underscores
+    @markup.add_regexp_handling(/\\(?:[#:A-Z]|[a-z]+_[a-z0-9])/, :SUPPRESSED_CROSSREF)
+
     init_link_notation_regexp_handlings
   end
 
@@ -80,7 +83,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def init_link_notation_regexp_handlings
     add_regexp_handling_RDOCLINK
-    add_regexp_handling_TIDYLINK
   end
 
   def handle_RDOCLINK(url) # :nodoc:
@@ -88,6 +90,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     when /^rdoc-ref:/
       CGI.escapeHTML($')
     when /^rdoc-label:/
+      return CGI.escapeHTML(url) if in_tidylink_label?
       text = $'
 
       text = case text
@@ -113,11 +116,127 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # +target+ is a <code><br></code>
+  def handle_PLAIN_TEXT(text)
+    emit_inline(convert_string(text))
+  end
 
-  def handle_regexp_HARD_BREAK(target)
-    '<br>'
+  def handle_REGEXP_HANDLING_TEXT(text)
+    emit_inline(text)
+  end
+
+  def handle_BOLD(nodes)
+    emit_inline('<strong>')
+    super
+    emit_inline('</strong>')
+  end
+
+  def handle_EM(nodes)
+    emit_inline('<em>')
+    super
+    emit_inline('</em>')
+  end
+
+  def handle_BOLD_WORD(word)
+    emit_inline('<strong>')
+    super
+    emit_inline('</strong>')
+  end
+
+  def handle_EM_WORD(word)
+    emit_inline('<em>')
+    super
+    emit_inline('</em>')
+  end
+
+  def handle_TT(code)
+    emit_inline('<code>')
+    super
+    emit_inline('</code>')
+  end
+
+  def handle_STRIKE(nodes)
+    emit_inline('<del>')
+    super
+    emit_inline('</del>')
+  end
+
+  def handle_HARD_BREAK
+    emit_inline('<br>')
+  end
+
+  def emit_inline(text)
+    @inline_output << text
+  end
+
+  # Returns true if we are processing inside a tidy link label.
+
+  def in_tidylink_label?
+    @in_tidylink_label
+  end
+
+  # Special handling for tidy link labels.
+  # When a tidy link is <tt>{rdoc-image:path/to/image.jpg:alt text}[http://example.com]</tt>,
+  # label part is normally considered RDOCLINK <tt>rdoc-image:path/to/image.jpg:alt</tt> and a text <tt>" text"</tt>
+  # but RDoc's test code expects the whole label part to be treated as RDOCLINK only in tidy link label.
+  # When a tidy link is <tt>{^1}[url]</tt> or <tt>{*1}[url]</tt>, the label part needs to drop leading * or ^.
+  # TODO: reconsider this workaround.
+
+  def apply_tidylink_label_special_handling(label, url)
+    # ^1 *1 will be converted to just 1 in tidy link label.
+    return label[1..] if label.match?(/\A[*^]\d+\z/)
+
+    # rdoc-image in label specially allows spaces in alt text.
+    return handle_RDOCLINK(label) if label.start_with?('rdoc-image:')
+  end
+
+  def handle_TIDYLINK(label_part, url)
+    # When url is an image, ignore label part (maybe bug?) and just generate img tag.
+    if url.match?(/\Ahttps?:\/\/.+\.(png|gif|jpg|jpeg|bmp)\z/)
+      emit_inline("<img src=\"#{CGI.escapeHTML(url)}\" />")
+      return
+    elsif url.match?(/\Ardoc-image:/)
+      emit_inline(handle_RDOCLINK(url))
+      return
+    end
+
+    if label_part.size == 1 && String === label_part[0]
+      raw_label = label_part[0]
+
+      @in_tidylink_label = true
+      special = apply_tidylink_label_special_handling(raw_label, url)
+      @in_tidylink_label = false
+
+      if special
+        tag = gen_url(CGI.escapeHTML(url), special)
+        unless tag.empty?
+          emit_inline(tag)
+          return
+        end
+      end
+    end
+
+    tag = gen_url(CGI.escapeHTML(url), '')
+    open_tag, close_tag = tag.split(/(?=<\/a>)/, 2)
+    valid_tag = open_tag && close_tag
+    emit_inline(open_tag) if valid_tag
+    @in_tidylink_label = true
+    traverse_inline_nodes(label_part)
+    @in_tidylink_label = false
+    emit_inline(close_tag) if valid_tag
+  end
+
+  def handle_inline(text) # :nodoc:
+    @inline_output = +''
+    super
+    out = @inline_output
+    @inline_output = nil
+    out
+  end
+
+  # Converts suppressed cross-reference +text+ to HTML by removing the leading backslash.
+
+  def handle_regexp_SUPPRESSED_CROSSREF(text)
+    convert_string(text.delete_prefix('\\'))
   end
 
   ##
@@ -132,9 +251,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # <tt>link:</tt>::
   #   Reference to a local file relative to the output directory.
 
-  def handle_regexp_HYPERLINK(target)
-    url = CGI.escapeHTML(target.text)
+  def handle_regexp_HYPERLINK(text)
+    return convert_string(text) if in_tidylink_label?
 
+    url = CGI.escapeHTML(text)
     gen_url url, url
   end
 
@@ -147,27 +267,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # For the +rdoc-label+ scheme the footnote and label prefixes are stripped
   # when creating a link.  All other contents will be linked verbatim.
 
-  def handle_regexp_RDOCLINK(target)
-    handle_RDOCLINK target.text
-  end
-
-  ##
-  # This +target+ is a link where the label is different from the URL
-  # <tt>label[url]</tt> or <tt>{long label}[url]</tt>
-
-  def handle_regexp_TIDYLINK(target)
-    text = target.text
-
-    if tidy_link_capturing?
-      return finish_tidy_link(text)
-    end
-
-    if text.start_with?('{') && !text.include?('}')
-      start_tidy_link text
-      return ''
-    end
-
-    convert_complete_tidy_link(text)
+  def handle_regexp_RDOCLINK(text)
+    handle_RDOCLINK text
   end
 
   # :section: Visitor
@@ -416,16 +517,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   ##
-  # Maps attributes to HTML tags
-
-  def init_tags
-    add_tag :BOLD,   "<strong>", "</strong>"
-    add_tag :TT,     "<code>",   "</code>"
-    add_tag :EM,     "<em>",     "</em>"
-    add_tag :STRIKE, "<del>",    "</del>"
-  end
-
-  ##
   # Returns the HTML tag for +list_type+, possible using a label from
   # +list_item+
 
@@ -474,141 +565,10 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Converts +item+ to HTML using RDoc::Text#to_html
 
   def to_html(item)
-    super convert_flow @am.flow item
-  end
-
-  private
-
-  def convert_flow(flow_items)
-    res = []
-
-    flow_items.each do |item|
-      case item
-      when String
-        append_flow_fragment res, convert_string(item)
-      when RDoc::Markup::AttrChanger
-        off_tags res, item
-        on_tags  res, item
-      when RDoc::Markup::RegexpHandling
-        append_flow_fragment res, convert_regexp_handling(item)
-      else
-        raise "Unknown flow element: #{item.inspect}"
-      end
-    end
-
-    res.join
-  end
-
-  def append_flow_fragment(res, fragment)
-    return if fragment.nil? || fragment.empty?
-
-    emit_tidy_link_fragment(res, fragment)
-  end
-
-  def append_to_tidy_label(fragment)
-    @tidy_link_buffer << fragment
-  end
-
-  ##
-  # Matches an entire tidy link with a braced label "{label}[url]".
-  #
-  # Capture 1: label contents.
-  # Capture 2: URL text.
-  # Capture 3: trailing content.
-  TIDY_LINK_WITH_BRACES = /\A\{(.*?)\}\[(.*?)\](.*)\z/
-
-  ##
-  # Matches the tail of a braced tidy link when the opening brace was
-  # consumed earlier while accumulating the label text.
-  #
-  # Capture 1: remaining label content.
-  # Capture 2: URL text.
-  # Capture 3: trailing content.
-  TIDY_LINK_WITH_BRACES_TAIL = /\A(.*?)\}\[(.*?)\](.*)\z/
-
-  ##
-  # Matches a tidy link with a single-word label "label[url]".
-  #
-  # Capture 1: the single-word label (no whitespace).
-  # Capture 2: URL text between the brackets.
-  TIDY_LINK_SINGLE_WORD = /\A(\S+)\[(.*?)\](.*)\z/
-
-  def convert_complete_tidy_link(text)
-    return text unless
-      text =~ TIDY_LINK_WITH_BRACES or text =~ TIDY_LINK_SINGLE_WORD
-
-    label = $1
-    url   = CGI.escapeHTML($2)
-
-    label_html = if /^rdoc-image:/ =~ label
-                   handle_RDOCLINK(label)
-                 else
-                   render_tidy_link_label(label)
-                 end
-
-    gen_url url, label_html
-  end
-
-  def emit_tidy_link_fragment(res, fragment)
-    if tidy_link_capturing?
-      append_to_tidy_label fragment
-    else
-      res << fragment
-    end
-  end
-
-  def finish_tidy_link(text)
-    label_tail, url, trailing = extract_tidy_link_parts(text)
-    append_to_tidy_label CGI.escapeHTML(label_tail) unless label_tail.empty?
-
-    return '' unless url
-
-    label_html = @tidy_link_buffer
-    @tidy_link_buffer = nil
-    link = gen_url(url, label_html)
-
-    return link if trailing.empty?
-
-    link + CGI.escapeHTML(trailing)
-  end
-
-  def extract_tidy_link_parts(text)
-    if text =~ TIDY_LINK_WITH_BRACES
-      [$1, CGI.escapeHTML($2), $3]
-    elsif text =~ TIDY_LINK_WITH_BRACES_TAIL
-      [$1, CGI.escapeHTML($2), $3]
-    elsif text =~ TIDY_LINK_SINGLE_WORD
-      [$1, CGI.escapeHTML($2), $3]
-    else
-      [text, nil, '']
-    end
-  end
-
-  def on_tags(res, item)
-    each_attr_tag(item.turn_on) do |tag|
-      emit_tidy_link_fragment(res, annotate(tag.on))
-      @in_tt += 1 if tt? tag
-    end
-  end
-
-  def off_tags(res, item)
-    each_attr_tag(item.turn_off, true) do |tag|
-      emit_tidy_link_fragment(res, annotate(tag.off))
-      @in_tt -= 1 if tt? tag
-    end
-  end
-
-  def start_tidy_link(text)
-    @tidy_link_buffer = String.new
-    append_to_tidy_label CGI.escapeHTML(text.delete_prefix('{'))
-  end
-
-  def tidy_link_capturing?
-    !!@tidy_link_buffer
-  end
-
-  def render_tidy_link_label(label)
-    RDoc::Markup::LinkLabelToHtml.render(label, @options, @from_path)
+    # Ideally, we should convert html characters at handle_PLAIN_TEXT or somewhere else,
+    # but we need to convert it here for now because to_html_characters converts pair of backticks to ’‘ and pair of double backticks to ”“.
+    # Known bugs: `...` in `<code>def f(...); end</code>` and `(c) in `<a href="(c)">` will be wrongly converted.
+    to_html_characters(handle_inline(item))
   end
 end
 

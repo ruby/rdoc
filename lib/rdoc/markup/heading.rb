@@ -57,8 +57,8 @@ module RDoc
 
           to_html = Markup::ToHtml.new nil
 
-          def to_html.handle_regexp_CROSSREF(target)
-            target.text.sub(/^\\/, '')
+          def to_html.handle_regexp_CROSSREF(text)
+            text.sub(/^\\/, '')
           end
 
           to_html
