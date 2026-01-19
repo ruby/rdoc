@@ -190,19 +190,13 @@ class RDoc::CrossReference
   ##
   # Returns a reference to +name+.
   #
-  # If the reference is found and +name+ is not documented +text+ will be
-  # returned.  If +name+ is escaped +name+ is returned.  If +name+ is not
-  # found +text+ is returned.
+  # If the reference is found and +name+ is not documented +nil+ will be
+  # returned.  If +name+ is not found +nil+ is returned.
 
-  def resolve(name, text)
+  def resolve(name)
     return @seen[name] if @seen.include? name
 
-    ref = case name
-          when /^\\(#{CLASS_REGEXP_STR})$/o then
-            @context.find_symbol $1
-          else
-            @context.find_symbol name
-          end
+    ref = @context.find_symbol name
 
     ref = resolve_local_symbol name unless ref
 
@@ -211,21 +205,7 @@ class RDoc::CrossReference
 
     ref = nil if RDoc::Alias === ref # external alias, can't link to it
 
-    out = if name == '\\' then
-            name
-          elsif name =~ /^\\/ then
-            # we remove the \ only in front of what we know:
-            # other backslashes are treated later, only outside of <tt>
-            ref ? $' : name
-          elsif ref then
-            if ref.display? then
-              ref
-            else
-              text
-            end
-          else
-            text
-          end
+    out = ref if ref&.display?
 
     @seen[name] = out
 

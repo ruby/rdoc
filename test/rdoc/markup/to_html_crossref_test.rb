@@ -52,6 +52,18 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para('<code>.bar.hello(\\)</code>'), result
   end
 
+  def test_convert_suppressed_CROSSREF_in_tt
+    result = @to.convert '<tt>C1</tt> <tt>\C1</tt>'
+    assert_equal para('<a href="C1.html"><code>C1</code></a> <code>C1</code>'), result
+
+    result = @to.convert '<tt>C1#m()</tt> <tt>\C1#m()</tt>'
+    assert_equal para('<a href="C1.html#method-i-m"><code>C1#m()</code></a> <code>C1#m()</code>'), result
+
+    # Keep backshash if crossref doesn't exitst
+    result = @to.convert '<tt>C1#&</tt> <tt>\\C1#&</tt>'
+    assert_equal para('<code>C1#&amp;</code> <code>\\C1#&amp;</code>'), result
+  end
+
   def test_convert_CROSSREF_ignored_excluded_words
     @options.autolink_excluded_words = ['C1']
 
@@ -355,7 +367,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_link
-    assert_equal 'n', @to.link('n', 'n')
+    assert_nil @to.link('n', 'n')
 
     assert_equal '<a href="C1.html#method-c-m"><code>m</code></a>', @to.link('m', 'm')
   end
