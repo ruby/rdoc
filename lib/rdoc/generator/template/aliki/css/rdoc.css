@@ -39,24 +39,14 @@
   --color-neutral-800: #292524;
   --color-neutral-900: #1c1917;
 
-  /* Code highlighting colors */
+  /* Code highlighting colors - neutral palette for all syntax highlighters */
   --code-blue: #1d4ed8;
   --code-green: #047857;
   --code-orange: #d97706;
   --code-purple: #7e22ce;
   --code-red: #dc2626;
-
-  /* C syntax highlighting */
-  --c-keyword: #b91c1c;
-  --c-type: #0891b2;
-  --c-macro: #ea580c;
-  --c-function: #7c3aed;
-  --c-identifier: #475569;
-  --c-operator: #059669;
-  --c-preprocessor: #a21caf;
-  --c-value: #92400e;
-  --c-string: #15803d;
-  --c-comment: #78716c;
+  --code-cyan: #0891b2;
+  --code-gray: #78716c;
 
   /* Color Palette - Green (for success states) */
   --color-green-400: #4ade80;
@@ -186,24 +176,14 @@
 
 /* Dark Theme */
 [data-theme="dark"] {
-  /* Code highlighting colors */
+  /* Code highlighting colors - neutral palette for all syntax highlighters */
   --code-blue: #93c5fd;
   --code-green: #34d399;
   --code-orange: #fbbf24;
   --code-purple: #c084fc;
   --code-red: #f87171;
-
-  /* C syntax highlighting */
-  --c-keyword: #f87171;
-  --c-type: #22d3ee;
-  --c-macro: #fb923c;
-  --c-function: #a78bfa;
-  --c-identifier: #94a3b8;
-  --c-operator: #6ee7b7;
-  --c-preprocessor: #e879f9;
-  --c-value: #fcd34d;
-  --c-string: #4ade80;
-  --c-comment: #a8a29e;
+  --code-cyan: #22d3ee;
+  --code-gray: #a8a29e;
 
   /* Semantic Colors - Dark Theme */
   --color-text-primary: var(--color-neutral-50);
@@ -1064,18 +1044,30 @@ main h6 a:hover {
 [data-theme="dark"] .ruby-string     { color: var(--code-green); }
 
 /* C Syntax Highlighting */
-.c-keyword { color: var(--c-keyword); }
-.c-type { color: var(--c-type); }
-.c-macro { color: var(--c-macro); }
-.c-function { color: var(--c-function); }
-.c-identifier { color: var(--c-identifier); }
-.c-operator { color: var(--c-operator); }
-.c-preprocessor { color: var(--c-preprocessor); }
-.c-value { color: var(--c-value); }
-.c-string { color: var(--c-string); }
+.c-keyword { color: var(--code-red); }
+.c-type { color: var(--code-cyan); }
+.c-macro { color: var(--code-orange); }
+.c-function { color: var(--code-purple); }
+.c-identifier { color: var(--color-text-secondary); }
+.c-operator { color: var(--code-green); }
+.c-preprocessor { color: var(--code-purple); }
+.c-value { color: var(--code-orange); }
+.c-string { color: var(--code-green); }
 
 .c-comment {
-  color: var(--c-comment);
+  color: var(--code-gray);
+  font-style: italic;
+}
+
+/* Shell Syntax Highlighting */
+.sh-prompt { color: var(--code-gray); }
+.sh-command { color: var(--code-blue); }
+.sh-option { color: var(--code-cyan); }
+.sh-string { color: var(--code-green); }
+.sh-envvar { color: var(--code-purple); }
+
+.sh-comment {
+  color: var(--code-gray);
   font-style: italic;
 }
 
