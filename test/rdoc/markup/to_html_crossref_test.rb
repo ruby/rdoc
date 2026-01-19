@@ -118,7 +118,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
 
   def test_convert_CROSSREF_legacy_label
     result = @to.convert 'C1@What-27s+Here'
-    assert_equal para("<a href=\"C1.html#class-c1-whats-here\">What\u2019s Here at <code>C1</code></a>"), result
+    assert_equal para("<a href=\"C1.html#class-c1-whats-here\">What's Here at <code>C1</code></a>"), result
   end
 
   def test_convert_CROSSREF_legacy_label_colon
@@ -130,7 +130,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     @c1.add_section "What's Here"
 
     result = @to.convert "C1@What-27s+Here"
-    assert_equal para("<a href=\"C1.html#whats-here\">What\u2019s Here at <code>C1</code></a>"), result
+    assert_equal para("<a href=\"C1.html#whats-here\">What's Here at <code>C1</code></a>"), result
   end
 
   def test_convert_CROSSREF_constant

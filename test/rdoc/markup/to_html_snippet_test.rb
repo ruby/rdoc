@@ -543,7 +543,7 @@ This is some text, it *will* be cut off after 100 characters
 <p>Hello There
 <p>This is some text, it <strong>will</strong> be cut off after 100 characters
 
-<pre>This one is cut off in this verbatim ...</pre>
+<pre>This one is cut off in this verbatim …</pre>
     EXPECTED
 
     actual = @to.convert rdoc

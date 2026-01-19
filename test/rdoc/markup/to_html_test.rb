@@ -718,6 +718,51 @@ EXPECTED
     assert_equal '&lt;&gt;', @to.convert_string('<>')
   end
 
+  def test_self_converter_encode_fallback
+    assert_equal '…',
+                 RDoc::Markup::ToHtml::encode_fallback('…', Encoding::UTF_8,    '...')
+    assert_equal '...',
+                 RDoc::Markup::ToHtml::encode_fallback('…', Encoding::US_ASCII, '...')
+  end
+
+  def test_convert_HTML_CHARACTER
+    result = @to.convert "<b>(c)(r)(C)(R)...--....---``''</b>"
+    assert_equal "\n<p><strong>©®©®…–.…—“”</strong></p>\n", result
+
+    result = @to.convert "<tt>(c)(r)(C)(R)...--....---``''</tt>"
+    assert_equal "\n<p><code>(c)(r)(C)(R)...--....---``&#39;&#39;</code></p>\n", result
+
+    result = @to.convert "{(c)(r)(C)(R)...--....---``''}[url]"
+    assert_equal "\n<p><a href=\"url\">©®©®…–.…—“”</a></p>\n", result
+
+    result = @to.convert "{link}[http://example.com/?q=(c)(r)(C)(R)...--....---``'']"
+    assert_equal "\n<p><a href=\"http://example.com/?q=(c)(r)(C)(R)...--....---``&#39;&#39;\">link</a></p>\n", result
+  end
+
+  def test_convert_HTML_CHARACTER_encoding
+    s = '...(c)'.encode Encoding::Shift_JIS
+    result = @to.convert s
+    assert_equal Encoding::Shift_JIS, result.encoding
+
+    expected = '…(c)'.encode Encoding::Shift_JIS
+    assert_equal "\n<p>#{expected}</p>\n", result
+  end
+
+  def test_convert_QUOTE_dquote
+    result = @to.convert '"This is a +quoted+ string." and "another"'
+    assert_equal "\n<p>“This is a <code>quoted</code> string.” and “another”</p>\n", result
+  end
+
+  def test_convert_QUOTE_squote
+    result = @to.convert "'quote' '1+2'. I'm 'RDoc'"
+    assert_equal "\n<p>‘quote’ ‘1+2’. I’m ‘RDoc’</p>\n", result
+  end
+
+  def test_convert_QUOTE_backtick
+    result = @to.convert "This is `quote' and this is `code`"
+    assert_equal "\n<p>This is ‘quote’ and this is <code>code</code></p>\n", result
+  end
+
   def test_convert_HYPERLINK_irc
     result = @to.convert 'irc://irc.freenode.net/#ruby-lang'
 
