@@ -153,6 +153,7 @@ module RDoc
 
   autoload :RDoc,           "#{__dir__}/rdoc/rdoc"
 
+  autoload :Checker,        "#{__dir__}/rdoc/checker"
   autoload :CrossReference, "#{__dir__}/rdoc/cross_reference"
   autoload :ERBIO,          "#{__dir__}/rdoc/erbio"
   autoload :ERBPartial,     "#{__dir__}/rdoc/erb_partial"

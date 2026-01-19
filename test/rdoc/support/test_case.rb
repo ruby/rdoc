@@ -60,6 +60,7 @@ class RDoc::TestCase < Test::Unit::TestCase
     @rdoc.generator = Object.new
 
     RDoc::Markup::PreProcess.reset
+    RDoc::Checker.clear
   end
 
   ##

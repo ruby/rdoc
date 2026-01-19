@@ -158,7 +158,18 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     case ref
     when String then
       if rdoc_ref && @options.warn_missing_rdoc_ref
-        puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{text}`"
+        # If we can, provide the source file where the document is written
+        # Or we fall back to the from_path, which is the html file being generated
+        source_file = if @context.respond_to?(:top_level) && @context.top_level
+                        @context.top_level.full_name
+                      else
+                        @from_path
+                      end
+        RDoc::Checker.add(
+          "`rdoc-ref:#{name}` can't be resolved for `#{text}`",
+          file: source_file,
+          line: @context&.line
+        )
       end
       ref
     else
