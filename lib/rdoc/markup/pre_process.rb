@@ -223,6 +223,10 @@ class RDoc::Markup::PreProcess
       blankline
     when 'nodoc' then
       return blankline unless code_object
+      if prefix.strip.empty? || prefix.strip == '#'
+        warn ":nodoc: on a standalone line may not work as intended. " \
+             "Append it to the line defining the class, method, or constant."
+      end
       code_object.document_self = nil # notify nodoc
       code_object.document_children = param !~ /all/i
 

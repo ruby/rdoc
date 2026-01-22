@@ -313,6 +313,28 @@ contents of a string.
     assert_equal "\n", result
   end
 
+  def test_handle_directive_nodoc_standalone_warns
+    code_object = RDoc::CodeObject.new
+
+    _, err = capture_output do
+      @pp.handle_directive '', 'nodoc', nil, code_object
+    end
+
+    assert_match(/standalone/, err,
+      ':nodoc: on a standalone line should emit a warning')
+  end
+
+  def test_handle_directive_nodoc_with_code_prefix_no_warning
+    code_object = RDoc::CodeObject.new
+
+    _, err = capture_output do
+      @pp.handle_directive 'def foo ', 'nodoc', nil, code_object
+    end
+
+    refute_match(/standalone/, err,
+      ':nodoc: with code prefix should NOT emit a warning')
+  end
+
   def test_handle_directive_registered
     RDoc::Markup::PreProcess.register 'x'
 
