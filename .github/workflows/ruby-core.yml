@@ -70,13 +70,13 @@ jobs:
         run: make html
         working-directory: ruby/ruby
       # We need to clear the generated documentation to generate them again
-      # with the Prism parser.
+      # with the Ripper parser.
       - name: Clear Generated Documentation
         run: rm -r .ext/html
         working-directory: ruby/ruby
-      - name: Generate Documentation with RDoc (Prism parser)
+      - name: Generate Documentation with RDoc (Ripper parser)
         run: make html
         working-directory: ruby/ruby
         env:
-          RDOC_USE_PRISM_PARSER: true
+          RDOC_USE_RIPPER_PARSER: true
 
