@@ -468,6 +468,8 @@ The internal error was:
 
     @options.default_title = "RDoc Documentation"
 
+    @options.git_commit_sha = detect_git_commit
+
     @store.complete @options.visibility
 
     @stats.coverage_level = @options.coverage_report
@@ -492,6 +494,13 @@ The internal error was:
     end
 
     exit @stats.fully_documented? if @options.coverage_report
+  end
+
+  def detect_git_commit
+    require "git"
+    Git.open(Dir.pwd).object("HEAD").sha
+  rescue StandardError
+    nil
   end
 
   ##
