@@ -1746,6 +1746,7 @@ module RDocParserPrismTestCases
   end
 
   def test_include_with_module_nesting
+    omit 'not implemented' if accept_legacy_bug?
     util_parser <<~RUBY
       module A
         module M; end
@@ -1765,15 +1766,16 @@ module RDocParserPrismTestCases
           include M
         end
       end
-      # TODO: make test pass with the following code appended
-      # module A::B::C
-      #   class D::Foo
-      #     include M
-      #   end
-      # end
+
+      module A::B::C
+        class D::Foo
+          include M
+        end
+      end
     RUBY
     klass = @store.find_class_named 'A::B::C::D::Foo'
-    assert_equal 'A::B::M', klass.includes.first.module.full_name
+    assert_equal 'A::B::M', klass.includes[0].module.full_name
+    assert_equal 'A::B::C::M', klass.includes[1].module.full_name
   end
 
   def test_various_argument_include
