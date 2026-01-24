@@ -58,7 +58,7 @@ class RDoc::Example
   #
   # Here is the <tt>:call-seq:</tt> directive given for this method:
   #
-  #   :call-seq:
+  #   \:call-seq:
   #     call_seq_example(foo, bar)
   #     Can be anything -> bar
   #     Also anything more -> baz or bat

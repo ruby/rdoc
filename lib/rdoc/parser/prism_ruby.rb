@@ -3,17 +3,135 @@
 require 'prism'
 require_relative 'ripper_state_lex'
 
-# Unlike lib/rdoc/parser/ruby.rb, this file is not based on rtags and does not contain code from
+# Unlike lib/rdoc/parser/ripper_ruby.rb, this file is not based on rtags and does not contain code from
 #   rtags.rb -
 #   ruby-lex.rb - ruby lexcal analyzer
 #   ruby-token.rb - ruby tokens
 
 # Parse and collect document from Ruby source code.
-# RDoc::Parser::PrismRuby is compatible with RDoc::Parser::Ruby and aims to replace it.
+
+##
+# Extracts code elements from a source file returning a TopLevel object
+# containing the constituent file elements.
+#
+# RubyParser understands how to document:
+# * classes
+# * modules
+# * methods
+# * constants
+# * aliases
+# * private, public, protected
+# * private_class_function, public_class_function
+# * private_constant, public_constant
+# * module_function
+# * attr, attr_reader, attr_writer, attr_accessor
+# * extra accessors given on the command line
+# * metaprogrammed methods
+# * require
+# * include
+#
+# == Method Arguments
+#
+# The parser extracts the arguments from the method definition.  You can
+# override this with a custom argument definition using the :args: directive:
+#
+#   ##
+#   # This method tries over and over until it is tired
+#
+#   def go_go_go(thing_to_try, tries = 10) # :args: thing_to_try
+#     puts thing_to_try
+#     go_go_go thing_to_try, tries - 1
+#   end
+#
+# If you have a more-complex set of overrides you can use the :call-seq:
+# directive:
+#
+#   ##
+#   # This method can be called with a range or an offset and length
+#   #
+#   # :call-seq:
+#   #   my_method(Range)
+#   #   my_method(offset, length)
+#
+#   def my_method(*args)
+#   end
+#
+# The parser extracts +yield+ expressions from method bodies to gather the
+# yielded argument names.  If your method manually calls a block instead of
+# yielding or you want to override the discovered argument names use
+# the :yields: directive:
+#
+#   ##
+#   # My method is awesome
+#
+#   def my_method(&block) # :yields: happy, times
+#     block.call 1, 2
+#   end
+#
+# == Metaprogrammed Methods
+#
+# To pick up a metaprogrammed method, the parser looks for a comment starting
+# with '##' before a metaprogramming method call:
+#
+#   ##
+#   # This is a meta-programmed method!
+#
+#   add_my_method :meta_method, :arg1, :arg2
+#
+# The parser looks at the first argument to determine the name, in
+# this example, :meta_method.  If a name cannot be found, a warning is printed
+# and 'unknown' is used.
+#
+# You can force the name of a method using the :method: directive:
+#
+#   ##
+#   # :method: some_method!
+#
+# By default, meta-methods are instance methods.  To indicate that a method is
+# a singleton method instead use the :singleton-method: directive:
+#
+#   ##
+#   # :singleton-method:
+#
+# You can also use the :singleton-method: directive with a name:
+#
+#   ##
+#   # :singleton-method: some_method!
+#
+# You can define arguments for metaprogrammed methods via either the
+# \:call-seq:, :arg: or :args: directives.
+#
+# Additionally you can mark a method as an attribute by
+# using :attr:, :attr_reader:, :attr_writer: or :attr_accessor:.  Just like
+# for :method:, the name is optional.
+#
+#   ##
+#   # :attr_reader: my_attr_name
+#
+# == Hidden methods and attributes
+#
+# You can provide documentation for methods that don't appear using
+# the :method:, :singleton-method: and :attr: directives:
+#
+#   ##
+#   # :attr_writer: ghost_writer
+#   # There is an attribute here, but you can't see it!
+#
+#   ##
+#   # :method: ghost_method
+#   # There is a method here, but you can't see it!
+#
+#   ##
+#   # this is a comment for a regular method
+#
+#   def regular_method() end
+#
+# Note that by default, the :method: directive will be ignored if there is a
+# standard rdocable item following it.
 
 class RDoc::Parser::PrismRuby < RDoc::Parser
 
-  parse_files_matching(/\.rbw?$/) if ENV['RDOC_USE_PRISM_PARSER']
+  parse_files_matching(/\.rbw?$/) unless ENV['RDOC_USE_RIPPER_PARSER']
 
   attr_accessor :visibility
   attr_reader :container, :singleton, :in_proc_block
