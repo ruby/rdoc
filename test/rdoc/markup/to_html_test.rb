@@ -736,6 +736,22 @@ EXPECTED
     assert_equal expected, result
   end
 
+  def test_convert_TIDYLINK_url_unescape
+    # markdown: [{label}](http://example.com/foo?q=bar+baz[])
+    result = @to.convert '{\{label\}}[http://example.com/_foo?q=bar+baz\[\]]'
+    expected = "\n<p><a href=\"http://example.com/_foo?q=bar+baz[]\">{label}</a></p>\n"
+    assert_equal expected, result
+  end
+
+  def test_convert_TIDYLINK_rdoc_in_markdown_url_unescape
+    # markdown: {label}[http://example.com/?q=<+_*]
+    # The ubove text is a plain text in markdown, so <+_* are escaped in HTML.
+    # If we're accepting rdoc-style link in markdown, these escape should be allowed in [url] part.
+    result = @to.convert '{label}[http://example.com/?q=\<\+\_\*]'
+    expected = "\n<p><a href=\"http://example.com/?q=&lt;+_*\">label</a></p>\n"
+    assert_equal expected, result
+  end
+
   def test_convert_TIDYLINK_with_code_label
     result = @to.convert '{Link to +Foo+}[https://example.com]'
 
