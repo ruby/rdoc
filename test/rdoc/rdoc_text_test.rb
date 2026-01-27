@@ -16,13 +16,6 @@ class RDocTextTest < RDoc::TestCase
     @language = nil
   end
 
-  def test_self_encode_fallback
-    assert_equal '…',
-                 RDoc::Text::encode_fallback('…', Encoding::UTF_8,    '...')
-    assert_equal '...',
-                 RDoc::Text::encode_fallback('…', Encoding::US_ASCII, '...')
-  end
-
   def test_expand_tabs
     assert_equal("hello\n  dave",
                  expand_tabs("hello\n  dave"), 'spaces')
@@ -476,104 +469,6 @@ The comments associated with
     EXPECTED
 
     assert_equal expected, strip_stars(text)
-  end
-
-  def test_to_html_apostrophe
-    assert_equal '‘a', to_html("'a")
-    assert_equal 'a’', to_html("a'")
-
-    assert_equal '‘a’ ‘', to_html("'a' '")
-  end
-
-  def test_to_html_apostrophe_entity
-    assert_equal '‘a', to_html("&#39;a")
-    assert_equal 'a’', to_html("a&#39;")
-
-    assert_equal '‘a’ ‘', to_html("&#39;a&#39; &#39;")
-  end
-
-  def test_to_html_backslash
-    # Don't handle unescaped crossref. It should be handled in RDoc::Markup::ToHtml, not in RDoc::Text
-    assert_equal '\\S', to_html('\\S')
-  end
-
-  def test_to_html_br
-    assert_equal '<br>', to_html('<br>')
-  end
-
-  def test_to_html_copyright
-    assert_equal '©', to_html('(c)')
-    assert_equal '©', to_html('(C)')
-  end
-
-  def test_to_html_dash
-    assert_equal '-',  to_html('-')
-    assert_equal '–',  to_html('--')
-    assert_equal '—',  to_html('---')
-    assert_equal '—-', to_html('----')
-  end
-
-  def test_to_html_double_backtick
-    assert_equal '“a',  to_html('``a')
-    assert_equal '“a“', to_html('``a``')
-    assert_equal '“a”', to_html("``a''")
-  end
-
-  def test_to_html_double_quote
-    assert_equal '“a',  to_html('"a')
-    assert_equal '“a”', to_html('"a"')
-  end
-
-  def test_to_html_double_quote_quot
-    assert_equal '“a',  to_html('&quot;a')
-    assert_equal '“a”', to_html('&quot;a&quot;')
-  end
-
-  def test_to_html_double_tick
-    assert_equal '”a',        to_html("''a")
-    assert_equal '”a”', to_html("''a''")
-  end
-
-  def test_to_html_ellipsis
-    assert_equal '..', to_html('..')
-    assert_equal '…',  to_html('...')
-    assert_equal '.…', to_html('....')
-  end
-
-  def test_to_html_encoding
-    s = '...(c)'.encode Encoding::Shift_JIS
-
-    html = to_html s
-
-    assert_equal Encoding::Shift_JIS, html.encoding
-
-    expected = '…(c)'.encode Encoding::Shift_JIS
-
-    assert_equal expected, html
-  end
-
-  def test_to_html_html_tag
-    assert_equal '<a href="http://example">hi’s</a>',
-                 to_html('<a href="http://example">hi\'s</a>')
-  end
-
-  def test_to_html_registered_trademark
-    assert_equal '®', to_html('(r)')
-    assert_equal '®', to_html('(R)')
-  end
-
-  def test_to_html_tt_tag
-    # tt tag content is already escaped
-    assert_equal '<tt>hi\'s</tt>',   to_html('<tt>hi\'s</tt>')
-    assert_equal '<tt>hi\\\\\'s</tt>', to_html('<tt>hi\\\\\'s</tt>')
-  end
-
-  def test_to_html_tt_tag_mismatch
-    _, err = verbose_capture_output do
-      assert_equal '<tt>hi', to_html('<tt>hi')
-    end
-
-    assert_include err, "mismatched <tt> tag\n"
   end
 
   def formatter

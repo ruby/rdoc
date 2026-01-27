@@ -109,7 +109,7 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     input = verbatim.text.rstrip
     text = truncate(input, @character_limit - @characters)
     @characters += input.length
-    text << ' ...' unless text == input
+    text << " #{TO_HTML_CHARACTERS[text.encoding][:ellipsis]}" unless text == input
 
     super RDoc::Markup::Verbatim.new text
 
@@ -262,14 +262,14 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     return ['', 0] if limit <= 0
     @inline_character_limit = limit
     res = super
-    res << ' ...' if @inline_character_limit <= 0
+    res << " #{TO_HTML_CHARACTERS[text.encoding][:ellipsis]}" if @inline_character_limit <= 0
     @characters += limit - @inline_character_limit
     res
   end
 
   def to_html(item)
     throw :done if @characters >= @character_limit
-    to_html_characters(handle_inline(item))
+    handle_inline(item)
   end
 
   ##
