@@ -491,7 +491,14 @@ The internal error was:
       puts @stats.summary.accept RDoc::Markup::ToRdoc.new
     end
 
-    exit @stats.fully_documented? if @options.coverage_report
+    failed_checks = RDoc::Checker.any?
+    RDoc::Checker.report if failed_checks
+
+    if @options.coverage_report
+      exit(@stats.fully_documented? && !failed_checks)
+    else
+      exit 1 if failed_checks
+    end
   end
 
   ##
