@@ -62,13 +62,13 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
 
     if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
-      text ||= [CGI.unescape($'), (" at <code>#{$1}</code>" if $~.begin(1))].join("")
+      text ||= [convert_string(CGI.unescape($')), (" at <code>#{convert_string($1)}</code>" if $~.begin(1))].join("")
       code = false
     else
-      text ||= name
+      text ||= convert_string(name)
     end
 
-    link lookup, text, code, rdoc_ref: rdoc_ref
+    create_html_link lookup, text, code, rdoc_ref: rdoc_ref
   end
 
   ##
@@ -91,7 +91,10 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       return name if name =~ /\A[a-z]*\z/
     end
 
-    cross_reference name, rdoc_ref: false
+    # Even if name is not a crossref, RDoc removes prefix '#' here. Maybe bug.
+    fallback_name = @show_hash ? name : name.delete_prefix('#')
+
+    cross_reference(name, rdoc_ref: false) || convert_string(fallback_name)
   end
 
   ##
@@ -103,7 +106,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     case url
     when /\Ardoc-ref:/
-      cross_reference $', rdoc_ref: true
+      ref = $'
+      cross_reference(ref, rdoc_ref: true) || convert_string(ref)
     else
       super
     end
@@ -123,7 +127,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       if in_tidylink_label?
         convert_string(url)
       else
-        cross_reference $', rdoc_ref: true
+        ref = $'
+        cross_reference(ref, rdoc_ref: true) || convert_string(ref)
       end
     else
       super
@@ -137,7 +142,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   def gen_url(url, text)
     if url =~ /\Ardoc-ref:/
       name = $'
-      cross_reference name, text, name == text, rdoc_ref: true
+      cross_reference(name, text, name == text, rdoc_ref: true) || text
     else
       super
     end
@@ -145,26 +150,32 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
   ##
   # Creates an HTML link to +name+ with the given +text+.
+  # Called from html generators.
 
-  def link(name, text, code = true, rdoc_ref: false)
+  def link(name, text)
+    create_html_link(name, convert_string(text))
+  end
+
+  # Creates an HTML link to +name+ with the given html +text+.
+
+  def create_html_link(name, text, code = true, rdoc_ref: false)
     if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
       name = $1
       label = $'
     end
 
-    ref = @cross_reference.resolve name, text if name
+    ref = @cross_reference.resolve(name) if name
 
-    case ref
-    when String then
+    if name && ref.nil?
       if rdoc_ref && @options.warn_missing_rdoc_ref
         puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{text}`"
       end
-      ref
+      nil
     else
       path = ref ? ref.as_href(@from_path) : +""
 
       if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
-        text = "<code>#{CGI.escapeHTML text}</code>"
+        text = "<code>#{text}</code>"
       end
 
       if label
@@ -203,29 +214,41 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
   def handle_TT(code)
-    emit_inline(tt_cross_reference(code) || "<code>#{CGI.escapeHTML code}</code>")
+    emit_inline(tt_cross_reference(code) || "<code>#{convert_string(code)}</code>")
   end
 
   # Applies additional special handling on top of the one defined in ToHtml.
   # When a tidy link is <tt>{Foo}[rdoc-ref:Foo]</tt>, the label part is surrounded by <tt><code></code></tt>.
   # TODO: reconsider this workaround.
   def apply_tidylink_label_special_handling(label, url)
-    if url == "rdoc-ref:#{label}" && cross_reference(label).include?('<code>')
+    if url == "rdoc-ref:#{label}" && cross_reference(label)&.include?('<code>')
       "<code>#{convert_string(label)}</code>"
     else
       super
     end
   end
 
+  # Handles cross-reference and suppressed-crossref inside tt tag.
+  # Returns nil if code is not a cross-reference nor a suppressed-crossref.
   def tt_cross_reference(code)
     return if in_tidylink_label?
 
     crossref_regexp = @options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
-    match = crossref_regexp.match(code)
+    # REGEXP sometimes matches to a string starts with backslash which is not a suppressed crossref. (e.g. `\+`)
+    # We need to check the backslash removed part matches to crossref_regexp
+    match = crossref_regexp.match(code.delete_prefix('\\'))
     return unless match && match.begin(1).zero?
     return unless match.post_match.match?(/\A[[:punct:]\s]*\z/)
 
-    ref = cross_reference(code)
-    ref if ref != code
+    if code.start_with?('\\')
+      # Remove leading backslash if crossref exists
+      "<code>#{convert_string(code[1..])}</code>" if cross_reference(code[1..])
+    else
+      # Even if code is not a crossref, RDoc removes prefix '#' here. Maybe bug.
+      # `<tt>#comment</tt>` will be rendered as `<tt>comment</tt>`
+      fallback_code = @show_hash ? code : code.delete_prefix('#')
+
+      cross_reference(code) || "<code>#{convert_string(fallback_code)}</code>"
+    end
   end
 end

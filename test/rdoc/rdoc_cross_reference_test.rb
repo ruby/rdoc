@@ -13,11 +13,11 @@ class RDocCrossReferenceTest < XrefTestCase
   end
 
   def assert_ref(expected, name)
-    assert_equal expected, @xref.resolve(name, 'fail')
+    assert_equal expected, @xref.resolve(name)
   end
 
   def refute_ref(name)
-    assert_equal name, @xref.resolve(name, name)
+    assert_nil @xref.resolve(name)
   end
 
   def test_METHOD_REGEXP_STR
@@ -202,22 +202,21 @@ class RDocCrossReferenceTest < XrefTestCase
   end
 
   def test_resolve_no_ref
-    assert_equal '', @xref.resolve('', '')
+    refute_ref('')
 
-    assert_equal "bogus",     @xref.resolve("bogus",     "bogus")
-    assert_equal "\\bogus",   @xref.resolve("\\bogus",   "\\bogus")
-    assert_equal "\\\\bogus", @xref.resolve("\\\\bogus", "\\\\bogus")
+    refute_ref("bogus")
+    refute_ref("\\bogus")
 
-    assert_equal "\\#n",    @xref.resolve("\\#n",    "fail")
-    assert_equal "\\#n()",  @xref.resolve("\\#n()",  "fail")
-    assert_equal "\\#n(*)", @xref.resolve("\\#n(*)", "fail")
+    refute_ref("\\#n")
+    refute_ref("\\#n()")
+    refute_ref("\\#n(*)")
 
-    assert_equal "C1",   @xref.resolve("\\C1",   "fail")
-    assert_equal "::C3", @xref.resolve("\\::C3", "fail")
+    refute_ref("\\C1")
+    refute_ref("\\::C3")
 
-    assert_equal "succeed",      @xref.resolve("::C3::H1#n",    "succeed")
-    assert_equal "succeed",      @xref.resolve("::C3::H1#n(*)", "succeed")
-    assert_equal "\\::C3::H1#n", @xref.resolve("\\::C3::H1#n",  "fail")
+    refute_ref("::C3::H1#n")
+    refute_ref("::C3::H1#n(*)")
+    refute_ref("\\::C3::H1#n")
   end
 
 end
