@@ -480,11 +480,11 @@ two
   end
 
   def test_parse_emphasis_underscore_embedded
-    doc = parse "foo_bar bar_baz\n"
+    doc = parse "foo_bar bar_baz _em1_ *em2*\n"
 
     expected =
       doc(
-        para("foo_bar bar_baz"))
+        para("foo\\_bar bar\\_baz _em1_ _em2_"))
 
     assert_equal expected, doc
   end
@@ -494,15 +494,64 @@ two
 
     expected =
       doc(
-        para("it foo_bar_baz"))
+        para("it foo\\_bar\\_baz"))
 
+    assert_equal expected, doc
+  end
+
+  def test_rdoc_code_escaped_in_normal_text
+    doc = parse "+notcode+ \\+notcode+ \\\\+notcode+"
+    expected = doc(para("\\+notcode\\+ \\+notcode\\+ \\\\\\+notcode\\+"))
+    assert_equal expected, doc
+  end
+
+  def test_escape_character_entities
+    doc = parse "&#x3C;tt>&#x2A;\\</tt> &#60;tt>&#43;\\</tt> &lt;tt>&lowbar;\\</tt>"
+    expected = doc(para("\\<tt>\\*\\</tt> \\<tt>\\+\\</tt> \\<tt>\\_\\</tt>"))
+    assert_equal expected, doc
+  end
+
+  def test_rdoc_escape_in_markdown_styling
+    doc = parse "_a \\_b\\_ c_ **+d+** `_1+2*3`"
+    expected = doc(para("<em>a \\_b\\_ c</em> <b>\\+d\\+</b> <code>_1+2*3</code>"))
+    assert_equal expected, doc
+  end
+
+  def test_rdoc_heading_escaped_inside_markdown
+    doc = parse "= notheading\n"
+    expected = doc(para("= notheading"))
+    assert_equal expected, doc
+  end
+
+  def test_rdoc_code_escaped_inside_markdown
+    doc = parse "~~+notcode+~~"
+    expected = doc(para("<del>\\+notcode\\+</del>"))
+    assert_equal expected, doc
+  end
+
+  def test_no_rdoc_escape_inside_markdown_code
+    doc = parse "`+foo+`"
+    expected = doc(para("<code>+foo+</code>"))
+    assert_equal expected, doc
+  end
+
+  def test_rdoc_format_escaped_inside_markdown_link
+    doc = parse "[Link +to+ `tap{ +1+ }`](http://example.com/?q=[])"
+    expected = doc(para("{Link \\+to\\+ <code>tap{ +1+ }</code>}[http://example.com/?q=\\[\\]]"))
+    assert_equal expected, doc
+  end
+
+  def test_lt_escape
+    doc = parse "\\<b>`a`\\</b> <b>\\</b>`b`</b>"
+    expected = doc(para("\\<b><code>a</code>\\</b> <b>\\</b><code>b</code></b>"))
     assert_equal expected, doc
   end
 
   def test_parse_escape
     assert_equal doc(para("Backtick: `")), parse("Backtick: \\`")
 
-    assert_equal doc(para("Backslash: \\")), parse("Backslash: \\\\")
+    # Unescaped as markdown and then escaped as RDoc
+    assert_equal doc(para("Backslash: \\\\")), parse("Backslash: \\\\")
 
     assert_equal doc(para("Colon: :")), parse("Colon: \\:")
   end
