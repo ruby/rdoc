@@ -101,7 +101,7 @@ require_relative 'ripper_state_lex'
 #
 # The parser looks at the token after the identifier to determine the name, in
 # this example, :meta_method.  If a name cannot be found, a warning is printed
-# and 'unknown is used.
+# and 'unknown' is used.
 #
 # You can force the name of a method using the :method: directive:
 #
