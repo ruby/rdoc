@@ -57,19 +57,9 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
     @markup.add_regexp_handling(/\\\S/, :SUPPRESSED_CROSSREF)
     @width = 78
-    init_tags
 
     @headings = DEFAULT_HEADINGS.dup
     @hard_break = "\n"
-  end
-
-  ##
-  # Maps attributes to HTML sequences
-
-  def init_tags
-    add_tag :BOLD, "<b>", "</b>"
-    add_tag :TT,   "<tt>", "</tt>"
-    add_tag :EM,   "<em>", "</em>"
   end
 
   ##
@@ -282,12 +272,90 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     text.size
   end
 
+  def handle_PLAIN_TEXT(text)
+    add_text(text)
+  end
+
+  def handle_REGEXP_HANDLING_TEXT(text)
+    add_text(text)
+  end
+
+  def handle_BOLD(target)
+    on(:BOLD)
+    super
+    off(:BOLD)
+  end
+
+  def handle_EM(target)
+    on(:EM)
+    super
+    off(:EM)
+  end
+
+  def handle_BOLD_WORD(word)
+    on(:BOLD)
+    super
+    off(:BOLD)
+  end
+
+  def handle_EM_WORD(word)
+    on(:EM)
+    super
+    off(:EM)
+  end
+
+  def handle_TT(code)
+    on(:TT)
+    super
+    off(:TT)
+  end
+
+  def handle_STRIKE(target)
+    on(:STRIKE)
+    super
+    off(:STRIKE)
+  end
+
+  def handle_HARD_BREAK
+    add_text("\n")
+  end
+
+  def handle_TIDYLINK(label_part, url)
+    super
+    add_text("( #{url} )")
+  end
+
+  def handle_inline(text, initial_attributes = [])
+    @attributes = Hash.new(0)
+    initial_attributes.each { |attr| on(attr) }
+    out = @inline_output = +''
+    super(text)
+    @inline_output = nil
+    out
+  end
+
+  def on(attr)
+    @attributes[attr] += 1
+  end
+
+  def off(attr)
+    @attributes[attr] -= 1
+    @attributes.delete(attr) if @attributes[attr] == 0
+  end
+
+  def add_text(text)
+    emit_inline(text)
+  end
+
+  def emit_inline(text)
+    @inline_output << text
+  end
+
   ##
-  # Applies attribute-specific markup to +text+ using RDoc::AttributeManager
+  # Applies attribute-specific markup to +text+ using RDoc::Markup::InlineParser
 
   def attributes(text)
-    flow = @am.flow text.dup
-    convert_flow flow
+    handle_inline(text)
   end
 
   ##
@@ -300,17 +368,8 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   ##
   # Removes preceding \\ from the suppressed crossref +target+
 
-  def handle_regexp_SUPPRESSED_CROSSREF(target)
-    text = target.text
-    text = text.sub('\\', '') unless in_tt?
-    text
-  end
-
-  ##
-  # Adds a newline to the output
-
-  def handle_regexp_HARD_BREAK(target)
-    "\n"
+  def handle_regexp_SUPPRESSED_CROSSREF(text)
+    text.sub('\\', '')
   end
 
   ##

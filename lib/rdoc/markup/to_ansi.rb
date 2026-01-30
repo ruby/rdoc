@@ -19,10 +19,57 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
   ##
   # Maps attributes to ANSI sequences
 
-  def init_tags
-    add_tag :BOLD, "\e[1m", "\e[m"
-    add_tag :TT,   "\e[7m", "\e[m"
-    add_tag :EM,   "\e[4m", "\e[m"
+  ANSI_STYLE_CODES_ON = {
+    BOLD: 1,
+    TT: 7,
+    EM: 4,
+    STRIKE: 9
+  }
+
+  ANSI_STYLE_CODES_OFF = {
+    BOLD: 22,
+    TT: 27,
+    EM: 24,
+    STRIKE: 29
+  }
+
+  # Apply the given attributes by emitting ANSI sequences.
+  # Emitting attribute changes are deferred until new text is added and applied in batch.
+  # This method computes the necessary ANSI codes to transition from the
+  # current set of applied attributes to the new set of +attributes+.
+
+  def apply_attributes(attributes)
+    before = @applied_attributes
+    after = attributes.sort
+    return if before == after
+
+    if after.empty?
+      emit_inline("\e[m")
+    elsif !before.empty? && before.size > (before & after).size + 1
+      codes = after.map {|attr| ANSI_STYLE_CODES_ON[attr] }.compact
+      emit_inline("\e[#{[0, *codes].join(';')}m")
+    else
+      off_codes = (before - after).map {|attr| ANSI_STYLE_CODES_OFF[attr] }.compact
+      on_codes = (after - before).map {|attr| ANSI_STYLE_CODES_ON[attr] }.compact
+      emit_inline("\e[#{(off_codes + on_codes).join(';')}m")
+    end
+    @applied_attributes = attributes
+  end
+
+  def add_text(text)
+    attrs = @attributes.keys
+    if @applied_attributes != attrs
+      apply_attributes(attrs)
+    end
+    emit_inline(text)
+  end
+
+  def handle_inline(text)
+    @applied_attributes = []
+    res = super
+    res << "\e[m" unless @applied_attributes.empty?
+    @applied_attributes = []
+    res
   end
 
   ##

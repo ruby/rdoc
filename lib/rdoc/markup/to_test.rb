@@ -18,8 +18,16 @@ class RDoc::Markup::ToTest < RDoc::Markup::Formatter
     @res
   end
 
+  def handle_PLAIN_TEXT(text)
+    @res << text
+  end
+
+  def handle_REGEXP_HANDLING_TEXT(text)
+    @res << text
+  end
+
   def accept_paragraph(paragraph)
-    @res << convert_flow(@am.flow(paragraph.text))
+    handle_inline(paragraph.text)
   end
 
   def accept_raw(raw)

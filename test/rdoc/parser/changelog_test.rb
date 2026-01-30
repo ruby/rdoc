@@ -473,6 +473,32 @@ ChangeLog
     assert_equal expected, @top_level.comment.parse
   end
 
+  def test_scan_git_reference
+    ruby = "https://github.com/ruby/"
+    repo = "#{ruby}ruby/"
+    entry = log_entry("#{repo}commit/",
+                      "a8a989b6f651b878c690f5fd0a728e19a54dd2b9",
+                      "Nobuyoshi Nakada", "nobu@ruby-lang.org",
+                      "2026-01-03 13:28:58 +0900",
+                      <<~LOG)
+      Test net-imap with ruby/net-imap#593
+
+      Fix #15791
+
+      GH-15791
+
+      (#15791)
+
+      Fix up [ruby/net-imap#543].
+      LOG
+    head, *bodies = entry.contents
+    assert_include head.text, "{ruby/net-imap#593}[#{ruby}net-imap/pull/593]"
+    assert_include bodies.shift.text, "Fix {#15791}[#{repo}pull/15791]"
+    assert_include bodies.shift.text, "{GH-15791}[#{repo}pull/15791]"
+    assert_include bodies.shift.text, "({#15791}[#{repo}pull/15791])"
+    assert_include bodies.shift.text, "{ruby/net-imap#543}[#{ruby}net-imap/pull/543]"
+  end
+
   def util_parser(content = '')
     RDoc::Parser::ChangeLog.new @top_level, content, @options, @stats
   end

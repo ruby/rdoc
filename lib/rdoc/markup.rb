@@ -16,7 +16,7 @@
 #
 # - +rdoc+:
 #   the +RDoc+ markup format;
-#   see RDoc::MarkupReference.
+#   see {RDoc Markup Reference}[rdoc-ref:doc/markup_reference/rdoc.rdoc]
 # - +markdown+:
 #   The +markdown+ markup format as described in
 #   the {Markdown Guide}[https://www.markdownguide.org];
@@ -79,7 +79,7 @@
 #
 #   class WikiHtml < RDoc::Markup::ToHtml
 #     def handle_regexp_WIKIWORD(target)
-#       "<font color=red>" + target.text + "</font>"
+#       "<font color=red>" + target + "</font>"
 #     end
 #   end
 #
@@ -102,7 +102,7 @@
 #
 # = \RDoc Markup Reference
 #
-# See RDoc::MarkupReference.
+# See {RDoc Markup Reference}[rdoc-ref:doc/markup_reference/rdoc.rdoc]
 #
 #--
 # Original Author:: Dave Thomas,  dave@pragmaticprogrammer.com
@@ -110,10 +110,10 @@
 
 class RDoc::Markup
 
-  ##
-  # An AttributeManager which handles inline markup.
+  # Array of regexp handling pattern and its name. A regexp handling
+  # sequence is something like a WikiWord
 
-  attr_reader :attribute_manager
+  attr_reader :regexp_handlings
 
   ##
   # Parses +str+ into an RDoc::Markup::Document.
@@ -148,25 +148,9 @@ https://github.com/ruby/rdoc/issues
   # structure (paragraphs, lists, and so on).  Invoke an event handler as we
   # identify significant chunks.
 
-  def initialize(attribute_manager = nil)
-    @attribute_manager = attribute_manager || RDoc::Markup::AttributeManager.new
+  def initialize
+    @regexp_handlings = []
     @output = nil
-  end
-
-  ##
-  # Add to the sequences used to add formatting to an individual word (such
-  # as *bold*).  Matching entries will generate attributes that the output
-  # formatters can recognize by their +name+.
-
-  def add_word_pair(start, stop, name)
-    @attribute_manager.add_word_pair(start, stop, name)
-  end
-
-  ##
-  # Add to the sequences recognized as general markup.
-
-  def add_html(tag, name)
-    @attribute_manager.add_html(tag, name)
   end
 
   ##
@@ -178,7 +162,7 @@ https://github.com/ruby/rdoc/issues
   # Each wiki word will be presented to the output formatter.
 
   def add_regexp_handling(pattern, name)
-    @attribute_manager.add_regexp_handling(pattern, name)
+    @regexp_handlings << [pattern, name]
   end
 
   ##
@@ -197,14 +181,8 @@ https://github.com/ruby/rdoc/issues
   end
 
   autoload :Parser,                "#{__dir__}/markup/parser"
+  autoload :InlineParser,          "#{__dir__}/markup/inline_parser"
   autoload :PreProcess,            "#{__dir__}/markup/pre_process"
-
-  # Inline markup classes
-  autoload :AttrChanger,           "#{__dir__}/markup/attr_changer"
-  autoload :AttrSpan,              "#{__dir__}/markup/attr_span"
-  autoload :Attributes,            "#{__dir__}/markup/attributes"
-  autoload :AttributeManager,      "#{__dir__}/markup/attribute_manager"
-  autoload :RegexpHandling,        "#{__dir__}/markup/regexp_handling"
 
   # RDoc::Markup AST
   autoload :BlankLine,             "#{__dir__}/markup/blank_line"

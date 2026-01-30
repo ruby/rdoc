@@ -33,6 +33,7 @@ class XrefTestCase < RDoc::TestCase
     @c1__m    = @c1.find_class_method_named 'm' # C1::m
     @c1_m     = @c1.find_instance_method_named 'm'  # C1#m
     @c1_plus  = @c1.find_instance_method_named '+'
+    @c1_const = @c1.find_constant_named 'CONST'
 
     @c2    = @xref_data.find_module_named 'C2'
     @c2_a  = @c2.method_list.last

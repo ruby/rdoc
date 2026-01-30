@@ -493,7 +493,8 @@ The comments associated with
   end
 
   def test_to_html_backslash
-    assert_equal 'S', to_html('\\S')
+    # Don't handle unescaped crossref. It should be handled in RDoc::Markup::ToHtml, not in RDoc::Text
+    assert_equal '\\S', to_html('\\S')
   end
 
   def test_to_html_br
@@ -562,8 +563,9 @@ The comments associated with
   end
 
   def test_to_html_tt_tag
+    # tt tag content is already escaped
     assert_equal '<tt>hi\'s</tt>',   to_html('<tt>hi\'s</tt>')
-    assert_equal '<tt>hi\\\'s</tt>', to_html('<tt>hi\\\\\'s</tt>')
+    assert_equal '<tt>hi\\\\\'s</tt>', to_html('<tt>hi\\\\\'s</tt>')
   end
 
   def test_to_html_tt_tag_mismatch

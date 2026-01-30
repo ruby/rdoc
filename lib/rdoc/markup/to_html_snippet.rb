@@ -107,8 +107,8 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   def accept_verbatim(verbatim)
     throw :done if @characters >= @character_limit
     input = verbatim.text.rstrip
-
-    text = truncate input
+    text = truncate(input, @character_limit - @characters)
+    @characters += input.length
     text << ' ...' unless text == input
 
     super RDoc::Markup::Verbatim.new text
@@ -128,16 +128,8 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   ##
   # Removes escaping from the cross-references in +target+
 
-  def handle_regexp_CROSSREF(target)
-    target.text.sub(/\A\\/, '')
-  end
-
-  ##
-  # +target+ is a <code><br></code>
-
-  def handle_regexp_HARD_BREAK(target)
-    @characters -= 4
-    '<br>'
+  def handle_regexp_CROSSREF(text)
+    text.sub(/\A\\/, '')
   end
 
   ##
@@ -212,74 +204,82 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     end_accepting
   end
 
-  ##
-  # Converts flow items +flow+
+  def handle_PLAIN_TEXT(text) # :nodoc:
+    return if inline_limit_reached?
 
-  def convert_flow(flow)
+    truncated = truncate(text, @inline_character_limit)
+    @inline_character_limit -= text.size
+    emit_inline(convert_string(truncated))
+  end
+
+  def handle_REGEXP_HANDLING_TEXT(text) # :nodoc:
+    return if inline_limit_reached?
+
+    # We can't truncate text including html tags.
+    # Just emit as is, and count all characters including html tag part.
+    emit_inline(text)
+    @inline_character_limit -= text.size
+  end
+
+  def handle_BOLD(nodes)
+    super unless inline_limit_reached?
+  end
+
+  def handle_BOLD_WORD(word)
+    super unless inline_limit_reached?
+  end
+
+  def handle_EM(nodes)
+    super unless inline_limit_reached?
+  end
+
+  def handle_EM_WORD(word)
+    super unless inline_limit_reached?
+  end
+
+  def handle_TT(code)
+    super unless inline_limit_reached?
+  end
+
+  def handle_STRIKE(nodes)
+    super unless inline_limit_reached?
+  end
+
+  def handle_HARD_BREAK
+    super unless inline_limit_reached?
+  end
+
+  def handle_TIDYLINK(label_part, url)
+    traverse_inline_nodes(label_part) unless inline_limit_reached?
+  end
+
+  def inline_limit_reached?
+    @inline_character_limit <= 0
+  end
+
+  def handle_inline(text)
+    limit = @character_limit - @characters
+    return ['', 0] if limit <= 0
+    @inline_character_limit = limit
+    res = super
+    res << ' ...' if @inline_character_limit <= 0
+    @characters += limit - @inline_character_limit
+    res
+  end
+
+  def to_html(item)
     throw :done if @characters >= @character_limit
-
-    res = []
-    @mask = 0
-
-    flow.each do |item|
-      case item
-      when RDoc::Markup::AttrChanger then
-        off_tags res, item
-        on_tags  res, item
-      when String then
-        text = convert_string item
-        res << truncate(text)
-      when RDoc::Markup::RegexpHandling then
-        text = convert_regexp_handling item
-        res << truncate(text)
-      else
-        raise "Unknown flow element: #{item.inspect}"
-      end
-
-      if @characters >= @character_limit then
-        off_tags res, RDoc::Markup::AttrChanger.new(0, @mask)
-        break
-      end
-    end
-
-    res << ' ...' if @characters >= @character_limit
-
-    res.join
+    to_html_characters(handle_inline(item))
   end
 
   ##
-  # Maintains a bitmask to allow HTML elements to be closed properly.  See
-  # RDoc::Markup::Formatter.
+  # Truncates +text+ at the end of the first word after the limit.
 
-  def on_tags(res, item)
-    @mask ^= item.turn_on
+  def truncate(text, limit)
+    return text if limit >= text.size
+    return '' if limit <= 0
 
-    super
-  end
-
-  ##
-  # Maintains a bitmask to allow HTML elements to be closed properly.  See
-  # RDoc::Markup::Formatter.
-
-  def off_tags(res, item)
-    @mask ^= item.turn_off
-
-    super
-  end
-
-  ##
-  # Truncates +text+ at the end of the first word after the character_limit.
-
-  def truncate(text)
-    length = text.length
-    characters = @characters
-    @characters += length
-
-    return text if @characters < @character_limit
-
-    remaining = @character_limit - characters
-
-    text =~ /\A(.{#{remaining},}?)(\s|$)/m # TODO word-break instead of \s?
+    text =~ /\A(.{#{limit},}?)(\s|$)/m # TODO word-break instead of \s?
 
     $1
   end

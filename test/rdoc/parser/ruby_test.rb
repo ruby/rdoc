@@ -2847,12 +2847,13 @@ EXPECTED
   def test_parse_instance_operation_method
     util_parser <<-RUBY
 class Foo
-  def self.& end
+  def self.&
+  end
 end
     RUBY
 
     expected = <<EXPECTED
-  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">&amp;</span> <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">&amp;</span>
 <span class="ruby-keyword">end</span>
 EXPECTED
     expected = expected.rstrip

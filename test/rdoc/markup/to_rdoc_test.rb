@@ -2,6 +2,35 @@
 require_relative '../helper'
 
 class RDocMarkupToRDocTest < RDoc::Markup::TextFormatterTestCase
+  class ToBoldEmTT < RDoc::Markup::ToRdoc
+    def handle_BOLD(nodes)
+      emit_inline('<b>')
+      super
+      emit_inline('</b>')
+    end
+
+    def handle_EM(nodes)
+      emit_inline('<em>')
+      super
+      emit_inline('</em>')
+    end
+
+    def handle_BOLD_WORD(word)
+      emit_inline('<b>')
+      super
+      emit_inline('</b>')
+    end
+
+    def handle_EM_WORD(word)
+      emit_inline('<em>')
+      super
+      emit_inline('</em>')
+    end
+
+    def handle_TT(text)
+      emit_inline("<tt>#{text}</tt>")
+    end
+  end
 
   add_visitor_tests
   add_text_tests
@@ -9,7 +38,7 @@ class RDocMarkupToRDocTest < RDoc::Markup::TextFormatterTestCase
   def setup
     super
 
-    @to = RDoc::Markup::ToRdoc.new
+    @to = ToBoldEmTT.new
   end
 
   def accept_blank_line

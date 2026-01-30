@@ -377,4 +377,10 @@ bar:
     assert_equal expected, @to.convert(note_list)
   end
 
+  def test_ansi_on_off
+    assert_equal "\e[1mab\e[m", @to.attributes('<b>a</b><b>b</b>')
+    assert_equal "\e[1;4ma\e[0;9mb\e[m", @to.attributes('<b><i>a</i></b><s>b</s>')
+    assert_equal "\e[1;4ma\e[24;9mb\e[m", @to.attributes('<b><i>a</i><s>b</s></b>')
+    assert_equal "\e[1;4ma\e[22mb\e[m", @to.attributes('<i><b>a</b>b</i>')
+  end
 end

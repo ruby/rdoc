@@ -145,6 +145,9 @@ end
 def C11
 end
 
+class C12 < C1
+end
+
 module M1
   def m
   end

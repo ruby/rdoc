@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'markup/attribute_manager' # for PROTECT_ATTR
-
 ##
 # RDoc::CrossReference is a reusable way to create cross references for names.
 
@@ -33,7 +31,7 @@ class RDoc::CrossReference
   # See CLASS_REGEXP_STR
 
   METHOD_REGEXP_STR = /(
-    (?!\d)[\w#{RDoc::Markup::AttributeManager::PROTECT_ATTR}]+[!?=]?|
+    (?!\d)[\w]+[!?=]?|
     %|=(?:==?|~)|![=~]|\[\]=?|<(?:<|=>?)?|>[>=]?|[-+!]@?|\*\*?|[\/%\`|&^~]
   )#{METHOD_ARGS_REGEXP_STR}/.source.delete("\n ").freeze
 
@@ -132,47 +130,56 @@ class RDoc::CrossReference
   end
 
   ##
-  # Returns a method reference to +name+.
+  # Returns a method, attribute or constant reference to +name+
+  # if it exists in the containing context object. It returns
+  # nil otherwise.
+  #
+  # For example, this method would decompose name = 'A::CONSTANT' into a
+  # container object A and a symbol 'CONSTANT', and it would try to find
+  # 'CONSTANT' in A.
 
-  def resolve_method(name)
+  def resolve_local_symbol(name)
     ref = nil
+    type = nil
+    container = nil
 
-    if /#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o =~ name then
+    case name
+    when /#{CLASS_REGEXP_STR}::([A-Z]\w*)\z/o then
+      symbol = $2
+      container = @context.find_symbol_module($1)
+    when /#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o then
       type = $2
       if '.' == type # will find either #method or ::method
-        method = $3
+        symbol = $3
       else
-        method = "#{type}#{$3}"
+        symbol = "#{type}#{$3}"
       end
       container = @context.find_symbol_module($1)
-    elsif /^([.#]|::)#{METHOD_REGEXP_STR}/o =~ name then
+    when /^([.#]|::)#{METHOD_REGEXP_STR}/o then
       type = $1
       if '.' == type
-        method = $2
+        symbol = $2
       else
-        method = "#{type}#{$2}"
+        symbol = "#{type}#{$2}"
       end
       container = @context
-    else
-      type = nil
-      container = nil
     end
 
     if container then
       unless RDoc::TopLevel === container then
         if '.' == type then
-          if 'new' == method then # AnyClassName.new will be class method
-            ref = container.find_local_symbol method
-            ref = container.find_ancestor_local_symbol method unless ref
+          if 'new' == symbol then # AnyClassName.new will be class method
+            ref = container.find_local_symbol symbol
+            ref = container.find_ancestor_local_symbol symbol unless ref
           else
-            ref = container.find_local_symbol "::#{method}"
-            ref = container.find_ancestor_local_symbol "::#{method}" unless ref
-            ref = container.find_local_symbol "##{method}" unless ref
-            ref = container.find_ancestor_local_symbol "##{method}" unless ref
+            ref = container.find_local_symbol "::#{symbol}"
+            ref = container.find_ancestor_local_symbol "::#{symbol}" unless ref
+            ref = container.find_local_symbol "##{symbol}" unless ref
+            ref = container.find_ancestor_local_symbol "##{symbol}" unless ref
           end
         else
-          ref = container.find_local_symbol method
-          ref = container.find_ancestor_local_symbol method unless ref
+          ref = container.find_local_symbol symbol
+          ref = container.find_ancestor_local_symbol symbol unless ref
         end
       end
     end
@@ -197,7 +204,7 @@ class RDoc::CrossReference
             @context.find_symbol name
           end
 
-    ref = resolve_method name unless ref
+    ref = resolve_local_symbol name unless ref
 
     # Try a page name
     ref = @store.page name if not ref and name =~ /^[\w.\/]+$/

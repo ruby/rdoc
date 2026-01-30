@@ -20,25 +20,8 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     @headings[6] = ['###### ', '']
 
     add_regexp_handling_RDOCLINK
-    add_regexp_handling_TIDYLINK
 
     @hard_break = "  \n"
-  end
-
-  ##
-  # Maps attributes to HTML sequences
-
-  def init_tags
-    add_tag :BOLD, '**', '**'
-    add_tag :EM,   '*',  '*'
-    add_tag :TT,   '`',  '`'
-  end
-
-  ##
-  # Adds a newline to the output
-
-  def handle_regexp_HARD_BREAK(target)
-    "  \n"
   end
 
   ##
@@ -92,6 +75,65 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
 
       @indent += 4
     end
+  end
+
+  def add_tag(tag, simple_tag, content)
+    if content.match?(/\A[\w\s]+\z/)
+      emit_inline("#{simple_tag}#{content}#{simple_tag}")
+    else
+      emit_inline("<#{tag}>#{content}</#{tag}>")
+    end
+  end
+
+  def handle_tag(nodes, simple_tag, tag)
+    if nodes.size == 1 && String === nodes[0]
+      content = apply_regexp_handling(nodes[0]).map do |text, converted|
+        converted ? text : convert_string(text)
+      end.join
+      add_tag(tag, simple_tag, content)
+    else
+      emit_inline("<#{tag}>")
+      traverse_inline_nodes(nodes)
+      emit_inline("</#{tag}>")
+    end
+  end
+
+  def handle_TIDYLINK(label_part, url)
+    if url =~ /^rdoc-label:foot/ then
+      emit_inline(handle_rdoc_link(url))
+    else
+      emit_inline('[')
+      traverse_inline_nodes(label_part)
+      emit_inline("](#{url})")
+    end
+  end
+
+  def handle_BOLD(nodes)
+    handle_tag(nodes, '**', 'strong')
+  end
+
+  def handle_EM(nodes)
+    handle_tag(nodes, '*', 'em')
+  end
+
+  def handle_BOLD_WORD(word)
+    add_tag('strong', '**', convert_string(word))
+  end
+
+  def handle_EM_WORD(word)
+    add_tag('em', '*', convert_string(word))
+  end
+
+  def handle_TT(text)
+    add_tag('code', '`', convert_string(text))
+  end
+
+  def handle_STRIKE(nodes)
+    handle_tag(nodes, '~~', 's')
+  end
+
+  def handle_HARD_BREAK
+    emit_inline("  \n")
   end
 
   ##
@@ -164,28 +206,10 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
   end
 
   ##
-  # Converts the RDoc markup tidylink into a Markdown.style link.
-
-  def handle_regexp_TIDYLINK(target)
-    text = target.text
-
-    return text unless text =~ /\{(.*?)\}\[(.*?)\]/ or text =~ /(\S+)\[(.*?)\]/
-
-    label = $1
-    url   = $2
-
-    if url =~ /^rdoc-label:foot/ then
-      handle_rdoc_link url
-    else
-      gen_url url, label
-    end
-  end
-
-  ##
   # Converts the rdoc-...: links into a Markdown.style links.
 
-  def handle_regexp_RDOCLINK(target)
-    handle_rdoc_link target.text
+  def handle_regexp_RDOCLINK(text)
+    handle_rdoc_link text
   end
 
 end
