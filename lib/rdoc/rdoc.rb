@@ -497,8 +497,12 @@ The internal error was:
   end
 
   def detect_git_commit
-    require "git"
-    Git.open(Dir.pwd).object("HEAD").sha
+    require "open3"
+    stdout, stderr, status = Open3.capture3("git", "rev-parse", "HEAD")
+
+    return nil unless status.success?
+
+    stdout.strip
   rescue StandardError
     nil
   end
