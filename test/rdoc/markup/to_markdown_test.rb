@@ -199,7 +199,7 @@ class RDocMarkupToMarkdownTest < RDoc::Markup::TextFormatterTestCase
   end
 
   def accept_verbatim
-    assert_equal "    hi\n      world\n\n", @to.res.join
+    assert_equal "```\nhi\n  world\n```\n\n", @to.res.join
   end
 
   def end_accepting
@@ -308,11 +308,11 @@ words words words words
   end
 
   def accept_verbatim_indent
-    assert_equal "      hi\n       world\n\n", @to.end_accepting
+    assert_equal "  ```\n  hi\n   world\n  ```\n\n", @to.end_accepting
   end
 
   def accept_verbatim_big_indent
-    assert_equal "      hi\n      world\n\n", @to.end_accepting
+    assert_equal "  ```\n  hi\n  world\n  ```\n\n", @to.end_accepting
   end
 
   def list_nested
@@ -329,17 +329,19 @@ words words words words
     expected = <<-EXPECTED # HACK overblown
 *   list stuff
 
-        * list
-          with
+    ```
+    * list
+      with
 
-          second
+      second
 
-          1. indented
-          2. numbered
+      1. indented
+      2. numbered
 
-          third
+      third
 
-        * second
+    * second
+    ```
 
     EXPECTED
 

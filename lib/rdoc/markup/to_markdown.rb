@@ -25,13 +25,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
   end
 
   ##
-  # Finishes consumption of `list`
-
-  def accept_list_end(list)
-    super
-  end
-
-  ##
   # Finishes consumption of `list_item`
 
   def accept_list_item_end(list_item)
@@ -78,10 +71,14 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
   end
 
   def add_tag(tag, simple_tag, content)
-    if content.match?(/\A[\w\s]+\z/)
-      emit_inline("#{simple_tag}#{content}#{simple_tag}")
+    if tag == 'code'
+      if content.include?('`')
+        emit_inline("`` #{content} ``")
+      else
+        emit_inline("`#{content}`")
+      end
     else
-      emit_inline("<#{tag}>#{content}</#{tag}>")
+      emit_inline("#{simple_tag}#{content}#{simple_tag}")
     end
   end
 
@@ -92,9 +89,9 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
       end.join
       add_tag(tag, simple_tag, content)
     else
-      emit_inline("<#{tag}>")
+      emit_inline(simple_tag)
       traverse_inline_nodes(nodes)
-      emit_inline("</#{tag}>")
+      emit_inline(simple_tag)
     end
   end
 
@@ -163,17 +160,24 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
   end
 
   ##
-  # Outputs `verbatim` indented 4 columns
+  # Outputs `verbatim` as a fenced code block
 
   def accept_verbatim(verbatim)
-    indent = ' ' * (@indent + 4)
+    indent = ' ' * @indent
 
+    lang = verbatim.format if verbatim.respond_to?(:format)
+    case lang
+    when :ruby, :rb then lang = 'ruby'
+    when nil, false then lang = nil
+    end
+
+    @res << indent << "```#{lang}\n"
     verbatim.parts.each do |part|
       @res << indent unless part == "\n"
       @res << part
     end
-
-    @res << "\n"
+    @res << "\n" unless @res.last.end_with?("\n")
+    @res << indent << "```\n\n"
   end
 
   ##

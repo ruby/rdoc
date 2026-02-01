@@ -270,7 +270,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   end
 
   def calculate_text_width(text)
-    text.size
+    text&.size || 0
   end
 
   def handle_PLAIN_TEXT(text)
