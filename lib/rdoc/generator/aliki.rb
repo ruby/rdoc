@@ -11,6 +11,8 @@ require 'uri'
 class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
   RDoc::RDoc.add_generator self
 
+  require_relative 'aliki/markdown_generator'
+
   def initialize(store, options)
     super
     aliki_template_dir = File.expand_path(File.join(__dir__, 'template', 'aliki'))
@@ -30,6 +32,7 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
     generate_file_files
     generate_table_of_contents
     write_search_index
+    generate_markdown_files
 
     copy_static
 
@@ -115,6 +118,18 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
 
     data = { index: index }
     File.write search_index_path, "var search_data = #{JSON.generate(data)};"
+  end
+
+  ##
+  # Generate markdown files for LLM consumption
+
+  def generate_markdown_files
+    debug_msg "Generating markdown files for LLM consumption"
+
+    markdown_gen = MarkdownGenerator.new(
+      @options, @outputdir, @classes, @files, @main_page, dry_run: @dry_run
+    )
+    markdown_gen.generate
   end
 
   ##
