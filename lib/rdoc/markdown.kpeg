@@ -303,6 +303,20 @@
     end
   end
 
+  # Escape character that has special meaning in RDoc format.
+  # To allow rdoc-styled link used in markdown format for now, bracket and brace are not escaped.
+
+  def rdoc_escape(text)
+    text.gsub(/[*+<\\_]/) {|s| "\\#{s}" }
+  end
+
+  # Escape link url that contains brackets.
+  # Brackets needs escape because link url will be surrounded by `[]` in RDoc format.
+
+  def rdoc_link_url_escape(text)
+    text.gsub(/[\[\]\\]/) {|s| "\\#{s}" }
+  end
+
   ##
   # :category: Extensions
   #
@@ -969,11 +983,11 @@ Space = @Spacechar+ { " " }
 
 Str = @StartList:a
       < @NormalChar+ > { a = text }
-      ( StrChunk:c { a << c } )* { a }
+      ( StrChunk:c { a << c } )* { rdoc_escape(a) }
 
 StrChunk = < (@NormalChar | /_+/ &Alphanumeric)+ > { text }
 
-EscapedChar =   "\\" !@Newline < /[:\\`|*_{}\[\]()#+.!><-]/ > { text }
+EscapedChar =   "\\" !@Newline < /[:\\`|*_{}\[\]()#+.!><-]/ > { rdoc_escape(text) }
 
 Entity =    ( HexEntity | DecEntity | CharEntity ):a { a }
 
@@ -988,7 +1002,7 @@ TerminalEndline = @Sp @Newline @Eof
 LineBreak = "  " @NormalEndline { RDoc::Markup::HardBreak.new }
 
 Symbol = < @SpecialChar >
-         { text }
+         { rdoc_escape(text) }
 
 # This keeps the parser from getting bogged down on long strings of '*' or '_',
 # or strings of '*' or '_' with space on each side:
@@ -1053,7 +1067,7 @@ ReferenceLinkSingle = Label:content < (Spnl "[]")? >
                       { link_to content, content, text }
 
 ExplicitLink = ExplicitLinkWithLabel:a
-               { "{#{a[:label]}}[#{a[:link]}]" }
+               { "{#{a[:label]}}[#{rdoc_link_url_escape(a[:link])}]" }
 
 ExplicitLinkWithLabel = Label:label "(" @Sp Source:link Spnl Title @Sp ")"
                         { { label: label, link: link } }
@@ -1163,12 +1177,12 @@ Newline           = %literals.Newline
 Spacechar         = %literals.Spacechar
 
 HexEntity  = /&#x/i < /[0-9a-fA-F]+/ > ";"
-             { [text.to_i(16)].pack 'U' }
+             { rdoc_escape([text.to_i(16)].pack('U')) }
 DecEntity  = "&#"   < /[0-9]+/       > ";"
-             { [text.to_i].pack 'U' }
+             { rdoc_escape([text.to_i].pack('U')) }
 CharEntity = "&"    </[A-Za-z0-9]+/  > ";"
              { if entity = HTML_ENTITIES[text] then
-                 entity.pack 'U*'
+                 rdoc_escape(entity.pack('U*'))
                else
                  "&#{text};"
                end
