@@ -149,6 +149,8 @@ class RDoc::TopLevel < RDoc::Context
     find_class_or_module(name)
   end
 
+  alias get_module_named find_module_named
+
   ##
   # Returns the relative name of this file
 

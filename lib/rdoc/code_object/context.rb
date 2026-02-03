@@ -785,7 +785,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Find a module at a higher scope
+  # Tries to find a module at a higher scope.
+  # But parent is not always a higher module nesting scope, so the result is not correct.
+  # Parent chain can only represent last-opened nesting, and may be broken in some cases.
+  # PrismRuby parser stopped representing module nesting with parent chain at all.
 
   def find_enclosing_module_named(name)
     parent && parent.find_module_named(name)
@@ -860,13 +863,21 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Find a module with +name+ using ruby's scoping rules
+  # Find a module with +name+ trying to using ruby's scoping rules.
+  # find_enclosing_module_named cannot use ruby's scoping so the result is not correct.
 
   def find_module_named(name)
-    res = @modules[name] || @classes[name]
+    res = get_module_named(name)
     return res if res
     return self if self.name == name
     find_enclosing_module_named name
+  end
+
+  # Get a module named +name+ in this context
+  # Don't look up for higher module nesting scopes. RDoc::Context doesn't have that information.
+
+  def get_module_named(name)
+    @modules[name] || @classes[name]
   end
 
   ##

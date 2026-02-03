@@ -59,11 +59,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @container = container
     @singleton = singleton
     @in_proc_block = false
-    unless singleton
-      # Need to update module parent chain to emulate Module.nesting.
-      # This mechanism is inaccurate and needs to be fixed.
-      container.parent = old_container
-    end
     @module_nesting.push([container, singleton])
     yield container
   ensure
@@ -482,12 +477,15 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
   end
 
+  # Adds includes/extends. Module name is resolved to full before adding.
+
   def add_includes_extends(names, rdoc_class, line_no) # :nodoc:
     return if @in_proc_block
     comment, directives = consecutive_comment(line_no)
     handle_code_object_directives(@container, directives) if directives
     names.each do |name|
-      ie = @container.add(rdoc_class, name, '')
+      resolved_name = resolve_constant_path(name)
+      ie = @container.add(rdoc_class, resolved_name || name, '')
       ie.store = @store
       ie.line = line_no
       ie.comment = comment
@@ -590,7 +588,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     else
       @module_nesting.reverse_each do |nesting, singleton|
         next if singleton
-        mod = nesting.find_module_named(root_name)
+        mod = nesting.get_module_named(root_name)
         break if mod
         # If a constant is found and it is not a module or class, RDoc can't document about it.
         # Return an anonymous module to avoid wrong document creation.
@@ -601,9 +599,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       mod ||= add_module.call(last_nesting, root_name, :module)
     end
     path.each do |name|
-      mod = mod.find_module_named(name) || add_module.call(mod, name, :module)
+      mod = mod.get_module_named(name) || add_module.call(mod, name, :module)
     end
-    mod.find_module_named(name) || add_module.call(mod, name, create_mode)
+    mod.get_module_named(name) || add_module.call(mod, name, create_mode)
   end
 
   # Resolves constant path to a full path by searching module nesting
@@ -614,10 +612,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     mod = nil
     @module_nesting.reverse_each do |nesting, singleton|
       next if singleton
-      mod = nesting.find_module_named(owner_name)
+      mod = nesting.get_module_named(owner_name)
       break if mod
     end
-    mod ||= @top_level.find_module_named(owner_name)
+    mod ||= @top_level.get_module_named(owner_name)
     [mod.full_name, path].compact.join('::') if mod
   end
 
@@ -657,7 +655,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       if rhs_name =~ /^::/
         @store.find_class_or_module(rhs_name)
       else
-        @container.find_module_named(rhs_name)
+        full_name = resolve_constant_path(rhs_name)
+        @store.find_class_or_module(full_name)
       end
     if mod && constant.document_self
       a = @container.add_module_alias(mod, rhs_name, constant, @top_level)
