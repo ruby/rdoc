@@ -16,7 +16,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   parse_files_matching(/\.rbw?$/) if ENV['RDOC_USE_PRISM_PARSER']
 
   attr_accessor :visibility
-  attr_reader :container, :singleton
+  attr_reader :container, :singleton, :in_proc_block
 
   def initialize(top_level, content, options, stats)
     super
@@ -43,9 +43,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # example: `Module.new { include M }` `M.module_eval { include N }`
 
   def with_in_proc_block
+    in_proc_block = @in_proc_block
     @in_proc_block = true
     yield
-    @in_proc_block = false
+    @in_proc_block = in_proc_block
   end
 
   # Dive into another container
@@ -480,7 +481,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Adds includes/extends. Module name is resolved to full before adding.
 
   def add_includes_extends(names, rdoc_class, line_no) # :nodoc:
-    return if @in_proc_block
     comment, directives = consecutive_comment(line_no)
     handle_code_object_directives(@container, directives) if directives
     names.each do |name|
@@ -508,8 +508,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Adds a method defined by `def` syntax
 
   def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
-    return if @in_proc_block
-
     receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
     comment, directives = consecutive_comment(start_line)
     handle_code_object_directives(@container, directives) if directives
@@ -774,12 +772,14 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     def visit_block_node(node)
       @scanner.with_in_proc_block do
-        # include, extend and method definition inside block are not documentable
+        # include, extend and method definition inside block are not documentable.
+        # visibility methods and attribute definition methods should be ignored inside block.
         super
       end
     end
 
     def visit_alias_method_node(node)
+      return if @scanner.in_proc_block
       @scanner.process_comments_until(node.location.start_line - 1)
       return unless node.old_name.is_a?(Prism::SymbolNode) && node.new_name.is_a?(Prism::SymbolNode)
       @scanner.add_alias_method(node.old_name.value.to_s, node.new_name.value.to_s, node.location.start_line)
@@ -857,6 +857,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       args_end_line = node.parameters&.location&.end_line || start_line
       end_line = node.location.end_line
       @scanner.process_comments_until(start_line - 1)
+
+      return if @scanner.in_proc_block
 
       case node.receiver
       when Prism::NilNode, Prism::TrueNode, Prism::FalseNode
@@ -996,19 +998,20 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
     def _visit_call_module_function(call_node)
       yield
-      return if @scanner.singleton
+      return if @scanner.in_proc_block || @scanner.singleton
       names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
       @scanner.change_method_to_module_function(names) if names
     end
 
     def _visit_call_public_private_class_method(call_node, visibility)
       yield
-      return if @scanner.singleton
+      return if @scanner.in_proc_block || @scanner.singleton
       names = visibility_method_arguments(call_node, singleton: true)
       @scanner.change_method_visibility(names, visibility, singleton: true) if names
     end
 
     def _visit_call_public_private_protected(call_node, visibility)
+      return if @scanner.in_proc_block
       arguments_node = call_node.arguments
       if arguments_node.nil? # `public` `private`
         @scanner.visibility = visibility
@@ -1020,12 +1023,16 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def _visit_call_alias_method(call_node)
+      return if @scanner.in_proc_block
+
       new_name, old_name, *rest = symbol_arguments(call_node)
       return unless old_name && new_name && rest.empty?
       @scanner.add_alias_method(old_name.to_s, new_name.to_s, call_node.location.start_line)
     end
 
     def _visit_call_include(call_node)
+      return if @scanner.in_proc_block
+
       names = constant_arguments_names(call_node)
       line_no = call_node.location.start_line
       return unless names
@@ -1038,26 +1045,30 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def _visit_call_extend(call_node)
+      return if @scanner.in_proc_block
+
       names = constant_arguments_names(call_node)
       @scanner.add_extends(names, call_node.location.start_line) if names && !@scanner.singleton
     end
 
     def _visit_call_public_constant(call_node)
-      return if @scanner.singleton
+      return if @scanner.in_proc_block || @scanner.singleton
       names = symbol_arguments(call_node)
       @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
     end
 
     def _visit_call_private_constant(call_node)
-      return if @scanner.singleton
+      return if @scanner.in_proc_block || @scanner.singleton
       names = symbol_arguments(call_node)
       @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
     end
 
     def _visit_call_attr_reader_writer_accessor(call_node, rw)
+      return if @scanner.in_proc_block
       names = symbol_arguments(call_node)
       @scanner.add_attributes(names.map(&:to_s), rw, call_node.location.start_line) if names
     end
+
     class MethodSignatureVisitor < Prism::Visitor # :nodoc:
       class << self
         def scan_signature(def_node)

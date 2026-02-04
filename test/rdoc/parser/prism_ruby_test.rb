@@ -2020,9 +2020,10 @@ module RDocParserPrismTestCases
     util_parser <<~RUBY
       module M; end
       module N; end
-      module O: end
+      module O; end
       class A
         metaprogramming do
+          tap do end
           include M
           extend N
           class B
@@ -2043,6 +2044,98 @@ module RDocParserPrismTestCases
     end
     assert_equal ['M'], b.includes.map(&:name)
     assert_equal ['N'], b.extends.map(&:name)
+  end
+
+  def test_visibility_methods_suppressed_within_block
+    util_parser <<~RUBY
+      class A
+        def pub1; end
+        X = 1
+        Y = 1
+        def self.s_pub; end
+        private_class_method def self.s_pri; end
+        private_constant :Y
+        Module.new do
+          tap do end
+          private_method :pub1
+          private_constant :X
+          public_constant :Y
+          private
+          private_class_method :s_pub
+          public_class_method :s_pri
+        end
+        def pub2; end
+        private
+        Module.new do
+          public
+        end
+        def pri; end
+      end
+    RUBY
+    klass = @store.find_class_named 'A'
+
+    assert_equal :public, klass.find_constant_named('X').visibility
+    assert_equal :private, klass.find_constant_named('Y').visibility
+    assert_equal :public, klass.find_method_named('pub1').visibility
+    assert_equal :private, klass.find_method_named('pri').visibility
+    assert_equal :public, klass.find_method_named('pub2').visibility
+    assert_equal :public, klass.find_class_method_named('s_pub').visibility
+    assert_equal :private, klass.find_class_method_named('s_pri').visibility unless accept_legacy_bug?
+  end
+
+  def test_alias_method_suppressed_within_block
+    omit if accept_legacy_bug?
+
+    util_parser <<~RUBY
+      class A
+        def foo; end
+        Module.new do
+          tap do end
+          def foo; end
+          alias_method :bar2, :foo
+          alias bar3 foo
+        end
+        alias_method :foo2, :foo
+        alias foo3 foo
+      end
+    RUBY
+    klass = @store.find_class_named 'A'
+    assert_equal ['foo', 'foo2', 'foo3'], klass.method_list.map(&:name)
+  end
+
+  def test_attr_method_suppressed_within_block
+    util_parser <<~RUBY
+      class A
+        attr_reader :r
+        attr_writer :w
+        attr_accessor :rw
+        Module.new do
+          tap do end
+          attr_reader :r2
+          attr_writer :w2
+          attr_accessor :rw2
+        end
+      end
+    RUBY
+    klass = @store.find_class_named 'A'
+    assert_equal ['r', 'w', 'rw'], klass.attributes.map(&:name)
+  end
+
+  def test_module_function_suppressed_within_block
+    util_parser <<~RUBY
+      module M
+        def foo; end
+        Module.new do
+          tap do end
+          def foo; end
+          module_function :foo
+        end
+        def bar; end
+        module_function :bar
+      end
+    RUBY
+    mod = @store.find_module_named 'M'
+    assert_equal ['bar'], mod.class_method_list.map(&:name)
   end
 
   def test_multibyte_method_name
