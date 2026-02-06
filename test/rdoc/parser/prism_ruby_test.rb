@@ -1864,6 +1864,19 @@ module RDocParserPrismTestCases
     assert_equal 'bar', klass.method_list.first.name
   end
 
+  def test_scan_deep_nested
+    util_parser <<~RUBY
+      class A
+        a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a private def f; end
+        a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{a{X = 1}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+      end
+    RUBY
+    klass = @store.find_class_named 'A'
+    assert_equal 'f', klass.method_list.first.name
+    assert_equal :private, klass.method_list.first.visibility
+    assert_equal 'X', klass.constants.first.name
+  end
+
   def test_scan_duplicate_module
     util_parser <<~RUBY
       # comment a

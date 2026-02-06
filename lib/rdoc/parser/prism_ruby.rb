@@ -765,7 +765,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         when :private_class_method
           _visit_call_public_private_class_method(node, :private) { super }
         else
-          node.arguments&.accept(self)
           super
         end
       else
