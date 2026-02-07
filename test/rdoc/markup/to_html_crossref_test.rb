@@ -111,6 +111,23 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para("<a href=\"C1.html#public-methods\">Public Methods at <code>C1</code></a>"), result
   end
 
+  def test_convert_CROSSREF_legacy_label
+    result = @to.convert 'C1@What-27s+Here'
+    assert_equal para("<a href=\"C1.html#class-c1-whats-here\">What\u2019s Here at <code>C1</code></a>"), result
+  end
+
+  def test_convert_CROSSREF_legacy_label_colon
+    result = @to.convert 'C1@Foo-3A-3ABar'
+    assert_equal para("<a href=\"C1.html#class-c1-foobar\">Foo::Bar at <code>C1</code></a>"), result
+  end
+
+  def test_convert_CROSSREF_legacy_section
+    @c1.add_section "What's Here"
+
+    result = @to.convert "C1@What-27s+Here"
+    assert_equal para("<a href=\"C1.html#whats-here\">What\u2019s Here at <code>C1</code></a>"), result
+  end
+
   def test_convert_CROSSREF_constant
     result = @to.convert 'C1::CONST'
 
