@@ -2,7 +2,7 @@
 
 require_relative '../helper'
 
-return if ENV['RDOC_USE_PRISM_PARSER']
+return unless ENV['RDOC_USE_RIPPER_PARSER']
 
 class RDocParserRubyTest < RDoc::TestCase
 
@@ -942,7 +942,7 @@ INVALID_CODE
     err = stds[1]
 
     expected = <<EXPECTED
-RDoc::Parser::Ruby failure around line 2 of
+#{RDoc::Parser::Ruby.name} failure around line 2 of
 #{@filename}
 
 class Invalid::@@Code
