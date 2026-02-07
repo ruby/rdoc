@@ -117,6 +117,23 @@ class RDoc::Markup::TextFormatterTestCase < RDoc::Markup::FormatterTestCase
       end
 
       ##
+      # Test case that calls <tt>@to.accept_table</tt> with body rows
+      # that have fewer columns than the header
+
+      def test_accept_table_ragged_rows
+        header = ['Name', 'Description']
+        body = [
+          ['foo', 'Foo description'],
+          ['bar'],
+        ]
+        aligns = [:left, :left]
+        @to.start_accepting
+        @to.accept_table header, body, aligns
+
+        accept_table_ragged_rows
+      end
+
+      ##
       # Test case that calls <tt>@to.attributes</tt> with an escaped
       # cross-reference.  If this test doesn't pass something may be very
       # wrong.
