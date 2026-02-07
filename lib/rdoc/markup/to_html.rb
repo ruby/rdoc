@@ -282,6 +282,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res = []
     @in_list_entry = []
     @list = []
+    @heading_ids = {}
   end
 
   ##
@@ -412,8 +413,8 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   def accept_heading(heading)
     level = [6, heading.level].min
 
-    label = heading.label @code_object
-    legacy_label = heading.legacy_label @code_object
+    label = deduplicate_heading_id(heading.label(@code_object))
+    legacy_label = deduplicate_heading_id(heading.legacy_label(@code_object))
 
     # Add legacy anchor before the heading for backward compatibility.
     # This allows old links with label- prefix to still work.
@@ -467,6 +468,20 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   end
 
   # :section: Utilities
+
+  ##
+  # Returns a unique heading ID, appending -1, -2, etc. for duplicates.
+  # Matches GitHub's behavior for duplicate heading anchors.
+
+  def deduplicate_heading_id(id)
+    if @heading_ids.key?(id)
+      @heading_ids[id] += 1
+      "#{id}-#{@heading_ids[id]}"
+    else
+      @heading_ids[id] = 0
+      id
+    end
+  end
 
   ##
   # CGI-escapes +text+

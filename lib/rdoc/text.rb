@@ -335,4 +335,27 @@ module RDoc::Text
     text.downcase.gsub(/[^a-z0-9 \-]/, '').gsub(' ', '-')
   end
 
+  ##
+  # Decodes a label that may be in legacy RDoc format where CGI.escape was
+  # applied and then '%' was replaced with '-'. Converts '+' to space,
+  # then reverses -XX hex encoding for non-alphanumeric characters.
+  #
+  # Labels in new format pass through unchanged because -XX patterns that
+  # decode to alphanumeric characters are left as-is (CGI.escape never
+  # encodes alphanumerics).
+  #
+  # Examples:
+  #   "What-27s+Here"  -> "What's Here"  (legacy: -27 is apostrophe)
+  #   "Foo-3A-3ABar"   -> "Foo::Bar"     (legacy: -3A is colon)
+  #   "Whats-Here"     -> "Whats-Here"   (new format, unchanged)
+
+  module_function def decode_legacy_label(label)
+    label = label.tr('+', ' ')
+    label.gsub!(/-([0-7][0-9A-F])/) do
+      char = [$1.hex].pack('C')
+      char.match?(/[a-zA-Z0-9]/) ? $& : char
+    end
+    label
+  end
+
 end
