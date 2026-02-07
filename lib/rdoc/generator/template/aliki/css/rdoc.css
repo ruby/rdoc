@@ -1622,12 +1622,20 @@ aside.table-of-contents .toc-sticky nav {
   height: auto;
 }
 
-aside.table-of-contents .toc-list > .toc-h2 {
+aside.table-of-contents .toc-list > .toc-depth-0 {
+  margin-left: 0;
+}
+
+aside.table-of-contents .toc-list > .toc-depth-1 {
   margin-left: var(--space-4);
 }
 
-aside.table-of-contents .toc-list > .toc-h3 {
+aside.table-of-contents .toc-list > .toc-depth-2 {
   margin-left: var(--space-8);
+}
+
+aside.table-of-contents .toc-list > .toc-depth-3 {
+  margin-left: var(--space-12);
 }
 
 /* Hide TOC on mobile/tablet */

@@ -5,7 +5,6 @@
 
 <nav id="navigation" role="navigation" hidden>
   <%= render '_sidebar_pages.rhtml' %>
-  <%= render '_sidebar_sections.rhtml' %>
   <%= render '_sidebar_ancestors.rhtml' %>
   <%= render '_sidebar_includes.rhtml' %>
   <%= render '_sidebar_extends.rhtml' %>
@@ -40,7 +39,7 @@
 
   <%- klass.each_section do |section, constants, attributes| %>
   <span id="<%= section.legacy_aref %>" class="legacy-anchor"></span>
-  <section id="<%= section.aref %>" class="documentation-section anchor-link">
+  <section id="<%= section.aref %>" class="documentation-section <%= "documentation-section-toplevel " unless section.title %>anchor-link">
     <%- if section.title then %>
     <header class="documentation-section-title">
       <h2>
