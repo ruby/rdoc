@@ -348,6 +348,16 @@ words words words words
     assert_equal expected, @to.end_accepting
   end
 
+  def accept_table_ragged_rows
+    expected = "\e[0m" + <<-EXPECTED
+Name|Description
+----|---------------
+foo |Foo description
+bar |
+    EXPECTED
+    assert_equal expected, @to.end_accepting
+  end
+
   def accept_table_align
     expected = "\e[0m" + <<-EXPECTED
  AA |BB |CCCCC|DDDDD

@@ -243,7 +243,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     header = header.map { |h| attributes h }
     body = body.map { |row| row.map { |t| attributes t } }
     widths = header.zip(*body).map do |cols|
-      cols.map { |col| calculate_text_width(col) }.max
+      cols.compact.map { |col| calculate_text_width(col) }.max
     end
     aligns = aligns.map do |a|
       case a
@@ -261,7 +261,8 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     end.join("|").rstrip << "\n"
     @res << widths.map {|w| "-" * w }.join("|") << "\n"
     body.each do |row|
-      @res << row.zip(widths, aligns).map do |t, w, a|
+      @res << widths.zip(aligns).each_with_index.map do |(w, a), i|
+        t = row[i] || ""
         extra_width = t.size - calculate_text_width(t)
         t.__send__(a, w + extra_width)
       end.join("|").rstrip << "\n"
