@@ -556,3 +556,107 @@ See [rdoc.rdoc](rdoc.rdoc) for complete directive documentation.
 5. **Fenced code blocks** - Only triple backticks are supported. Tilde fences (`~~~`) are not supported as they conflict with strikethrough syntax. Four or more backticks for nesting are also not supported.
 
 6. **Auto-linking** - RDoc automatically links class and method names in output, even without explicit link syntax.
+
+## Comparison with GitHub Flavored Markdown (GFM)
+
+This section compares RDoc's Markdown implementation with the
+[GitHub Flavored Markdown Spec](https://github.github.com/gfm/) (Version 0.29-gfm, 2019-04-06).
+
+### Block Elements
+
+| Feature | GFM | RDoc | Notes |
+|---------|:---:|:----:|-------|
+| ATX Headings (`#`) | ✅ | ✅ | Both support levels 1-6, optional closing `#` |
+| Setext Headings | ✅ | ✅ | `=` for H1, `-` for H2 |
+| Paragraphs | ✅ | ✅ | Full match |
+| Indented Code Blocks | ✅ | ✅ | 4 spaces (RDoc also accepts 1 tab) |
+| Fenced Code (backticks) | ✅ 3+ | ⚠️ 3 only | RDoc doesn't support 4+ backticks for nesting |
+| Fenced Code (tildes) | ✅ `~~~` | ❌ | Conflicts with strikethrough syntax |
+| Info strings (language) | ✅ any | ⚠️ `ruby`/`rb`/`c` | Limited syntax highlighting |
+| Blockquotes | ✅ | ✅ | Full match, nested supported |
+| Lazy Continuation | ✅ | ❌ | GFM allows omitting `>` on continuation lines |
+| Bullet Lists | ✅ | ✅ | `*`, `+`, `-` supported |
+| Ordered Lists | ✅ `.` `)` | ⚠️ `.` only | RDoc doesn't support `)` delimiter |
+| Nested Lists | ✅ | ✅ | 4-space indentation |
+| Tables | ✅ | ✅ | Full alignment support |
+| Thematic Breaks | ✅ | ✅ | `---`, `***`, `___` |
+| HTML Blocks | ✅ 7 types | ⚠️ | See below |
+
+#### HTML Blocks
+
+GFM defines 7 types of HTML blocks:
+
+| Type | Description | GFM | RDoc |
+|------|-------------|:---:|:----:|
+| 1 | `<script>`, `<pre>` | ✅ | ✅ |
+| 1 | `<style>` | ✅ | ❌ |
+| 2 | HTML comments `<!-- -->` | ✅ | ✅ |
+| 3 | Processing instructions `<? ?>` | ✅ | ❌ |
+| 4 | Declarations `<!DOCTYPE>` | ✅ | ❌ |
+| 5 | CDATA `<![CDATA[ ]]>` | ✅ | ❌ |
+| 6 | Block-level tags | ✅ | ⚠️ |
+| 7 | Any complete open/close tag | ✅ | ❌ |
+
+RDoc uses a whitelist of block-level tags defined in
+[lib/rdoc/markdown.kpeg](https://github.com/ruby/rdoc/blob/master/lib/rdoc/markdown.kpeg)
+(see `HtmlBlockInTags`). HTML5 semantic elements like `<article>`, `<section>`,
+`<nav>`, `<header>`, `<footer>` are not supported.
+
+### Inline Elements
+
+| Feature | GFM | RDoc | Notes |
+|---------|:---:|:----:|-------|
+| Emphasis `*text*` `_text_` | ✅ | ✅ | Full match |
+| Strong `**text**` `__text__` | ✅ | ✅ | Full match |
+| Combined `***text***` | ✅ | ✅ | Full match |
+| Code spans | ✅ | ✅ | Multiple backticks supported |
+| Inline links | ✅ | ✅ | Full match |
+| Reference links | ✅ | ✅ | Full match |
+| Link titles | ✅ | ⚠️ | Parsed but not rendered |
+| Images | ✅ | ✅ | Full match |
+| Autolinks `<url>` | ✅ | ✅ | Full match |
+| Hard line breaks | ✅ | ✅ | 2+ trailing spaces |
+| Backslash escapes | ✅ | ✅ | Full match |
+| HTML entities | ✅ | ✅ | Named, decimal, hex |
+| Inline HTML | ✅ | ✅ | Full match |
+
+### GFM Extensions
+
+| Feature | GFM | RDoc | Notes |
+|---------|:---:|:----:|-------|
+| Strikethrough `~~text~~` | ✅ | ✅ | Full match |
+| Task Lists `[ ]` `[x]` | ✅ | ❌ | Not supported |
+| Extended Autolinks | ✅ | ❌ | See below |
+| Disallowed Raw HTML | ✅ | ❌ | No security filtering |
+
+#### GFM Extended Autolinks
+
+GFM automatically converts certain text patterns into links without requiring
+angle brackets (`<>`). RDoc requires the standard `<url>` syntax.
+
+GFM recognizes these patterns as autolinks:
+
+- `www.example.com` — text starting with `www.` followed by a valid domain
+- `https://example.com` — URLs starting with `http://` or `https://`
+- `user@example.com` — valid email addresses
+- `mailto:user@example.com` — `mailto:` or `xmpp:` followed by an email
+
+Example in GFM:
+
+```markdown
+Visit www.example.com or contact support@example.com for help.
+```
+
+In GFM, both become clickable links. In RDoc, you must use:
+
+```markdown
+Visit <https://www.example.com> or contact <support@example.com> for help.
+```
+
+### RDoc-Specific Features (not in GFM)
+
+- [Definition Lists](#definition-lists)
+- [Footnotes](#footnotes)
+- [Cross-references](#cross-references)
+- [Anchor Links](#anchor-links)
+- [Directives](#directives)
