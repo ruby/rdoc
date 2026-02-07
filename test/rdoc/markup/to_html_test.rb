@@ -360,6 +360,56 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
     assert_equal "\n<h1 id=\"hello\">Hello</h1>\n", @to.res.join
   end
 
+  def test_accept_heading_duplicate
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
+
+    result = @to.res.join
+    assert_match(/<h2 id="hello">/, result)
+    assert_match(/<h2 id="hello-1">/, result)
+    assert_match(/id="label-Hello" class="legacy-anchor"/, result)
+    assert_match(/id="label-Hello-1" class="legacy-anchor"/, result)
+  end
+
+  def test_accept_heading_duplicate_punctuation_collision
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(2, 'Method match')
+    @to.accept_heading @RM::Heading.new(2, 'Method match?')
+
+    result = @to.res.join
+    assert_match(/<h2 id="method-match">/, result)
+    assert_match(/<h2 id="method-match-1">/, result)
+  end
+
+  def test_accept_heading_three_duplicates
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
+
+    result = @to.res.join
+    assert_match(/<h2 id="hello">/, result)
+    assert_match(/<h2 id="hello-1">/, result)
+    assert_match(/<h2 id="hello-2">/, result)
+  end
+
+  def test_accept_heading_dedup_resets_on_start_accepting
+    @to.start_accepting
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
+
+    @to.start_accepting
+    @to.accept_heading @RM::Heading.new(2, 'Hello')
+
+    result = @to.res.join
+    assert_match(/<h2 id="hello">/, result)
+    refute_match(/id="hello-1"/, result)
+  end
+
   def test_accept_paragraph_newline
     hellos = ["hello", "\u{393 3b5 3b9 3ac} \u{3c3 3bf 3c5}"]
     worlds = ["world", "\u{3ba 3cc 3c3 3bc 3bf 3c2}"]

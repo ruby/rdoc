@@ -111,4 +111,41 @@ class RDocMarkupToLabelTest < RDoc::Markup::FormatterTestCase
     assert_equal 'tt', @to.convert('<tt>tt</tt>')
   end
 
+  def test_decode_legacy_label_apostrophe
+    assert_equal "What's Here", RDoc::Text.decode_legacy_label("What-27s+Here")
+  end
+
+  def test_decode_legacy_label_colon
+    assert_equal "Foo::Bar", RDoc::Text.decode_legacy_label("Foo-3A-3ABar")
+  end
+
+  def test_decode_legacy_label_new_format_passthrough
+    assert_equal "Whats-Here", RDoc::Text.decode_legacy_label("Whats-Here")
+  end
+
+  def test_decode_legacy_label_alphanumeric_hex_unchanged
+    # -4F decodes to 'O' (alphanumeric), so leave as literal
+    assert_equal "class-4Fther", RDoc::Text.decode_legacy_label("class-4Fther")
+  end
+
+  def test_decode_legacy_label_plus_to_space
+    assert_equal "foo bar", RDoc::Text.decode_legacy_label("foo+bar")
+  end
+
+  def test_decode_legacy_label_encoded_plus
+    # -2B is '+' which is not alphanumeric, so it decodes
+    assert_equal "a+b", RDoc::Text.decode_legacy_label("a-2Bb")
+  end
+
+  def test_decode_legacy_label_percent
+    # -25 is '%' which is not alphanumeric
+    assert_equal "%w and %W", RDoc::Text.decode_legacy_label("-25w+and+-25W")
+  end
+
+  def test_decode_legacy_label_lowercase_hex_passthrough
+    # New-format anchors use lowercase; CGI.escape only produces uppercase hex.
+    # Lowercase hex-like patterns must not be decoded.
+    assert_equal "a-3a-test", RDoc::Text.decode_legacy_label("a-3a-test")
+  end
+
 end
