@@ -40,6 +40,25 @@ class RDocContextSectionTest < RDoc::TestCase
     assert_equal [c2, c3], s.comments
   end
 
+  def test_description
+    file1 = @store.add_file 'file1.rb'
+    klass = file1.add_class RDoc::NormalClass, 'Klass'
+
+
+    c1 = comment "# :section: section\n", file1, :ruby
+    c2 = comment "# hello\n",             file1, :ruby
+    c3 = comment "# <tt>world</tt>\n",    file1, :ruby
+
+    s = @S.new klass, 'section', c1, @store
+    assert_equal '', s.description
+
+    s.add_comment c2
+    assert_equal "\n<p>hello</p>\n", s.description
+
+    s.add_comment c3
+    assert_equal "\n<p>hello</p>\n\n<p><code>world</code></p>\n", s.description
+  end
+
   def test_aref
     assert_equal 'section', @s.aref
 
@@ -86,7 +105,7 @@ class RDocContextSectionTest < RDoc::TestCase
     expected = doc RDoc::Comment.new('comment', @top_level).parse
 
     assert_equal 'section', loaded.title
-    assert_equal expected,  loaded.parse
+    assert_equal expected,  loaded.to_document
     assert_nil              loaded.parent, 'parent is set manually'
   end
 
@@ -112,7 +131,7 @@ class RDocContextSectionTest < RDoc::TestCase
     expected = doc RDoc::Comment.new('comment', @top_level).parse
 
     assert_equal 'section', loaded.title
-    assert_equal expected,  loaded.parse
+    assert_equal expected,  loaded.to_document
     assert_nil              loaded.parent, 'parent is set manually'
   end
 
@@ -139,7 +158,7 @@ class RDocContextSectionTest < RDoc::TestCase
 
     loaded.remove_comment comment('bogus', @top_level)
 
-    assert_equal doc(other_comment.parse), loaded.parse
+    assert_equal doc(other_comment.parse), loaded.to_document
   end
 
 end

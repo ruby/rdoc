@@ -587,7 +587,7 @@ class RDoc::Context < RDoc::CodeObject
     if section = @sections[title] then
       section.add_comment comment if comment
     else
-      section = Section.new self, title, comment
+      section = Section.new self, title, comment, @store
       @sections[title] = section
     end
 

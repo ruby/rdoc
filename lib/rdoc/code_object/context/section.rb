@@ -18,11 +18,6 @@ class RDoc::Context::Section
   MARSHAL_VERSION = 0 # :nodoc:
 
   ##
-  # Section comment
-
-  attr_reader :comment
-
-  ##
   # Section comments
 
   attr_reader :comments
@@ -38,11 +33,17 @@ class RDoc::Context::Section
   attr_reader :title
 
   ##
+  # The RDoc::Store for this object.
+
+  attr_reader :store
+
+  ##
   # Creates a new section with +title+ and +comment+
 
-  def initialize(parent, title, comment)
+  def initialize(parent, title, comment, store = nil)
     @parent = parent
     @title = title ? title.strip : title
+    @store = store
 
     @comments = []
 
@@ -151,7 +152,7 @@ class RDoc::Context::Section
     [
       MARSHAL_VERSION,
       @title,
-      parse,
+      to_document,
     ]
   end
 
@@ -169,7 +170,7 @@ class RDoc::Context::Section
   # Parses +comment_location+ into an RDoc::Markup::Document composed of
   # multiple RDoc::Markup::Documents with their file set.
 
-  def parse
+  def to_document
     RDoc::Markup::Document.new(*@comments.map(&:parse))
   end
 
@@ -180,6 +181,23 @@ class RDoc::Context::Section
 
   def plain_html
     @title || 'Top Section'
+  end
+
+  ##
+  # Section comment
+
+  def comment
+    return nil if @comments.empty?
+    RDoc::Comment.from_document(to_document)
+  end
+
+  def description
+    return '' if @comments.empty?
+    markup comment
+  end
+
+  def language
+    @comments.first&.language
   end
 
   ##
