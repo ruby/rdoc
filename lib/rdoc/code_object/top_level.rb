@@ -39,6 +39,11 @@ class RDoc::TopLevel < RDoc::Context
   attr_reader :parser
 
   ##
+  # Is this page hidden from the sidebar listing?
+
+  attr_accessor :hidden
+
+  ##
   # Creates a new TopLevel for the file at +absolute_name+.  If documentation
   # is being generated outside the source dir +relative_name+ is relative to
   # the source directory.
@@ -49,6 +54,7 @@ class RDoc::TopLevel < RDoc::Context
     @absolute_name = absolute_name
     @relative_name = relative_name
     @parser        = nil
+    @hidden        = false
 
     if relative_name
       @base_name = File.basename(relative_name)
