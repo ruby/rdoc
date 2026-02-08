@@ -743,11 +743,14 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         when :extend
           _visit_call_extend(node)
         when :public
-          _visit_call_public_private_protected(node, :public) { super }
+          super
+          _visit_call_public_private_protected(node, :public)
         when :private
-          _visit_call_public_private_protected(node, :private) { super }
+          super
+          _visit_call_public_private_protected(node, :private)
         when :protected
-          _visit_call_public_private_protected(node, :protected) { super }
+          super
+          _visit_call_public_private_protected(node, :protected)
         when :private_constant
           _visit_call_private_constant(node)
         when :public_constant
@@ -757,11 +760,14 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         when :alias_method
           _visit_call_alias_method(node)
         when :module_function
-          _visit_call_module_function(node) { super }
+          super
+          _visit_call_module_function(node)
         when :public_class_method
-          _visit_call_public_private_class_method(node, :public) { super }
+          super
+          _visit_call_public_private_class_method(node, :public)
         when :private_class_method
-          _visit_call_public_private_class_method(node, :private) { super }
+          super
+          _visit_call_public_private_class_method(node, :private)
         else
           super
         end
@@ -997,14 +1003,12 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def _visit_call_module_function(call_node)
-      yield
       return if @scanner.in_proc_block || @scanner.singleton
       names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
       @scanner.change_method_to_module_function(names) if names
     end
 
     def _visit_call_public_private_class_method(call_node, visibility)
-      yield
       return if @scanner.in_proc_block || @scanner.singleton
       names = visibility_method_arguments(call_node, singleton: true)
       @scanner.change_method_visibility(names, visibility, singleton: true) if names
@@ -1016,7 +1020,6 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       if arguments_node.nil? # `public` `private`
         @scanner.visibility = visibility
       else # `public :foo, :bar`, `private def foo; end`
-        yield
         names = visibility_method_arguments(call_node, singleton: false)
         @scanner.change_method_visibility(names, visibility) if names
       end
