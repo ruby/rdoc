@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh repo view:*)",
+      "Bash(gh release list:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh api repos/*/releases/*)"
+    ]
+  }
+}
