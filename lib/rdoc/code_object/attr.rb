@@ -43,7 +43,8 @@ class RDoc::Attr < RDoc::MethodAttr
   # Add +an_alias+ as an attribute in +context+.
 
   def add_alias(an_alias, context)
-    new_attr = self.class.new(text, an_alias.new_name, rw, comment, singleton: singleton)
+    access_type = an_alias.new_name.end_with?('=') ? 'W' : 'R'
+    new_attr = self.class.new(text, an_alias.new_name, access_type, comment, singleton: singleton)
     new_attr.record_location an_alias.file
     new_attr.visibility = self.visibility
     new_attr.is_alias_for = self
