@@ -61,8 +61,11 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
 
-    if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
-      text ||= [CGI.unescape($'), (" at <code>#{$1}</code>" if $~.begin(1))].join("")
+    if !name.end_with?('+@', '-@') && match = name.match(/(.*[^#:])?@(.*)/)
+      context_name = match[1]
+      label = RDoc::Text.decode_legacy_label(match[2])
+      text ||= "#{label} at <code>#{context_name}</code>" if context_name
+      text ||= label
       code = false
     else
       text ||= name
@@ -168,9 +171,10 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       end
 
       if label
-        # Convert label to GitHub-style anchor format
-        # First convert + to space (URL encoding), then apply GitHub-style rules
-        formatted_label = RDoc::Text.to_anchor(label.tr('+', ' '))
+        # Decode legacy labels (e.g., "What-27s+Here" -> "What's Here")
+        # then convert to GitHub-style anchor format
+        decoded_label = RDoc::Text.decode_legacy_label(label)
+        formatted_label = RDoc::Text.to_anchor(decoded_label)
 
         # Case 1: Path already has an anchor (e.g., method link)
         #   Input:  C1#method@label -> path="C1.html#method-i-m"
@@ -181,7 +185,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
         # Case 2: Label matches a section title
         #   Input:  C1@Section -> path="C1.html", section "Section" exists
         #   Output: C1.html#section (uses section.aref for GitHub-style)
-        elsif (section = ref&.sections&.find { |s| label.tr('+', ' ') == s.title })
+        elsif (section = ref&.sections&.find { |s| decoded_label == s.title })
           path << "##{section.aref}"
 
         # Case 3: Ref has an aref (class/module context)
