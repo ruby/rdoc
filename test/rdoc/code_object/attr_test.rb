@@ -187,4 +187,18 @@ class RDocAttrTest < RDoc::TestCase
     assert_equal 'class', @a.type
   end
 
+  [
+    ['bar', 'baz', 'R'],
+    ['bar=', 'baz=', 'W']
+  ].each do |original_name, new_name, expected_rw|
+    define_method("test_add_alias_#{new_name}_for_an_attribute_accessor") do
+      context = RDoc::Context.new
+      attr = RDoc::Attr.new nil, 'bar', 'RW', ''
+      an_alias = RDoc::Alias.new nil, original_name, new_name, ''
+
+      new_attr = attr.add_alias an_alias, context
+
+      assert_equal expected_rw, new_attr.rw
+    end
+  end
 end
