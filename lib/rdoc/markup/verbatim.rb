@@ -9,7 +9,7 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
 
   attr_accessor :format
 
-  def initialize *parts # :nodoc:
+  def initialize(*parts) # :nodoc:
     super
 
     @format = nil

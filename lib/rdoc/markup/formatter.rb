@@ -252,7 +252,7 @@ class RDoc::Markup::Formatter
   #
   #   alias accept_raw ignore
 
-  def ignore *node
+  def ignore(*node)
   end
 
   ##
