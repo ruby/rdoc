@@ -103,7 +103,7 @@ class RDoc::TestCase < Test::Unit::TestCase
   ##
   # Shortcut for RDoc::Markup::BlockQuote.new with +contents+
 
-  def block *contents
+  def block(*contents)
     @RM::BlockQuote.new(*contents)
   end
 
@@ -119,7 +119,7 @@ class RDoc::TestCase < Test::Unit::TestCase
   ##
   # Shortcut for RDoc::Markup::Document.new with +contents+
 
-  def doc *contents
+  def doc(*contents)
     @RM::Document.new(*contents)
   end
 
@@ -140,14 +140,14 @@ class RDoc::TestCase < Test::Unit::TestCase
   ##
   # Shortcut for RDoc::Markup::ListItem.new with +label+ and +parts+
 
-  def item label = nil, *parts
+  def item(label = nil, *parts)
     @RM::ListItem.new label, *parts
   end
 
   ##
   # Shortcut for RDoc::Markup::List.new with +type+ and +items+
 
-  def list type = nil, *items
+  def list(type = nil, *items)
     @RM::List.new type, *items
   end
 
@@ -163,7 +163,7 @@ class RDoc::TestCase < Test::Unit::TestCase
   ##
   # Shortcut for RDoc::Markup::Paragraph.new with +contents+
 
-  def para *a
+  def para(*a)
     @RM::Paragraph.new(*a)
   end
 
@@ -177,7 +177,7 @@ class RDoc::TestCase < Test::Unit::TestCase
   ##
   # Shortcut for RDoc::Markup::Raw.new with +contents+
 
-  def raw *contents
+  def raw(*contents)
     @RM::Raw.new(*contents)
   end
 
@@ -198,7 +198,7 @@ class RDoc::TestCase < Test::Unit::TestCase
   ##
   # Shortcut for RDoc::Markup::Verbatim.new with +parts+
 
-  def verb *parts
+  def verb(*parts)
     @RM::Verbatim.new(*parts)
   end
 

@@ -13,7 +13,7 @@ class RDoc::Markup::IndentedParagraph < RDoc::Markup::Raw
   # Creates a new IndentedParagraph containing +parts+ indented with +indent+
   # spaces
 
-  def initialize indent, *parts
+  def initialize(indent, *parts)
     @indent = indent
 
     super(*parts)

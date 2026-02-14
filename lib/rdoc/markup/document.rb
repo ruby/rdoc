@@ -26,7 +26,7 @@ class RDoc::Markup::Document
   ##
   # Creates a new Document with +parts+
 
-  def initialize *parts
+  def initialize(*parts)
     @parts = []
     @parts.concat parts
 
@@ -148,7 +148,7 @@ class RDoc::Markup::Document
   ##
   # Appends +parts+ to the document
 
-  def push *parts
+  def push(*parts)
     self.parts.concat parts
   end
 

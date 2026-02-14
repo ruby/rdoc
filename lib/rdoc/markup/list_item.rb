@@ -24,7 +24,7 @@ class RDoc::Markup::ListItem
   ##
   # Creates a new ListItem with an optional +label+ containing +parts+
 
-  def initialize label = nil, *parts
+  def initialize(label = nil, *parts)
     @label = label
     @parts = []
     @parts.concat parts
@@ -92,7 +92,7 @@ class RDoc::Markup::ListItem
   ##
   # Adds +parts+ to the ListItem
 
-  def push *parts
+  def push(*parts)
     @parts.concat parts
   end
 

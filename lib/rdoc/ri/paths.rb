@@ -30,7 +30,7 @@ module RDoc::RI::Paths
   # :extra:: ri data directory from the command line.  Yielded for each
   #          entry in +extra_dirs+
 
-  def self.each system = true, site = true, home = true, gems = :latest, *extra_dirs # :yields: directory, type
+  def self.each(system = true, site = true, home = true, gems = :latest, *extra_dirs) # :yields: directory, type
     return enum_for __method__, system, site, home, gems, *extra_dirs unless
       block_given?
 
