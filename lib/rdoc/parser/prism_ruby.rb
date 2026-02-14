@@ -12,11 +12,16 @@ require_relative 'ripper_state_lex'
 # RDoc::Parser::PrismRuby is compatible with RDoc::Parser::Ruby and aims to replace it.
 
 class RDoc::Parser::PrismRuby < RDoc::Parser
-
   parse_files_matching(/\.rbw?$/) if ENV['RDOC_USE_PRISM_PARSER']
 
-  attr_accessor :visibility
-  attr_reader :container, :singleton, :in_proc_block
+  # Nesting information
+  # container: ClassModule or TopLevel
+  # singleton: true(container is a singleton class) or false
+  # nodoc: true(in shallow nodoc) or false
+  # state: :startdoc, :stopdoc, :enddoc
+  # visibility: :public, :private, :protected
+  # block_level: block nesting level within current container. > 0 means in block
+  Nesting = Struct.new(:container, :singleton, :block_level, :visibility, :nodoc, :doc_state)
 
   def initialize(top_level, content, options, stats)
     super
@@ -31,11 +36,66 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     @track_visibility = :nodoc != @options.visibility
     @encoding = @options.encoding
 
-    @module_nesting = [[top_level, false]]
-    @container = top_level
-    @visibility = :public
-    @singleton = false
-    @in_proc_block = false
+    # Names of constant/class/module marked as nodoc in this file local scope
+    @file_local_nodoc_names = Set.new
+    # Represent module_nesting, visibility, block nesting level and startdoc/stopdoc/enddoc/nodoc for each module_nesting
+    @nestings = [Nesting.new(top_level, false, 0, :public, false, :startdoc)]
+  end
+
+  # Mark the given const/class/module full name as nodoc in current file local scope.
+  def locally_mark_const_name_as_nodoc(const_name)
+    @file_local_nodoc_names << const_name
+  end
+
+  # Returns true if the given container is marked as nodoc in current file local scope.
+  def locally_marked_as_nodoc?(container)
+    @file_local_nodoc_names.include?(container.full_name)
+  end
+
+  def current_nesting # :nodoc:
+    @nestings.last
+  end
+
+  # Current container code object (ClassModule or TopLevel) being processed
+  def current_container
+    current_nesting.container
+  end
+
+  # Returns true if current container is a singleton class
+  # False when in a normal class/module <tt>class A; end</tt>, true when in a singleton class <tt>class << A; end</tt>
+  def singleton?
+    current_nesting.singleton
+  end
+
+  # Returns true if currently inside a proc or block
+  # When true, `self` may not be the current container
+  def in_proc_block?
+    current_nesting.block_level > 0
+  end
+
+  # Current method visibility (:public, :private, :protected)
+  def current_visibility
+    current_nesting.visibility
+  end
+
+  def current_visibility=(v)
+    current_nesting.visibility = v
+  end
+
+  # Mark this container as documentable.
+  # When creating a container within nodoc scope, or creating intermediate modules when reached `class A::Intermediate::D`,
+  # the created container is marked as ignored. Documentable or not will be determined later.
+  # It may be undocumented if the container doesn't have any comment or documentable children,
+  # and will be documentable when receiving comment or documentable children later.
+  def mark_container_documentable(container)
+    return if container.received_nodoc || !container.ignored?
+    record_location(container)
+    container.start_doc
+    mark_container_documentable(container.parent) if container.parent.is_a?(RDoc::ClassModule)
+  end
+
+  def container_accept_document?(container) # :nodoc:
+    !current_nesting.nodoc && current_nesting.doc_state == :startdoc && !container.received_nodoc && !locally_marked_as_nodoc?(container)
   end
 
   # Suppress `extend` and `include` within block
@@ -43,31 +103,27 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # example: `Module.new { include M }` `M.module_eval { include N }`
 
   def with_in_proc_block
-    in_proc_block = @in_proc_block
-    @in_proc_block = true
+    current_nesting.block_level += 1
     yield
-    @in_proc_block = in_proc_block
+    current_nesting.block_level -= 1
   end
 
   # Dive into another container
 
   def with_container(container, singleton: false)
-    old_container = @container
-    old_visibility = @visibility
-    old_singleton = @singleton
-    old_in_proc_block = @in_proc_block
-    @visibility = :public
-    @container = container
-    @singleton = singleton
-    @in_proc_block = false
-    @module_nesting.push([container, singleton])
+    nesting = current_nesting
+    nodoc = locally_marked_as_nodoc?(container) || container.received_nodoc
+    @nestings << Nesting.new(
+      container,
+      singleton,
+      0,
+      :public,
+      nodoc, # Set to true if container is marked as nodoc file-locally or globally. Not inherited from parene nesting.
+      nesting.doc_state # state(stardoc/stopdoc/enddoc) is inherited
+    )
     yield container
   ensure
-    @container = old_container
-    @visibility = old_visibility
-    @singleton = old_singleton
-    @in_proc_block = old_in_proc_block
-    @module_nesting.pop
+    @nestings.pop
   end
 
   # Records the location of this +container+ in the file for this parser and
@@ -103,10 +159,44 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     process_comments_until(@lines.size + 1)
   end
 
-  def should_document?(code_object) # :nodoc:
-    return true unless @track_visibility
-    return false if code_object.parent&.document_children == false
-    code_object.document_self
+  # Apply document control directive such as :startdoc:, :stopdoc: and :enddoc: to the current container
+  def apply_document_control_directive(directives)
+    directives.each do |key, (value, _loc)|
+      case key
+      when 'startdoc', 'stopdoc'
+        state = key.to_sym
+        if current_nesting.doc_state == state || current_nesting.doc_state == :enddoc
+          warn "Already in :#{state}: state, ignoring"
+        else
+          current_nesting.doc_state = state
+        end
+      when 'enddoc'
+        if current_nesting.doc_state == :enddoc
+          warn "Already in :enddoc: state, ignoring"
+        else
+          current_nesting.doc_state = :enddoc
+        end
+      when 'nodoc'
+        if value == 'all'
+          current_nesting.doc_state = :enddoc
+          current_nesting.nodoc = true
+          # Globally mark container as nodoc
+          current_container.document_self = nil
+        elsif current_nesting.nodoc
+          warn "Already in :nodoc: state, ignoring"
+        elsif current_nesting.doc_state == :enddoc
+          warn "Already in :enddoc: state, ignoring"
+        else
+          # Mark this shallow scope as nodoc: methods and constants are not documented
+          current_nesting.nodoc = true
+          # And mark this scope as enddoc: nested containers are not documented
+          current_nesting.doc_state = :enddoc
+          # Mark container as nodoc in this file. When this container is reopened later,
+          # `nodoc!` will be applied again but `enddoc!` will not be applied.
+          locally_mark_const_name_as_nodoc(current_container.full_name) unless current_container.is_a?(RDoc::TopLevel)
+        end
+      end
+    end
   end
 
   # Assign AST node to a line.
@@ -216,7 +306,15 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   def handle_modifier_directive(code_object, line_no) # :nodoc:
     if (comment_text = @modifier_comments[line_no])
       _text, directives = @preprocess.parse_comment(comment_text, line_no, :ruby)
-      handle_code_object_directives(code_object, directives)
+      if (value, = directives['nodoc'])
+        if value == 'all'
+          nodoc_state = :nodoc_all
+        else
+          nodoc_state = :nodoc
+        end
+      end
+      handle_code_object_directives(code_object, directives.except('nodoc'))
+      nodoc_state
     end
   end
 
@@ -235,10 +333,11 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Handles meta method comments
 
   def handle_meta_method_comment(comment, directives, node)
-    handle_code_object_directives(@container, directives)
+    apply_document_control_directive(directives)
+    handle_code_object_directives(current_container, directives)
     is_call_node = node.is_a?(Prism::CallNode)
     singleton_method = false
-    visibility = @visibility
+    visibility = current_visibility
     attributes = rw = line_no = method_name = nil
     directives.each do |directive, (param, line)|
       case directive
@@ -257,13 +356,16 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       end
     end
 
+    return unless container_accept_document?(current_container)
+
     if attributes
       attributes.each do |attr|
-        a = RDoc::Attr.new(@container, attr, rw, comment, singleton: @singleton)
+        a = RDoc::Attr.new(current_container, attr, rw, comment, singleton: singleton?)
         a.store = @store
         a.line = line_no
         record_location(a)
-        @container.add_attribute(a)
+        current_container.add_attribute(a)
+        mark_container_documentable(current_container)
         a.visibility = visibility
       end
     elsif line_no || node
@@ -276,13 +378,13 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       end
       internal_add_method(
         method_name,
-        @container,
+        current_container,
         comment: comment,
         directives: directives,
         dont_rename_initialize: false,
         line_no: line_no,
         visibility: visibility,
-        singleton: @singleton || singleton_method,
+        singleton: singleton? || singleton_method,
         params: nil,
         calls_super: false,
         block_params: nil,
@@ -309,7 +411,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     elsif normal_comment_treat_as_ghost_method_for_now?(directives, line_no) && start_line != @first_non_meta_comment_start_line
       handle_meta_method_comment(comment, directives, nil)
     else
-      handle_code_object_directives(@container, directives)
+      apply_document_control_directive(directives)
+      handle_code_object_directives(current_container, directives)
     end
   end
 
@@ -321,8 +424,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       if @markup == 'tomdoc'
         comment = RDoc::Comment.new(text, @top_level, :ruby)
         comment.format = 'tomdoc'
-        parse_comment_tomdoc(@container, comment, line_no, start_line)
-        @preprocess.run_post_processes(comment, @container)
+        parse_comment_tomdoc(current_container, comment, line_no, start_line)
+        @preprocess.run_post_processes(comment, current_container)
       elsif (comment_text, directives = parse_comment_text_to_directives(text, start_line))
         handle_standalone_consecutive_comment_directive(comment_text, directives, text.start_with?(/#\#$/), line_no, start_line)
       end
@@ -357,10 +460,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     comment.format = markup&.downcase || @markup
     if (section, = directives['section'])
       # If comment has :section:, it is not a documentable comment for a code object
-      @container.set_current_section(section, comment.dup)
+      current_container.set_current_section(section, comment.dup)
       return
     end
-    @preprocess.run_post_processes(comment, @container)
+    @preprocess.run_post_processes(comment, current_container)
     [comment, directives]
   end
 
@@ -393,10 +496,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
 
-  def change_method_visibility(names, visibility, singleton: @singleton)
+  def change_method_visibility(names, visibility, singleton: singleton?)
     new_methods = []
-    @container.methods_matching(names, singleton) do |m|
-      if m.parent != @container
+    current_container.methods_matching(names, singleton) do |m|
+      if m.parent != current_container
         m = m.dup
         record_location(m)
         new_methods << m
@@ -407,9 +510,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     new_methods.each do |method|
       case method
       when RDoc::AnyMethod then
-        @container.add_method(method)
+        current_container.add_method(method)
       when RDoc::Attr then
-        @container.add_attribute(method)
+        current_container.add_attribute(method)
       end
       method.visibility = visibility
     end
@@ -418,9 +521,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Handles `module_function :foo, :bar`
 
   def change_method_to_module_function(names)
-    @container.set_visibility_for(names, :private, false)
+    current_container.set_visibility_for(names, :private, false)
     new_methods = []
-    @container.methods_matching(names) do |m|
+    current_container.methods_matching(names) do |m|
       s_m = m.dup
       record_location(s_m)
       s_m.singleton = true
@@ -429,9 +532,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     new_methods.each do |method|
       case method
       when RDoc::AnyMethod then
-        @container.add_method(method)
+        current_container.add_method(method)
       when RDoc::Attr then
-        @container.add_attribute(method)
+        current_container.add_attribute(method)
       end
       method.visibility = :public
     end
@@ -439,6 +542,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def handle_code_object_directives(code_object, directives) # :nodoc:
     directives.each do |directive, (param)|
+      next if directive in 'nodoc' | 'startdoc' | 'stopdoc' | 'enddoc'
       @preprocess.handle_directive('', directive, param, code_object)
     end
   end
@@ -447,34 +551,40 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def add_alias_method(old_name, new_name, line_no)
     comment, directives = consecutive_comment(line_no)
-    handle_code_object_directives(@container, directives) if directives
-    visibility = @container.find_method(old_name, @singleton)&.visibility || :public
-    a = RDoc::Alias.new(nil, old_name, new_name, comment, singleton: @singleton)
-    handle_modifier_directive(a, line_no)
+    apply_document_control_directive(directives) if directives
+    handle_code_object_directives(current_container, directives) if directives
+    visibility = current_container.find_method(old_name, singleton?)&.visibility || :public
+    a = RDoc::Alias.new(nil, old_name, new_name, comment, singleton: singleton?)
+    modifier_nodoc = handle_modifier_directive(a, line_no)
+
+    return unless container_accept_document?(current_container) && !(@track_visibility && modifier_nodoc)
+
     a.store = @store
     a.line = line_no
+    mark_container_documentable(current_container)
     record_location(a)
-    if should_document?(a)
-      @container.add_alias(a)
-      @container.find_method(new_name, @singleton)&.visibility = visibility
-    end
+    current_container.add_alias(a)
+    current_container.find_method(new_name, singleton?)&.visibility = visibility
   end
 
   # Handles `attr :a, :b`, `attr_reader :a, :b`, `attr_writer :a, :b` and `attr_accessor :a, :b`
 
   def add_attributes(names, rw, line_no)
     comment, directives = consecutive_comment(line_no)
-    handle_code_object_directives(@container, directives) if directives
-    return unless @container.document_children
+    apply_document_control_directive(directives) if directives
+    handle_code_object_directives(current_container, directives) if directives
+    return unless container_accept_document?(current_container)
 
     names.each do |symbol|
-      a = RDoc::Attr.new(nil, symbol.to_s, rw, comment, singleton: @singleton)
+      a = RDoc::Attr.new(nil, symbol.to_s, rw, comment, singleton: singleton?)
       a.store = @store
       a.line = line_no
+      modifier_nodoc = handle_modifier_directive(a, line_no)
+      next if @track_visibility && modifier_nodoc
       record_location(a)
-      handle_modifier_directive(a, line_no)
-      @container.add_attribute(a) if should_document?(a)
-      a.visibility = visibility # should set after adding to container
+      current_container.add_attribute(a)
+      mark_container_documentable(current_container)
+      a.visibility = current_visibility # should set after adding to container
     end
   end
 
@@ -482,10 +592,16 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def add_includes_extends(names, rdoc_class, line_no) # :nodoc:
     comment, directives = consecutive_comment(line_no)
-    handle_code_object_directives(@container, directives) if directives
+    apply_document_control_directive(directives) if directives
+    handle_code_object_directives(current_container, directives) if directives
+
+    return unless container_accept_document?(current_container)
+
+    mark_container_documentable(current_container)
+
     names.each do |name|
       resolved_name = resolve_constant_path(name)
-      ie = @container.add(rdoc_class, resolved_name || name, '')
+      ie = current_container.add(rdoc_class, resolved_name || name, '')
       ie.store = @store
       ie.line = line_no
       ie.comment = comment
@@ -508,9 +624,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Adds a method defined by `def` syntax
 
   def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
-    receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
+    receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : current_container
     comment, directives = consecutive_comment(start_line)
-    handle_code_object_directives(@container, directives) if directives
+    apply_document_control_directive(directives) if directives
+    handle_code_object_directives(current_container, directives) if directives
 
     internal_add_method(
       method_name,
@@ -532,10 +649,18 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     meth = RDoc::AnyMethod.new(nil, method_name, singleton: singleton)
     meth.comment = comment
     handle_code_object_directives(meth, directives) if directives
+    modifier_nodoc = nil
     modifier_comment_lines&.each do |line|
-      handle_modifier_directive(meth, line)
+      modifier_nodoc ||= handle_modifier_directive(meth, line)
     end
-    return unless should_document?(meth)
+
+    return unless container_accept_document?(container)
+    if modifier_nodoc
+      return if @track_visibility
+      meth.document_self = nil
+    end
+
+    mark_container_documentable(container)
 
     if directives && (call_seq, = directives['call-seq'])
       meth.call_seq = call_seq.lines.map(&:chomp).reject(&:empty?).join("\n") if call_seq
@@ -573,28 +698,35 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def find_or_create_module_path(module_name, create_mode)
     root_name, *path, name = module_name.split('::')
+
+    # Creates intermediate modules/classes if they do not exist.
+    # The created module may not be documented if it does not have comment nor documentable children.
     add_module = ->(mod, name, mode) {
-      case mode
-      when :class
-        mod.add_class(RDoc::NormalClass, name, 'Object').tap { |m| m.store = @store }
-      when :module
-        mod.add_module(RDoc::NormalModule, name).tap { |m| m.store = @store }
-      end
+      created =
+        case mode
+        when :class
+          mod.add_class(RDoc::NormalClass, name, 'Object').tap { |m| m.store = @store }
+        when :module
+          mod.add_module(RDoc::NormalModule, name).tap { |m| m.store = @store }
+        end
+      # Set to true later if this module receives comment or documentable children
+      created.ignore
+      created
     }
     if root_name.empty?
       mod = @top_level
     else
-      @module_nesting.reverse_each do |nesting, singleton|
-        next if singleton
-        mod = nesting.get_module_named(root_name)
+      @nestings.reverse_each do |nesting|
+        next if nesting.singleton
+        mod = nesting.container.get_module_named(root_name)
         break if mod
         # If a constant is found and it is not a module or class, RDoc can't document about it.
         # Return an anonymous module to avoid wrong document creation.
-        return RDoc::NormalModule.new(nil) if nesting.find_constant_named(root_name)
+        return RDoc::NormalModule.new(nil) if nesting.container.find_constant_named(root_name)
       end
-      last_nesting, = @module_nesting.reverse_each.find { |_, singleton| !singleton }
-      return mod || add_module.call(last_nesting, root_name, create_mode) unless name
-      mod ||= add_module.call(last_nesting, root_name, :module)
+      last_nesting = @nestings.reverse_each.find { |nesting| !nesting.singleton }
+      return mod || add_module.call(last_nesting.container, root_name, create_mode) unless name
+      mod ||= add_module.call(last_nesting.container, root_name, :module)
     end
     path.each do |name|
       mod = mod.get_module_named(name) || add_module.call(mod, name, :module)
@@ -608,9 +740,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     owner_name, path = constant_path.split('::', 2)
     return constant_path if owner_name.empty? # ::Foo, ::Foo::Bar
     mod = nil
-    @module_nesting.reverse_each do |nesting, singleton|
-      next if singleton
-      mod = nesting.get_module_named(owner_name)
+    @nestings.reverse_each do |nesting|
+      next if nesting.singleton
+      mod = nesting.container.get_module_named(owner_name)
       break if mod
     end
     mod ||= @top_level.get_module_named(owner_name)
@@ -626,7 +758,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       # Within `class C` or `module C`, owner is C(== current container)
       # Within `class <<C`, owner is C.singleton_class
       # but RDoc don't track constants of a singleton class of module
-      [(@singleton ? nil : @container), name]
+      [(singleton? ? nil : current_container), name]
     elsif const_path.empty? # class ::Foo
       [@top_level, name]
     else # `class Foo::Bar` or `class ::Foo::Bar`
@@ -638,16 +770,33 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def add_constant(constant_name, rhs_name, start_line, end_line)
     comment, directives = consecutive_comment(start_line)
-    handle_code_object_directives(@container, directives) if directives
+    apply_document_control_directive(directives) if directives
+    handle_code_object_directives(current_container, directives) if directives
     owner, name = find_or_create_constant_owner_name(constant_name)
     return unless owner
 
     constant = RDoc::Constant.new(name, rhs_name, comment)
     constant.store = @store
     constant.line = start_line
-    record_location(constant)
-    handle_modifier_directive(constant, start_line)
-    handle_modifier_directive(constant, end_line)
+    constant.parent = owner
+    modifier_nodocs = [
+      handle_modifier_directive(constant, start_line),
+      handle_modifier_directive(constant, end_line)
+    ].compact
+
+    if @track_visibility && modifier_nodocs.include?(:nodoc_all)
+      constant.document_self = nil
+      owner.add_constant(constant)
+    elsif @track_visibility && modifier_nodocs.include?(:nodoc)
+      locally_mark_const_name_as_nodoc(constant.full_name)
+      constant.ignore
+    elsif container_accept_document?(owner)
+      mark_container_documentable(owner)
+      record_location(constant)
+    else
+      constant.ignore
+    end
+
     owner.add_constant(constant)
     mod =
       if rhs_name =~ /^::/
@@ -656,8 +805,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         full_name = resolve_constant_path(rhs_name)
         @store.find_class_or_module(full_name)
       end
-    if mod && constant.document_self
-      a = @container.add_module_alias(mod, rhs_name, constant, @top_level)
+    if mod
+      a = current_container.add_module_alias(mod, rhs_name, constant, @top_level)
       a.store = @store
       a.line = start_line
       record_location(a)
@@ -668,8 +817,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def add_module_or_class(module_name, start_line, end_line, is_class: false, superclass_name: nil, superclass_expr: nil)
     comment, directives = consecutive_comment(start_line)
-    handle_code_object_directives(@container, directives) if directives
-    return unless @container.document_children
+    apply_document_control_directive(directives) if directives
+    handle_code_object_directives(current_container, directives) if directives
 
     owner, name = find_or_create_constant_owner_name(module_name)
     return unless owner
@@ -684,7 +833,12 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         superclass_full_path = superclass_full_path.sub(/^::/, '')
       end
       # add_class should be done after resolving superclass
-      mod = owner.classes_hash[name] || owner.add_class(RDoc::NormalClass, name, superclass_name || superclass_expr || '::Object')
+      mod = owner.classes_hash[name]
+      unless mod
+        mod = owner.add_class(RDoc::NormalClass, name, superclass_name || superclass_expr || '::Object')
+        mod.ignore
+      end
+
       if superclass_name
         if superclass
           mod.superclass = superclass
@@ -693,16 +847,35 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         end
       end
     else
-      mod = owner.modules_hash[name] || owner.add_module(RDoc::NormalModule, name)
+      mod = owner.modules_hash[name]
+      unless mod
+        mod = owner.add_module(RDoc::NormalModule, name)
+        mod.ignore
+      end
     end
 
     mod.store = @store
     mod.line = start_line
-    record_location(mod)
-    handle_modifier_directive(mod, start_line)
-    handle_modifier_directive(mod, end_line)
-    mod.add_comment(comment, @top_level) if comment
-    mod
+    modifier_nodocs = [
+      handle_modifier_directive(mod, start_line),
+      handle_modifier_directive(mod, end_line)
+    ]
+
+    nodoc = false
+    if @track_visibility && modifier_nodocs.include?(:nodoc_all)
+      mod.document_self = nil
+      nodoc = true
+    elsif @track_visibility && modifier_nodocs.include?(:nodoc)
+      locally_mark_const_name_as_nodoc(mod.full_name)
+      nodoc = true
+    elsif container_accept_document?(owner) && !locally_marked_as_nodoc?(mod)
+      mark_container_documentable(owner)
+      mark_container_documentable(mod)
+      record_location(mod)
+      mod.add_comment(comment, @top_level) if comment
+    end
+
+    [mod, nodoc]
   end
 
   class RDocVisitor < Prism::Visitor # :nodoc:
@@ -785,7 +958,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def visit_alias_method_node(node)
-      return if @scanner.in_proc_block
+      return if @scanner.in_proc_block?
       @scanner.process_comments_until(node.location.start_line - 1)
       return unless node.old_name.is_a?(Prism::SymbolNode) && node.new_name.is_a?(Prism::SymbolNode)
       @scanner.add_alias_method(node.old_name.value.to_s, node.new_name.value.to_s, node.location.start_line)
@@ -795,9 +968,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       node.constant_path.accept(self)
       @scanner.process_comments_until(node.location.start_line - 1)
       module_name = constant_path_string(node.constant_path)
-      mod = @scanner.add_module_or_class(module_name, node.location.start_line, node.location.end_line) if module_name
+      mod, nodoc = @scanner.add_module_or_class(module_name, node.location.start_line, node.location.end_line) if module_name
       if mod
         @scanner.with_container(mod) do
+          @scanner.current_nesting.doc_state = :enddoc if nodoc
           node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
@@ -813,9 +987,10 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       superclass_name = constant_path_string(node.superclass) if node.superclass
       superclass_expr = node.superclass.slice if node.superclass && !superclass_name
       class_name = constant_path_string(node.constant_path)
-      klass = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr) if class_name
+      klass, nodoc = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr) if class_name
       if klass
         @scanner.with_container(klass) do
+          @scanner.current_nesting.doc_state = :enddoc if nodoc
           node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
@@ -839,13 +1014,13 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       case expression
       when Prism::ConstantWriteNode
         # Accept `class << (NameErrorCheckers = Object.new)` as a module which is not actually a module
-        mod = @scanner.container.add_module(RDoc::NormalModule, expression.name.to_s)
+        mod = @scanner.current_container.add_module(RDoc::NormalModule, expression.name.to_s)
       when Prism::ConstantPathNode, Prism::ConstantReadNode
         expression_name = constant_path_string(expression)
         # If a constant_path does not exist, RDoc creates a module
         mod = @scanner.find_or_create_module_path(expression_name, :module) if expression_name
       when Prism::SelfNode
-        mod = @scanner.container if @scanner.container != @top_level
+        mod = @scanner.current_container if @scanner.current_container != @top_level
       end
       expression.accept(self)
       if mod
@@ -864,7 +1039,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       end_line = node.location.end_line
       @scanner.process_comments_until(start_line - 1)
 
-      return if @scanner.in_proc_block
+      return if @scanner.in_proc_block?
 
       case node.receiver
       when Prism::NilNode, Prism::TrueNode, Prism::FalseNode
@@ -882,7 +1057,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         receiver_fallback_type = :class
       when Prism::SelfNode
         # singleton method of a singleton class is not documentable
-        return if @scanner.singleton
+        return if @scanner.singleton?
         visibility = :public
         singleton = true
       when Prism::ConstantReadNode, Prism::ConstantPathNode
@@ -892,8 +1067,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         receiver_fallback_type = :module
         return unless receiver_name
       when nil
-        visibility = @scanner.visibility
-        singleton = @scanner.singleton
+        visibility = @scanner.current_visibility
+        singleton = @scanner.singleton?
       else
         # `def (unknown expression).method_name` is not documentable
         return
@@ -999,26 +1174,26 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       return unless call_node.arguments&.arguments&.size == 1
       arg = call_node.arguments.arguments.first
       return unless arg.is_a?(Prism::StringNode)
-      @scanner.container.add_require(RDoc::Require.new(arg.unescaped, nil))
+      @scanner.current_container.add_require(RDoc::Require.new(arg.unescaped, nil))
     end
 
     def _visit_call_module_function(call_node)
-      return if @scanner.in_proc_block || @scanner.singleton
+      return if @scanner.in_proc_block? || @scanner.singleton?
       names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
       @scanner.change_method_to_module_function(names) if names
     end
 
     def _visit_call_public_private_class_method(call_node, visibility)
-      return if @scanner.in_proc_block || @scanner.singleton
+      return if @scanner.in_proc_block? || @scanner.singleton?
       names = visibility_method_arguments(call_node, singleton: true)
       @scanner.change_method_visibility(names, visibility, singleton: true) if names
     end
 
     def _visit_call_public_private_protected(call_node, visibility)
-      return if @scanner.in_proc_block
+      return if @scanner.in_proc_block?
       arguments_node = call_node.arguments
       if arguments_node.nil? # `public` `private`
-        @scanner.visibility = visibility
+        @scanner.current_visibility = visibility
       else # `public :foo, :bar`, `private def foo; end`
         names = visibility_method_arguments(call_node, singleton: false)
         @scanner.change_method_visibility(names, visibility) if names
@@ -1026,7 +1201,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def _visit_call_alias_method(call_node)
-      return if @scanner.in_proc_block
+      return if @scanner.in_proc_block?
 
       new_name, old_name, *rest = symbol_arguments(call_node)
       return unless old_name && new_name && rest.empty?
@@ -1034,13 +1209,13 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def _visit_call_include(call_node)
-      return if @scanner.in_proc_block
+      return if @scanner.in_proc_block?
 
       names = constant_arguments_names(call_node)
       line_no = call_node.location.start_line
       return unless names
 
-      if @scanner.singleton
+      if @scanner.singleton?
         @scanner.add_extends(names, line_no)
       else
         @scanner.add_includes(names, line_no)
@@ -1048,26 +1223,26 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     end
 
     def _visit_call_extend(call_node)
-      return if @scanner.in_proc_block
+      return if @scanner.in_proc_block?
 
       names = constant_arguments_names(call_node)
-      @scanner.add_extends(names, call_node.location.start_line) if names && !@scanner.singleton
+      @scanner.add_extends(names, call_node.location.start_line) if names && !@scanner.singleton?
     end
 
     def _visit_call_public_constant(call_node)
-      return if @scanner.in_proc_block || @scanner.singleton
+      return if @scanner.in_proc_block? || @scanner.singleton?
       names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
+      @scanner.current_container.set_constant_visibility_for(names.map(&:to_s), :public) if names
     end
 
     def _visit_call_private_constant(call_node)
-      return if @scanner.in_proc_block || @scanner.singleton
+      return if @scanner.in_proc_block? || @scanner.singleton?
       names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
+      @scanner.current_container.set_constant_visibility_for(names.map(&:to_s), :private) if names
     end
 
     def _visit_call_attr_reader_writer_accessor(call_node, rw)
-      return if @scanner.in_proc_block
+      return if @scanner.in_proc_block?
       names = symbol_arguments(call_node)
       @scanner.add_attributes(names.map(&:to_s), rw, call_node.location.start_line) if names
     end

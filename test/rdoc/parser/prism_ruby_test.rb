@@ -1557,22 +1557,23 @@ module RDocParserPrismTestCases
     foo = @top_level.classes.first
     bar = foo.classes.first
     object = @top_level.find_class_or_module('Object')
-    assert_equal ['A', 'D', 'E', 'F'], foo.constants.map(&:name) unless accept_legacy_bug?
+    assert_equal ['A', 'DUMMY2', 'D', 'E', 'F'], foo.constants.map(&:name) unless accept_legacy_bug?
+    assert_equal ['A', 'D'], foo.constants.reject(&:ignored?).map(&:name) unless accept_legacy_bug?
     assert_equal '(any expression 1)', foo.constants.first.value
     assert_equal ['B'], bar.constants.map(&:name)
     assert_equal ['C', 'G'], object.constants.map(&:name) unless accept_legacy_bug?
     all_constants = foo.constants + bar.constants + object.constants
-    assert_equal [@top_level] * 7, all_constants.map(&:file) unless accept_legacy_bug?
-    assert_equal [2, 12, 13, 14, 7, 8, 18], all_constants.map(&:line) unless accept_legacy_bug?
+    assert_equal [@top_level, nil, @top_level, nil, nil, @top_level, @top_level, @top_level], all_constants.map(&:file) unless accept_legacy_bug?
+    assert_equal [2, 10, 12, 13, 14, 7, 8, 18], all_constants.map(&:line) unless accept_legacy_bug?
   end
 
   def test_nodoc_constant_assigned_without_nodoc_comment
     util_parser <<~RUBY
       module Foo
         A = 1
-        B = 1 # :nodoc:
+        B = 1 # :nodoc: all
         begin
-          C = 1 # :nodoc:
+          C = 1 # :nodoc: all
         rescue
           C = 2
         end
@@ -1581,8 +1582,9 @@ module RDocParserPrismTestCases
       Foo::D = 2
     RUBY
     mod = @top_level.modules.first
-    assert_equal ['A', 'B', 'C', 'D'], mod.constants.map(&:name)
-    assert_equal [false, true, true, false], mod.constants.map(&:received_nodoc)
+    constants = mod.constants.sort_by(&:name)
+    assert_equal ['A', 'B', 'C', 'D'], constants.map(&:name)
+    assert_equal [false, true, true, false], constants.map(&:received_nodoc)
   end
 
   def test_constant_visibility
