@@ -37,7 +37,7 @@ class RDoc::Markup::List
   # Creates a new list of +type+ with +items+.  Valid list types are:
   # +:BULLET+, +:LABEL+, +:LALPHA+, +:NOTE+, +:NUMBER+, +:UALPHA+
 
-  def initialize type = nil, *items
+  def initialize(type = nil, *items)
     @type = type
     @items = []
     @items.concat items
@@ -94,7 +94,7 @@ class RDoc::Markup::List
   ##
   # Appends +items+ to the list
 
-  def push *items
+  def push(*items)
     @items.concat items
   end
 

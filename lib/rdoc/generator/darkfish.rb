@@ -173,7 +173,7 @@ class RDoc::Generator::Darkfish
   ##
   # Output progress information if debugging is enabled
 
-  def debug_msg *msg
+  def debug_msg(*msg)
     return unless $DEBUG_RDOC
     $stderr.puts(*msg)
   end
