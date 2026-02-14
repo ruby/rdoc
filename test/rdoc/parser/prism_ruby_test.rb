@@ -2310,8 +2310,8 @@ class RDocParserPrismRubyTest < RDoc::TestCase
   end
 end
 
-# Run the same test with the original RDoc::Parser::Ruby
-class RDocParserRubyWithPrismRubyTestCasesTest < RDoc::TestCase
+# Run the same test with the original RDoc::Parser::RipperRuby
+class RDocParserRipperRubyWithPrismRubyTestCasesTest < RDoc::TestCase
   include RDocParserPrismTestCases
 
   def accept_legacy_bug?
@@ -2319,7 +2319,7 @@ class RDocParserRubyWithPrismRubyTestCasesTest < RDoc::TestCase
   end
 
   def util_parser(content)
-    @parser = RDoc::Parser::Ruby.new @top_level, content, @options, @stats
+    @parser = RDoc::Parser::RipperRuby.new @top_level, content, @options, @stats
     @parser.scan
   end
-end unless ENV['RDOC_USE_PRISM_PARSER']
+end if ENV['RDOC_USE_RIPPER_PARSER']

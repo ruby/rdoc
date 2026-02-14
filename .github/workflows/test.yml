@@ -39,9 +39,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-    # libyaml-dev is needed for psych, see https://github.com/ruby/setup-ruby/issues/409
-    - if: ${{ matrix.os == 'ubuntu-latest' }}
-      run: sudo apt install libyaml-dev
     - name: Set up Ruby
       uses: ruby/setup-ruby@09a7688d3b55cf0e976497ff046b70949eeaccfd # v1.288.0
       with:
@@ -53,12 +50,32 @@ jobs:
       run: bundle exec rake
       env:
         RUBYOPT: --enable-frozen_string_literal
-    - name: Run test with Prism parser
+    - name: Run test with Ripper parser
       run: bundle exec rake
       env:
         RUBYOPT: --enable-frozen_string_literal
-        RDOC_USE_PRISM_PARSER: true
+        RDOC_USE_RIPPER_PARSER: true
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake rdoc
     - if: ${{ matrix.ruby == 'head' && startsWith(matrix.os, 'ubuntu') }}
       run: bundle exec rake install
+
+  prism-version-test:
+    needs: ruby-versions
+    strategy:
+      fail-fast: false
+      matrix:
+        prism_version: ['1.0.0', '1.3.0', '1.7.0', 'head']
+    runs-on: ubuntu-latest
+    env:
+      RUBYOPT: --enable-frozen_string_literal
+      PRISM_VERSION: ${{matrix.prism_version}}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@09a7688d3b55cf0e976497ff046b70949eeaccfd # v1.288.0
+        with:
+          ruby-version: ${{ fromJson(needs.ruby-versions.outputs.latest) }}
+          bundler-cache: true
+      - name: Run test
+        run: bundle exec rake
