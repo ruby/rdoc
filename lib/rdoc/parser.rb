@@ -170,7 +170,7 @@ class RDoc::Parser
     file_name = top_level.absolute_name
     return if binary? file_name
 
-    parser = use_markup content
+    parser = use_markup content, file_name
 
     unless parser then
       parse_name = file_name
@@ -229,21 +229,22 @@ class RDoc::Parser
   #
   # Any comment style may be used to hide the markup comment.
 
-  def self.use_markup(content)
+  def self.use_markup(content, file_path)
     markup = content.lines.first(3).grep(/markup:\s+(\w+)/) { $1 }.first
 
-    return unless markup
+    if markup
+      return RDoc::Parser::Ruby if markup == "tomdoc"
 
-    # TODO Ruby should be returned only when the filename is correct
-    return RDoc::Parser::Ruby if %w[tomdoc markdown].include? markup
-
-    markup = Regexp.escape markup
-
-    _, selected = RDoc::Parser.parsers.find do |_, parser|
-      /^#{markup}$/i =~ parser.name.sub(/.*:/, '')
+      markup = Regexp.escape markup
+      _, selected = RDoc::Parser.parsers.find do |_, parser|
+        /^#{markup}$/i =~ parser.name.sub(/.*:/, '')
+      end
+      selected
+    else
+      selected = RDoc::Parser.can_parse_by_name(file_path)
+      return if selected == RDoc::Parser::Simple
+      selected
     end
-
-    selected
   end
 
   ##

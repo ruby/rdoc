@@ -232,7 +232,7 @@ class RDocParserTest < RDoc::TestCase
 # coding: utf-8 markup: rd
     CONTENT
 
-    parser = @RP.use_markup content
+    parser = @RP.use_markup content, ""
 
     assert_equal @RP::RD, parser
   end
@@ -242,9 +242,9 @@ class RDocParserTest < RDoc::TestCase
 # coding: utf-8 markup: markdown
     CONTENT
 
-    parser = @RP.use_markup content
+    parser = @RP.use_markup content, ""
 
-    assert_equal @RP::Ruby, parser
+    assert_equal @RP::Markdown, parser
   end
 
   def test_class_use_markup_modeline
@@ -253,7 +253,7 @@ class RDocParserTest < RDoc::TestCase
 # markup: rd
     CONTENT
 
-    parser = @RP.use_markup content
+    parser = @RP.use_markup content, ""
 
     assert_equal @RP::RD, parser
   end
@@ -266,7 +266,7 @@ class RDocParserTest < RDoc::TestCase
  */
     CONTENT
 
-    parser = @RP.use_markup content
+    parser = @RP.use_markup content, ""
 
     assert_equal @RP::RD, parser
   end
@@ -277,7 +277,7 @@ class RDocParserTest < RDoc::TestCase
 # coding: utf-8 markup: rd
     CONTENT
 
-    parser = @RP.use_markup content
+    parser = @RP.use_markup content, ""
 
     assert_equal @RP::RD, parser
   end
@@ -287,13 +287,13 @@ class RDocParserTest < RDoc::TestCase
 # coding: utf-8 markup: tomdoc
     CONTENT
 
-    parser = @RP.use_markup content
+    parser = @RP.use_markup content, ""
 
     assert_equal @RP::Ruby, parser
   end
 
   def test_class_use_markup_none
-    parser = @RP.use_markup ''
+    parser = @RP.use_markup '', ''
 
     assert_nil parser
   end
@@ -303,9 +303,23 @@ class RDocParserTest < RDoc::TestCase
 # :markup: RDoc
     CONTENT
 
-    parser = @RP.use_markup content
+    parser = @RP.use_markup content, ""
 
     assert_nil parser
+  end
+
+  def test_class_use_markup_filepath
+    parser = @RP.use_markup "", "foo.rb"
+
+    assert_equal @RP::Ruby, parser
+  end
+
+  def test_class_use_markup_content_and_filepath
+    parser = @RP.use_markup <<~C, "foo.c"
+      /* :markup: markdown */
+    C
+
+    assert_equal @RP::Markdown, parser
   end
 
   def test_initialize
