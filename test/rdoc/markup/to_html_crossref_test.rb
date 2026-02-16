@@ -141,13 +141,15 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_convert_RDOCLINK_rdoc_ref_not_found
-    result = nil
-    stdout, _ = capture_output do
-      result = @to.convert 'rdoc-ref:FOO'
-    end
+    RDoc::Checker.clear
+
+    result = @to.convert 'rdoc-ref:FOO'
 
     assert_equal para("FOO"), result
-    assert_include stdout, "index.html: `rdoc-ref:FOO` can't be resolved for `FOO`"
+    assert RDoc::Checker.any?
+    warning = RDoc::Checker.warnings.first
+    assert_equal "xref_data.rb", warning.file
+    assert_match(/rdoc-ref:FOO/, warning.message)
   end
 
   def test_convert_RDOCLINK_rdoc_ref_method
@@ -234,11 +236,14 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_gen_url_rdoc_ref_not_found
-    stdout, _ = capture_output do
-      @to.gen_url 'rdoc-ref:FOO', 'FOO'
-    end
+    RDoc::Checker.clear
 
-    assert_include stdout, "index.html: `rdoc-ref:FOO` can't be resolved for `FOO`"
+    @to.gen_url 'rdoc-ref:FOO', 'FOO'
+
+    assert RDoc::Checker.any?
+    warning = RDoc::Checker.warnings.first
+    assert_equal "xref_data.rb", warning.file
+    assert_match(/rdoc-ref:FOO/, warning.message)
   end
 
   def test_handle_regexp_CROSSREF
