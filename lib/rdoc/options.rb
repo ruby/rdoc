@@ -169,6 +169,11 @@ class RDoc::Options
   attr_writer :exclude
 
   ##
+  # Pages matching this pattern will be hidden from listings but still generated
+
+  attr_writer :hide
+
+  ##
   # The list of files to be processed
 
   attr_accessor :files
@@ -409,6 +414,7 @@ class RDoc::Options
     @embed_mixins = false
     @exclude = []
     @files = nil
+    @hide = []
     @force_output = false
     @force_update = true
     @generator_name = "aliki"
@@ -461,6 +467,7 @@ class RDoc::Options
     @charset        = map['charset']
     @embed_mixins   = map['embed_mixins']
     @exclude        = map['exclude']
+    @hide           = map['hide']
     @generator_name = map['generator_name']
     @hyperlink_all  = map['hyperlink_all']
     @line_numbers   = map['line_numbers']
@@ -497,6 +504,7 @@ class RDoc::Options
     @charset        = map['charset']        if map.has_key?('charset')
     @embed_mixins   = map['embed_mixins']   if map.has_key?('embed_mixins')
     @exclude        = map['exclude']        if map.has_key?('exclude')
+    @hide           = map['hide']           if map.has_key?('hide')
     @generator_name = map['generator_name'] if map.has_key?('generator_name')
     @hyperlink_all  = map['hyperlink_all']  if map.has_key?('hyperlink_all')
     @line_numbers   = map['line_numbers']   if map.has_key?('line_numbers')
@@ -629,6 +637,19 @@ class RDoc::Options
   end
 
   ##
+  # Create a regexp for #hide
+
+  def hide
+    if @hide.nil? || @hide.is_a?(Regexp)
+      @hide
+    elsif @hide.empty?
+      nil
+    else
+      Regexp.new(@hide.join("|"))
+    end
+  end
+
+  ##
   # Completes any unfinished option setup business such as filtering for
   # existent files, creating a regexp for #exclude and setting a default
   # #template.
@@ -647,6 +668,7 @@ class RDoc::Options
     end
 
     @exclude = self.exclude
+    @hide = self.hide
 
     finish_page_dir
 
@@ -861,6 +883,15 @@ Usage: #{opt.program_name} [options] [names...]
       opt.on("--[no-]apply-default-exclude",
              "Use default PATTERN to exclude.") do |value|
         @apply_default_exclude = value
+      end
+
+      opt.separator nil
+
+      opt.on("--hide=PATTERN", "-H", Regexp,
+             "Hide pages matching PATTERN from the",
+             "sidebar listing. Pages are still",
+             "generated and linkable.") do |value|
+        @hide << value
       end
 
       opt.separator nil

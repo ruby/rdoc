@@ -579,4 +579,72 @@ class RDocRDocTest < RDoc::TestCase
       assert_empty output
     end
   end
+
+  def test_parse_file_hide
+    @rdoc.store = RDoc::Store.new(@options)
+    @rdoc.options.hide = /internal/
+
+    temp_dir do
+      @rdoc.options.root = Pathname(Dir.pwd)
+
+      File.write 'internal.md', '# Hidden Page'
+
+      top_level = @rdoc.parse_file 'internal.md'
+
+      assert top_level.hidden, "Expected internal.md to be hidden"
+    end
+  end
+
+  def test_parse_file_not_hide
+    @rdoc.store = RDoc::Store.new(@options)
+    @rdoc.options.hide = /internal/
+
+    temp_dir do
+      @rdoc.options.root = Pathname(Dir.pwd)
+
+      File.write 'public.md', '# Public Page'
+
+      top_level = @rdoc.parse_file 'public.md'
+
+      refute top_level.hidden, "Expected public.md to not be hidden"
+    end
+  end
+
+  def test_validate_hide_patterns_warns_for_excluded_file
+    @rdoc.store = RDoc::Store.new(@options)
+    @rdoc.options.hide = /secret\.md/
+    @rdoc.options.exclude = /secret/
+
+    temp_dir do
+      @rdoc.options.root = Pathname(Dir.pwd)
+
+      File.write 'secret.md', '# Secret'
+
+      _, err = capture_output do
+        @rdoc.validate_hide_patterns
+      end
+
+      assert_match(/secret\.md.*hide.*exclude/, err)
+    end
+  end
+
+  def test_validate_hide_patterns_warns_for_unprocessed_file
+    @rdoc.store = RDoc::Store.new(@options)
+    @rdoc.options.hide = /notincluded\.md/
+
+    temp_dir do
+      @rdoc.options.root = Pathname(Dir.pwd)
+
+      # Create a file that won't be processed (not in .document)
+      FileUtils.mkdir 'subdir'
+      File.write 'subdir/notincluded.md', '# Not included'
+      File.write 'subdir/.document', '' # empty .document excludes everything
+
+      _, err = capture_output do
+        @rdoc.validate_hide_patterns
+      end
+
+      assert_match(/notincluded\.md.*hide.*not included for documentation/, err)
+    end
+  end
 end
