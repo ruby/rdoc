@@ -188,17 +188,21 @@ class RDocAttrTest < RDoc::TestCase
   end
 
   [
-    ['bar', 'baz', 'R'],
-    ['bar=', 'baz=', 'W']
-  ].each do |original_name, new_name, expected_rw|
-    define_method("test_add_alias_#{new_name}_for_an_attribute_accessor") do
+    [{ rw: 'RW', type: :accessor }, { old_name: 'bar',  new_name: 'baz' }, 'R'],
+    [{ rw: 'RW', type: :accessor }, { old_name: 'bar=', new_name: 'baz=' }, 'W'],
+    [{ rw: 'R', type: :reader    }, { old_name: 'bar',  new_name: 'baz' }, 'R'],
+    [{ rw: 'W', type: :writer    }, { old_name: 'bar=', new_name: 'baz=' }, 'W']
+  ].each do |orig_attr, an_alias, exp_rw|
+    define_method(
+      "test_add_alias_#{an_alias[:new_name]}_for_attr_#{orig_attr[:type]}_sets_correct_rw"
+    ) do
       context = RDoc::Context.new
-      attr = RDoc::Attr.new nil, 'bar', 'RW', ''
-      an_alias = RDoc::Alias.new nil, original_name, new_name, ''
+      attr = RDoc::Attr.new nil, 'bar', orig_attr[:rw], ''
+      als = RDoc::Alias.new nil, an_alias[:old_name], an_alias[:new_name], ''
 
-      new_attr = attr.add_alias an_alias, context
+      new_attr = attr.add_alias als, context
 
-      assert_equal expected_rw, new_attr.rw
+      assert_equal exp_rw, new_attr.rw
     end
   end
 end
