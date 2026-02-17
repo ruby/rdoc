@@ -294,4 +294,15 @@ require_relative 'parser/c'
 require_relative 'parser/changelog'
 require_relative 'parser/markdown'
 require_relative 'parser/rd'
-require_relative 'parser/ruby'
+
+if ENV['RDOC_USE_RIPPER_PARSER']
+  puts "========================================================================="
+  puts "RDoc is using the deprecated Ripper parser to generate the documentation."
+  puts "This parser will be removed in a future version of RDoc."
+  puts "========================================================================="
+  require 'rdoc/parser/ripper_ruby'
+  RDoc::Parser::Ruby = RDoc::Parser::RipperRuby
+else
+  require 'rdoc/parser/prism_ruby'
+  RDoc::Parser::Ruby = RDoc::Parser::PrismRuby
+end
