@@ -432,9 +432,7 @@ class RDocServletTest < RDoc::TestCase
 
     @s.show_documentation @req, @res
 
-    assert_equal 'text/html', @res.content_type
-    # Aliki does not have a table_of_contents template, so the body is nil
-    assert_nil @res.body
+    assert_equal 404, @res.status
   end
 
   def test_show_documentation_page
