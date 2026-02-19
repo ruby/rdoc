@@ -178,12 +178,10 @@ lib/rdoc/
 │   └── ...
 ├── generator/                 # Documentation generators
 │   ├── aliki.rb               # HTML generator (default theme)
-│   ├── darkfish.rb            # HTML generator (deprecated, will be removed in v8.0)
 │   ├── markup.rb              # Markup format generator
 │   ├── ri.rb                  # RI command generator
 │   └── template/              # ERB templates (.rhtml files)
-│       ├── aliki/             # Aliki theme (default)
-│       └── darkfish/          # Darkfish theme (deprecated)
+│       └── aliki/             # Aliki theme
 ├── markup/                    # Markup parsing and formatting
 ├── code_object/               # AST objects for documented items
 ├── markdown/                  # Markdown parsing
@@ -230,7 +228,7 @@ exe/
 ### Pluggable System
 
 - **Parsers:** Ruby, C, Markdown, RD, Prism-based Ruby (experimental)
-- **Generators:** HTML/Aliki (default), HTML/Darkfish (deprecated), RI, POT (gettext), JSON, Markup
+- **Generators:** HTML/Aliki (default), RI, POT (gettext), Markup
 
 ## Common Workflows
 
@@ -317,7 +315,7 @@ When editing markup reference documentation, such as `doc/markup_reference/markd
 
 ### Modifying Themes/Styling
 
-When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
+When making changes to theme CSS or templates:
 
 1. **Generate documentation**: Run `bundle exec rake rerdoc` to create baseline
 2. **Start HTTP server**: Run `cd _site && python3 -m http.server 8000` (use different port if 8000 is in use)
