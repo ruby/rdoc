@@ -93,7 +93,7 @@ class RDoc::Generator::Aliki
     @base_dir       = Pathname.pwd.expand_path
     @dry_run        = @options.dry_run
     @file_output    = true
-    @template_dir   = Pathname.new(File.expand_path(File.join(__dir__, 'template', 'aliki')))
+    @template_dir   = Pathname.new(@options.template_dir)
     @template_cache = {}
 
     @classes = nil
@@ -120,27 +120,26 @@ class RDoc::Generator::Aliki
   end
 
   ##
-  # Copy only the static assets required by Aliki.
-  # Aliki does not ship embedded fonts or image sprites, keeping
-  # generated documentation lightweight.
+  # Copy static assets (CSS, JS, fonts) from the template directory
+  # to the output directory.
 
   def write_style_sheet
-    debug_msg "Copying Aliki static files"
+    debug_msg "Copying static files"
     options = { verbose: $DEBUG_RDOC, noop: @dry_run }
 
-    install_rdoc_static_file @template_dir + 'css/rdoc.css', "./css/rdoc.css", options
+    %w[css js fonts images].each do |subdir|
+      Dir[(@template_dir + "#{subdir}/**/*").to_s].each do |path|
+        next if File.directory?(path)
+        next if File.basename(path).start_with?('.')
+
+        dst = Pathname.new(path).relative_path_from(@template_dir)
+
+        install_rdoc_static_file @template_dir + path, dst, options
+      end
+    end
 
     unless @options.template_stylesheets.empty?
       FileUtils.cp @options.template_stylesheets, '.', **options
-    end
-
-    Dir[(@template_dir + 'js/**/*').to_s].each do |path|
-      next if File.directory?(path)
-      next if File.basename(path).start_with?('.')
-
-      dst = Pathname.new(path).relative_path_from(@template_dir)
-
-      install_rdoc_static_file @template_dir + path, dst, options
     end
   end
 
