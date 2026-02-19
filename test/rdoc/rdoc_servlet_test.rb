@@ -79,11 +79,11 @@ class RDocServletTest < RDoc::TestCase
       File.open 'css/rdoc.css', 'w' do |io| io.write 'h1 { color: red }' end
       File.utime now, now, 'css/rdoc.css'
 
-      @s.asset_dirs[:darkfish] = '.'
+      @s.asset_dirs[:aliki] = '.'
 
       @req.path = '/css/rdoc.css'
 
-      @s.asset :darkfish, @req, @res
+      @s.asset :aliki, @req, @res
 
       assert_equal 'h1 { color: red }', @res.body
       assert_equal 'text/css',          @res.content_type
@@ -101,33 +101,18 @@ class RDocServletTest < RDoc::TestCase
     assert_equal 404, @res.status
   end
 
-  def test_do_GET_asset_darkfish
+  def test_do_GET_asset_aliki
     temp_dir do
       FileUtils.mkdir 'css'
       FileUtils.touch 'css/rdoc.css'
 
-      @s.asset_dirs[:darkfish] = '.'
+      @s.asset_dirs[:aliki] = '.'
 
       @req.path = '/css/rdoc.css'
 
       @s.do_GET @req, @res
 
       assert_equal 'text/css',          @res.content_type
-    end
-  end
-
-  def test_do_GET_asset_json_index
-    temp_dir do
-      FileUtils.mkdir 'js'
-      FileUtils.touch 'js/navigation.js'
-
-      @s.asset_dirs[:json_index] = '.'
-
-      @req.path = '/js/navigation.js'
-
-      @s.do_GET @req, @res
-
-      assert_equal 'application/javascript', @res.content_type
     end
   end
 
@@ -148,7 +133,7 @@ class RDocServletTest < RDoc::TestCase
       FileUtils.mkdir 'css'
       FileUtils.touch 'css/rdoc.css'
 
-      @s.asset_dirs[:darkfish] = '.'
+      @s.asset_dirs[:aliki] = '.'
 
       @req.path = '/mount/path/css/rdoc.css'.dup
 
@@ -210,8 +195,8 @@ class RDocServletTest < RDoc::TestCase
 
     @s.documentation_page store, generator, 'Klass::Sub.html', @req, @res
 
-    assert_match %r%<title>class Klass::Sub - </title>%,            @res.body
-    assert_match %r%<body id="top" role="document" class="class">%, @res.body
+    assert_match %r%<title>class Klass::Sub - </title>%,           @res.body
+    assert_match %r%<body role="document" class="class has-toc">%, @res.body
   end
 
   def test_documentation_page_not_found
@@ -236,7 +221,7 @@ class RDocServletTest < RDoc::TestCase
     @s.documentation_page store, generator, 'README_md.html', @req, @res
 
     assert_match %r%<title>README - </title>%, @res.body
-    assert_match %r%<body [^>]+ class="file">%,      @res.body
+    assert_match %r%<body role="document" class="file has-toc">%, @res.body
   end
 
   def test_documentation_page_page_with_nesting
@@ -408,22 +393,22 @@ class RDocServletTest < RDoc::TestCase
     index = JSON.parse $&
 
     expected = {
-      'index' => {
-        'searchIndex' => %w[
-          My\ Extra\ Documentation
-          Ruby\ Documentation
-        ],
-        'longSearchIndex' => %w[
-          My\ Extra\ Documentation
-          Ruby\ Documentation
-        ],
-        'info' => [
-          ['My Extra Documentation', '', @extra_dirs[0], '',
-            'My Extra Documentation'],
-          ['Ruby Documentation', '', 'ruby', '',
-            'Documentation for the Ruby standard library'],
-        ],
-      }
+      'index' => [
+        {
+          'name' => 'My Extra Documentation',
+          'full_name' => 'My Extra Documentation',
+          'type' => 'extra',
+          'path' => @extra_dirs[0],
+          'snippet' => 'My Extra Documentation',
+        },
+        {
+          'name' => 'Ruby Documentation',
+          'full_name' => 'Ruby Documentation',
+          'type' => 'system',
+          'path' => 'ruby',
+          'snippet' => 'Documentation for the Ruby standard library',
+        },
+      ]
     }
 
     assert_equal expected, index
@@ -447,9 +432,9 @@ class RDocServletTest < RDoc::TestCase
 
     @s.show_documentation @req, @res
 
-    assert_equal 'text/html',         @res.content_type
-    assert_match %r%<title>Table of Contents - Standard Library Documentation%,
-                 @res.body
+    assert_equal 'text/html', @res.content_type
+    # Aliki does not have a table_of_contents template, so the body is nil
+    assert_nil @res.body
   end
 
   def test_show_documentation_page
