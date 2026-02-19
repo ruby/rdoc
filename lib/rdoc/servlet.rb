@@ -392,7 +392,12 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
     when nil, '', 'index.html' then
       res.body = generator.generate_index
     when 'table_of_contents.html' then
-      res.body = generator.generate_table_of_contents
+      result = generator.generate_table_of_contents
+      if result
+        res.body = result
+      else
+        not_found generator, req, res
+      end
     when 'js/search_index.js' then
       documentation_search store, generator, req, res
     else

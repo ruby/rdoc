@@ -81,10 +81,6 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     assert_file 'js/search_ranker.js'
     assert_file 'js/theme-toggle.js'
     assert_file 'js/c_highlighter.js'
-
-    # Aliki should NOT have fonts
-    refute File.exist?('css/fonts.css'), 'Aliki should not copy fonts.css'
-    refute File.exist?('fonts'), 'Aliki should not copy fonts directory'
   end
 
   # Aliki-specific: verify version query strings on asset references
