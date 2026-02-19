@@ -277,48 +277,6 @@ class RDocTopLevelTest < XrefTestCase
     assert_equal 'README', tl.page_name
   end
 
-  def test_search_record
-    assert_nil @xref_data.search_record
-  end
-
-  def test_search_record_page
-    page = @store.add_file 'README.txt'
-    page.parser = RDoc::Parser::Simple
-    page.comment = 'This is a comment.'
-
-    expected = [
-      'README',
-      '',
-      'README',
-      '',
-      'README_txt.html',
-      '',
-      "<p>This is a comment.\n",
-    ]
-
-    assert_equal expected, page.search_record
-  end
-
-  def test_search_record_main_page
-    page = @store.add_file 'README.txt'
-    page.parser = RDoc::Parser::Simple
-    page.comment = 'This is a comment.'
-
-    @options.main_page = 'README.txt'
-
-    expected = [
-      'README',
-      '',
-      'README',
-      '',
-      'index.html',
-      '',
-      "<p>This is a comment.\n",
-    ]
-
-    assert_equal expected, page.search_record
-  end
-
   def test_text_eh
     refute @xref_data.text?
 

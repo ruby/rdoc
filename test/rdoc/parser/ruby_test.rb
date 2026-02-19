@@ -2991,10 +2991,6 @@ EXPECTED
 
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.full_name
-
-    blah = foo.method_list.first
-    markup_comment = blah.search_record[6]
-    assert_equal expected, markup_comment
   end
 
   def test_parse_require_dynamic_string

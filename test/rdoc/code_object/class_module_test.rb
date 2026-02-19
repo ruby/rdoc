@@ -1251,39 +1251,6 @@ class RDocClassModuleTest < XrefTestCase
     assert_equal %w[D], parent.classes_hash.keys
   end
 
-  def test_search_record
-    @c2_c3.add_comment 'This is a comment.', @xref_data
-
-    expected = [
-      'C3',
-      'C2::C3',
-      'C2::C3',
-      '',
-      'C2/C3.html',
-      '',
-      "<p>This is a comment.\n"
-    ]
-
-    assert_equal expected, @c2_c3.search_record
-  end
-
-  def test_search_record_merged
-    @c2_c3.add_comment 'comment A', @store.add_file('a.rb')
-    @c2_c3.add_comment 'comment B', @store.add_file('b.rb')
-
-    expected = [
-      'C3',
-      'C2::C3',
-      'C2::C3',
-      '',
-      'C2/C3.html',
-      '',
-      "<p>comment A\n<p>comment B\n"
-    ]
-
-    assert_equal expected, @c2_c3.search_record
-  end
-
   def test_store_equals
     # version 2
     loaded = Marshal.load "\x04\bU:\x16RDoc::NormalClass[\x0Fi\aI\"\nKlass" +
