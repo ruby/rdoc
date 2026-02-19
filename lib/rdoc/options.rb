@@ -75,23 +75,6 @@ require 'pathname'
 class RDoc::Options
 
   ##
-  # The deprecated options.
-
-  DEPRECATED = {
-    '--accessor'      => 'support discontinued',
-    '--diagram'       => 'support discontinued',
-    '--help-output'   => 'support discontinued',
-    '--image-format'  => 'was an option for --diagram',
-    '--inline-source' => 'source code is now always inlined',
-    '--merge'         => 'ri now always merges class information',
-    '--one-file'      => 'support discontinued',
-    '--op-name'       => 'support discontinued',
-    '--opname'        => 'support discontinued',
-    '--promiscuous'   => 'files always only document their content',
-    '--ri-system'     => 'Ruby installers use other techniques',
-  }
-
-  ##
   # RDoc options ignored (or handled specially) by --write-options
 
   SPECIAL = %w[
@@ -113,7 +96,6 @@ class RDoc::Options
     rdoc_include
     root
     static_path
-    stylesheet_url
     template
     template_dir
     update_output_dir
@@ -430,7 +412,6 @@ class RDoc::Options
     @root = Pathname(Dir.pwd)
     @show_hash = false
     @static_path = []
-    @stylesheet_url = nil # TODO remove in RDoc 4
     @tab_width = 8
     @template = nil
     @template_dir = nil
@@ -769,14 +750,6 @@ Usage: #{opt.program_name} [options] [names...]
       end
       opt.banner += "  - TomDoc:  Only in ruby files\n"
 
-      opt.banner += "\n  The following options are deprecated:\n\n"
-
-      name_length = DEPRECATED.keys.sort_by { |k| k.length }.last.length
-
-      DEPRECATED.sort_by { |k,| k }.each do |name, reason|
-        opt.banner += "    %*1$2$s  %3$s\n" % [-name_length, name, reason]
-      end
-
       opt.accept Template do |template|
         template_dir = template_dir_for template
 
@@ -1014,14 +987,6 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.separator nil
-
-      opt.on("-d",
-             "Deprecated --diagram option.",
-             "Prevents firing debug mode",
-             "with legacy invocation.") do |value|
-      end
-
-      opt.separator nil
       opt.separator 'HTML generator options:'
       opt.separator nil
 
@@ -1230,15 +1195,12 @@ Usage: #{opt.program_name} [options] [names...]
       opt.separator nil
     end
 
-    deprecated = []
     invalid = []
 
     begin
       opts.parse! argv
     rescue OptionParser::ParseError => e
-      if DEPRECATED[e.args.first] then
-        deprecated << e.args.first
-      elsif %w[--format --ri -r --ri-site -R].include? e.args.first then
+      if %w[--format --ri -r --ri-site -R].include? e.args.first then
         raise
       else
         invalid << e.args.join(' ')
@@ -1252,12 +1214,6 @@ Usage: #{opt.program_name} [options] [names...]
     if @pipe and not argv.empty? then
       @pipe = false
       invalid << '-p (with files)'
-    end
-
-    unless quiet then
-      deprecated.each do |opt|
-        $stderr.puts 'option ' + opt + ' is deprecated: ' + DEPRECATED[opt]
-      end
     end
 
     unless invalid.empty? then

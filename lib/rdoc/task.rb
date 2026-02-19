@@ -203,21 +203,6 @@ class RDoc::Task < Rake::TaskLib
   end
 
   ##
-  # All source is inline now.  This method is deprecated
-
-  def inline_source # :nodoc:
-    warn "RDoc::Task#inline_source is deprecated"
-    true
-  end
-
-  ##
-  # All source is inline now.  This method is deprecated
-
-  def inline_source=(value) # :nodoc:
-    warn "RDoc::Task#inline_source is deprecated"
-  end
-
-  ##
   # Create the tasks defined by this task lib.
 
   def define
