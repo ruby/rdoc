@@ -61,7 +61,7 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
 
   def test_template_dir
     assert_kind_of RDoc::Generator::Aliki, @g
-    assert_match %r{/template/aliki\z}, @g.template_dir.to_s
+    assert_match %r{/template/aliki/?$}, @g.template_dir.to_s
   end
 
   def test_aliased_classes_full_name
