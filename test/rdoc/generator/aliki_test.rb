@@ -59,8 +59,8 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     FileUtils.rm_rf @tmpdir
   end
 
-  def test_inheritance_and_template_dir
-    assert_kind_of RDoc::Generator::Darkfish, @g
+  def test_template_dir
+    assert_kind_of RDoc::Generator::Aliki, @g
     assert_match %r{/template/aliki\z}, @g.template_dir.to_s
   end
 
@@ -82,7 +82,7 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     assert_file 'js/theme-toggle.js'
     assert_file 'js/c_highlighter.js'
 
-    # Aliki should NOT have fonts (unlike Darkfish)
+    # Aliki should NOT have fonts
     refute File.exist?('css/fonts.css'), 'Aliki should not copy fonts.css'
     refute File.exist?('fonts'), 'Aliki should not copy fonts directory'
   end
@@ -206,6 +206,61 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     # Title should be HTML escaped
     assert_match %r{<title>&lt;script&gt;alert\(&quot;xss&quot;\)&lt;/script&gt;</title>}, content
     refute_match %r{<title><script>alert}, content
+  end
+
+  def test_generate_does_not_create_page_file_for_main_page
+    top_level = @store.add_file("README.rdoc", parser: RDoc::Parser::Simple)
+    top_level.comment = "= Main Page\nThis is the main page content."
+
+    other_page = @store.add_file("OTHER.rdoc", parser: RDoc::Parser::Simple)
+    other_page.comment = "= Other Page\nThis is another page."
+
+    @options.main_page = "README.rdoc"
+
+    @g.generate
+
+    assert_file "index.html"
+    refute File.exist?("README_rdoc.html"), "main_page should not be generated as a separate page"
+    assert_file "OTHER_rdoc.html"
+  end
+
+  def test_generate_sidebar_excludes_main_page
+    top_level = @store.add_file("README.rdoc", parser: RDoc::Parser::Simple)
+    top_level.comment = "= Main Page\nThis is the main page content."
+
+    other_page = @store.add_file("OTHER.rdoc", parser: RDoc::Parser::Simple)
+    other_page.comment = "= Other Page\nThis is another page."
+
+    @options.main_page = "README.rdoc"
+    @store.options.main_page = "README.rdoc"
+
+    @g.generate
+
+    other_html = File.binread("OTHER_rdoc.html")
+
+    # The sidebar should not include the main_page at all
+    assert_not_match %r{href="[^"]*README_rdoc\.html"}, other_html
+    # But OTHER should be listed
+    assert_match %r{href="[^"]*OTHER_rdoc\.html"}, other_html
+  end
+
+  def test_generate_cross_reference_to_main_page_links_to_index_html
+    readme = @store.add_file("README.rdoc", parser: RDoc::Parser::Simple)
+    readme.comment = "= Main Page\nThis is the main page content."
+
+    other_page = @store.add_file("OTHER.rdoc", parser: RDoc::Parser::Simple)
+    other_page.comment = "= Other Page\nSee README.rdoc for more info."
+
+    @options.main_page = "README.rdoc"
+    @store.options.main_page = "README.rdoc"
+
+    @g.generate
+
+    other_html = File.binread("OTHER_rdoc.html")
+
+    # Cross-reference to main_page should point to index.html
+    assert_match %r{<a href="[^"]*index\.html">README\.rdoc</a>}, other_html
+    assert_not_match %r{<a href="[^"]*README_rdoc\.html">}, other_html
   end
 
   def test_generate
