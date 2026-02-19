@@ -84,26 +84,20 @@ contents of a string.
   end
 
   def test_handle
-    text = "# :main: M\n"
-    output = nil
-    _, err = capture_output do
-      output = @pp.handle text
-    end
+    text = "# :stopdoc:\n"
+    code_object = RDoc::CodeObject.new
+    output = @pp.handle text, code_object
 
-    assert_include err, "The :main: directive is deprecated and will be removed in RDoc 7."
     assert_equal "#\n", output
   end
 
   def test_handle_comment
-    text = "# :main: M\n"
+    text = "# :stopdoc:\n"
     c = comment text
+    code_object = RDoc::CodeObject.new
 
-    output = nil
-    _, err = capture_output do
-      output = @pp.handle c
-    end
+    output = @pp.handle c, code_object
 
-    assert_include err, "The :main: directive is deprecated and will be removed in RDoc 7."
     assert_equal "#\n", output
   end
 
@@ -253,12 +247,11 @@ contents of a string.
   def test_handle_directive_main
     @pp.options = RDoc::Options.new
 
-    _, err = capture_output do
-      @pp.handle_directive '', 'main', 'M'
-    end
+    # :main: directive was removed; it is now treated as unhandled metadata
+    code_object = RDoc::CodeObject.new
+    @pp.handle_directive '', 'main', 'M', code_object
 
-    assert_include err, "The :main: directive is deprecated and will be removed in RDoc 7."
-    assert_equal 'M', @pp.options.main_page
+    assert_equal 'M', code_object.metadata['main']
   end
 
   def test_handle_directive_notnew
@@ -396,12 +389,11 @@ contents of a string.
   def test_handle_directive_title
     @pp.options = RDoc::Options.new
 
-    _, err = capture_output do
-      @pp.handle_directive '', 'title', 'T'
-    end
+    # :title: directive was removed; it is now treated as unhandled metadata
+    code_object = RDoc::CodeObject.new
+    @pp.handle_directive '', 'title', 'T', code_object
 
-    assert_include err, "The :title: directive is deprecated and will be removed in RDoc 7."
-    assert_equal 'T', @pp.options.title
+    assert_equal 'T', code_object.metadata['title']
   end
 
   def test_handle_directive_unhandled

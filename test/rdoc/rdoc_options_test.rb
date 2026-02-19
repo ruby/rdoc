@@ -281,21 +281,6 @@ rdoc_include:
     assert_match %r%rdoc/generator/template/aliki$%, @options.template_dir
   end
 
-  def test_parse_deprecated
-    dep_hash = RDoc::Options::DEPRECATED
-    options = dep_hash.keys.sort
-
-    out, err = capture_output do
-      @options.parse options
-    end
-
-    dep_hash.each_pair do |opt, message|
-      assert_match %r%.*#{opt}.+#{message}%, err
-    end
-
-    assert_empty out
-  end
-
   def test_parse_dry_run
     @options.parse %w[--dry-run]
 

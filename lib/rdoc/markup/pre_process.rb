@@ -209,18 +209,6 @@ class RDoc::Markup::PreProcess
     when 'include' then
       filename = param.split(' ', 2).first
       include_file filename, prefix, encoding
-    when 'main' then
-      @options.main_page = param if @options.respond_to? :main_page
-      warn <<~MSG
-        The :main: directive is deprecated and will be removed in RDoc 7.
-
-        You can use these options to specify the initial page displayed instead:
-        - `--main=#{param}` via the command line
-        - `rdoc.main = "#{param}"` if you use `RDoc::Task`
-        - `main_page: #{param}` in your `.rdoc_options` file
-      MSG
-
-      blankline
     when 'nodoc' then
       return blankline unless code_object
       code_object.document_self = nil # notify nodoc
@@ -244,19 +232,6 @@ class RDoc::Markup::PreProcess
       return blankline unless code_object
 
       code_object.stop_doc
-
-      blankline
-    when 'title' then
-      @options.default_title = param if @options.respond_to? :default_title=
-
-      warn <<~MSG
-        The :title: directive is deprecated and will be removed in RDoc 7.
-
-        You can use these options to specify the title displayed instead:
-        - `--title=#{param}` via the command line
-        - `rdoc.title = "#{param}"` if you use `RDoc::Task`
-        - `title: #{param}` in your `.rdoc_options` file
-      MSG
 
       blankline
     when 'yield', 'yields' then

@@ -19,24 +19,6 @@ class RDocTaskTest < RDoc::TestCase
     assert_equal 'Remove RDoc HTML files', @t.clobber_task_description
   end
 
-  def test_inline_source
-    _, err = verbose_capture_output do
-      assert @t.inline_source
-    end
-
-    assert_include err, "RDoc::Task#inline_source is deprecated\n"
-
-    _, err = verbose_capture_output do
-      @t.inline_source = false
-    end
-
-    assert_include err, "RDoc::Task#inline_source is deprecated\n"
-
-    capture_output do
-      assert @t.inline_source
-    end
-  end
-
   def test_markup_option
     rdoc_task = RDoc::Task.new do |rd|
       rd.markup = "tomdoc"
