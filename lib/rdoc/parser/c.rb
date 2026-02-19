@@ -1089,11 +1089,10 @@ class RDoc::Parser::C < RDoc::Parser
   # Look for directives in a normal comment block:
   #
   #   /*
-  #    * :title: My Awesome Project
+  #    * :nodoc:
   #    */
   #
   # This method modifies the +comment+
-  # Both :main: and :title: directives are deprecated and will be removed in RDoc 7.
 
   def look_for_directives_in(context, comment)
     comment.text, format = @preprocess.run_pre_processes(comment.text, context, comment.line || 1, :c)
