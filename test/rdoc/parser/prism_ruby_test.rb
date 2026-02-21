@@ -1638,6 +1638,50 @@ module RDocParserPrismTestCases
     assert_equal 'Foo::C', klass.find_module_named('C').full_name
   end
 
+  def test_constant_alias_reverse_order
+    util_parser <<~RUBY
+      # Parsed first
+      class Foo
+        A = Bar
+        B = Foo::Bar
+        C = Baz
+      end
+
+      # Parsed later
+      class Foo
+        class Bar; end
+      end
+      class Baz; end
+    RUBY
+    klass = @top_level.classes.first
+    assert_equal 'Foo::Bar', klass.find_constant_named('A').is_alias_for.full_name
+    assert_equal 'Foo::Bar', klass.find_constant_named('B').is_alias_for.full_name
+    assert_equal 'Baz', klass.find_constant_named('C').is_alias_for.full_name
+  end
+
+  def test_repeated_constant_alias
+    util_parser <<~RUBY
+      # Parsed first
+      class Foo
+        if cond
+          A = Bar
+          B = Baz
+        else
+          A = Bar
+          B = Baz
+        end
+      end
+
+      # Parsed later
+      class Baz
+      end
+    RUBY
+    klass = @top_level.classes.first
+    assert_equal 'Bar', klass.find_constant_named('A').value
+    assert_nil klass.find_constant_named('A').is_alias_for
+    assert_equal 'Baz', klass.find_constant_named('B').is_alias_for.full_name
+  end
+
   def test_constant_with_singleton_class
     omit if accept_legacy_bug?
     util_parser <<~RUBY

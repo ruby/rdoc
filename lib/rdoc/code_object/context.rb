@@ -439,6 +439,7 @@ class RDoc::Context < RDoc::CodeObject
       known.value = constant.value if
         known.value.nil? or known.value.strip.empty?
 
+      constant.parent = self
       known.is_alias_for ||= constant.is_alias_for
     else
       @constants_hash[constant.name] = constant
