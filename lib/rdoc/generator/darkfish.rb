@@ -580,6 +580,15 @@ class RDoc::Generator::Darkfish
 
     return unless @store
 
+    refresh_store_data
+  end
+
+  ##
+  # Refreshes the generator's data from the store.  Called by #setup and
+  # can be called again after the store has been updated (e.g. in server
+  # mode after re-parsing changed files).
+
+  def refresh_store_data
     @classes = @store.all_classes_and_modules.sort
     @files   = @store.all_files.sort
     @methods = @classes.flat_map { |m| m.method_list }.sort

@@ -180,6 +180,41 @@ There are also a few community-maintained themes for RDoc:
 
 Please follow the theme's README for usage instructions.
 
+## Live Preview Server
+
+RDoc includes a built-in server for previewing documentation while you edit source files. It parses your code once on startup, then watches for changes and auto-refreshes the browser.
+
+```shell
+rdoc --server
+```
+
+This starts a server at `http://localhost:4000`. You can specify a different port:
+
+```shell
+rdoc --server=8080
+```
+
+Or use the Rake task:
+
+```shell
+rake rdoc:server
+```
+
+### How It Works
+
+- Parses all source files on startup and serves pages from memory using the Aliki theme
+- A background thread polls file mtimes every second
+- When a file changes, only that file is re-parsed — the browser refreshes automatically
+- New files are detected and added; deleted files are removed
+
+**No external dependencies.** The server uses Ruby's built-in `TCPServer` (`socket` stdlib) — no WEBrick or other gems required.
+
+### Limitations
+
+- **Reopened classes and file deletion.** If a class is defined across multiple files (e.g. `Foo` in both `a.rb` and `b.rb`), deleting one file removes the entire class from the store, including parts from the other file. Saving the remaining file triggers a re-parse that restores it.
+- **Full cache invalidation.** Any file change clears all cached pages. This is simple and correct — rendering is fast (~ms per page), parsing is the expensive part and is done incrementally.
+- **No HTTPS or HTTP/2.** The server is intended for local development preview only.
+
 ## Bugs
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information on filing a bug report.  It's OK to file a bug report for anything you're having a problem with.  If you can't figure out how to make RDoc produce the output you like that is probably a documentation bug.

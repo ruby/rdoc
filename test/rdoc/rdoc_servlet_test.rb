@@ -5,7 +5,7 @@ begin
 rescue LoadError
 end
 
-class RDocServletTest < RDoc::TestCase
+class RDocRIServletTest < RDoc::TestCase
 
   def setup
     super
@@ -30,7 +30,7 @@ class RDocServletTest < RDoc::TestCase
 
     @extra_dirs = [File.join(@tempdir, 'extra1'), File.join(@tempdir, 'extra2')]
 
-    @s = RDoc::Servlet.new @server, @stores, @cache, nil, @extra_dirs
+    @s = RDoc::RI::Servlet.new @server, @stores, @cache, nil, @extra_dirs
 
     @req = WEBrick::HTTPRequest.new :Logger => nil
     @res = WEBrick::HTTPResponse.new :HTTPVersion => '1.0'
@@ -142,7 +142,7 @@ class RDocServletTest < RDoc::TestCase
   end
 
   def test_do_GET_mount_path
-    @s = RDoc::Servlet.new @server, @stores, @cache, '/mount/path'
+    @s = RDoc::RI::Servlet.new @server, @stores, @cache, '/mount/path'
 
     temp_dir do
       FileUtils.mkdir 'css'

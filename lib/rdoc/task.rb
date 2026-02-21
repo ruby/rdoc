@@ -245,6 +245,15 @@ class RDoc::Task < Rake::TaskLib
         $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
         RDoc::RDoc.new.document args
       end
+
+      desc server_task_description
+      task "server" do
+        @before_running_rdoc.call if @before_running_rdoc
+        args = option_list + ["--server"] + @rdoc_files
+
+        $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
+        RDoc::RDoc.new.document args
+      end
     end
 
     self
@@ -292,6 +301,13 @@ class RDoc::Task < Rake::TaskLib
 
   def coverage_task_description
     "Print RDoc coverage report"
+  end
+
+  ##
+  # Task description for the server task
+
+  def server_task_description
+    "Start a live-reloading documentation server"
   end
 
   private
