@@ -2,6 +2,9 @@
 
 changelog:
   categories:
+    - title: 💥 Breaking Changes
+      labels:
+        - breaking-change
     - title: ✨ Enhancements
       labels:
         - enhancement
