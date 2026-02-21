@@ -125,6 +125,12 @@ bundle exec rake rerdoc
 # Show documentation coverage
 bundle exec rake rdoc:coverage
 bundle exec rake coverage
+
+# Start live-reloading preview server (port 4000)
+bundle exec rake rdoc:server
+
+# Or via CLI with custom port
+bundle exec rdoc --server=8080
 ```
 
 **Output Directory:** `_site/` (GitHub Pages compatible)
@@ -176,6 +182,7 @@ lib/rdoc/
 │   ├── c.rb                   # C extension parser
 │   ├── prism_ruby.rb          # Prism-based Ruby parser
 │   └── ...
+├── server.rb                  # Live-reloading preview server (rdoc --server)
 ├── generator/                 # Documentation generators
 │   ├── aliki.rb               # HTML generator (default theme)
 │   ├── darkfish.rb            # HTML generator (deprecated, will be removed in v8.0)
@@ -231,6 +238,30 @@ exe/
 
 - **Parsers:** Ruby, C, Markdown, RD, Prism-based Ruby (experimental)
 - **Generators:** HTML/Aliki (default), HTML/Darkfish (deprecated), RI, POT (gettext), JSON, Markup
+
+### Live Preview Server (`RDoc::Server`)
+
+The server (`lib/rdoc/server.rb`) provides `rdoc --server` for live documentation preview.
+
+**Architecture:**
+- Uses Ruby's built-in `TCPServer` (`socket` stdlib) — no WEBrick or external dependencies
+- Creates a persistent `RDoc::Generator::Aliki` instance with `file_output = false` (renders to strings)
+- Thread-per-connection HTTP handling with `Connection: close` (no keep-alive)
+- Background watcher thread polls file mtimes every 1 second
+- Live reload via inline JS polling `/__status` endpoint
+
+**Key files:**
+- `lib/rdoc/server.rb` — HTTP server, routing, caching, file watcher
+- `lib/rdoc/rdoc.rb` — `start_server` method, server branch in `document`
+- `lib/rdoc/options.rb` — `--server[=PORT]` option
+- `lib/rdoc/generator/darkfish.rb` — `refresh_store_data` (extracted for server reuse)
+- `lib/rdoc/store.rb` — `remove_file` (for deleted file handling)
+- `lib/rdoc/task.rb` — `rdoc:server` Rake task
+
+**Known limitations:**
+- Reopened classes: deleting a file that partially defines a class removes the entire class from the store (save the other file to restore)
+- Template/CSS changes require server restart (only source files are watched)
+- Full page cache invalidation on any change (rendering is fast, so this is acceptable)
 
 ## Common Workflows
 
@@ -319,20 +350,17 @@ When editing markup reference documentation, such as `doc/markup_reference/markd
 
 When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
 
-1. **Generate documentation**: Run `bundle exec rake rerdoc` to create baseline
-2. **Start HTTP server**: Run `cd _site && python3 -m http.server 8000` (use different port if 8000 is in use)
-3. **Investigate with Playwright**: Ask the AI assistant to take screenshots and inspect the documentation visually
-   - Example: "Navigate to the docs at localhost:8000 and screenshot the RDoc module page"
+1. **Start the live-reloading server**: Run `bundle exec rdoc --server` (or `bundle exec rake rdoc:server`)
+2. **Make changes**: Edit files in `lib/rdoc/generator/template/<theme>/` or source code
+3. **Browser auto-refreshes**: The server detects file changes and refreshes the browser automatically
+4. **Investigate with Playwright**: Ask the AI assistant to take screenshots and inspect the documentation visually
+   - Example: "Navigate to the docs at localhost:4000 and screenshot the RDoc module page"
    - See "Playwright MCP for Testing Generated Documentation" section below for details
-4. **Make changes**: Edit files in `lib/rdoc/generator/template/<theme>/` as needed
-5. **Regenerate**: Run `bundle exec rake rerdoc` to rebuild documentation with changes
-6. **Verify with Playwright**: Take new screenshots and compare to original issues
-7. **Lint changes** (if modified):
+5. **Lint changes** (if modified):
    - ERB templates: `npx @herb-tools/linter "lib/rdoc/generator/template/**/*.rhtml"`
    - CSS files: `npm run lint:css -- --fix`
-8. **Stop server**: Kill the HTTP server process when done
 
-**Tip:** Keep HTTP server running during iteration. Just regenerate with `bundle exec rake rerdoc` between changes.
+**Note:** The server watches source files, not template files. If you modify `.rhtml` templates or CSS in the template directory, restart the server to pick up those changes.
 
 ## Notes for AI Agents
 
@@ -386,23 +414,27 @@ Restart Claude Code after running these commands.
 
 ### Testing Generated Documentation
 
-To test the generated documentation:
+The easiest way to test documentation is with the live-reloading server:
 
 ```bash
-# Generate documentation
-bundle exec rake rerdoc
-
-# Start a simple HTTP server in the _site directory (use an available port)
-cd _site && python3 -m http.server 8000
+bundle exec rdoc --server
+# Or: bundle exec rake rdoc:server
 ```
 
-If port 8000 is already in use, try another port (e.g., `python3 -m http.server 9000`).
+This starts a server at `http://localhost:4000` that auto-refreshes on file changes.
+
+Alternatively, for testing static output:
+
+```bash
+bundle exec rake rerdoc
+cd _site && python3 -m http.server 8000
+```
 
 Then ask the AI assistant to inspect the documentation. It will use the appropriate Playwright tools (`browser_navigate`, `browser_snapshot`, `browser_take_screenshot`, etc.) based on your request.
 
 **Example requests:**
 
-- "Navigate to `http://localhost:8000` and take a screenshot"
+- "Navigate to `http://localhost:4000` and take a screenshot"
 - "Take a screenshot of the RDoc module page"
 - "Check if code blocks are rendering properly on the Markup page"
 - "Compare the index page before and after my CSS changes"

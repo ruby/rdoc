@@ -456,6 +456,19 @@ The internal error was:
       exit
     end
 
+    if @options.server_port
+      @store.load_cache
+
+      parse_files @options.files
+
+      @options.default_title = "RDoc Documentation"
+
+      @store.complete @options.visibility
+
+      start_server
+      return
+    end
+
     unless @options.coverage_report then
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
@@ -514,6 +527,19 @@ The internal error was:
         update_output_dir '.', @start_time, @last_modified
       end
     end
+  end
+
+  ##
+  # Starts a live-reloading HTTP server for previewing documentation.
+  # Called from #document when <tt>--server</tt> is given.
+
+  def start_server
+    server = RDoc::Server.new(self, @options.server_port)
+
+    trap('INT')  { server.shutdown }
+    trap('TERM') { server.shutdown }
+
+    server.start
   end
 
   ##

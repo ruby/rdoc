@@ -194,6 +194,26 @@ class RDoc::Store
   end
 
   ##
+  # Removes a file and its classes/modules from the store.  Used by the
+  # live-reloading server when a source file is deleted.
+  #
+  # Note: this does not handle reopened classes correctly.  If a class is
+  # defined across multiple files (e.g. +Foo+ in both +a.rb+ and +b.rb+),
+  # deleting one file removes the entire class from the store — including
+  # the parts contributed by the other file.  Saving the remaining file
+  # triggers a re-parse that restores it.
+
+  def remove_file(relative_name)
+    top_level = @files_hash.delete(relative_name)
+    @text_files_hash.delete(relative_name)
+    @c_class_variables.delete(relative_name)
+    @c_singleton_class_variables.delete(relative_name)
+    return unless top_level
+
+    remove_classes_and_modules(top_level.classes_or_modules)
+  end
+
+  ##
   # Make sure any references to C variable names are resolved to the corresponding class.
   #
 
@@ -978,6 +998,19 @@ class RDoc::Store
   end
 
   private
+
+  def remove_classes_and_modules(cms)
+    cms.each do |cm|
+      remove_classes_and_modules(cm.classes_and_modules)
+
+      if cm.is_a?(RDoc::NormalModule)
+        @modules_hash.delete(cm.full_name)
+      else
+        @classes_hash.delete(cm.full_name)
+      end
+    end
+  end
+
   def marshal_load(file)
     File.open(file, 'rb') {|io| Marshal.load(io, MarshalFilter)}
   end
