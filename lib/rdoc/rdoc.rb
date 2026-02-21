@@ -546,7 +546,6 @@ rescue LoadError
 end
 
 # require built-in generators after discovery in case they've been replaced
-require_relative 'generator/darkfish'
 require_relative 'generator/aliki'
 require_relative 'generator/ri'
 require_relative 'generator/pot'

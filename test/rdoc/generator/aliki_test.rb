@@ -59,9 +59,9 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     FileUtils.rm_rf @tmpdir
   end
 
-  def test_inheritance_and_template_dir
-    assert_kind_of RDoc::Generator::Darkfish, @g
-    assert_match %r{/template/aliki\z}, @g.template_dir.to_s
+  def test_template_dir
+    assert_kind_of RDoc::Generator::Aliki, @g
+    assert_match %r{/template/aliki/?$}, @g.template_dir.to_s
   end
 
   def test_aliased_classes_full_name
@@ -81,10 +81,6 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     assert_file 'js/search_ranker.js'
     assert_file 'js/theme-toggle.js'
     assert_file 'js/c_highlighter.js'
-
-    # Aliki should NOT have fonts (unlike Darkfish)
-    refute File.exist?('css/fonts.css'), 'Aliki should not copy fonts.css'
-    refute File.exist?('fonts'), 'Aliki should not copy fonts directory'
   end
 
   # Aliki-specific: verify version query strings on asset references

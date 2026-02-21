@@ -373,25 +373,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
   end
 
   ##
-  # Used by RDoc::Generator::JsonIndex to create a record for the search
-  # engine.
-  #
-  # TODO: Remove this method after dropping the darkfish theme and JsonIndex generator.
-  # Use #search_snippet instead for getting documentation snippets.
-
-  def search_record
-    [
-      @name,
-      full_name,
-      @name,
-      @parent.full_name,
-      path,
-      params,
-      search_snippet,
-    ]
-  end
-
-  ##
   # Returns an HTML snippet of the comment for search results.
 
   def search_snippet

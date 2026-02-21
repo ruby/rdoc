@@ -77,20 +77,18 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
     @options = RDoc::Options.new
     @options.op_dir = '.'
 
-    darkfish_dir = nil
+    aliki_dir = nil
 
     # HACK dup
     $LOAD_PATH.each do |path|
-      darkfish_dir = File.join path, 'rdoc/generator/template/darkfish/'
-      next unless File.directory? darkfish_dir
-      @options.template_dir = darkfish_dir
+      aliki_dir = File.join path, 'rdoc/generator/template/aliki/'
+      next unless File.directory? aliki_dir
+      @options.template_dir = aliki_dir
       break
     end
 
     @asset_dirs = {
-      :darkfish   => darkfish_dir,
-      :json_index =>
-        File.expand_path('../generator/template/json_index/', __FILE__),
+      :aliki => aliki_dir,
     }
   end
 
@@ -122,13 +120,10 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
     case req.path
     when '/' then
       root req, res
-    when '/js/darkfish.js', '/js/jquery.js', '/js/search.js',
-         %r%^/css/%, %r%^/images/%, %r%^/fonts/% then
-      asset :darkfish, req, res
-    when '/js/navigation.js', '/js/searcher.js' then
-      asset :json_index, req, res
     when '/js/search_index.js' then
       root_search req, res
+    when %r%^/js/%, %r%^/css/% then
+      asset :aliki, req, res
     else
       show_documentation req, res
     end
@@ -165,17 +160,17 @@ class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
   end
 
   ##
-  # Creates the JSON search index on +res+ for the given +store+.  +generator+
-  # must respond to \#json_index to build.  +req+ is ignored.
+  # Creates the search index on +res+ for the given +store+.  +generator+
+  # must respond to \#build_search_index.  +req+ is ignored.
 
   def documentation_search(store, generator, req, res)
-    json_index = @cache[store].fetch :json_index do
-      @cache[store][:json_index] =
-        JSON.dump generator.json_index.build_index
+    search_index = @cache[store].fetch :search_index do
+      @cache[store][:search_index] =
+        JSON.dump({ index: generator.build_search_index })
     end
 
     res.content_type = 'application/javascript'
-    res.body = "var search_data = #{json_index}"
+    res.body = "var search_data = #{search_index};"
   end
 
   ##
@@ -241,10 +236,10 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   end
 
   ##
-  # Instantiates a Darkfish generator for +store+
+  # Instantiates an Aliki generator for +store+
 
   def generator_for(store)
-    generator = RDoc::Generator::Darkfish.new store, @options
+    generator = RDoc::Generator::Aliki.new store, @options
     generator.file_output = false
     generator.asset_rel_path = '..'
     generator.setup
@@ -333,7 +328,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   # Generates the root page on +res+.  +req+ is ignored.
 
   def root(req, res)
-    generator = RDoc::Generator::Darkfish.new nil, @options
+    generator = RDoc::Generator::Aliki.new nil, @options
 
     res.body = generator.generate_servlet_root installed_docs
 
@@ -344,13 +339,10 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
   # Generates a search index for the root page on +res+.  +req+ is ignored.
 
   def root_search(req, res)
-    search_index = []
-    info         = []
+    index = []
 
-    installed_docs.map do |name, href, exists, type, path|
+    installed_docs.each do |name, href, exists, type, path|
       next unless exists
-
-      search_index << name
 
       case type
       when :gem
@@ -359,33 +351,29 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
 
         spec = Gem::Specification.load gemspec
 
-        path    = spec.full_name
-        comment = spec.summary
+        entry_path = spec.full_name
+        snippet    = spec.summary
       when :system then
-        path    = 'ruby'
-        comment = 'Documentation for the Ruby standard library'
+        entry_path = 'ruby'
+        snippet    = 'Documentation for the Ruby standard library'
       when :site then
-        path    = 'site'
-        comment = 'Documentation for non-gem libraries'
+        entry_path = 'site'
+        snippet    = 'Documentation for non-gem libraries'
       when :home then
-        path    = 'home'
-        comment = 'Documentation from your home directory'
+        entry_path = 'home'
+        snippet    = 'Documentation from your home directory'
       when :extra
-        comment = name
+        entry_path = path
+        snippet    = name
       end
 
-      info << [name, '', path, '', comment]
+      entry = { name: name, full_name: name, type: type.to_s, path: entry_path }
+      entry[:snippet] = snippet if snippet
+      index << entry
     end
 
-    index = {
-      :index => {
-        :searchIndex     => search_index,
-        :longSearchIndex => search_index,
-        :info            => info,
-      }
-    }
-
-    res.body = "var search_data = #{JSON.dump index};"
+    data = { index: index }
+    res.body = "var search_data = #{JSON.dump data};"
     res.content_type = 'application/javascript'
   end
 
@@ -404,7 +392,12 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
     when nil, '', 'index.html' then
       res.body = generator.generate_index
     when 'table_of_contents.html' then
-      res.body = generator.generate_table_of_contents
+      result = generator.generate_table_of_contents
+      if result
+        res.body = result
+      else
+        not_found generator, req, res
+      end
     when 'js/search_index.js' then
       documentation_search store, generator, req, res
     else

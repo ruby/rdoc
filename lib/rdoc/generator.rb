@@ -2,7 +2,7 @@
 ##
 # RDoc uses generators to turn parsed source code in the form of an
 # RDoc::CodeObject tree into some form of output.  RDoc comes with the HTML
-# generator RDoc::Generator::Darkfish and an ri data generator
+# generator RDoc::Generator::Aliki and an ri data generator
 # RDoc::Generator::RI.
 #
 # == Registering a Generator
@@ -44,8 +44,6 @@ module RDoc::Generator
   autoload :Markup,   "#{__dir__}/generator/markup"
 
   autoload :Aliki,     "#{__dir__}/generator/aliki"
-  autoload :Darkfish,  "#{__dir__}/generator/darkfish"
-  autoload :JsonIndex, "#{__dir__}/generator/json_index"
   autoload :RI,        "#{__dir__}/generator/ri"
   autoload :POT,       "#{__dir__}/generator/pot"
 
