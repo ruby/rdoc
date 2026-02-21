@@ -38,12 +38,13 @@ Filter out the version-bump commit for the tag itself (e.g., "Bump version to v7
 
 ### 3. Identify release-relevant labels
 
-Read `.github/release.yml` to find which labels map to changelog categories (currently `bug`, `enhancement`, `documentation`). PRs outside these categories appear under "Other Changes" and do not need labels.
+Read `.github/release.yml` to find which labels map to changelog categories (currently `breaking-change`, `bug`, `enhancement`, `documentation`). PRs outside these categories appear under "Other Changes" and do not need labels.
 
 ### 4. Report: PRs missing release-relevant labels
 
 List PRs that look like they **should** have a release-relevant label but don't. Use the PR title and description to judge:
 
+- PRs that remove public API or change default behavior in ways that break existing usage → likely needs `breaking-change` (note: dropping Ruby version support is not a breaking change, just a minor bump)
 - Titles starting with "Fix" or describing a fix → likely needs `bug`
 - Titles describing new features or capabilities → likely needs `enhancement`
 - Titles about docs → likely needs `documentation`
@@ -69,6 +70,9 @@ PRs that are clearly CI, dependency bumps, refactors, or test-only changes do **
 Show all PRs grouped by their release-relevant label, with URLs:
 
 ```
+### Breaking Changes
+- https://github.com/ruby/rdoc/pull/1616 — Remove deprecated CLI options and directives
+
 ### Enhancements
 - https://github.com/ruby/rdoc/pull/1544 — Highlight bash commands
 
@@ -87,8 +91,10 @@ Show all PRs grouped by their release-relevant label, with URLs:
 
 Apply semver reasoning:
 
-- **Major** — breaking changes to public API or behavior users depend on
+- **Major** — breaking changes to public API or behavior users depend on (any PR with `breaking-change` label)
 - **Minor** — new features, significant internal rewrites that change behavior, enhancements
 - **Patch** — only bug fixes, documentation, and maintenance
+
+If any PR has the `breaking-change` label, recommend a **major** version bump.
 
 Explain the reasoning, highlighting the most impactful changes by URL.
