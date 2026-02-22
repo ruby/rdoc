@@ -8,7 +8,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
   def setup
     super
 
-    @to = RDoc::Markup::ToHtml.new @options
+    @to = RDoc::Markup::ToHtml.new
   end
 
   def accept_blank_line
@@ -351,7 +351,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_pipe
-    @options.pipe = true
+    @to = RDoc::Markup::ToHtml.new(pipe: true)
 
     @to.start_accepting
 
@@ -451,7 +451,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_output_decoration
-    @options.output_decoration = false
+    @to = RDoc::Markup::ToHtml.new(output_decoration: false)
 
     @to.start_accepting
 
@@ -461,8 +461,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_output_decoration_with_pipe
-    @options.pipe = true
-    @options.output_decoration = false
+    @to = RDoc::Markup::ToHtml.new(pipe: true, output_decoration: false)
 
     @to.start_accepting
 
@@ -520,7 +519,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_verbatim_pipe
-    @options.pipe = true
+    @to = RDoc::Markup::ToHtml.new(pipe: true)
 
     verb = @RM::Verbatim.new("1 + 1\n")
     verb.format = :ruby

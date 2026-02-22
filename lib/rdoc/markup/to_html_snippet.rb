@@ -34,8 +34,8 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   # next word boundary after the given number of +characters+ or +paragraphs+
   # of text have been encountered.
 
-  def initialize(options, characters = 100, paragraphs = 3)
-    super options
+  def initialize(characters = 100, paragraphs = 3)
+    super()
 
     @character_limit = characters
     @paragraph_limit = paragraphs

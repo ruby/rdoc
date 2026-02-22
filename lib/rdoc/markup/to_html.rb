@@ -43,9 +43,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   ##
   # Creates a new formatter that will output HTML
 
-  def initialize(options)
-    super
+  def initialize(pipe: false, output_decoration: true)
+    super()
 
+    @pipe = pipe
+    @output_decoration = output_decoration
     @code_object = nil
     @from_path = ''
     @in_list_entry = nil
@@ -347,7 +349,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
                 CGI.escapeHTML text
               end
 
-    if @options.pipe then
+    if @pipe
       @res << "\n<pre><code>#{CGI.escapeHTML text}\n</code></pre>\n"
     else
       @res << "\n<pre#{klass}>#{content}</pre>\n"
@@ -418,17 +420,17 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
     # Add legacy anchor before the heading for backward compatibility.
     # This allows old links with label- prefix to still work.
-    if @options.output_decoration && !@options.pipe
+    if @output_decoration && !@pipe
       @res << "\n<span id=\"#{legacy_label}\" class=\"legacy-anchor\"></span>"
     end
 
-    @res << if @options.output_decoration
+    @res << if @output_decoration
               "\n<h#{level} id=\"#{label}\">"
             else
               "\n<h#{level}>"
             end
 
-    if @options.pipe
+    if @pipe
       @res << to_html(heading.text)
     else
       @res << "<a href=\"##{label}\">#{to_html(heading.text)}</a>"
@@ -584,21 +586,5 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     # but we need to convert it here for now because to_html_characters converts pair of backticks to ’‘ and pair of double backticks to ”“.
     # Known bugs: `...` in `<code>def f(...); end</code>` and `(c) in `<a href="(c)">` will be wrongly converted.
     to_html_characters(handle_inline(item))
-  end
-end
-
-##
-# Formatter dedicated to rendering tidy link labels without mutating the
-# calling formatter's state.
-
-class RDoc::Markup::LinkLabelToHtml < RDoc::Markup::ToHtml
-  def self.render(label, options, from_path)
-    new(options, from_path).to_html(label)
-  end
-
-  def initialize(options, from_path = nil)
-    super(options)
-
-    self.from_path = from_path if from_path
   end
 end

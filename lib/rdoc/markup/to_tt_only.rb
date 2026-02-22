@@ -16,13 +16,6 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
   attr_reader :res
 
   ##
-  # Creates a new tt-only formatter.
-
-  def initialize
-    super nil
-  end
-
-  ##
   # Adds tts from +block_quote+ to the output
 
   def accept_block_quote(block_quote)

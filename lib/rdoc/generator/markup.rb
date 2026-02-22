@@ -37,7 +37,15 @@ module RDoc::Generator::Markup
     options = @store.options
     this = RDoc::Context === self ? self : @parent
 
-    @formatter = RDoc::Markup::ToHtmlCrossref.new options, this.path, this
+    @formatter = RDoc::Markup::ToHtmlCrossref.new(
+      this.path, this,
+      pipe: options.pipe,
+      output_decoration: options.output_decoration,
+      hyperlink_all: options.hyperlink_all,
+      show_hash: options.show_hash,
+      autolink_excluded_words: options.autolink_excluded_words || [],
+      warn_missing_rdoc_ref: options.warn_missing_rdoc_ref
+    )
     @formatter.code_object = self
     @formatter
   end

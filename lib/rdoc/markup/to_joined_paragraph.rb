@@ -8,11 +8,6 @@
 # other markup syntax items will not work.
 
 class RDoc::Markup::ToJoinedParagraph < RDoc::Markup::Formatter
-
-  def initialize # :nodoc:
-    super nil
-  end
-
   def start_accepting # :nodoc:
   end
 

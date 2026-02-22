@@ -52,7 +52,7 @@ module RDoc
       #: () -> RDoc::Markup::ToHtml
       def self.to_html
         @to_html ||= begin
-          to_html = Markup::ToHtml.new nil
+          to_html = Markup::ToHtml.new
 
           def to_html.handle_regexp_CROSSREF(text)
             text.sub(/^\\/, '')

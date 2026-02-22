@@ -277,7 +277,8 @@ class RDoc::CodeObject
   # The options instance from the store this CodeObject is attached to, or a
   # default options instance if the CodeObject is not attached.
   #
-  # This is used by Text#snippet
+  # Used by: store= (visibility check), ClassModule#path, TopLevel#path,
+  #          ClassModule#embed_mixins
 
   def options
     @store&.options || RDoc::Options.new

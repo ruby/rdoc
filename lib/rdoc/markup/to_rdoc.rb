@@ -53,7 +53,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
   # Creates a new formatter that will output (mostly) \RDoc markup
 
   def initialize
-    super nil
+    super
 
     @markup.add_regexp_handling(/\\\S/, :SUPPRESSED_CROSSREF)
     @width = 78

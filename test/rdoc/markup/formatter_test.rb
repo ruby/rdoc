@@ -6,7 +6,7 @@ class RDocMarkupFormatterTest < RDoc::TestCase
   class ToTest < RDoc::Markup::Formatter
 
     def initialize(markup = nil)
-      super(nil)
+      super()
       @markup = markup if markup
     end
 

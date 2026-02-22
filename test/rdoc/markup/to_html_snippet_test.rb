@@ -8,7 +8,7 @@ class RDocMarkupToHtmlSnippetTest < RDoc::Markup::FormatterTestCase
   def setup
     super
 
-    @to = RDoc::Markup::ToHtmlSnippet.new @options, 100, 100
+    @to = RDoc::Markup::ToHtmlSnippet.new 100, 100
     @ellipsis = @to.to_html '...'
   end
 
@@ -436,7 +436,7 @@ class RDocMarkupToHtmlSnippetTest < RDoc::Markup::FormatterTestCase
   end
 
   def test_add_paragraph
-    @to = RDoc::Markup::ToHtmlSnippet.new @options, 0, 3
+    @to = RDoc::Markup::ToHtmlSnippet.new 0, 3
     assert_throws :done do
       @to.add_paragraph
       @to.add_paragraph
@@ -488,7 +488,7 @@ be guessed, raises an error if +name+ couldn't be guessed.
   end
 
   def test_convert_limit_paragraphs
-    @to = RDoc::Markup::ToHtmlSnippet.new @options, 100, 3
+    @to = RDoc::Markup::ToHtmlSnippet.new 100, 3
 
     rdoc = <<-RDOC
 = \RDoc - Ruby Documentation System
@@ -519,7 +519,7 @@ See RDoc for a description of RDoc's markup and basic use.
   end
 
   def test_convert_limit_in_tag
-    @to = RDoc::Markup::ToHtmlSnippet.new @options, 4
+    @to = RDoc::Markup::ToHtmlSnippet.new 4
     rdoc = "* ab *c* d\n"
 
     expected = "<p>ab <strong>c</strong> #{@ellipsis}\n\n"
@@ -598,7 +598,7 @@ This routine modifies its +comment+ parameter.
   end
 
   def test_convert_limit_over
-    @to = RDoc::Markup::ToHtmlSnippet.new @options, 4
+    @to = RDoc::Markup::ToHtmlSnippet.new 4
     rdoc = "* text\n" * 2
 
     expected = "<p>text\n"

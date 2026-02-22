@@ -48,9 +48,7 @@ class RDoc::Markup::Formatter
   ##
   # Creates a new Formatter
 
-  def initialize(options)
-    @options = options
-
+  def initialize
     @markup = RDoc::Markup.new
 
     @from_path = '.'

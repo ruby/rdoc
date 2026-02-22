@@ -577,7 +577,7 @@ The comments associated with
   end
 
   def formatter
-    RDoc::Markup::ToHtml.new @options
+    RDoc::Markup::ToHtml.new
   end
 
   def options
