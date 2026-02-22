@@ -92,8 +92,16 @@ class RDoc::Constant < RDoc::CodeObject
       @is_alias_for = found if found
       @is_alias_for
     else
-      @is_alias_for
+      @is_alias_for ||= find_alias_for
     end
+  end
+
+  # Find alias constant for a value.
+  # This is used when the constant is parsed before the class or module defined in another file.
+  # Note that module nesting information is lost, so constant lookup is inaccurate.
+
+  def find_alias_for
+    parent.find_module_named(value) if value&.match?(/\A(::)?([A-Z][A-Za-z0-9_]*)(::[A-Z][A-Za-z0-9_]*)*\z/)
   end
 
   def inspect # :nodoc:
