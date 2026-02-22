@@ -140,7 +140,7 @@ class RDoc::RDoc
   # Turns RDoc from stdin into HTML
 
   def handle_pipe
-    @html = RDoc::Markup::ToHtml.new @options
+    @html = RDoc::Markup::ToHtml.new(pipe: @options.pipe, output_decoration: @options.output_decoration)
 
     parser = RDoc::Text::MARKUP_FORMAT[@options.markup]
 

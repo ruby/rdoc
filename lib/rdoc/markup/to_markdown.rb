@@ -9,7 +9,7 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
   ##
   # Creates a new formatter that will output Markdown format text
 
-  def initialize(markup = nil)
+  def initialize
     super
 
     @headings[1] = ['# ',      '']

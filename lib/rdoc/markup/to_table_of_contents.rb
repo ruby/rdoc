@@ -25,7 +25,7 @@ class RDoc::Markup::ToTableOfContents < RDoc::Markup::Formatter
   attr_accessor :omit_headings_below
 
   def initialize # :nodoc:
-    super nil
+    super
 
     @omit_headings_below = nil
   end

@@ -7,10 +7,8 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   def setup
     super
 
-    @options.hyperlink_all = true
-    @options.warn_missing_rdoc_ref = true
-
-    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'index.html', @c1
+    @to = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1,
+      hyperlink_all: true, warn_missing_rdoc_ref: true
   end
 
   def test_convert_CROSSREF
@@ -35,9 +33,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_convert_CROSSREF_backslash_in_tt
-    @options.hyperlink_all = false
-
-    formatter = RDoc::Markup::ToHtmlCrossref.new(@options, 'C9.html', @c9_b)
+    formatter = RDoc::Markup::ToHtmlCrossref.new('C9.html', @c9_b)
 
     result = formatter.convert '<tt>C1</tt>'
     assert_equal para('<a href="C1.html"><code>C1</code></a>'), result
@@ -53,7 +49,9 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_convert_CROSSREF_ignored_excluded_words
-    @options.autolink_excluded_words = ['C1']
+    @to = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1,
+      hyperlink_all: true, warn_missing_rdoc_ref: true,
+      autolink_excluded_words: ['C1']
 
     result = @to.convert 'C1'
     assert_equal para("C1"), result
@@ -285,7 +283,8 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     readme = @store.add_file 'README.txt'
     readme.parser = RDoc::Parser::Simple
 
-    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'C2.html', @c2
+    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2,
+      hyperlink_all: true, warn_missing_rdoc_ref: true
 
     link = @to.handle_regexp_HYPERLINK hyper 'C2::C3'
 
@@ -304,7 +303,8 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     readme = @store.add_file 'README.txt'
     readme.parser = RDoc::Parser::Simple
 
-    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'C2.html', @c2
+    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2,
+      hyperlink_all: true, warn_missing_rdoc_ref: true
 
     link = @to.to_html tidy 'C2::C3'
 
@@ -339,9 +339,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_to_html_CROSSREF_email
-    @options.hyperlink_all = false
-
-    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'index.html', @c1
+    @to = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1
 
     result = @to.to_html 'first.last@example.com'
 
@@ -361,7 +359,8 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_link_for_method_traverse
-    @to = RDoc::Markup::ToHtmlCrossref.new @options, 'C2.html', @c9
+    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c9,
+      hyperlink_all: true, warn_missing_rdoc_ref: true
     assert_equal '<a href="C9/A.html#method-i-foo"><code>C9::B#foo</code></a>', @to.link('C9::B#foo', 'C9::B#foo')
   end
 

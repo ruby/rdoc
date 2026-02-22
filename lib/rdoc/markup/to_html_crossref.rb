@@ -29,15 +29,19 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # references are removed unless +show_hash+ is true.  Only method names
   # preceded by '#' or '::' are linked, unless +hyperlink_all+ is true.
 
-  def initialize(options, from_path, context, markup = nil)
+  def initialize(from_path, context, pipe: false, output_decoration: true,
+                 hyperlink_all: false, show_hash: false,
+                 autolink_excluded_words: [], warn_missing_rdoc_ref: true)
     raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
 
-    super options, markup
+    super(pipe: pipe, output_decoration: output_decoration)
 
     @context       = context
     @from_path     = from_path
-    @hyperlink_all = @options.hyperlink_all
-    @show_hash     = @options.show_hash
+    @hyperlink_all = hyperlink_all
+    @show_hash     = show_hash
+    @autolink_excluded_words = autolink_excluded_words
+    @warn_missing_rdoc_ref = warn_missing_rdoc_ref
 
     @cross_reference = RDoc::CrossReference.new @context
   end
@@ -48,7 +52,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     # The crossref must be linked before tidylink because Klass.method[:sym]
     # will be processed as a tidylink first and will be broken.
-    crossref_re = @options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
+    crossref_re = @hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
     @markup.add_regexp_handling crossref_re, :CROSSREF
   end
 
@@ -83,7 +87,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
   def handle_regexp_CROSSREF(name)
     return convert_string(name) if in_tidylink_label?
-    return name if @options.autolink_excluded_words&.include?(name)
+    return name if @autolink_excluded_words&.include?(name)
 
     return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
 
@@ -159,7 +163,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     case ref
     when String then
-      if rdoc_ref && @options.warn_missing_rdoc_ref
+      if rdoc_ref && @warn_missing_rdoc_ref
         puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{text}`"
       end
       ref
@@ -224,7 +228,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   def tt_cross_reference(code)
     return if in_tidylink_label?
 
-    crossref_regexp = @options.hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
+    crossref_regexp = @hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
     match = crossref_regexp.match(code)
     return unless match && match.begin(1).zero?
     return unless match.post_match.match?(/\A[[:punct:]\s]*\z/)

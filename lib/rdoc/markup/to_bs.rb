@@ -10,7 +10,7 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
   ##
   # Returns a new ToBs that is ready for hot backspace action!
 
-  def initialize(markup = nil)
+  def initialize
     super
 
     @in_b  = false

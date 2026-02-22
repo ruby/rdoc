@@ -48,10 +48,8 @@ class RDoc::Markup::Formatter
   ##
   # Creates a new Formatter
 
-  def initialize(options, markup = nil)
-    @options = options
-
-    @markup = markup || RDoc::Markup.new
+  def initialize
+    @markup = RDoc::Markup.new
 
     @from_path = '.'
   end
