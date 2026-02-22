@@ -29,10 +29,10 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # references are removed unless +show_hash+ is true.  Only method names
   # preceded by '#' or '::' are linked, unless +hyperlink_all+ is true.
 
-  def initialize(options, from_path, context, markup = nil)
+  def initialize(options, from_path, context)
     raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
 
-    super options, markup
+    super options
 
     @context       = context
     @from_path     = from_path

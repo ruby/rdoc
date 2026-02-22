@@ -24,7 +24,7 @@ the time
 
     m = RDoc::Markup.new
 
-    tt = RDoc::Markup::ToTest.new m
+    tt = RDoc::Markup::ToTest.new nil
 
     out = m.convert str, tt
 
@@ -55,7 +55,7 @@ the time
 
     m = RDoc::Markup.new
 
-    tt = RDoc::Markup::ToTest.new m
+    tt = RDoc::Markup::ToTest.new nil
 
     out = m.convert doc, tt
 

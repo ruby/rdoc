@@ -52,9 +52,6 @@ module RDoc
       #: () -> RDoc::Markup::ToHtml
       def self.to_html
         @to_html ||= begin
-          markup = Markup.new
-          markup.add_regexp_handling CrossReference::CROSSREF_REGEXP, :CROSSREF
-
           to_html = Markup::ToHtml.new nil
 
           def to_html.handle_regexp_CROSSREF(text)

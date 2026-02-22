@@ -18,8 +18,8 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
   ##
   # Creates a new tt-only formatter.
 
-  def initialize(markup = nil)
-    super nil, markup
+  def initialize
+    super nil
   end
 
   ##

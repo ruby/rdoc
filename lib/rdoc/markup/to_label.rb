@@ -14,8 +14,8 @@ class RDoc::Markup::ToLabel < RDoc::Markup::Formatter
   ##
   # Creates a new formatter that will output HTML-safe labels
 
-  def initialize(markup = nil)
-    super nil, markup
+  def initialize
+    super nil
 
     @markup.add_regexp_handling RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF
 

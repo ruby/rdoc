@@ -5,8 +5,9 @@ class RDocMarkupFormatterTest < RDoc::TestCase
 
   class ToTest < RDoc::Markup::Formatter
 
-    def initialize(markup)
-      super nil, markup
+    def initialize(markup = nil)
+      super(nil)
+      @markup = markup if markup
     end
 
     def accept_paragraph(paragraph)

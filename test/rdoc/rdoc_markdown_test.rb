@@ -14,7 +14,7 @@ class RDocMarkdownTest < RDoc::TestCase
 
     @parser = RDoc::Markdown.new
 
-    @to_html = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
+    @to_html = RDoc::Markup::ToHtml.new(RDoc::Options.new)
   end
 
   def test_class_parse
