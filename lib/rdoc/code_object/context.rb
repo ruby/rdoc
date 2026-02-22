@@ -305,12 +305,11 @@ class RDoc::Context < RDoc::CodeObject
       if full_name =~ /^(.+)::(\w+)$/ then
         name = $2
         ename = $1
-        enclosing = @store.classes_hash[ename] || @store.modules_hash[ename]
+        enclosing = @store.find_class_or_module(ename)
         # HACK: crashes in actionpack/lib/action_view/helpers/form_helper.rb (metaprogramming)
         unless enclosing then
           # try the given name at top level (will work for the above example)
-          enclosing = @store.classes_hash[given_name] ||
-                      @store.modules_hash[given_name]
+          enclosing = @store.find_class_or_module(given_name)
           return enclosing if enclosing
           # not found: create the parent(s)
           names = ename.split('::')
@@ -358,7 +357,7 @@ class RDoc::Context < RDoc::CodeObject
       superclass = nil if superclass == full_name
     end
 
-    klass = @store.classes_hash[full_name]
+    klass = @store.find_class_named(full_name)
 
     if klass then
       # if TopLevel, it may not be registered in the classes:
@@ -384,8 +383,7 @@ class RDoc::Context < RDoc::CodeObject
       else
         klass = class_type.new name, superclass
 
-        enclosing.add_class_or_module(klass, enclosing.classes_hash,
-                                      @store.classes_hash)
+        enclosing.add_class_or_module(klass, enclosing.classes_hash)
       end
     end
 
@@ -395,13 +393,12 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds the class or module +mod+ to the modules or
-  # classes Hash +self_hash+, and to +all_hash+ (either
-  # <tt>TopLevel::modules_hash</tt> or <tt>TopLevel::classes_hash</tt>),
+  # Adds the class or module +mod+ to the local Hash +self_hash+,
+  # and registers it with the store,
   # unless #done_documenting is +true+. Sets the #parent of +mod+
   # to +self+, and its #section to #current_section. Returns +mod+.
 
-  def add_class_or_module(mod, self_hash, all_hash)
+  def add_class_or_module(mod, self_hash)
     mod.section = current_section # TODO declaring context? something is
                                   # wrong here...
     mod.parent = self
@@ -412,7 +409,11 @@ class RDoc::Context < RDoc::CodeObject
       self_hash[mod.name] = mod
       # this must be done AFTER adding mod to its parent, so that the full
       # name is correct:
-      all_hash[mod.full_name] = mod
+      if mod.module? then
+        @store.modules_hash[mod.full_name] = mod
+      else
+        @store.classes_hash[mod.full_name] = mod
+      end
       if @store.unmatched_constant_alias[mod.full_name] then
         to, file = @store.unmatched_constant_alias[mod.full_name]
         add_module_alias mod, mod.name, to, file
@@ -508,16 +509,16 @@ class RDoc::Context < RDoc::CodeObject
     return mod if mod
 
     full_name = child_name name
-    mod = @store.modules_hash[full_name] || class_type.new(name)
+    mod = @store.find_module_named(full_name) || class_type.new(name)
 
-    add_class_or_module mod, @modules, @store.modules_hash
+    add_class_or_module mod, @modules
   end
 
   ##
   # Adds a module by +RDoc::NormalModule+ instance. See also #add_module.
 
   def add_module_by_normal_module(mod)
-    add_class_or_module mod, @modules, @store.modules_hash
+    add_class_or_module mod, @modules
   end
 
   ##
@@ -1222,8 +1223,9 @@ class RDoc::Context < RDoc::CodeObject
     klass.store = @store
 
     # if it was there, then we keep it even if done_documenting
+    @store.modules_hash.delete mod.full_name
     @store.classes_hash[mod.full_name] = klass
-    enclosing.classes_hash[mod.name]   = klass
+    enclosing.classes_hash[mod.name] = klass
 
     klass
   end

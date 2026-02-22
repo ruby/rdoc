@@ -702,12 +702,12 @@ class RDoc::ClassModule < RDoc::Context
 
     modules_hash.each_key do |name|
       full_name = prefix + name
-      modules_hash.delete name unless @store.modules_hash[full_name]
+      modules_hash.delete name unless @store.find_module_named(full_name)
     end
 
     classes_hash.each_key do |name|
       full_name = prefix + name
-      classes_hash.delete name unless @store.classes_hash[full_name]
+      classes_hash.delete name unless @store.find_class_named(full_name)
     end
   end
 
@@ -875,7 +875,7 @@ class RDoc::ClassModule < RDoc::Context
   def update_includes
     includes.reject! do |include|
       mod = include.module
-      !(String === mod) && @store.modules_hash[mod.full_name].nil?
+      !(String === mod) && @store.find_module_named(mod.full_name).nil?
     end
 
     includes.uniq!
@@ -891,7 +891,7 @@ class RDoc::ClassModule < RDoc::Context
     extends.reject! do |ext|
       mod = ext.module
 
-      !(String === mod) && @store.modules_hash[mod.full_name].nil?
+      !(String === mod) && @store.find_module_named(mod.full_name).nil?
     end
 
     extends.uniq!
