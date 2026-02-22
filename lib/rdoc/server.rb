@@ -210,7 +210,7 @@ class RDoc::Server
     name = path.sub(%r{\A/}, '')
     name = 'index.html' if name.empty?
 
-    html = @mutex.synchronize { @page_cache[name] } || render_page(name)
+    html = render_page(name)
 
     unless html
       not_found = @generator.generate_servlet_not_found(
