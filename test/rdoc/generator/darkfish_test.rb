@@ -178,6 +178,22 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_not_include index_html, 'This is the API documentation for My awesome Ruby project.'
   end
 
+  def test_generate_does_not_create_page_file_for_main_page
+    top_level = @store.add_file("README.rdoc", parser: RDoc::Parser::Simple)
+    top_level.comment = "= Main Page\nThis is the main page content."
+
+    other_page = @store.add_file("OTHER.rdoc", parser: RDoc::Parser::Simple)
+    other_page.comment = "= Other Page\nThis is another page."
+
+    @options.main_page = "README.rdoc"
+
+    @g.generate
+
+    assert_file "index.html"
+    refute File.exist?("README_rdoc.html"), "main_page should not be generated as a separate page"
+    assert_file "OTHER_rdoc.html"
+  end
+
   def test_generate_index_without_main_page
     top_level = @store.add_file 'file.rb'
     top_level.comment = <<~RDOC
