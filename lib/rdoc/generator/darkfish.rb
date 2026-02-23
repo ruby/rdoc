@@ -393,7 +393,7 @@ class RDoc::Generator::Darkfish
     @files.each do |file|
       current = file
 
-      next if file.full_name == @options.main_page
+      next if file.text? && file.full_name == @options.main_page
 
       if file.text? and page_file.exist? then
         generate_page file
