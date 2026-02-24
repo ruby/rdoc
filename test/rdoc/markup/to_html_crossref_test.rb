@@ -84,6 +84,13 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para("<a href=\"EXAMPLE_md.html#foo\">foo at <code>EXAMPLE</code></a>"), result
   end
 
+  def test_convert_CROSSREF_label_for_main_page
+    @options.main_page = 'EXAMPLE.md'
+
+    result = @to.convert 'EXAMPLE@foo'
+    assert_equal para("<a href=\"index.html#foo\">foo at <code>EXAMPLE</code></a>"), result
+  end
+
   def test_convert_CROSSREF_label_period
     result = @to.convert 'C1@foo.'
     assert_equal para("<a href=\"C1.html#class-c1-foo\">foo at <code>C1</code></a>."), result
@@ -299,6 +306,20 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal '<a href="README_txt.html">README.txt</a>', link
   end
 
+  def test_handle_regexp_HYPERLINK_rdoc_main_page
+    readme = @store.add_file 'README.txt'
+    readme.parser = RDoc::Parser::Simple
+
+    @options.main_page = 'README.txt'
+
+    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2,
+      hyperlink_all: true, warn_missing_rdoc_ref: true
+
+    link = @to.handle_regexp_HYPERLINK hyper 'README.txt'
+
+    assert_equal '<a href="index.html">README.txt</a>', link
+  end
+
   def test_handle_TIDYLINK_rdoc
     readme = @store.add_file 'README.txt'
     readme.parser = RDoc::Parser::Simple
@@ -321,6 +342,20 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     link = @to.to_html tidy 'README.txt'
 
     assert_equal '<a href="README_txt.html">tidy</a>', link
+  end
+
+  def test_handle_TIDYLINK_rdoc_main_page
+    readme = @store.add_file 'README.txt'
+    readme.parser = RDoc::Parser::Simple
+
+    @options.main_page = 'README.txt'
+
+    @to = RDoc::Markup::ToHtmlCrossref.new 'C2.html', @c2,
+      hyperlink_all: true, warn_missing_rdoc_ref: true
+
+    link = @to.to_html tidy 'README.txt'
+
+    assert_equal '<a href="index.html">tidy</a>', link
   end
 
   def test_handle_regexp_TIDYLINK_label

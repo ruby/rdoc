@@ -221,9 +221,15 @@ class RDoc::TopLevel < RDoc::Context
   # Path to this file for use with HTML generator output.
 
   def path
+    base = if options.main_page == full_name
+             'index.html'
+           else
+             http_url
+           end
+
     prefix = options.file_path_prefix
-    return http_url unless prefix
-    File.join(prefix, http_url)
+    return base unless prefix
+    File.join(prefix, base)
   end
 
   def pretty_print(q) # :nodoc:

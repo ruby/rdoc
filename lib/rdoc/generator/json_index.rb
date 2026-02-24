@@ -250,7 +250,7 @@ class RDoc::Generator::JsonIndex
     debug_msg "  generating pages search index"
 
     pages = @files.select do |file|
-      file.text?
+      file.text? && file.full_name != @options.main_page
     end
 
     pages.each do |page|

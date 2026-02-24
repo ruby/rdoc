@@ -157,11 +157,51 @@ class RDocTopLevelTest < XrefTestCase
     assert_equal 'path_other/level_rb.html', other_level.http_url
   end
 
+  def test_http_url_unaffected_by_main_page
+    page = @store.add_file 'README.md'
+    page.parser = RDoc::Parser::Simple
+
+    @store.main = 'README.md'
+
+    # http_url always returns the file-based URL; main_page redirect is in #path
+    assert_equal 'README_md.html', page.http_url
+  end
+
   def test_path
     assert_equal 'path/top_level_rb.html', @top_level.path
 
     @options.file_path_prefix = 'file'
     assert_equal 'file/path/top_level_rb.html', @top_level.path
+  end
+
+  def test_path_main_page
+    page = @store.add_file 'README.md'
+    page.parser = RDoc::Parser::Simple
+
+    @options.main_page = 'README.md'
+
+    assert_equal 'index.html', page.path
+  end
+
+  def test_path_main_page_with_prefix
+    page = @store.add_file 'README.md'
+    page.parser = RDoc::Parser::Simple
+
+    @options.main_page = 'README.md'
+    @options.file_path_prefix = 'file'
+
+    assert_equal 'file/index.html', page.path
+  end
+
+  def test_path_non_main_page_unaffected
+    page = @store.add_file 'README.md'
+    page.parser = RDoc::Parser::Simple
+    other = @store.add_file 'OTHER.md'
+    other.parser = RDoc::Parser::Simple
+
+    @options.main_page = 'README.md'
+
+    assert_equal 'OTHER_md.html', other.path
   end
 
   def test_marshal_dump
@@ -252,6 +292,26 @@ class RDocTopLevelTest < XrefTestCase
       'README',
       '',
       'README_txt.html',
+      '',
+      "<p>This is a comment.\n",
+    ]
+
+    assert_equal expected, page.search_record
+  end
+
+  def test_search_record_main_page
+    page = @store.add_file 'README.txt'
+    page.parser = RDoc::Parser::Simple
+    page.comment = 'This is a comment.'
+
+    @options.main_page = 'README.txt'
+
+    expected = [
+      'README',
+      '',
+      'README',
+      '',
+      'index.html',
       '',
       "<p>This is a comment.\n",
     ]

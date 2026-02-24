@@ -356,6 +356,22 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
     assert_equal expected, @g.index
   end
 
+  def test_index_pages_excludes_main_page
+    @options.main_page = "page.rdoc"
+
+    @g.reset @top_levels, @klasses
+
+    @g.index_pages
+
+    expected = {
+      searchIndex:     [],
+      longSearchIndex: [],
+      info:            [],
+    }
+
+    assert_equal expected, @g.index
+  end
+
   def test_search_string
     assert_equal 'cd', @g.search_string('C d')
   end
