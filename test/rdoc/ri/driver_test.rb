@@ -951,6 +951,187 @@ Foo::Bar#bother
     assert_match %r%OTHER\.rdoc%,         out
   end
 
+  def test_display_global_variable
+    util_store
+
+    # Create a globals page in the store
+    globals = @store1.add_file 'globals.rdoc'
+    globals.parser = RDoc::Parser::Simple
+    globals.comment = RDoc::Comment.from_document(doc(
+      head(1, 'Pre-Defined Global Variables'),
+      head(2, 'Streams'),
+      head(3, '$< (ARGF or $stdin)'),
+      para('Points to stream ARGF if not empty, else to stream $stdin; read-only.'),
+      head(3, '$> (Default Standard Output)'),
+      para('An output stream, initially $stdout.')
+    ))
+    @store1.save_page globals
+    @store1.type = :system
+
+    out, = capture_output do
+      @driver.display_global '$<'
+    end
+
+    assert_match %r%\$< \(ARGF or \$stdin\)%, out
+    assert_match %r%Points to stream ARGF%, out
+    refute_match %r%\$>%, out
+  end
+
+  def test_display_global_constant
+    util_store
+
+    # Create a globals page in the store
+    globals = @store1.add_file 'globals.rdoc'
+    globals.parser = RDoc::Parser::Simple
+    globals.comment = RDoc::Comment.from_document(doc(
+      head(1, 'Pre-Defined Global Constants'),
+      head(2, 'Streams'),
+      head(3, 'STDIN'),
+      para('The standard input stream.'),
+      head(3, 'STDOUT'),
+      para('The standard output stream.')
+    ))
+    @store1.save_page globals
+    @store1.type = :system
+
+    out, = capture_output do
+      @driver.display_global 'STDOUT'
+    end
+
+    assert_match %r%STDOUT%, out
+    assert_match %r%standard output stream%, out
+    refute_match %r%STDIN%, out
+  end
+
+  def test_display_global_not_found
+    util_store
+
+    # Create a globals page in the store (without the requested global)
+    globals = @store1.add_file 'globals.rdoc'
+    globals.parser = RDoc::Parser::Simple
+    globals.comment = RDoc::Comment.from_document(doc(
+      head(1, 'Pre-Defined Global Variables'),
+      head(3, '$<'),
+      para('Some doc')
+    ))
+    @store1.save_page globals
+    @store1.type = :system
+
+    assert_raise RDoc::RI::Driver::NotFoundError do
+      @driver.display_global '$NONEXISTENT'
+    end
+  end
+
+  def test_display_global_no_system_store
+    util_store
+    # Store type is :home by default, not :system
+
+    assert_raise RDoc::RI::Driver::NotFoundError do
+      @driver.display_global '$<'
+    end
+  end
+
+  def test_display_name_global_variable
+    util_store
+
+    # Create a globals page in the store
+    globals = @store1.add_file 'globals.rdoc'
+    globals.parser = RDoc::Parser::Simple
+    globals.comment = RDoc::Comment.from_document(doc(
+      head(1, 'Pre-Defined Global Variables'),
+      head(3, '$< (ARGF or $stdin)'),
+      para('Points to stream ARGF.')
+    ))
+    @store1.save_page globals
+    @store1.type = :system
+
+    out, = capture_output do
+      @driver.display_name '$<'
+    end
+
+    assert_match %r%\$<%, out
+    assert_match %r%ARGF%, out
+  end
+
+  def test_display_name_predefined_constant
+    util_store
+
+    # Create a globals page in the store
+    globals = @store1.add_file 'globals.rdoc'
+    globals.parser = RDoc::Parser::Simple
+    globals.comment = RDoc::Comment.from_document(doc(
+      head(1, 'Pre-Defined Global Constants'),
+      head(3, 'ARGV'),
+      para('An array of the given command-line arguments.')
+    ))
+    @store1.save_page globals
+    @store1.type = :system
+
+    out, = capture_output do
+      @driver.display_name 'ARGV'
+    end
+
+    assert_match %r%ARGV%, out
+    assert_match %r%command-line arguments%, out
+  end
+
+  def test_display_name_predefined_constant_over_class
+    util_store
+
+    # Create a Data class that could conflict with DATA constant
+    # (on case-insensitive filesystems, DATA could match Data)
+    @cData = @top_level.add_class RDoc::NormalClass, 'Data'
+    @cData.add_comment 'Data class for value objects', @top_level
+    @cData.record_location @top_level
+    @store1.save_class @cData
+
+    # Create a globals page with DATA constant
+    globals = @store1.add_file 'globals.rdoc'
+    globals.parser = RDoc::Parser::Simple
+    globals.comment = RDoc::Comment.from_document(doc(
+      head(1, 'Pre-Defined Global Constants'),
+      head(3, 'DATA'),
+      para('File object for lines after __END__.')
+    ))
+    @store1.save_page globals
+    @store1.type = :system
+
+    # DATA (all caps) should show the predefined constant, not the Data class
+    out, = capture_output do
+      @driver.display_name 'DATA'
+    end
+
+    assert_match %r%DATA%, out
+    assert_match %r%__END__%, out
+    refute_match %r%value objects%, out
+
+    # Data (capitalized) should show the class, not the constant
+    out, = capture_output do
+      @driver.display_name 'Data'
+    end
+
+    assert_match %r%Data%, out
+    assert_match %r%value objects%, out
+    refute_match %r%__END__%, out
+  end
+
+  def test_predefined_global_constant?
+    assert @driver.predefined_global_constant?('STDIN')
+    assert @driver.predefined_global_constant?('STDOUT')
+    assert @driver.predefined_global_constant?('STDERR')
+    assert @driver.predefined_global_constant?('ARGV')
+    assert @driver.predefined_global_constant?('ARGF')
+    assert @driver.predefined_global_constant?('DATA')
+    assert @driver.predefined_global_constant?('TOPLEVEL_BINDING')
+    assert @driver.predefined_global_constant?('RUBY_VERSION')
+    assert @driver.predefined_global_constant?('RUBY_PLATFORM')
+
+    refute @driver.predefined_global_constant?('ENV')  # ENV is a class, not a simple constant
+    refute @driver.predefined_global_constant?('MyClass')
+    refute @driver.predefined_global_constant?('Foo')
+    refute @driver.predefined_global_constant?('$<')
+  end
+
   def test_expand_class
     util_store
 
