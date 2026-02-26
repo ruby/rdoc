@@ -1270,7 +1270,7 @@ Table = &{ github? }
 TableHead = TableItem2+:items "|"? @Newline
             { items }
 
-TableRow = ( ( TableItem:item1 TableItem2*:items { [item1, *items] } ):row | TableItem2+:row ) "|"? @Newline
+TableRow = ( ( TableItem:item1 TableItem2+:items { [item1, *items] } ):row | TableItem2+:row ) "|"? @Newline
 	   { row }
 TableItem2 = "|" TableItem
 TableItem = < /(?:\\.|[^|\n])+/ >

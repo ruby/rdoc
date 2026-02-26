@@ -15937,7 +15937,7 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TableRow = ((TableItem:item1 TableItem2*:items { [item1, *items] }):row | TableItem2+:row) "|"? @Newline { row }
+  # TableRow = ((TableItem:item1 TableItem2+:items { [item1, *items] }):row | TableItem2+:row) "|"? @Newline { row }
   def _TableRow
 
     _save = self.pos
@@ -15954,14 +15954,21 @@ class RDoc::Markdown
             self.pos = _save2
             break
           end
+          _save3 = self.pos
           _ary = []
-          while true
-            _tmp = apply(:_TableItem2)
-            _ary << @result if _tmp
-            break unless _tmp
+          _tmp = apply(:_TableItem2)
+          if _tmp
+            _ary << @result
+            while true
+              _tmp = apply(:_TableItem2)
+              _ary << @result if _tmp
+              break unless _tmp
+            end
+            _tmp = true
+            @result = _ary
+          else
+            self.pos = _save3
           end
-          _tmp = true
-          @result = _ary
           items = @result
           unless _tmp
             self.pos = _save2
@@ -16666,7 +16673,7 @@ class RDoc::Markdown
   Rules[:_CodeFence] = rule_info("CodeFence", "&{ github? } Ticks3 (@Sp StrChunk:format)? Spnl < ((!\"`\" Nonspacechar)+ | !Ticks3 /`+/ | Spacechar | @Newline)+ > Ticks3 @Sp @Newline* { verbatim = RDoc::Markup::Verbatim.new text               verbatim.format = format.intern if format.instance_of?(String)               verbatim             }")
   Rules[:_Table] = rule_info("Table", "&{ github? } TableHead:header TableLine:line TableRow+:body {           table = RDoc::Markup::Table.new(header, line, body)           parse_table_cells(table)         }")
   Rules[:_TableHead] = rule_info("TableHead", "TableItem2+:items \"|\"? @Newline { items }")
-  Rules[:_TableRow] = rule_info("TableRow", "((TableItem:item1 TableItem2*:items { [item1, *items] }):row | TableItem2+:row) \"|\"? @Newline { row }")
+  Rules[:_TableRow] = rule_info("TableRow", "((TableItem:item1 TableItem2+:items { [item1, *items] }):row | TableItem2+:row) \"|\"? @Newline { row }")
   Rules[:_TableItem2] = rule_info("TableItem2", "\"|\" TableItem")
   Rules[:_TableItem] = rule_info("TableItem", "< /(?:\\\\.|[^|\\n])+/ > { text.strip.gsub(/\\\\([|])/, '\\1')  }")
   Rules[:_TableLine] = rule_info("TableLine", "((TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] }):line | TableAlign2+:line) \"|\"? @Newline { line }")
