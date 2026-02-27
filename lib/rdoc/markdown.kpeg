@@ -1276,7 +1276,7 @@ TableItem2 = "|" TableItem
 TableItem = < /(?:\\.|[^|\n])+/ >
 	    { text.strip.gsub(/\\([|])/, '\1')  }
 
-TableLine = ( ( TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] } ):line | TableAlign2+:line ) "|"? @Newline
+TableLine = ( ( TableAlign:align1 TableAlign2+:aligns {[align1, *aligns] } ):line | TableAlign2+:line ) "|"? @Newline
 	    { line }
 TableAlign2 = "|" @Sp TableAlign
 TableAlign = < /:?-+:?/ > @Sp

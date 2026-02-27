@@ -16084,7 +16084,7 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TableLine = ((TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] }):line | TableAlign2+:line) "|"? @Newline { line }
+  # TableLine = ((TableAlign:align1 TableAlign2+:aligns {[align1, *aligns] }):line | TableAlign2+:line) "|"? @Newline { line }
   def _TableLine
 
     _save = self.pos
@@ -16101,14 +16101,21 @@ class RDoc::Markdown
             self.pos = _save2
             break
           end
+          _save3 = self.pos
           _ary = []
-          while true
-            _tmp = apply(:_TableAlign2)
-            _ary << @result if _tmp
-            break unless _tmp
+          _tmp = apply(:_TableAlign2)
+          if _tmp
+            _ary << @result
+            while true
+              _tmp = apply(:_TableAlign2)
+              _ary << @result if _tmp
+              break unless _tmp
+            end
+            _tmp = true
+            @result = _ary
+          else
+            self.pos = _save3
           end
-          _tmp = true
-          @result = _ary
           aligns = @result
           unless _tmp
             self.pos = _save2
@@ -16676,7 +16683,7 @@ class RDoc::Markdown
   Rules[:_TableRow] = rule_info("TableRow", "((TableItem:item1 TableItem2+:items { [item1, *items] }):row | TableItem2+:row) \"|\"? @Newline { row }")
   Rules[:_TableItem2] = rule_info("TableItem2", "\"|\" TableItem")
   Rules[:_TableItem] = rule_info("TableItem", "< /(?:\\\\.|[^|\\n])+/ > { text.strip.gsub(/\\\\([|])/, '\\1')  }")
-  Rules[:_TableLine] = rule_info("TableLine", "((TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] }):line | TableAlign2+:line) \"|\"? @Newline { line }")
+  Rules[:_TableLine] = rule_info("TableLine", "((TableAlign:align1 TableAlign2+:aligns {[align1, *aligns] }):line | TableAlign2+:line) \"|\"? @Newline { line }")
   Rules[:_TableAlign2] = rule_info("TableAlign2", "\"|\" @Sp TableAlign")
   Rules[:_TableAlign] = rule_info("TableAlign", "< /:?-+:?/ > @Sp {                 text.start_with?(\":\") ?                 (text.end_with?(\":\") ? :center : :left) :                 (text.end_with?(\":\") ? :right : nil)               }")
   Rules[:_DefinitionList] = rule_info("DefinitionList", "&{ definition_lists? } DefinitionListItem+:list { RDoc::Markup::List.new :NOTE, *list.flatten }")
