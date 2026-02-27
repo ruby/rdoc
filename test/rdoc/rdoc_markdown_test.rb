@@ -1334,6 +1334,19 @@ and an extra note.[^2]
     assert_equal expected, doc
   end
 
+  def test_gfm_table_separator_without_pipe_does_not_form_table
+    doc = parse <<~MD
+    | Command | Shows |
+    ---------
+    | ri File | Document for Ruby class File. |
+    MD
+
+    # The separator line has no pipe, so this should NOT parse as a table.
+    # "| Command | Shows |" becomes a paragraph, "---" becomes a paragraph,
+    # and "| ri File | ..." becomes a paragraph.
+    assert(doc.parts.none? { |part| part.is_a?(@RM::Table) })
+  end
+
   def test_gfm_table_with_backslashes_in_code_spans
     doc = parse <<~MD
     Plain text: `$\\\\` and `$\\\\ ` should work.
