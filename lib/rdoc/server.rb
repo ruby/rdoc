@@ -17,19 +17,27 @@ require 'uri'
 
 class RDoc::Server
 
-  LIVE_RELOAD_SCRIPT = <<~JS
-    <script>
-    (function() {
-      var lastChange = 0;
-      setInterval(function() {
-        fetch('/__status').then(function(r) { return r.json(); }).then(function(data) {
-          if (lastChange && data.last_change > lastChange) location.reload();
-          lastChange = data.last_change;
-        }).catch(function() {});
-      }, 1000);
-    })();
-    </script>
-  JS
+  ##
+  # Returns a live-reload polling script with the given +last_change_time+
+  # embedded so the browser knows the exact timestamp of the content it
+  # received.  This avoids a race where a change that occurs between page
+  # generation and the first poll would be silently skipped.
+
+  def self.live_reload_script(last_change_time)
+    <<~JS
+      <script>
+      (function() {
+        var lastChange = #{last_change_time};
+        setInterval(function() {
+          fetch('/__status').then(function(r) { return r.json(); }).then(function(data) {
+            if (data.last_change > lastChange) location.reload();
+            lastChange = data.last_change;
+          }).catch(function() {});
+        }, 1000);
+      })();
+      </script>
+    JS
+  end
 
   CONTENT_TYPES = {
     '.html' => 'text/html',
@@ -216,7 +224,8 @@ class RDoc::Server
       not_found = @generator.generate_servlet_not_found(
         "The page <kbd>#{ERB::Util.html_escape path}</kbd> was not found"
       )
-      return [404, 'text/html', inject_live_reload(not_found || '')]
+      t = @mutex.synchronize { @last_change_time }
+      return [404, 'text/html', inject_live_reload(not_found || '', t)]
     end
 
     ext = File.extname(name)
@@ -234,7 +243,7 @@ class RDoc::Server
       result = generate_page(name)
       return nil unless result
 
-      result = inject_live_reload(result) if name.end_with?('.html')
+      result = inject_live_reload(result, @last_change_time) if name.end_with?('.html')
       @page_cache[name] = result
     end
   end
@@ -273,8 +282,8 @@ class RDoc::Server
   ##
   # Injects the live-reload polling script before +</body>+.
 
-  def inject_live_reload(html)
-    html.sub('</body>', "#{LIVE_RELOAD_SCRIPT}</body>")
+  def inject_live_reload(html, last_change_time)
+    html.sub('</body>', "#{self.class.live_reload_script(last_change_time)}</body>")
   end
 
   ##
@@ -374,6 +383,7 @@ class RDoc::Server
         removed_files.each do |f|
           @file_mtimes.delete(f)
           relative = relative_path_for(f)
+          clear_file_contributions(relative)
           @store.remove_file(relative)
         end
       end
@@ -402,9 +412,10 @@ class RDoc::Server
 
   ##
   # Removes a file's contributions (methods, constants, comments, etc.)
-  # from its classes and modules without removing the classes themselves
-  # from the store.  This prevents duplication when the file is re-parsed
-  # while preserving shared namespaces like +RDoc+ that span many files.
+  # from its classes and modules.  If no other files contribute to a
+  # class or module, it is removed from the store entirely.  This
+  # prevents duplication when the file is re-parsed while preserving
+  # shared namespaces like +RDoc+ that span many files.
 
   def clear_file_contributions(relative_name)
     top_level = @store.files_hash[relative_name]
@@ -442,6 +453,20 @@ class RDoc::Server
 
       # Remove this file from the class/module's file list
       cm.in_files.delete(top_level)
+
+      # If no files contribute to this class/module anymore, remove it
+      # from the store entirely.  This handles file deletion correctly
+      # for classes that are only defined in the deleted file, while
+      # preserving classes that span multiple files.
+      if cm.in_files.empty?
+        if cm.is_a?(RDoc::NormalModule)
+          @store.modules_hash.delete(cm.full_name)
+        else
+          @store.classes_hash.delete(cm.full_name)
+        end
+        cm.parent&.classes_hash&.delete(cm.name)
+        cm.parent&.modules_hash&.delete(cm.name)
+      end
     end
 
     # Clear the TopLevel's class/module list to prevent duplicates
