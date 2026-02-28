@@ -724,24 +724,6 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # Search record used by RDoc::Generator::JsonIndex
-  #
-  # TODO: Remove this method after dropping the darkfish theme and JsonIndex generator.
-  # Use #search_snippet instead for getting documentation snippets.
-
-  def search_record
-    [
-      name,
-      full_name,
-      full_name,
-      '',
-      path,
-      '',
-      snippet(@comment_location),
-    ]
-  end
-
-  ##
   # Returns an HTML snippet of the first comment for search results.
 
   def search_snippet
