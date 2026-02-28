@@ -120,8 +120,73 @@ a block quote
     expected =
       doc(
         block(
-          para("this is\na block quote"),
+          para("this is\na block quote")),
+        block(
           para("that continues")))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_block_quote_no_lazy_continuation_for_list
+    doc = parse <<-BLOCK_QUOTE
+> foo
+- bar
+    BLOCK_QUOTE
+
+    expected =
+      doc(
+        block(
+          para("foo")),
+        list(:BULLET,
+          item(nil, para("bar"))))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_block_quote_no_lazy_continuation_for_ordered_list
+    doc = parse <<-BLOCK_QUOTE
+> foo
+1. bar
+    BLOCK_QUOTE
+
+    expected =
+      doc(
+        block(
+          para("foo")),
+        list(:NUMBER,
+          item(nil, para("bar"))))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_block_quote_no_lazy_continuation_for_heading
+    doc = parse <<-BLOCK_QUOTE
+> foo
+# bar
+    BLOCK_QUOTE
+
+    expected =
+      doc(
+        block(
+          para("foo")),
+        head(1, "bar"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_block_quote_no_lazy_continuation_for_code_fence
+    doc = parse <<~BLOCK_QUOTE
+      > foo
+      ```
+      code
+      ```
+    BLOCK_QUOTE
+
+    expected =
+      doc(
+        block(
+          para("foo")),
+        verb("code\n"))
 
     assert_equal expected, doc
   end
