@@ -332,20 +332,7 @@ option)
 
     return unless content
 
-    filename_path = Pathname(filename).expand_path
-    begin
-      relative_path = filename_path.relative_path_from @options.root
-    rescue ArgumentError
-      relative_path = filename_path
-    end
-
-    if @options.page_dir and
-       relative_path.to_s.start_with? @options.page_dir.to_s then
-      relative_path =
-        relative_path.relative_path_from @options.page_dir
-    end
-
-    top_level = @store.add_file filename, relative_name: relative_path.to_s
+    top_level = @store.add_file filename, relative_name: relative_path_for(filename)
 
     parser = RDoc::Parser.for top_level, content, @options, @stats
 
@@ -386,6 +373,28 @@ The internal error was:
     $stderr.puts e.backtrace.join("\n\t") if $DEBUG_RDOC
 
     raise e
+  end
+
+  ##
+  # Returns the relative path for +filename+ against +options.root+ (and
+  # +options.page_dir+ when set).  This is the key used by RDoc::Store to
+  # identify files.
+
+  def relative_path_for(filename)
+    filename_path = Pathname(filename).expand_path
+    begin
+      relative_path = filename_path.relative_path_from @options.root
+    rescue ArgumentError
+      relative_path = filename_path
+    end
+
+    if @options.page_dir &&
+       relative_path.to_s.start_with?(@options.page_dir.to_s)
+      relative_path =
+        relative_path.relative_path_from @options.page_dir
+    end
+
+    relative_path.to_s
   end
 
   ##
