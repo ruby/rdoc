@@ -1059,4 +1059,163 @@ class RDocStoreTest < XrefTestCase
     assert_equal 'rdoc', @s.title
   end
 
+  def test_clear_file_contributions_single_file_class
+    file = @s.add_file 'single.rb'
+
+    klass = file.add_class RDoc::NormalClass, 'SingleFileClass'
+    klass.record_location file
+    file.add_to_classes_or_modules klass
+
+    meth = RDoc::AnyMethod.new nil, 'solo_method'
+    meth.record_location file
+    klass.add_method meth
+
+    assert_includes @s.classes_hash, 'SingleFileClass'
+
+    @s.clear_file_contributions 'single.rb'
+
+    assert_not_include @s.classes_hash, 'SingleFileClass'
+  end
+
+  def test_clear_file_contributions_single_file_module
+    file = @s.add_file 'single_mod.rb'
+
+    mod = file.add_module RDoc::NormalModule, 'SingleFileMod'
+    mod.record_location file
+    file.add_to_classes_or_modules mod
+
+    meth = RDoc::AnyMethod.new nil, 'solo_method'
+    meth.record_location file
+    mod.add_method meth
+
+    assert_includes @s.modules_hash, 'SingleFileMod'
+
+    @s.clear_file_contributions 'single_mod.rb'
+
+    assert_not_include @s.modules_hash, 'SingleFileMod'
+  end
+
+  def test_clear_file_contributions_multi_file_class
+    file_a = @s.add_file 'a.rb'
+    file_b = @s.add_file 'b.rb'
+
+    klass = file_a.add_class RDoc::NormalClass, 'MultiFileClass'
+    klass.record_location file_a
+    klass.record_location file_b
+    file_a.add_to_classes_or_modules klass
+    file_b.add_to_classes_or_modules klass
+
+    meth_a = RDoc::AnyMethod.new nil, 'from_a'
+    meth_a.record_location file_a
+    klass.add_method meth_a
+
+    meth_b = RDoc::AnyMethod.new nil, 'from_b'
+    meth_b.record_location file_b
+    klass.add_method meth_b
+
+    klass.add_comment 'comment from a', file_a
+    klass.add_comment 'comment from b', file_b
+
+    @s.clear_file_contributions 'a.rb'
+
+    # Class is preserved because file_b still contributes
+    assert_includes @s.classes_hash, 'MultiFileClass'
+
+    # Method from a.rb is removed, method from b.rb remains
+    method_names = klass.method_list.map { |m| m.name }
+    assert_not_include method_names, 'from_a'
+    assert_includes method_names, 'from_b'
+
+    # Comment from a.rb is removed, comment from b.rb remains
+    comment_files = klass.comment_location.map { |(_, loc)| loc }
+    assert_not_include comment_files, file_a
+    assert_includes comment_files, file_b
+  end
+
+  def test_clear_file_contributions_cleans_methods_and_constants
+    file_a = @s.add_file 'ca.rb'
+    file_b = @s.add_file 'cb.rb'
+
+    klass = file_a.add_class RDoc::NormalClass, 'CleanupTestClass'
+    klass.record_location file_a
+    klass.record_location file_b
+    file_a.add_to_classes_or_modules klass
+    file_b.add_to_classes_or_modules klass
+
+    # Methods from different files
+    meth_a = RDoc::AnyMethod.new nil, 'meth_a'
+    meth_a.record_location file_a
+    klass.add_method meth_a
+
+    meth_b = RDoc::AnyMethod.new nil, 'meth_b'
+    meth_b.record_location file_b
+    klass.add_method meth_b
+
+    # Attributes from different files
+    attr_a = RDoc::Attr.new nil, 'attr_a', 'R', ''
+    attr_a.record_location file_a
+    klass.add_attribute attr_a
+
+    attr_b = RDoc::Attr.new nil, 'attr_b', 'R', ''
+    attr_b.record_location file_b
+    klass.add_attribute attr_b
+
+    # Constants from different files
+    const_a = RDoc::Constant.new 'CONST_A', 'val_a', ''
+    const_a.record_location file_a
+    klass.add_constant const_a
+
+    const_b = RDoc::Constant.new 'CONST_B', 'val_b', ''
+    const_b.record_location file_b
+    klass.add_constant const_b
+
+    # Includes from different files
+    incl_a = RDoc::Include.new 'ModA', ''
+    incl_a.record_location file_a
+    klass.add_include incl_a
+
+    incl_b = RDoc::Include.new 'ModB', ''
+    incl_b.record_location file_b
+    klass.add_include incl_b
+
+    # Extends from different files
+    ext_a = RDoc::Extend.new 'ExtA', ''
+    ext_a.record_location file_a
+    klass.add_extend ext_a
+
+    ext_b = RDoc::Extend.new 'ExtB', ''
+    ext_b.record_location file_b
+    klass.add_extend ext_b
+
+    @s.clear_file_contributions 'ca.rb'
+
+    # Methods: only file_b's remain
+    assert_equal ['meth_b'], klass.method_list.map(&:name)
+    assert_includes klass.methods_hash, '#meth_b'
+    assert_not_include klass.methods_hash, '#meth_a'
+
+    # Attributes: only file_b's remain
+    assert_equal ['attr_b'], klass.attributes.map(&:name)
+
+    # Constants: only file_b's remain
+    assert_equal ['CONST_B'], klass.constants.map(&:name)
+    assert_includes klass.constants_hash, 'CONST_B'
+    assert_not_include klass.constants_hash, 'CONST_A'
+
+    # Includes: only file_b's remain
+    assert_equal ['ModB'], klass.includes.map(&:name)
+
+    # Extends: only file_b's remain
+    assert_equal ['ExtB'], klass.extends.map(&:name)
+
+    # in_files no longer includes file_a
+    assert_not_include klass.in_files, file_a
+    assert_includes klass.in_files, file_b
+  end
+
+  def test_clear_file_contributions_nonexistent_file
+    # Should be a no-op and not raise
+    @s.clear_file_contributions 'nonexistent.rb'
+  end
+
 end

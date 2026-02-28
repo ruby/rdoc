@@ -353,26 +353,6 @@ class RDoc::Server
   end
 
   ##
-  # Returns the relative path for +filename+ matching the key used by the
-  # store, mirroring the logic in RDoc::RDoc#parse_file.
-
-  def relative_path_for(filename)
-    filename_path = Pathname(filename).expand_path
-    begin
-      relative_path = filename_path.relative_path_from(@options.root)
-    rescue ArgumentError
-      relative_path = filename_path
-    end
-
-    if @options.page_dir &&
-       relative_path.to_s.start_with?(@options.page_dir.to_s)
-      relative_path = relative_path.relative_path_from(@options.page_dir)
-    end
-
-    relative_path.to_s
-  end
-
-  ##
   # Re-parses changed files, removes deleted files from the store,
   # refreshes the generator, and invalidates caches.
 
@@ -382,8 +362,8 @@ class RDoc::Server
         $stderr.puts "Removed: #{removed_files.join(', ')}"
         removed_files.each do |f|
           @file_mtimes.delete(f)
-          relative = relative_path_for(f)
-          clear_file_contributions(relative)
+          relative = @rdoc.relative_path_for(f)
+          @store.clear_file_contributions(relative)
           @store.remove_file(relative)
         end
       end
@@ -392,8 +372,8 @@ class RDoc::Server
         $stderr.puts "Re-parsing: #{changed_files.join(', ')}"
         changed_files.each do |f|
           begin
-            relative = relative_path_for(f)
-            clear_file_contributions(relative)
+            relative = @rdoc.relative_path_for(f)
+            @store.clear_file_contributions(relative)
             @rdoc.parse_file(f)
             @file_mtimes[f] = File.mtime(f) rescue nil
           rescue => e
@@ -410,66 +390,4 @@ class RDoc::Server
     end
   end
 
-  ##
-  # Removes a file's contributions (methods, constants, comments, etc.)
-  # from its classes and modules.  If no other files contribute to a
-  # class or module, it is removed from the store entirely.  This
-  # prevents duplication when the file is re-parsed while preserving
-  # shared namespaces like +RDoc+ that span many files.
-
-  def clear_file_contributions(relative_name)
-    top_level = @store.files_hash[relative_name]
-    return unless top_level
-
-    top_level.classes_or_modules.each do |cm|
-      # Remove methods and attributes contributed by this file
-      cm.method_list.reject! { |m| m.file == top_level }
-      cm.attributes.reject! { |a| a.file == top_level }
-
-      # Rebuild methods_hash from remaining methods and attributes
-      cm.methods_hash.clear
-      cm.method_list.each { |m| cm.methods_hash[m.pretty_name] = m }
-      cm.attributes.each { |a| cm.methods_hash[a.pretty_name] = a }
-
-      # Remove constants contributed by this file
-      cm.constants.reject! { |c| c.file == top_level }
-      cm.constants_hash.clear
-      cm.constants.each { |c| cm.constants_hash[c.name] = c }
-
-      # Remove includes, extends, and aliases from this file
-      cm.includes.reject! { |i| i.file == top_level }
-      cm.extends.reject! { |e| e.file == top_level }
-      cm.aliases.reject! { |a| a.file == top_level }
-      cm.external_aliases.reject! { |a| a.file == top_level }
-
-      # Remove comment entries from this file and rebuild the comment
-      if cm.is_a?(RDoc::ClassModule)
-        cm.comment_location.reject! { |(_, loc)| loc == top_level }
-        texts = cm.comment_location.map { |(c, _)| c.to_s }
-        merged = texts.join("\n---\n")
-        cm.instance_variable_set(:@comment,
-          merged.empty? ? '' : RDoc::Comment.new(merged))
-      end
-
-      # Remove this file from the class/module's file list
-      cm.in_files.delete(top_level)
-
-      # If no files contribute to this class/module anymore, remove it
-      # from the store entirely.  This handles file deletion correctly
-      # for classes that are only defined in the deleted file, while
-      # preserving classes that span multiple files.
-      if cm.in_files.empty?
-        if cm.is_a?(RDoc::NormalModule)
-          @store.modules_hash.delete(cm.full_name)
-        else
-          @store.classes_hash.delete(cm.full_name)
-        end
-        cm.parent&.classes_hash&.delete(cm.name)
-        cm.parent&.modules_hash&.delete(cm.name)
-      end
-    end
-
-    # Clear the TopLevel's class/module list to prevent duplicates
-    top_level.classes_or_modules.clear
-  end
 end
