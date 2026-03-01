@@ -353,14 +353,33 @@ When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
 1. **Start the live-reloading server**: Run `bundle exec rdoc --server` (or `bundle exec rake rdoc:server`)
 2. **Make changes**: Edit files in `lib/rdoc/generator/template/<theme>/` or source code
 3. **Browser auto-refreshes**: The server detects file changes and refreshes the browser automatically
-4. **Investigate with Playwright**: Ask the AI assistant to take screenshots and inspect the documentation visually
-   - Example: "Navigate to the docs at localhost:4000 and screenshot the RDoc module page"
-   - See "Playwright MCP for Testing Generated Documentation" section below for details
+4. **Verify with `/test-server`**: Use the test-server skill for endpoint checks, live-reload verification, and optional Playwright screenshots
 5. **Lint changes** (if modified):
    - ERB templates: `npx @herb-tools/linter "lib/rdoc/generator/template/**/*.rhtml"`
    - CSS files: `npm run lint:css -- --fix`
 
 **Note:** The server watches source files, not template files. If you modify `.rhtml` templates or CSS in the template directory, restart the server to pick up those changes.
+
+## Visual Testing with Playwright CLI
+
+Use `npx playwright` to take screenshots of generated documentation — works with both the live-reload server and static `_site/` output.
+
+```bash
+# Install browsers (one-time)
+npx playwright install chromium
+
+# Screenshot a live server page
+npx playwright screenshot http://localhost:4000/RDoc.html /tmp/rdoc-class.png
+
+# Screenshot static output (start a file server first)
+cd _site && python3 -m http.server 8000 &
+npx playwright screenshot http://localhost:8000/index.html /tmp/rdoc-index.png
+
+# Full-page screenshot
+npx playwright screenshot --full-page http://localhost:4000/RDoc.html /tmp/rdoc-full.png
+```
+
+For server-specific E2E testing (endpoint checks, live-reload verification, file change detection), use the `/test-server` skill.
 
 ## Notes for AI Agents
 
@@ -373,68 +392,3 @@ When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
 4. **Use `rake rerdoc`** to regenerate documentation (not just `rdoc`)
 5. **Verify generated files** with `rake verify_generated`
 6. **Don't edit generated files** directly (in `lib/rdoc/markdown/` and `lib/rdoc/rd/`)
-
-## Playwright MCP for Testing Generated Documentation
-
-The Playwright MCP server enables visual inspection and interaction with generated HTML documentation. This is useful for verifying CSS styling, layout issues, and overall appearance.
-
-**MCP Server:** `@playwright/mcp` (Microsoft's official browser automation server)
-
-### Setup
-
-The Playwright MCP server can be used with any MCP-compatible AI tool (Claude Code, Cursor, GitHub Copilot, OpenAI Agents, etc.).
-
-**Claude Code:**
-
-```bash
-/plugin playwright
-```
-
-**Other MCP-compatible tools:**
-
-```bash
-npx @playwright/mcp@latest
-```
-
-Configure your tool to connect to this MCP server. Playwright launches its own browser instance automatically - no manual browser setup or extensions required.
-
-### Troubleshooting: Chrome Remote Debugging Blocked
-
-If you encounter `DevTools remote debugging is disallowed by the system admin`, Chrome's debugging is blocked by the machine's policy. Use Firefox instead:
-
-```bash
-# Install Firefox for Playwright
-npx playwright install firefox
-
-# Add Playwright MCP with Firefox to your project (creates/updates .mcp.json)
-claude mcp add playwright --scope project -- npx -y @playwright/mcp@latest --browser firefox
-```
-
-Restart Claude Code after running these commands.
-
-### Testing Generated Documentation
-
-The easiest way to test documentation is with the live-reloading server:
-
-```bash
-bundle exec rdoc --server
-# Or: bundle exec rake rdoc:server
-```
-
-This starts a server at `http://localhost:4000` that auto-refreshes on file changes.
-
-Alternatively, for testing static output:
-
-```bash
-bundle exec rake rerdoc
-cd _site && python3 -m http.server 8000
-```
-
-Then ask the AI assistant to inspect the documentation. It will use the appropriate Playwright tools (`browser_navigate`, `browser_snapshot`, `browser_take_screenshot`, etc.) based on your request.
-
-**Example requests:**
-
-- "Navigate to `http://localhost:4000` and take a screenshot"
-- "Take a screenshot of the RDoc module page"
-- "Check if code blocks are rendering properly on the Markup page"
-- "Compare the index page before and after my CSS changes"
