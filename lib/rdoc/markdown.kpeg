@@ -617,8 +617,8 @@ BlockQuote = BlockQuoteRaw:a
 
 BlockQuoteRaw =  @StartList:a
                  (( ">" " "? Line:l { a << l } )
-                  ( !">" !@BlankLine Line:c { a << c } )*
-                  ( @BlankLine:n { a << n } )*
+                  ( !">" !@BlankLine !AtxStart !Bullet !Enumerator !Ticks3 Line:c { a << c } )*
+                  ( ">" @BlankLine:n { a << n } )*
                  )+
                  { inner_parse a.join }
 
