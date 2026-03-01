@@ -56,7 +56,7 @@ class RDocMarkdownTest < RDoc::TestCase
     expected =
       doc(
         block(
-          para("this is\na block quote")))
+          para("this is", hard_break, "a block quote")))
 
     assert_equal expected, doc
   end
@@ -70,9 +70,20 @@ a block quote
     expected =
       doc(
         block(
-          para("this is\na block quote")))
+          para("this is", hard_break, "a block quote")))
 
     assert_equal expected, doc
+  end
+
+  def test_parse_block_quote_continue_html
+    doc = parse <<-BLOCK_QUOTE
+> this is
+a block quote
+    BLOCK_QUOTE
+
+    html = doc.accept(RDoc::Markup::ToHtml.new)
+
+    assert_include html, "<p>this is<br>\na block quote</p>"
   end
 
   def test_parse_block_quote_list
@@ -104,7 +115,7 @@ a block quote
     expected =
       doc(
         block(
-          para("this is\na block quote")))
+          para("this is", hard_break, "a block quote")))
 
     assert_equal expected, doc
   end
@@ -120,7 +131,7 @@ a block quote
     expected =
       doc(
         block(
-          para("this is\na block quote"),
+          para("this is", hard_break, "a block quote"),
           para("that continues")))
 
     assert_equal expected, doc
@@ -262,7 +273,7 @@ code goes here
     assert_equal expected, parse(doc)
 
     expected =
-      doc(para("Example:\n<code>\n""code goes here\n</code>"))
+      doc(para("Example:", hard_break, "<code>\n""code goes here\n</code>"))
 
     assert_equal expected, parse(doc.sub(/^\n/, ''))
   end
@@ -296,7 +307,7 @@ code goes here
     assert_equal expected, parse(doc)
 
     expected =
-      doc(para("Example:\n<code>ruby\n""code goes here\n</code>"))
+      doc(para("Example:", hard_break, "<code>ruby\n""code goes here\n</code>"))
 
     assert_equal expected, parse(doc.sub(/^\n/, ''))
   end
@@ -343,7 +354,7 @@ four
         item(%w[one],   para("Indented one characters")),
         item(%w[two],   para("Indented two characters")),
         item(%w[three], para("Indented three characters"))),
-      para("four\n : Indented four characters"))
+      para("four", hard_break, " : Indented four characters"))
 
     assert_equal expected, doc
   end
@@ -392,9 +403,9 @@ that also extends to two lines
     expected = doc(
       list(:NOTE,
         item(%w[one],
-          para("This is a definition\nthat extends to two lines")),
+          para("This is a definition", hard_break, "that extends to two lines")),
         item(%w[two],
-          para("This is another definition\nthat also extends to two lines"))))
+          para("This is another definition", hard_break, "that also extends to two lines"))))
 
     assert_equal expected, doc
   end
@@ -430,8 +441,8 @@ two
     MD
 
     expected = doc(
-        para("one\n: This is a definition"),
-        para("two\n: This is another definition"))
+        para("one", hard_break, ": This is a definition"),
+        para("two", hard_break, ": This is another definition"))
 
     assert_equal expected, doc
   end
@@ -779,7 +790,7 @@ This is [an example][] reference-style link.
 
     expected = doc(
       list(:BULLET,
-        item(nil, para("one\n two"))))
+        item(nil, para("one", hard_break, " two"))))
 
     assert_equal expected, doc
   end
@@ -832,7 +843,7 @@ This is [an example][] reference-style link.
           para("outer"),
           list(:BULLET,
             item(nil,
-              para("inner\n continue inner")))),
+              para("inner", hard_break, " continue inner")))),
         item(nil,
           para("outer 2"))))
 
@@ -899,7 +910,7 @@ Some text.[^1]
     expected = doc(
       para("Some text.{*1}[rdoc-label:foottext-1:footmark-1]"),
       rule(1),
-      para("{^1}[rdoc-label:footmark-1:foottext-1] With a footnote\n\nmore"))
+      para("{^1}[rdoc-label:footmark-1:foottext-1] With a footnote", hard_break, "more"))
 
     assert_equal expected, doc
   end
@@ -940,8 +951,10 @@ and an extra note.[^2]
     MD
 
     expected = doc(
-      para("Some text{*1}[rdoc-label:foottext-1:footmark-1]\n" +
-           "with inline notes{*2}[rdoc-label:foottext-2:footmark-2]\n" +
+      para("Some text{*1}[rdoc-label:foottext-1:footmark-1]",
+           hard_break,
+           "with inline notes{*2}[rdoc-label:foottext-2:footmark-2]",
+           hard_break,
            "and an extra note.{*3}[rdoc-label:foottext-3:footmark-3]"),
 
       rule(1),
@@ -1040,7 +1053,7 @@ and an extra note.[^2]
   def test_parse_paragraph_multiline
     doc = parse "one\ntwo"
 
-    expected = doc(para("one\ntwo"))
+    expected = doc(para("one", hard_break, "two"))
 
     assert_equal expected, doc
   end

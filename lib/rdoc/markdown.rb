@@ -587,6 +587,7 @@ class RDoc::Markdown
   # Extensions enabled by default
 
   DEFAULT_EXTENSIONS = [
+    :break_on_newline,
     :definition_lists,
     :github,
     :html,

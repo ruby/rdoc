@@ -421,8 +421,8 @@ ChangeLog
                 'Masataka Pocke Kuwabara', 'kuwabara@pocke.me', '2021-01-01 14:25:08 +0900',
                 [head(4, 'Make args info for RubyVM::AST to available on endless method without parens'),
                  head(5, 'Problem'),
-                 para("Arguments information is missing for endless method without parens.\n" +
-                      "For example:"),
+                 para("Arguments information is missing for endless method without parens.",
+                      hard_break, "For example:"),
                  verb("# ok\n").tap {|v| v.format = :ruby},
                  para('It causes an error if a program expects <code>args</code> node exists.'),
                  head(5, 'Solution'),
