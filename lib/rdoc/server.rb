@@ -68,8 +68,8 @@ class RDoc::Server
     @port = port
 
     @generator = create_generator
+    @template_dir = File.expand_path(@generator.template_dir)
     @page_cache = {}
-    @search_index_cache = nil
     @last_change_time = Time.now.to_f
     @mutex = Mutex.new
     @running = false
@@ -199,9 +199,8 @@ class RDoc::Server
     rel_path = path.delete_prefix("/")
     asset_path = File.join(@generator.template_dir, rel_path)
     real_asset = File.expand_path(asset_path)
-    real_template = File.expand_path(@generator.template_dir)
 
-    unless real_asset.start_with?("#{real_template}/") && File.file?(real_asset)
+    unless real_asset.start_with?("#{@template_dir}/") && File.file?(real_asset)
       return [404, 'text/plain', "Asset not found: #{rel_path}"]
     end
 
@@ -258,7 +257,7 @@ class RDoc::Server
     when 'table_of_contents.html'
       @generator.generate_table_of_contents
     when 'js/search_data.js'
-      build_search_index
+      "var search_data = #{JSON.generate(index: @generator.build_search_index)};"
     else
       text_name = name.chomp('.html')
       class_name = text_name.gsub('/', '::')
@@ -272,26 +271,10 @@ class RDoc::Server
   end
 
   ##
-  # Builds the search index JavaScript.
-
-  def build_search_index
-    @search_index_cache ||=
-      "var search_data = #{JSON.generate(index: @generator.build_search_index)};"
-  end
-
-  ##
   # Injects the live-reload polling script before +</body>+.
 
   def inject_live_reload(html, last_change_time)
     html.sub('</body>', "#{self.class.live_reload_script(last_change_time)}</body>")
-  end
-
-  ##
-  # Clears all cached HTML pages and the search index.
-
-  def invalidate_all_caches
-    @page_cache.clear
-    @search_index_cache = nil
   end
 
   ##
@@ -385,7 +368,7 @@ class RDoc::Server
       @store.complete(@options.visibility)
 
       @generator.refresh_store_data
-      invalidate_all_caches
+      @page_cache.clear
       @last_change_time = Time.now.to_f
     end
   end
