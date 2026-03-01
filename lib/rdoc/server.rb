@@ -27,7 +27,7 @@ class RDoc::Server
     <<~JS
       <script>
       (function() {
-        var lastChange = #{last_change_time};
+        var lastChange = #{last_change_time.to_json};
         setInterval(function() {
           fetch('/__status').then(function(r) { return r.json(); }).then(function(data) {
             if (data.last_change > lastChange) location.reload();
@@ -196,7 +196,7 @@ class RDoc::Server
   # Serves a static asset (CSS, JS) from the Aliki template directory.
 
   def serve_asset(path)
-    rel_path = path.sub(%r{\A/}, '')
+    rel_path = path.delete_prefix("/")
     asset_path = File.join(@generator.template_dir, rel_path)
     real_asset = File.expand_path(asset_path)
     real_template = File.expand_path(@generator.template_dir)
@@ -215,7 +215,7 @@ class RDoc::Server
   # version.
 
   def serve_page(path)
-    name = path.sub(%r{\A/}, '')
+    name = path.delete_prefix("/")
     name = 'index.html' if name.empty?
 
     html = render_page(name)
