@@ -1128,9 +1128,8 @@ class RDocStoreTest < XrefTestCase
     assert_includes method_names, 'from_b'
 
     # Comment from a.rb is removed, comment from b.rb remains
-    comment_files = klass.comment_location.map { |(_, loc)| loc }
-    assert_not_include comment_files, file_a
-    assert_includes comment_files, file_b
+    assert_not_include klass.comment_location.keys, file_a
+    assert_includes klass.comment_location.keys, file_b
   end
 
   def test_clear_file_contributions_cleans_methods_and_constants
@@ -1217,6 +1216,43 @@ class RDocStoreTest < XrefTestCase
   def test_clear_file_contributions_nonexistent_file
     # Should be a no-op and not raise
     @s.clear_file_contributions 'nonexistent.rb'
+  end
+
+  def test_clear_file_contributions_keep_position
+    file_a = @s.add_file 'a.rb'
+    file_b = @s.add_file 'b.rb'
+
+    klass = file_a.add_class RDoc::NormalClass, 'KeepPosClass'
+    klass.record_location file_a
+    klass.record_location file_b
+    file_a.add_to_classes_or_modules klass
+    file_b.add_to_classes_or_modules klass
+
+    klass.add_comment 'comment from a', file_a
+    klass.add_comment 'comment from b', file_b
+
+    @s.clear_file_contributions 'a.rb', keep_position: true
+
+    # Class is preserved
+    assert_includes @s.classes_hash, 'KeepPosClass'
+
+    # comment_location still has two entries (empty placeholder for a.rb)
+    assert_equal 2, klass.comment_location.size
+    assert_equal [file_a, file_b], klass.comment_location.keys
+
+    # The placeholder is an empty array
+    assert_equal [], klass.comment_location[file_a]
+
+    # in_files is not modified
+    assert_includes klass.in_files, file_a
+    assert_includes klass.in_files, file_b
+
+    # Simulate re-parse: add_comment appends to array at existing key position
+    klass.add_comment 'updated comment from a', file_a
+
+    # Order is preserved: a.rb first, b.rb second
+    assert_equal [file_a, file_b], klass.comment_location.keys
+    assert_equal 'updated comment from a', klass.comment_location[file_a].first.to_s
   end
 
 end

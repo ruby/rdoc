@@ -748,6 +748,18 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
+  # Rebuilds +@comment+ from the current +@comment_location+ entries,
+  # skipping any empty placeholders.
+
+  def rebuild_comment_from_location
+    texts = @comment_location.each_value.flat_map { |comments|
+      comments.filter_map { |c| c.to_s unless c.empty? }
+    }
+    merged = texts.join("\n---\n")
+    @comment = merged.empty? ? '' : RDoc::Comment.new(merged)
+  end
+
+  ##
   # Sets the store for this class or module and its contained code objects.
 
   def store=(store)

@@ -220,7 +220,7 @@ class RDoc::Store
   # prevents duplication when the file is re-parsed while preserving
   # shared namespaces like +RDoc+ that span many files.
 
-  def clear_file_contributions(relative_name)
+  def clear_file_contributions(relative_name, keep_position: false)
     top_level = @files_hash[relative_name]
     return unless top_level
 
@@ -245,30 +245,33 @@ class RDoc::Store
       cm.aliases.reject! { |a| a.file == top_level }
       cm.external_aliases.reject! { |a| a.file == top_level }
 
-      # Remove comment entries from this file and rebuild the comment
+      # Clear or remove comment entries from this file
       if cm.is_a?(RDoc::ClassModule)
-        cm.comment_location.reject! { |(_, loc)| loc == top_level }
-        texts = cm.comment_location.map { |(c, _)| c.to_s }
-        merged = texts.join("\n---\n")
-        cm.instance_variable_set(:@comment,
-          merged.empty? ? '' : RDoc::Comment.new(merged))
+        if keep_position
+          cm.comment_location[top_level] = [] if cm.comment_location.key?(top_level)
+        else
+          cm.comment_location.delete(top_level)
+        end
+        cm.rebuild_comment_from_location
       end
 
-      # Remove this file from the class/module's file list
-      cm.in_files.delete(top_level)
+      unless keep_position
+        # Remove this file from the class/module's file list
+        cm.in_files.delete(top_level)
 
-      # If no files contribute to this class/module anymore, remove it
-      # from the store entirely.  This handles file deletion correctly
-      # for classes that are only defined in the deleted file, while
-      # preserving classes that span multiple files.
-      if cm.in_files.empty?
-        if cm.is_a?(RDoc::NormalModule)
-          @modules_hash.delete(cm.full_name)
-        else
-          @classes_hash.delete(cm.full_name)
+        # If no files contribute to this class/module anymore, remove it
+        # from the store entirely.  This handles file deletion correctly
+        # for classes that are only defined in the deleted file, while
+        # preserving classes that span multiple files.
+        if cm.in_files.empty?
+          if cm.is_a?(RDoc::NormalModule)
+            @modules_hash.delete(cm.full_name)
+          else
+            @classes_hash.delete(cm.full_name)
+          end
+          cm.parent&.classes_hash&.delete(cm.name)
+          cm.parent&.modules_hash&.delete(cm.name)
         end
-        cm.parent&.classes_hash&.delete(cm.name)
-        cm.parent&.modules_hash&.delete(cm.name)
       end
     end
 
