@@ -194,6 +194,89 @@ class RDoc::Store
   end
 
   ##
+  # Removes a file and its classes/modules from the store.  Used by the
+  # live-reloading server when a source file is deleted.
+  #
+  # Note: this does not handle reopened classes correctly.  If a class is
+  # defined across multiple files (e.g. +Foo+ in both +a.rb+ and +b.rb+),
+  # deleting one file removes the entire class from the store — including
+  # the parts contributed by the other file.  Saving the remaining file
+  # triggers a re-parse that restores it.
+
+  def remove_file(relative_name)
+    top_level = @files_hash.delete(relative_name)
+    @text_files_hash.delete(relative_name)
+    @c_class_variables.delete(relative_name)
+    @c_singleton_class_variables.delete(relative_name)
+    return unless top_level
+
+    remove_classes_and_modules(top_level.classes_or_modules)
+  end
+
+  ##
+  # Removes a file's contributions (methods, constants, comments, etc.)
+  # from its classes and modules.  If no other files contribute to a
+  # class or module, it is removed from the store entirely.  This
+  # prevents duplication when the file is re-parsed while preserving
+  # shared namespaces like +RDoc+ that span many files.
+
+  def clear_file_contributions(relative_name)
+    top_level = @files_hash[relative_name]
+    return unless top_level
+
+    top_level.classes_or_modules.each do |cm|
+      # Remove methods and attributes contributed by this file
+      cm.method_list.reject! { |m| m.file == top_level }
+      cm.attributes.reject! { |a| a.file == top_level }
+
+      # Rebuild methods_hash from remaining methods and attributes
+      cm.methods_hash.clear
+      cm.method_list.each { |m| cm.methods_hash[m.pretty_name] = m }
+      cm.attributes.each { |a| cm.methods_hash[a.pretty_name] = a }
+
+      # Remove constants contributed by this file
+      cm.constants.reject! { |c| c.file == top_level }
+      cm.constants_hash.clear
+      cm.constants.each { |c| cm.constants_hash[c.name] = c }
+
+      # Remove includes, extends, and aliases from this file
+      cm.includes.reject! { |i| i.file == top_level }
+      cm.extends.reject! { |e| e.file == top_level }
+      cm.aliases.reject! { |a| a.file == top_level }
+      cm.external_aliases.reject! { |a| a.file == top_level }
+
+      # Remove comment entries from this file and rebuild the comment
+      if cm.is_a?(RDoc::ClassModule)
+        cm.comment_location.reject! { |(_, loc)| loc == top_level }
+        texts = cm.comment_location.map { |(c, _)| c.to_s }
+        merged = texts.join("\n---\n")
+        cm.instance_variable_set(:@comment,
+          merged.empty? ? '' : RDoc::Comment.new(merged))
+      end
+
+      # Remove this file from the class/module's file list
+      cm.in_files.delete(top_level)
+
+      # If no files contribute to this class/module anymore, remove it
+      # from the store entirely.  This handles file deletion correctly
+      # for classes that are only defined in the deleted file, while
+      # preserving classes that span multiple files.
+      if cm.in_files.empty?
+        if cm.is_a?(RDoc::NormalModule)
+          @modules_hash.delete(cm.full_name)
+        else
+          @classes_hash.delete(cm.full_name)
+        end
+        cm.parent&.classes_hash&.delete(cm.name)
+        cm.parent&.modules_hash&.delete(cm.name)
+      end
+    end
+
+    # Clear the TopLevel's class/module list to prevent duplicates
+    top_level.classes_or_modules.clear
+  end
+
+  ##
   # Make sure any references to C variable names are resolved to the corresponding class.
   #
 
@@ -978,6 +1061,19 @@ class RDoc::Store
   end
 
   private
+
+  def remove_classes_and_modules(cms)
+    cms.each do |cm|
+      remove_classes_and_modules(cm.classes_and_modules)
+
+      if cm.is_a?(RDoc::NormalModule)
+        @modules_hash.delete(cm.full_name)
+      else
+        @classes_hash.delete(cm.full_name)
+      end
+    end
+  end
+
   def marshal_load(file)
     File.open(file, 'rb') {|io| Marshal.load(io, MarshalFilter)}
   end

@@ -95,6 +95,7 @@ class RDoc::Options
     pipe
     rdoc_include
     root
+    server_port
     static_path
     template
     template_dir
@@ -329,6 +330,13 @@ class RDoc::Options
   attr_reader :visibility
 
   ##
+  # When set to a port number, starts a live-reloading server instead of
+  # writing files.  Defaults to +false+ (no server).  Set via
+  # <tt>--server[=PORT]</tt>.
+
+  attr_reader :server_port
+
+  ##
   # Indicates if files of test suites should be skipped
   attr_accessor :skip_tests
 
@@ -410,6 +418,7 @@ class RDoc::Options
     @output_decoration = true
     @rdoc_include = []
     @root = Pathname(Dir.pwd)
+    @server_port = false
     @show_hash = false
     @static_path = []
     @tab_width = 8
@@ -1121,6 +1130,15 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
       opt.separator "Generic options:"
+      opt.separator nil
+
+      opt.on("--server[=PORT]", Integer,
+             "Start a web server to preview",
+             "documentation with live reload.",
+             "Defaults to port 4000.") do |port|
+        @server_port = port || 4000
+      end
+
       opt.separator nil
 
       opt.on("--write-options",
