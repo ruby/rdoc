@@ -475,7 +475,7 @@ The internal error was:
       @store.complete @options.visibility
 
       start_server
-      return
+      exit
     end
 
     unless @options.coverage_report then
