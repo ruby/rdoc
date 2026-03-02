@@ -720,6 +720,63 @@ class RDoc::Store
   end
 
   ##
+  # Resolves a parent CodeObject by +parent_name+ and +parent_class+.
+  # This encapsulates the lazy parent resolution logic: if the parent is a
+  # TopLevel, it is resolved via add_file; otherwise it is looked up in the
+  # class/module registry, falling back to loading from disk.
+
+  def resolve_parent(parent_name, parent_class)
+    if parent_class == RDoc::TopLevel
+      add_file parent_name
+    else
+      find_class_or_module(parent_name) || begin
+        load_class(parent_name)
+      rescue MissingFileError
+        nil
+      end
+    end
+  end
+
+  ##
+  # Resolves a mixin's module reference by walking the namespace hierarchy.
+  # +name+ is the module name to resolve, +parent_context+ is the Context
+  # containing the mixin, and +mixin+ is the Mixin object itself (used to
+  # limit the include search to only includes before this one).
+  #
+  # Returns the resolved RDoc::NormalModule, or nil if not found.
+
+  def resolve_mixin(name, parent_context, mixin)
+    return nil unless parent_context
+
+    # search the current context
+    full_name = parent_context.child_name(name)
+    found = find_module_named(full_name)
+    return found if found
+    return nil if name =~ /^::/
+
+    # search the includes before this one, in reverse order
+    searched = parent_context.includes.take_while { |i| i != mixin }.reverse
+    searched.each do |i|
+      inc = i.module
+      next if String === inc
+      full_name = inc.child_name(name)
+      found = find_module_named(full_name)
+      return found if found
+    end
+
+    # go up the hierarchy of names
+    up = parent_context.parent
+    while up
+      full_name = up.child_name(name)
+      found = find_module_named(full_name)
+      return found if found
+      up = up.parent
+    end
+
+    nil
+  end
+
+  ##
   # Returns the RDoc::TopLevel that is a file and has the given +name+
 
   def page(name)

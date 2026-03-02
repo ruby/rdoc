@@ -2016,8 +2016,8 @@ end
 
     @parser.parse_method m, RDoc::Parser::Ruby::NORMAL, tk, @comment
 
-    assert_empty @store.modules_hash.keys
-    assert_equal %w[M], @store.classes_hash.keys
+    assert_equal %w[M], @store.modules_hash.keys
+    assert_empty @store.classes_hash.keys
   end
 
   def test_parse_method_false

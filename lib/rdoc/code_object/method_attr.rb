@@ -147,15 +147,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @see
   end
 
-  ##
-  # Sets the store for this class or module and its contained code objects.
-
-  def store=(store)
-    super
-
-    @file = @store.add_file @file.full_name if @file
-  end
-
   def find_see # :nodoc:
     return nil if singleton || is_alias_for
 
@@ -172,7 +163,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
     return nil unless parent.respond_to? :ancestors
 
     searched = parent.ancestors
-    kernel = @store.modules_hash['Kernel']
+    kernel = @store.find_module_named('Kernel')
 
     searched << kernel if kernel &&
       parent != kernel && !searched.include?(kernel)
