@@ -92,31 +92,30 @@ class RDoc::Markup::Formatter
   # Applies regexp handling to +text+ and returns an array of [text, converted?] pairs.
 
   def apply_regexp_handling(text)
-    output = []
-    start = 0
-    loop do
-      pos = text.size
-      matched_name = matched_text = nil
-      @markup.regexp_handlings.each do |pattern, name|
-        m = text.match(pattern, start)
-        next unless m
+    matched = []
+    @markup.regexp_handlings.each_with_index do |(pattern, name), priority|
+      text.scan(pattern) do
+        m = Regexp.last_match
         idx = m[1] ? 1 : 0
-        if m.begin(idx) < pos
-          pos = m.begin(idx)
-          matched_text = m[idx]
-          matched_name = name
-        end
+        matched << [m.begin(idx), m.end(idx), m[idx], name, priority]
       end
-      output << [text[start...pos], false] if pos > start
-      if matched_name
-        handled = public_send(:"handle_regexp_#{matched_name}", matched_text)
-        output << [handled, true]
-        start = pos + matched_text.size
-      else
-        start = pos
-      end
-      break if pos == text.size
     end
+    # If the start positions are the same, prefer the one with higher priority (registered earlier one)
+    matched.sort_by! {|beg_pos, _, _, _, priority| [beg_pos, priority] }
+
+    chars = text.chars
+    pos = 0
+    output = []
+    matched.each do |beg_pos, end_pos, s, name|
+      next if beg_pos < pos
+
+      output << [chars[pos...beg_pos].join, false] if beg_pos != pos
+      handled = public_send(:"handle_regexp_#{name}", s)
+      output << [handled, true]
+      pos = end_pos
+    end
+
+    output << [chars[pos..].join, false] if pos < chars.size
     output
   end
 
