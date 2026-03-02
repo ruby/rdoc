@@ -375,6 +375,10 @@ class RDoc::Options
 
   attr_accessor :footer_content
 
+  ##
+  # Git hash value
+  attr_accessor :git_commit_sha
+
   def initialize(loaded_options = nil) # :nodoc:
     init_ivars
     override loaded_options if loaded_options
@@ -431,6 +435,7 @@ class RDoc::Options
     @file_path_prefix = nil
     @canonical_root = nil
     @footer_content = nil
+    @git_commit_sha = nil
   end
 
   def init_with(map) # :nodoc:

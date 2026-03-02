@@ -91,6 +91,7 @@ class RDocOptionsTest < RDoc::TestCase
       'file_path_prefix' => nil,
       'canonical_root' => nil,
       'footer_content' => nil,
+      'git_commit_sha' => nil,
     }
 
     assert_equal expected, coder
