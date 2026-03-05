@@ -924,12 +924,13 @@ class RDocStoreTest < XrefTestCase
 
     loaded = s.load_class('Object')
 
-    # After loading, comment_location is an array (not a Document)
-    assert_kind_of Array, loaded.comment_location
-    assert_equal 1, loaded.comment_location.length
+    # After loading, comment_location is a hash (not a Document)
+    assert_kind_of Hash, loaded.comment_location
+    assert_equal 1, loaded.comment_location.size
 
     # Verify content is preserved
-    comment, location = loaded.comment_location.first
+    location, comments = loaded.comment_location.first
+    comment = comments.first
     assert_kind_of @RM::Document, comment
     assert_equal 'new comment', comment.parts[0].text
     assert_equal @top_level.relative_name, location

@@ -801,9 +801,7 @@ end
 
     foo = @top_level.classes.first
     assert_equal 'Foo', foo.full_name
-    assert_equal [[comment_a, @top_level],
-                  [comment_b, @top_level],
-                  [comment_c, @top_level]], foo.comment_location
+    assert_equal({ @top_level => [comment_a, comment_b, comment_c] }, foo.comment_location)
     assert_equal [@top_level], foo.in_files
     assert_equal 1, foo.line
   end
@@ -3722,7 +3720,7 @@ end
       RDoc::Comment.new('comment b', @top_level)
     ]
 
-    assert_equal expected, foo.comment_location.map { |c, l| c }
+    assert_equal expected, foo.comment_location[@top_level]
   end
 
   def test_scan_meta_method_block

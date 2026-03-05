@@ -30,22 +30,20 @@ class RDoc::ClassModule < RDoc::Context
   attr_accessor :constant_aliases
 
   ##
-  # An array of `[comment, location]` pairs documenting this class/module.
+  # A hash of <tt>{ location => [comments] }</tt> documenting this class/module.
   # Use #add_comment to add comments.
   #
+  # Ruby hashes maintain insertion order, so comments render in the order
+  # they were first added. Each location maps to an array of comments,
+  # allowing a class reopened in the same file to accumulate multiple comments.
+  #
   # Before marshalling:
-  # - +comment+ is a String
   # - +location+ is an RDoc::TopLevel
+  # - +comments+ are Strings
   #
   # After unmarshalling:
-  # - +comment+ is an RDoc::Markup::Document
   # - +location+ is a filename String
-  #
-  # These type changes are acceptable (for now) because:
-  # - +comment+: Both String and Document respond to #empty?, and #parse
-  #   returns Document as-is (see RDoc::Text#parse)
-  # - +location+: Only used by #parse to set Document#file, which accepts
-  #   both TopLevel (extracts relative_name) and String
+  # - +comments+ are RDoc::Markup::Documents
 
   attr_accessor :comment_location
 
@@ -63,8 +61,8 @@ class RDoc::ClassModule < RDoc::Context
   def self.from_module(class_type, mod)
     klass = class_type.new mod.name
 
-    mod.comment_location.each do |comment, location|
-      klass.add_comment comment, location
+    mod.comment_location.each do |location, comments|
+      comments.each { |comment| klass.add_comment comment, location }
     end
 
     klass.parent = mod.parent
@@ -125,7 +123,7 @@ class RDoc::ClassModule < RDoc::Context
     @is_alias_for     = nil
     @name             = name
     @superclass       = superclass
-    @comment_location = [] # Array of [comment, location] pairs
+    @comment_location = {} # Hash of { location => [comments] }
 
     super()
   end
@@ -147,11 +145,7 @@ class RDoc::ClassModule < RDoc::Context
                 normalize_comment comment
               end
 
-    if location.parser == RDoc::Parser::C
-      @comment_location.delete_if { |(_, l)| l == location }
-    end
-
-    @comment_location << [comment, location]
+    (@comment_location[location] ||= []) << comment
 
     self.comment = original
   end
@@ -270,7 +264,7 @@ class RDoc::ClassModule < RDoc::Context
   def documented?
     return true if @received_nodoc
     return false if @comment_location.empty?
-    @comment_location.any? { |comment, _| not comment.empty? }
+    @comment_location.each_value.any? { |comments| comments.any? { |c| not c.empty? } }
   end
 
   ##
@@ -411,9 +405,9 @@ class RDoc::ClassModule < RDoc::Context
     @comment    = RDoc::Comment.from_document document
 
     @comment_location = if document.parts.first.is_a?(RDoc::Markup::Document)
-                          document.parts.map { |doc| [doc, doc.file] }
+                          document.parts.group_by(&:file)
                         else
-                          [[document, document.file]]
+                          { document.file => [document] }
                         end
 
     array[5].each do |name, rw, visibility, singleton, file|
@@ -495,9 +489,9 @@ class RDoc::ClassModule < RDoc::Context
       @comment = RDoc::Comment.from_document(document)
 
       @comment_location = if document.parts.first.is_a?(RDoc::Markup::Document)
-                            document.parts.map { |doc| [doc, doc.file] }
+                            document.parts.group_by(&:file)
                           else
-                            [[document, document.file]]
+                            { document.file => [document] }
                           end
     end
 
@@ -643,11 +637,13 @@ class RDoc::ClassModule < RDoc::Context
     case comment_location
     when String then
       super
-    when Array then
-      docs = comment_location.map do |comment, location|
-        doc = super comment
-        doc.file = location
-        doc
+    when Hash then
+      docs = comment_location.flat_map do |location, comments|
+        comments.map do |comment|
+          doc = super comment
+          doc.file = location
+          doc
+        end
       end
 
       RDoc::Markup::Document.new(*docs)
@@ -745,7 +741,7 @@ class RDoc::ClassModule < RDoc::Context
   # Returns an HTML snippet of the first comment for search results.
 
   def search_snippet
-    first_comment = @comment_location.first&.first
+    first_comment = @comment_location.each_value.first&.first
     return '' unless first_comment && !first_comment.empty?
 
     snippet(first_comment)

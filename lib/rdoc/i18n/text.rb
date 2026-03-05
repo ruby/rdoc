@@ -89,9 +89,9 @@ class RDoc::I18n::Text
     case raw
     when RDoc::Comment
       raw.text.each_line(&block)
-    when Array
-      raw.each do |comment, location|
-        each_line(comment, &block)
+    when Hash
+      raw.each_value do |comments|
+        comments.each { |comment| each_line(comment, &block) }
       end
     else
       raw.each_line(&block)

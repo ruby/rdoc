@@ -1939,7 +1939,7 @@ module RDocParserPrismTestCases
       RDoc::Comment.new('comment b', @top_level)
     ]
 
-    assert_equal expected, mod.comment_location.map { |c, _l| c }
+    assert_equal expected, mod.comment_location[@top_level]
   end
 
   def test_enddoc
