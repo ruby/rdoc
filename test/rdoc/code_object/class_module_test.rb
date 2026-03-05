@@ -12,21 +12,21 @@ class RDocClassModuleTest < XrefTestCase
     comment_tl1 = RDoc::Comment.new('# comment 1', @top_level, :ruby)
     cm.add_comment comment_tl1, tl1
 
-    assert_equal [[comment_tl1, tl1]], cm.comment_location
+    assert_equal({ tl1 => [comment_tl1] }, cm.comment_location)
     assert_equal 'comment 1', cm.comment.text
 
     comment_tl2 = RDoc::Comment.new('# comment 2', @top_level, :ruby)
     cm.add_comment comment_tl2, tl2
 
-    assert_equal [[comment_tl1, tl1], [comment_tl2, tl2]], cm.comment_location
+    assert_equal({ tl1 => [comment_tl1], tl2 => [comment_tl2] }, cm.comment_location)
     assert_equal "comment 1\n---\ncomment 2", cm.comment
 
     comment_tl3 = RDoc::Comment.new('# * comment 3', @top_level, :ruby)
     cm.add_comment comment_tl3, tl3
 
-    assert_equal [[comment_tl1, tl1],
-                  [comment_tl2, tl2],
-                  [comment_tl3, tl3]], cm.comment_location
+    assert_equal({ tl1 => [comment_tl1],
+                   tl2 => [comment_tl2],
+                   tl3 => [comment_tl3] }, cm.comment_location)
     assert_equal "comment 1\n---\ncomment 2\n---\n* comment 3", cm.comment
   end
 
@@ -38,7 +38,7 @@ class RDocClassModuleTest < XrefTestCase
     assert_equal 'comment', cm.comment.text
   end
 
-  def test_add_comment_duplicate
+  def test_add_comment_same_file_reopened_class
     tl1 = @store.add_file 'one.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
@@ -47,8 +47,8 @@ class RDocClassModuleTest < XrefTestCase
     cm.add_comment comment1, tl1
     cm.add_comment comment2, tl1
 
-    assert_equal [[comment1, tl1],
-                  [comment2, tl1]], cm.comment_location
+    # Both comments should appear in the rendered description
+    assert_equal({ tl1 => [comment1, comment2] }, cm.comment_location)
   end
 
   def test_add_comment_stopdoc
@@ -156,7 +156,7 @@ class RDocClassModuleTest < XrefTestCase
 
     klass = RDoc::ClassModule.from_module RDoc::NormalClass, klass
 
-    assert_equal [['really a class', tl]], klass.comment_location
+    assert_equal({ tl => ['really a class'] }, klass.comment_location)
   end
 
   def test_marshal_dump
@@ -631,7 +631,7 @@ class RDocClassModuleTest < XrefTestCase
     assert_match(/class comment/, snippet)
   end
 
-  def test_comment_location_is_array_after_marshal
+  def test_comment_location_is_hash_after_marshal
     @store.path = Dir.tmpdir
     tl = @store.add_file 'file.rb'
 
@@ -642,10 +642,11 @@ class RDocClassModuleTest < XrefTestCase
     loaded = Marshal.load Marshal.dump cm
     loaded.store = @store
 
-    assert_kind_of Array, loaded.comment_location
-    assert_equal 1, loaded.comment_location.length
+    assert_kind_of Hash, loaded.comment_location
+    assert_equal 1, loaded.comment_location.size
 
-    comment, location = loaded.comment_location.first
+    location, comments = loaded.comment_location.first
+    comment = comments.first
     assert_kind_of RDoc::Markup::Document, comment
     # After marshal, location is the filename string (from doc.file)
     assert_equal tl.relative_name, location
@@ -668,7 +669,8 @@ class RDocClassModuleTest < XrefTestCase
     assert c1.current_section, 'original current_section'
     assert c2.current_section, 'merged current_section'
 
-    comment, location = c2.comment_location.first
+    location, comments = c2.comment_location.first
+    comment = comments.first
     assert_kind_of RDoc::Markup::Document, comment
     assert_equal tl.relative_name, location
   end
@@ -793,7 +795,7 @@ class RDocClassModuleTest < XrefTestCase
     inner2 = @RM::Document.new @RM::Paragraph.new 'klass 2'
     inner2.file = 'two.rb'
 
-    expected = @RM::Document.new inner2, inner1
+    expected = @RM::Document.new inner1, inner2
 
     assert_equal expected, cm1.comment.parse
   end
@@ -1217,17 +1219,15 @@ class RDocClassModuleTest < XrefTestCase
     cm.add_comment 'comment 1', tl1
     cm.add_comment 'comment 2', tl2
 
-    assert_kind_of Array, cm.comment_location
-    assert_equal 2, cm.comment_location.length
-    assert_equal 'comment 1', cm.comment_location[0][0]
-    assert_equal tl1, cm.comment_location[0][1]
-    assert_equal 'comment 2', cm.comment_location[1][0]
-    assert_equal tl2, cm.comment_location[1][1]
+    assert_kind_of Hash, cm.comment_location
+    assert_equal 2, cm.comment_location.size
+    assert_equal ['comment 1'], cm.comment_location[tl1]
+    assert_equal ['comment 2'], cm.comment_location[tl2]
 
     cm = Marshal.load Marshal.dump cm
 
-    # After marshal, comment_location should still be an array
-    assert_kind_of Array, cm.comment_location
+    # After marshal, comment_location should still be a hash
+    assert_kind_of Hash, cm.comment_location
 
     # parse() produces a Document with parts for each comment
     parsed = cm.parse(cm.comment_location)

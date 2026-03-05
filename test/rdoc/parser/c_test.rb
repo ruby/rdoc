@@ -318,8 +318,7 @@ VALUE cFoo = rb_define_class("Foo", rb_cObject);
 
     klass = util_get_class content, 'cFoo'
     assert_equal 1, klass.comment_location.size
-    first = klass.comment_location.first
-    first_comment = first[0]
+    first_comment = klass.comment_location.each_value.first&.first
     assert_equal 'first', first_comment.text
   end
 
