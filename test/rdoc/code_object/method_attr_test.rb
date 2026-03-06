@@ -124,22 +124,6 @@ class RDocMethodAttrTest < XrefTestCase
     assert_equal @c2_b, @c2_a.is_alias_for
   end
 
-  def test_search_record
-    @c1_m.comment = 'This is a comment.'
-
-    expected = [
-      'm',
-      'C1#m',
-      'm',
-      'C1',
-      'C1.html#method-i-m',
-      '(foo)',
-      "<p>This is a comment.\n",
-    ]
-
-    assert_equal expected, @c1_m.search_record
-  end
-
   def test_spaceship_returns_nil_on_inappropriate_types
     assert_nil @c1_m.<=>(RDoc::CodeObject.new)
   end

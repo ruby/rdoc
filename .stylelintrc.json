@@ -1,9 +1,6 @@
 {
   "extends": "stylelint-config-standard",
   "plugins": ["stylelint-value-no-unknown-custom-properties"],
-  "ignoreFiles": [
-    "lib/rdoc/generator/template/darkfish/css/**/*.css"
-  ],
   "rules": {
     "csstools/value-no-unknown-custom-properties": true,
     "custom-property-no-missing-var-function": true,

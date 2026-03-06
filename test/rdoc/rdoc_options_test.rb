@@ -137,12 +137,12 @@ class RDocOptionsTest < RDoc::TestCase
   def test_generator_descriptions
     # HACK autotest/isolate should take care of this
     RDoc::RDoc::GENERATORS.clear
-    RDoc::RDoc::GENERATORS['darkfish'] = RDoc::Generator::Darkfish
-    RDoc::RDoc::GENERATORS['ri']       = RDoc::Generator::RI
+    RDoc::RDoc::GENERATORS['aliki'] = RDoc::Generator::Aliki
+    RDoc::RDoc::GENERATORS['ri']    = RDoc::Generator::RI
 
     expected = <<-EXPECTED.chomp
-  darkfish - HTML generator, written by Michael Granger
-  ri       - creates ri data files
+  aliki - HTML generator, default theme
+  ri    - creates ri data files
     EXPECTED
 
     assert_equal expected, @options.generator_descriptions
@@ -306,10 +306,10 @@ rdoc_include:
 
   def test_parse_formatter
     e = assert_raise OptionParser::InvalidOption do
-      @options.parse %w[--format darkfish --format ri]
+      @options.parse %w[--format aliki --format ri]
     end
 
-    assert_equal 'invalid option: --format generator already set to darkfish',
+    assert_equal 'invalid option: --format generator already set to aliki',
                  e.message
   end
 
@@ -329,37 +329,37 @@ rdoc_include:
 
   def test_parse_formatter_ri
     e = assert_raise OptionParser::InvalidOption do
-      @options.parse %w[--format darkfish --ri]
+      @options.parse %w[--format aliki --ri]
     end
 
-    assert_equal 'invalid option: --ri generator already set to darkfish',
+    assert_equal 'invalid option: --ri generator already set to aliki',
                  e.message
 
     @options = RDoc::Options.new
 
     e = assert_raise OptionParser::InvalidOption do
-      @options.parse %w[--format darkfish -r]
+      @options.parse %w[--format aliki -r]
     end
 
-    assert_equal 'invalid option: -r generator already set to darkfish',
+    assert_equal 'invalid option: -r generator already set to aliki',
                  e.message
   end
 
   def test_parse_formatter_ri_site
     e = assert_raise OptionParser::InvalidOption do
-      @options.parse %w[--format darkfish --ri-site]
+      @options.parse %w[--format aliki --ri-site]
     end
 
-    assert_equal 'invalid option: --ri-site generator already set to darkfish',
+    assert_equal 'invalid option: --ri-site generator already set to aliki',
                  e.message
 
     @options = RDoc::Options.new
 
     e = assert_raise OptionParser::InvalidOption do
-      @options.parse %w[--format darkfish -R]
+      @options.parse %w[--format aliki -R]
     end
 
-    assert_equal 'invalid option: -R generator already set to darkfish',
+    assert_equal 'invalid option: -R generator already set to aliki',
                  e.message
   end
 
@@ -618,15 +618,15 @@ rdoc_include:
 
   def test_parse_template
     out, err = capture_output do
-      @options.parse %w[--template darkfish]
+      @options.parse %w[--template aliki]
     end
 
     assert_empty out
     assert_empty err
 
-    assert_equal 'darkfish', @options.template
+    assert_equal 'aliki', @options.template
 
-    assert_match %r%rdoc/generator/template/darkfish$%, @options.template_dir
+    assert_match %r%rdoc/generator/template/aliki$%, @options.template_dir
   end
 
   def test_parse_template_nonexistent
