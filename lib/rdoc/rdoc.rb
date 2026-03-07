@@ -507,7 +507,9 @@ The internal error was:
       Dir.chdir @options.op_dir do
         unless @options.quiet then
           $stderr.puts "\nGenerating #{@generator.class.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
-          $stderr.puts "\nYou can visit the home page at: \e]8;;file://#{Dir.pwd}/index.html\e\\file://#{Dir.pwd}/index.html\e]8;;\e\\"
+          uri = "file://#{Dir.pwd}/index.html"
+          ref = $stderr.tty? ? "\e]8;;#{uri}\e\\#{uri}\e]8;;\e\\" : uri
+          $stderr.puts "\nYou can visit the home page at: #{ref}"
         end
 
         @generator.generate
