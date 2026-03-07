@@ -363,6 +363,8 @@ class RDoc::Server
             $stderr.puts "Error parsing #{f}: #{e.message}"
           end
         end
+
+        @store.cleanup_stale_contributions
       end
 
       @store.complete(@options.visibility)

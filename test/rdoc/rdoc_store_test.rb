@@ -1255,4 +1255,53 @@ class RDocStoreTest < XrefTestCase
     assert_equal 'updated comment from a', klass.comment_location[file_a].first.to_s
   end
 
+  def test_cleanup_stale_comment_locations
+    file_a = @s.add_file 'a.rb'
+    file_b = @s.add_file 'b.rb'
+
+    klass = file_a.add_class RDoc::NormalClass, 'StaleClass'
+    klass.record_location file_a
+    klass.record_location file_b
+    file_a.add_to_classes_or_modules klass
+    file_b.add_to_classes_or_modules klass
+
+    klass.add_comment 'comment from a', file_a
+    klass.add_comment 'comment from b', file_b
+
+    # Simulate keep_position clearing followed by re-parse that no longer
+    # defines StaleClass in a.rb (no add_comment called for file_a)
+    @s.clear_file_contributions 'a.rb', keep_position: true
+
+    # Stale placeholder exists
+    assert_equal [], klass.comment_location[file_a]
+
+    # Cleanup should remove the stale entry
+    @s.cleanup_stale_contributions
+
+    assert_not_include klass.comment_location.keys, file_a
+    assert_not_include klass.in_files, file_a
+    assert_includes klass.comment_location.keys, file_b
+    assert_includes klass.in_files, file_b
+  end
+
+  def test_cleanup_stale_contributions_removes_empty_class
+    file_a = @s.add_file 'a.rb'
+
+    klass = file_a.add_class RDoc::NormalClass, 'GoneClass'
+    klass.record_location file_a
+    file_a.add_to_classes_or_modules klass
+
+    klass.add_comment 'comment from a', file_a
+
+    @s.clear_file_contributions 'a.rb', keep_position: true
+
+    # Stale placeholder exists, class still in store
+    assert_includes @s.classes_hash, 'GoneClass'
+
+    @s.cleanup_stale_contributions
+
+    # Class should be removed from store
+    assert_not_include @s.classes_hash, 'GoneClass'
+  end
+
 end

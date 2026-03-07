@@ -280,6 +280,35 @@ class RDoc::Store
   end
 
   ##
+  # Removes stale empty placeholders left by +clear_file_contributions+ with
+  # <tt>keep_position: true</tt>.  After re-parsing, a file may no longer
+  # define a class it previously contributed to, leaving an empty entry in
+  # +comment_location+ and a stale +in_files+ reference.  Call this after
+  # all re-parsing is complete.
+
+  def cleanup_stale_contributions
+    all_classes_and_modules.each do |cm|
+      cm.comment_location.delete_if { |_, comments| comments.empty? }
+      cm.rebuild_comment_from_location
+
+      cm.in_files.select! { |tl| cm.comment_location.key?(tl) ||
+        cm.method_list.any? { |m| m.file == tl } ||
+        cm.attributes.any? { |a| a.file == tl } ||
+        cm.constants.any? { |c| c.file == tl } }
+
+      if cm.in_files.empty?
+        if cm.is_a?(RDoc::NormalModule)
+          @modules_hash.delete(cm.full_name)
+        else
+          @classes_hash.delete(cm.full_name)
+        end
+        cm.parent&.classes_hash&.delete(cm.name)
+        cm.parent&.modules_hash&.delete(cm.name)
+      end
+    end
+  end
+
+  ##
   # Make sure any references to C variable names are resolved to the corresponding class.
   #
 
