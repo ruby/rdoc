@@ -36,6 +36,41 @@ module RDocParserPrismTestCases
     assert_equal 'new section', section.title
   end
 
+  def test_section_with_divider
+    util_parser <<~RUBY
+      # DIVIDER
+      # :section: section 1
+      # foo
+      # DIVIDER
+
+      # DIVIDER 1
+      # DIVIDER 2
+      # :section: section 2
+      # foo
+      # DIVIDER 1
+      # DIVIDER 2
+
+      # DIVIDER TOP ONLY
+      # :section: section 3
+      # foo
+
+      # DIVIDER TOP ONLY
+      # :section: section 4
+    RUBY
+
+    section = @top_level.sections_hash['section 1']
+    assert_equal "\n<p>foo</p>\n", section.description
+
+    section = @top_level.sections_hash['section 2']
+    assert_equal "\n<p>foo</p>\n", section.description
+
+    section = @top_level.sections_hash['section 3']
+    assert_equal "\n<p>foo</p>\n", section.description
+
+    section = @top_level.sections_hash['section 4']
+    assert_equal '', section.description
+  end
+
   def test_look_for_directives_in_commented
     util_parser <<~RUBY
       # how to make a section:
