@@ -8,9 +8,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
   # :stopdoc:
   ALL_CROSSREF_REGEXP = RDoc::CrossReference::ALL_CROSSREF_REGEXP
-  CLASS_REGEXP_STR    = RDoc::CrossReference::CLASS_REGEXP_STR
   CROSSREF_REGEXP     = RDoc::CrossReference::CROSSREF_REGEXP
-  METHOD_REGEXP_STR   = RDoc::CrossReference::METHOD_REGEXP_STR
   # :startdoc:
 
   ##

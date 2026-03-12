@@ -15,13 +15,6 @@ require 'rdoc/markup/inline_parser'
 class RDoc::Markup::Formatter
 
   ##
-  # Tag for inline markup containing a +bit+ for the bitmask and the +on+ and
-  # +off+ triggers.
-
-  InlineTag = Struct.new(:bit, :on, :off)
-
-
-  ##
   # Converts a target url to one that is relative to a given path
 
   def self.gen_relative_url(path, target)
