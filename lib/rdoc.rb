@@ -189,7 +189,6 @@ module RDoc
   autoload :Context,        "#{__dir__}/rdoc/code_object/context"
   autoload :TopLevel,       "#{__dir__}/rdoc/code_object/top_level"
 
-  autoload :AnonClass,      "#{__dir__}/rdoc/code_object/anon_class"
   autoload :ClassModule,    "#{__dir__}/rdoc/code_object/class_module"
   autoload :NormalClass,    "#{__dir__}/rdoc/code_object/normal_class"
   autoload :NormalModule,   "#{__dir__}/rdoc/code_object/normal_module"

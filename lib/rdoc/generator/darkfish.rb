@@ -74,11 +74,6 @@ class RDoc::Generator::Darkfish
   ]
 
   ##
-  # Release Version
-
-  VERSION = '3'
-
-  ##
   # Description of this generator
 
   DESCRIPTION = 'HTML generator, written by Michael Granger'

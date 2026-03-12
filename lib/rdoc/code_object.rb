@@ -10,7 +10,6 @@
 # * RDoc::Context
 #   * RDoc::TopLevel
 #   * RDoc::ClassModule
-#     * RDoc::AnonClass (never used so far)
 #     * RDoc::NormalClass
 #     * RDoc::NormalModule
 #     * RDoc::SingleClass
