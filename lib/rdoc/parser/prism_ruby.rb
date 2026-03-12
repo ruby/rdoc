@@ -473,13 +473,26 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     comment.line = start_line
     markup, = directives['markup']
     comment.format = markup&.downcase || @markup
-    if (section, = directives['section'])
+    if (section, directive_line = directives['section'])
       # If comment has :section:, it is not a documentable comment for a code object
-      @container.set_current_section(section, comment.dup)
+      comment.text = extract_section_comment(comment_text, directive_line - start_line)
+      @container.set_current_section(section, comment)
       return
     end
     @preprocess.run_post_processes(comment, @container)
     [comment, directives]
+  end
+
+  # Extracts the comment for this section from the normalized comment block.
+  # Removes all lines before the line that contains :section:
+  # If the comment also ends with the same content, remove it as well
+
+  def extract_section_comment(comment_text, prefix_line_count) # :nodoc:
+    prefix = comment_text.lines[0...prefix_line_count].join
+    comment_text.delete_prefix!(prefix)
+    # Comment is already normalized and doesn't end with a newline
+    comment_text.delete_suffix!(prefix.chomp)
+    comment_text
   end
 
   def slice_tokens(start_pos, end_pos) # :nodoc:
