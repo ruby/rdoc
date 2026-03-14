@@ -641,17 +641,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Class attributes
-
-  def class_attributes
-    @class_attributes ||= attributes.select { |a| a.singleton }
-  end
-
-  ##
   # Class methods
 
   def class_method_list
-    @class_method_list ||= method_list.select { |a| a.singleton }
+    method_list.select { |a| a.singleton }
   end
 
   ##
@@ -952,27 +945,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Instance attributes
-
-  def instance_attributes
-    @instance_attributes ||= attributes.reject { |a| a.singleton }
-  end
-
-  ##
   # Instance methods
 
   def instance_methods
-    @instance_methods ||= method_list.reject { |a| a.singleton }
-  end
-
-  ##
-  # Instance methods
-  #--
-  # TODO remove this later
-
-  def instance_method_list
-    warn '#instance_method_list is obsoleted, please use #instance_methods'
-    @instance_methods ||= method_list.reject { |a| a.singleton }
+    method_list.reject { |a| a.singleton }
   end
 
   ##
