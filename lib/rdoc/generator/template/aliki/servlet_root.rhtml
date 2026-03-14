@@ -42,7 +42,7 @@
 
 <%- gems = installed.select { |_, _, _, type,| type == :gem } %>
 <%- missing = gems.reject { |_, _, exists,| exists } %>
-<%- unless missing.empty? then %>
+<%- unless missing.empty? %>
   <h2>Missing Gem Documentation</h2>
 
   <p>You are missing documentation for some of your installed gems.

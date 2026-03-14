@@ -1,11 +1,11 @@
-<%- comment = if current.respond_to? :comment_location then
+<%- comment = if current.respond_to? :comment_location
                current.comment_location
              else
                current.comment
              end
    table = current.parse(comment).table_of_contents.dup
 
-   if table.length > 1 then %>
+   if table.length > 1 %>
 <div class="nav-section">
   <h3>Table of Contents</h3>
 
@@ -17,18 +17,18 @@
       <%- level = table.first&.level %>
       <%- while table.first && table.first.level >= level %>
         <%- heading = table.shift %>
+        <li>
         <%- if table.first.nil? || table.first.level <= heading.level %>
-          <li><% display_link.call heading %></li>
+          <% display_link.call heading %>
         <%- else %>
-          <li>
             <details open>
               <summary><%- display_link.call heading %></summary>
               <ul class="link-list" role="directory">
                 <% list_siblings.call %>
               </ul>
             </details>
-          </li>
         <%- end %>
+        </li>
       <%- end %>
     <%- end %>
 

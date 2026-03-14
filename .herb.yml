@@ -1,0 +1,21 @@
+version: 0.9.0
+
+linter:
+  enabled: true
+
+  rules:
+    # RDoc templates are not Rails partials — instance variables are the
+    # standard way to pass data from the generator to templates.
+    erb-no-instance-variables-in-partials:
+      enabled: false
+
+    # Template output is generated from trusted RDoc data, not user input.
+    erb-no-unsafe-script-interpolation:
+      enabled: false
+
+    # Same: attribute values come from trusted RDoc data.
+    erb-no-output-in-attribute-position:
+      enabled: false
+
+formatter:
+  enabled: false

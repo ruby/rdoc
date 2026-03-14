@@ -4,7 +4,7 @@
   <%- dir = current.full_name[%r{\A[^/]+(?=/)}] || current.page_name %>
 <%- end %>
 
-<%- unless simple_files.empty? then %>
+<%- unless simple_files.empty? %>
   <div id="fileindex-section" class="nav-section">
     <details class="nav-section-collapsible" <%= 'open' unless @inside_class_file %>>
       <summary class="nav-section-header">

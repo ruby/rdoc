@@ -28,7 +28,7 @@
 <%- elsif @title %>
   <meta name="keywords" content="ruby,documentation,<%= h @title %>">
   <%- if @options.main_page and
-      main_page = @files.find { |f| f.full_name == @options.main_page } then %>
+      main_page = @files.find { |f| f.full_name == @options.main_page } %>
     <meta
       name="description"
       content="<%= h "#{@title}: #{excerpt(main_page.comment)}" %>"

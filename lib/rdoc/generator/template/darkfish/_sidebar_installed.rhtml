@@ -5,7 +5,7 @@
   <%- installed.each do |name, href, exists, type, _| %>
     <%- next if type == :extra %>
     <li class="folder">
-    <%- if exists then %>
+    <%- if exists %>
       <a href="<%= href %>"><%= h name %></a>
     <%- else %>
       <%= h name %>
