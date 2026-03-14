@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_relative '../rdoc'
+require_relative '../../rdoc'
 require 'erb'
 require 'time'
 require 'json'
@@ -24,14 +24,14 @@ end
 #
 #   server = WEBrick::HTTPServer.new Port: 8000
 #
-#   server.mount '/', RDoc::Servlet
+#   server.mount '/', RDoc::RI::Servlet
 #
 # If you want to mount the servlet some other place than the root, provide the
 # base path when mounting:
 #
-#   server.mount '/rdoc', RDoc::Servlet, '/rdoc'
+#   server.mount '/rdoc', RDoc::RI::Servlet, '/rdoc'
 
-class RDoc::Servlet < WEBrick::HTTPServlet::AbstractServlet
+class RDoc::RI::Servlet < WEBrick::HTTPServlet::AbstractServlet
 
   @server_stores = Hash.new { |hash, server| hash[server] = {} }
   @cache         = Hash.new { |hash, store|  hash[store]  = {} }
