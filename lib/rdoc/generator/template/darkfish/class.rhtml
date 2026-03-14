@@ -26,7 +26,7 @@
         <% if namespace[:self] %>
         <span><%= namespace[:name] %></span>
         <% else %>
-        <a href="<%= namespace[:path] %>"><%= namespace[:name] %></a><span>::</span>
+        <a href="<%= namespace[:path] %>"><%= namespace[:name] %></a><span class="separator">::</span>
         <% end %>
       </li>
       <% end %>
@@ -45,7 +45,7 @@
   <%- klass.each_section do |section, constants, attributes| %>
   <span id="<%= section.legacy_aref %>" class="legacy-anchor"></span>
   <section id="<%= section.aref %>" class="documentation-section anchor-link">
-    <%- if section.title then %>
+    <%- if section.title %>
     <header class="documentation-section-title">
       <h2>
         <%= section.title %>
@@ -56,13 +56,13 @@
     </header>
     <%- end %>
 
-    <%- if section.comment then %>
+    <%- if section.comment %>
     <div>
       <%= section.description %>
     </div>
     <%- end %>
 
-    <%- unless constants.empty? then %>
+    <%- unless constants.empty? %>
     <section class="constants-list">
       <header>
         <h3>Constants</h3>
@@ -70,9 +70,9 @@
       <dl>
       <%- constants.each do |const| %>
         <dt id="<%= const.name %>"><%= const.name %></dt>
-        <%- if const.comment then %>
+        <%- if const.comment %>
         <dd>
-          <%- if const.mixin_from then %>
+          <%- if const.mixin_from %>
             <div class="mixin-from">
               Included from <a href="<%= klass.aref_to(const.mixin_from.path) %>"><%= const.mixin_from.full_name %></a>
             </div>
@@ -87,7 +87,7 @@
     </section>
     <%- end %>
 
-    <%- unless attributes.empty? then %>
+    <%- unless attributes.empty? %>
     <section class="attribute-method-details method-section">
       <header>
         <h3>Attributes</h3>
@@ -103,12 +103,12 @@
         </div>
 
         <div class="method-description">
-        <%- if attrib.mixin_from then %>
+        <%- if attrib.mixin_from %>
           <div class="mixin-from">
             <%= attrib.singleton ? "Extended" : "Included" %> from <a href="<%= klass.aref_to(attrib.mixin_from.path) %>"><%= attrib.mixin_from.full_name %></a>
           </div>
         <%- end %>
-        <%- if attrib.comment then %>
+        <%- if attrib.comment %>
         <%= attrib.description.strip %>
         <%- else %>
         <p class="missing-docs">(Not documented)</p>
@@ -131,7 +131,7 @@
     <%- methods.each do |method| %>
       <div id="<%= method.aref %>" class="method-detail anchor-link <%= method.is_alias_for ? "method-alias" : '' %>">
         <div class="method-header">
-          <%- if (call_seq = method.call_seq) then %>
+          <%- if (call_seq = method.call_seq) %>
             <%- call_seq.strip.split("\n").each_with_index do |call_seq, i| %>
               <div class="method-heading">
                 <a href="#<%= method.aref %>" title="Link to this method">
@@ -143,7 +143,7 @@
                 </a>
               </div>
             <%- end %>
-          <%- elsif method.has_call_seq? then %>
+          <%- elsif method.has_call_seq? %>
             <div class="method-heading">
               <a href="#<%= method.aref %>" title="Link to this method">
                 <span class="method-name"><%= h method.name %></span>
@@ -170,19 +170,19 @@
           </div>
         <%- end %>
 
-        <%- unless method.skip_description? then %>
+        <%- unless method.skip_description? %>
         <div class="method-description">
-          <%- if method.mixin_from then %>
+          <%- if method.mixin_from %>
             <div class="mixin-from">
               <%= method.singleton ? "Extended" : "Included" %> from <a href="<%= klass.aref_to(method.mixin_from.path) %>"><%= method.mixin_from.full_name %></a>
             </div>
           <%- end %>
-          <%- if method.comment then %>
+          <%- if method.comment %>
           <%= method.description.strip %>
           <%- else %>
           <p class="missing-docs">(Not documented)</p>
           <%- end %>
-          <%- if method.calls_super then %>
+          <%- if method.calls_super %>
             <div class="method-calls-super">
               Calls superclass method
               <%=
@@ -194,7 +194,7 @@
         </div>
         <%- end %>
 
-        <%- unless method.aliases.empty? then %>
+        <%- unless method.aliases.empty? %>
         <div class="aliases">
           Also aliased as: <%= method.aliases.map do |aka|
             if aka.parent then # HACK lib/rexml/encodings
@@ -206,7 +206,7 @@
         </div>
         <%- end %>
 
-        <%- if method.is_alias_for then %>
+        <%- if method.is_alias_for %>
         <div class="aliases">
           Alias for: <a href="<%= klass.aref_to method.is_alias_for.path %>"><%= h method.is_alias_for.name %></a>
         </div>
