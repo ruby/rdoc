@@ -2,7 +2,7 @@
 <%- if defined?(current) %>
   <%- dir = current.full_name[%r{\A[^/]+(?=/)}] || current.page_name %>
 <%- end %>
-<%- unless simple_files.empty? then %>
+<%- unless simple_files.empty? %>
 <div id="fileindex-section" class="nav-section">
   <h3>Pages</h3>
 
