@@ -387,6 +387,25 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal 'first.last@example.com', result
   end
 
+  def test_convert_CROSSREF_c_file_not_autolinked
+    # C files are not text files, so they don't get HTML pages generated.
+    # Auto cross-references to them should not produce links.
+    c_file = @store.add_file 'array.c'
+    c_file.parser = RDoc::Parser::C
+
+    result = @to.convert 'array.c'
+    assert_equal para("array.c"), result
+  end
+
+  def test_convert_RDOCLINK_rdoc_ref_c_file_linked
+    # Explicit rdoc-ref: links to non-text files should still work.
+    c_file = @store.add_file 'array.c'
+    c_file.parser = RDoc::Parser::C
+
+    result = @to.convert 'rdoc-ref:array.c'
+    assert_equal para("<a href=\"array_c.html\">array.c</a>"), result
+  end
+
   def test_link
     assert_equal 'n', @to.link('n', 'n')
 

@@ -159,6 +159,12 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     ref = @cross_reference.resolve name, text if name
 
+    # Non-text source files (C, Ruby, etc.) don't get HTML pages generated,
+    # so don't auto-link to them. Explicit rdoc-ref: links are still allowed.
+    if !rdoc_ref && RDoc::TopLevel === ref && !ref.text?
+      return text
+    end
+
     case ref
     when String then
       if rdoc_ref && @warn_missing_rdoc_ref
