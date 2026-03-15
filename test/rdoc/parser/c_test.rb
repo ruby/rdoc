@@ -2215,6 +2215,83 @@ void Init_Blah(void) {
     assert_equal("markdown", klass.attributes.find {|a| a.name == "default_format"}.comment.format)
   end
 
+  def test_clear_file_contributions_removes_c_methods
+    content = <<~C
+      /* Document-class: Foo */
+      VALUE cFoo = rb_define_class("Foo", rb_cObject);
+
+      /* call-seq: bar -> nil */
+      VALUE foo_bar(VALUE self) { return Qnil; }
+
+      void Init_Foo(void) {
+        cFoo = rb_define_class("Foo", rb_cObject);
+        rb_define_method(cFoo, "bar", foo_bar, 0);
+      }
+    C
+
+    util_get_class content, 'cFoo'
+
+    klass = @store.find_class_named 'Foo'
+    assert_equal 1, klass.method_list.size
+
+    @store.clear_file_contributions @top_level.relative_name
+    assert_equal 0, klass.method_list.size
+  end
+
+  def test_reparse_c_file_no_duplicates
+    content = <<~C
+      /* Document-class: Foo
+       * Original comment
+       */
+      VALUE cFoo = rb_define_class("Foo", rb_cObject);
+
+      /* call-seq: bar -> nil */
+      VALUE foo_bar(VALUE self) { return Qnil; }
+
+      void Init_Foo(void) {
+        cFoo = rb_define_class("Foo", rb_cObject);
+        rb_define_method(cFoo, "bar", foo_bar, 0);
+      }
+    C
+
+    # First parse
+    util_get_class content, 'cFoo'
+
+    klass = @store.find_class_named 'Foo'
+    assert_equal 1, klass.method_list.size
+
+    # Simulate server mode re-parse: clear then parse again
+    @store.clear_file_contributions @top_level.relative_name
+    @top_level.classes_or_modules.clear
+
+    updated_content = <<~C
+      /* Document-class: Foo
+       * Updated comment
+       */
+      VALUE cFoo = rb_define_class("Foo", rb_cObject);
+
+      /* call-seq: bar -> nil */
+      VALUE foo_bar(VALUE self) { return Qnil; }
+
+      /* call-seq: baz -> nil */
+      VALUE foo_baz(VALUE self) { return Qnil; }
+
+      void Init_Foo(void) {
+        cFoo = rb_define_class("Foo", rb_cObject);
+        rb_define_method(cFoo, "bar", foo_bar, 0);
+        rb_define_method(cFoo, "baz", foo_baz, 0);
+      }
+    C
+
+    util_get_class updated_content, 'cFoo'
+
+    klass = @store.find_class_named 'Foo'
+    method_names = klass.method_list.map(&:name)
+    assert_equal 2, method_names.size
+    assert_include method_names, 'bar'
+    assert_include method_names, 'baz'
+  end
+
   def util_get_class(content, name = nil)
     @parser = util_parser content
     @parser.scan

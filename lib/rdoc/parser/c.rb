@@ -683,6 +683,7 @@ class RDoc::Parser::C < RDoc::Parser
       container.name = base_name if base_name
 
       container.record_location @top_level
+      @top_level.add_to_classes_or_modules container
       @classes[raw_name] = container
     end
     @classes[raw_name]
@@ -898,6 +899,7 @@ class RDoc::Parser::C < RDoc::Parser
     end
 
     cm.record_location enclosure.top_level
+    enclosure.top_level.add_to_classes_or_modules cm
 
     find_class_comment cm.full_name, cm
 
