@@ -741,10 +741,12 @@ class RDoc::ClassModule < RDoc::Context
   # Returns an HTML snippet of the first comment for search results.
 
   def search_snippet
+    return @search_snippet_cache if instance_variable_defined?(:@search_snippet_cache)
+
     first_comment = @comment_location.each_value.first&.first
     return '' unless first_comment && !first_comment.empty?
 
-    snippet(first_comment)
+    @search_snippet_cache = snippet(first_comment)
   end
 
   ##
@@ -757,6 +759,7 @@ class RDoc::ClassModule < RDoc::Context
     }
     merged = texts.join("\n---\n")
     @comment = merged.empty? ? '' : RDoc::Comment.new(merged)
+    remove_instance_variable(:@search_snippet_cache) if instance_variable_defined?(:@search_snippet_cache)
   end
 
   ##

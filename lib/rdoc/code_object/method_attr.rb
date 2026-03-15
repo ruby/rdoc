@@ -397,7 +397,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
   def search_snippet
     return '' if @comment.empty?
 
-    snippet(@comment)
+    @search_snippet_cache ||= snippet(@comment)
   end
 
   def to_s # :nodoc:

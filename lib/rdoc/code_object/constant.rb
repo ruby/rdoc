@@ -168,7 +168,7 @@ class RDoc::Constant < RDoc::CodeObject
   def search_snippet
     return '' if comment.empty?
 
-    snippet(comment)
+    @search_snippet_cache ||= snippet(comment)
   end
 
   def pretty_print(q) # :nodoc:
