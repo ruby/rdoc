@@ -118,9 +118,13 @@ class RDoc::Generator::Darkfish
   attr_reader :json_index
 
   ##
-  # Methods to be displayed by this generator
+  # Methods to be displayed by this generator.
+  # Computed lazily from @classes to avoid sorting 10K+ methods on every
+  # refresh_store_data call.
 
-  attr_reader :methods
+  def methods
+    @methods ||= @classes&.flat_map { |m| m.method_list }&.sort
+  end
 
   ##
   # Sorted list of classes and modules to be displayed by this generator
@@ -588,9 +592,10 @@ class RDoc::Generator::Darkfish
   def refresh_store_data
     @classes = @store.all_classes_and_modules.sort
     @files   = @store.all_files.sort
-    @methods = @classes.flat_map { |m| m.method_list }.sort
+    @methods = nil  # computed lazily by #all_methods
     @modsort = get_sorted_module_list @classes
   end
+
 
   ##
   # Creates a template from its components and the +body_file+.

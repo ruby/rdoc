@@ -86,7 +86,7 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
       end
     end
 
-    @methods.each do |method|
+    methods.each do |method|
       next unless method.display?
 
       index << build_method_entry(method)
