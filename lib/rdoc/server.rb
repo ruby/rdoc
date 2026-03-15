@@ -85,6 +85,7 @@ class RDoc::Server
     @running = true
 
     @watcher_thread = start_watcher(@rdoc.last_modified.keys)
+    prebuild_search_index
 
     url = "http://localhost:#{@port}"
     $stderr.puts "\nServing documentation at: \e]8;;#{url}\e\\#{url}\e]8;;\e\\"
@@ -116,6 +117,20 @@ class RDoc::Server
     gen.asset_rel_path = ''
     gen.setup
     gen
+  end
+
+  ##
+  # Pre-builds the search index so it's ready when the user first
+  # requests search_data.js.  This avoids a multi-second delay
+  # on the first search request.  Called before accepting connections
+  # so no synchronization is needed.
+
+  def prebuild_search_index
+    index = @generator.build_search_index
+    @page_cache['js/search_data.js'] = "var search_data = #{JSON.generate(index: index)};"
+    $stderr.puts "Search index ready (#{index.size} entries)"
+  rescue => e
+    $stderr.puts "Search index pre-build error: #{e.message}"
   end
 
   ##
