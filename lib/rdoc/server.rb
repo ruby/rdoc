@@ -67,6 +67,8 @@ class RDoc::Server
     @store = rdoc.store
     @port = port
 
+    # Silence stats output — the server prints its own timing.
+    @rdoc.stats.verbosity = 0
     @generator = create_generator
     @template_dir = File.expand_path(@generator.template_dir)
     @page_cache = {}
