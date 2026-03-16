@@ -67,6 +67,8 @@ class RDoc::Server
     @store = rdoc.store
     @port = port
 
+    # Silence stats output — the server prints its own timing.
+    @rdoc.stats.verbosity = 0
     @generator = create_generator
     @template_dir = File.expand_path(@generator.template_dir)
     @page_cache = {}
@@ -101,6 +103,12 @@ class RDoc::Server
   end
 
   private
+
+  def measure
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    yield
+    ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time) * 1000).round(1)
+  end
 
   def create_generator
     gen = RDoc::Generator::Aliki.new(@store, @options)
@@ -138,7 +146,14 @@ class RDoc::Server
       return write_response(client, 405, 'text/plain', 'Method Not Allowed')
     end
 
-    status, content_type, body = route(path)
+    if path.start_with?('/__') || %r{\A/(?:css|js)/}.match?(path)
+      status, content_type, body = route(path)
+    else
+      duration_ms = measure do
+        status, content_type, body = route(path)
+      end
+      $stderr.puts "#{status} #{path} (#{duration_ms}ms)"
+    end
     write_response(client, status, content_type, body)
   rescue => e
     write_response(client, 500, 'text/html', <<~HTML)
@@ -185,6 +200,8 @@ class RDoc::Server
     client.write(header)
     client.write(body_bytes)
     client.flush
+  rescue Errno::EPIPE
+    # Client disconnected before we finished writing — harmless.
   end
 
   ##
@@ -347,19 +364,23 @@ class RDoc::Server
       end
 
       unless changed_files.empty?
-        $stderr.puts "Re-parsing: #{changed_files.join(', ')}"
-        changed_files.each do |f|
-          begin
+        changed_file_names = []
+        duration_ms = measure do
+          changed_files.each do |f|
             relative = @rdoc.relative_path_for(f)
-            @store.clear_file_contributions(relative, keep_position: true)
-            @rdoc.parse_file(f)
-            @file_mtimes[f] = File.mtime(f) rescue nil
-          rescue => e
-            $stderr.puts "Error parsing #{f}: #{e.message}"
+            changed_file_names << relative
+            begin
+              @store.clear_file_contributions(relative, keep_position: true)
+              @rdoc.parse_file(f)
+              @file_mtimes[f] = File.mtime(f) rescue nil
+            rescue => e
+              $stderr.puts "Error parsing #{f}: #{e.message}"
+            end
           end
-        end
 
-        @store.cleanup_stale_contributions
+          @store.cleanup_stale_contributions
+        end
+        $stderr.puts "Re-parsed #{changed_file_names.join(', ')} (#{duration_ms}ms)"
       end
 
       @store.complete(@options.visibility)

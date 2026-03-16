@@ -39,10 +39,17 @@ class RDoc::Stats
     @start            = Time.now
     @undoc_params     = 0
 
+    self.verbosity = verbosity
+  end
+
+  ##
+  # Sets the verbosity level, rebuilding the display outputter.
+
+  def verbosity=(verbosity)
     @display = case verbosity
-               when 0 then Quiet.new   num_files
-               when 1 then Normal.new  num_files
-               else        Verbose.new num_files
+               when 0 then Quiet.new   @num_files
+               when 1 then Normal.new  @num_files
+               else        Verbose.new @num_files
                end
   end
 
