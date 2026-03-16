@@ -200,6 +200,8 @@ class RDoc::Server
     client.write(header)
     client.write(body_bytes)
     client.flush
+  rescue Errno::EPIPE
+    # Client disconnected before we finished writing — harmless.
   end
 
   ##
