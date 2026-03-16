@@ -9,6 +9,8 @@ jobs:
     name: Trigger Preview Build and Deploy (Main Repo)
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.fork == false
+    permissions:
+      contents: write
     steps:
       - name: Trigger preview deployment
         uses: actions/github-script@v8
