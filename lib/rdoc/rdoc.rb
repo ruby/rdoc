@@ -546,10 +546,6 @@ The internal error was:
 
   def start_server
     server = RDoc::Server.new(self, @options.server_port)
-
-    trap('INT')  { server.shutdown }
-    trap('TERM') { server.shutdown }
-
     server.start
   end
 

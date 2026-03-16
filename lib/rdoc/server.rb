@@ -91,15 +91,10 @@ class RDoc::Server
     loop do
       client = @tcp_server.accept
       Thread.new(client) { |c| handle_client(c) }
-    rescue IOError
-      break
     end
-  end
-
-  ##
-  # Shuts down the server.
-
-  def shutdown
+  rescue Interrupt
+    # Ctrl+C
+  ensure
     @running = false
     @tcp_server&.close
     @watcher_thread&.join(2)
