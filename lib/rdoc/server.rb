@@ -362,19 +362,23 @@ class RDoc::Server
       end
 
       unless changed_files.empty?
-        $stderr.puts "Re-parsing: #{changed_files.join(', ')}"
-        changed_files.each do |f|
-          begin
+        changed_file_names = []
+        duration_ms = measure do
+          changed_files.each do |f|
             relative = @rdoc.relative_path_for(f)
-            @store.clear_file_contributions(relative, keep_position: true)
-            @rdoc.parse_file(f)
-            @file_mtimes[f] = File.mtime(f) rescue nil
-          rescue => e
-            $stderr.puts "Error parsing #{f}: #{e.message}"
+            changed_file_names << relative
+            begin
+              @store.clear_file_contributions(relative, keep_position: true)
+              @rdoc.parse_file(f)
+              @file_mtimes[f] = File.mtime(f) rescue nil
+            rescue => e
+              $stderr.puts "Error parsing #{f}: #{e.message}"
+            end
           end
-        end
 
-        @store.cleanup_stale_contributions
+          @store.cleanup_stale_contributions
+        end
+        $stderr.puts "Re-parsed #{changed_file_names.join(', ')} (#{duration_ms}ms)"
       end
 
       @store.complete(@options.visibility)
