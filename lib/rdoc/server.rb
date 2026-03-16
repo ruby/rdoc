@@ -104,6 +104,12 @@ class RDoc::Server
 
   private
 
+  def measure
+    start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    yield
+    ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time) * 1000).round(1)
+  end
+
   def create_generator
     gen = RDoc::Generator::Aliki.new(@store, @options)
     gen.file_output = false
@@ -140,7 +146,14 @@ class RDoc::Server
       return write_response(client, 405, 'text/plain', 'Method Not Allowed')
     end
 
-    status, content_type, body = route(path)
+    if path.start_with?('/__') || %r{\A/(?:css|js)/}.match?(path)
+      status, content_type, body = route(path)
+    else
+      duration_ms = measure do
+        status, content_type, body = route(path)
+      end
+      $stderr.puts "#{status} #{path} (#{duration_ms}ms)"
+    end
     write_response(client, status, content_type, body)
   rescue => e
     write_response(client, 500, 'text/html', <<~HTML)
