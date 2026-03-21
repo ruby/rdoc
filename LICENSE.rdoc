@@ -1,10 +1,11 @@
-# SPDX-License-Identifier: Ruby
+# SPDX-License-Identifier: Ruby or GPL-2
 
 = License
 
 RDoc is copyrighted free software.
 
-You can redistribute it and/or modify it under the terms of the Ruby License.
+You can redistribute it and/or modify it under either the terms of the GPL
+version 2 (see the file GPL), or the conditions below:
 
 1. You may make and give away verbatim copies of the source form of the
    software without restriction, provided that you duplicate all of the

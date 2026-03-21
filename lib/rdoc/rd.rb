@@ -14,7 +14,7 @@
 # You can find the original source for rdtool at
 # https://github.com/uwabami/rdtool/
 #
-# You can use, re-distribute or change these files under Ruby's License.
+# You can use, re-distribute or change these files under Ruby's License or GPL.
 #
 # 1. You may make and give away verbatim copies of the source form of the
 #    software without restriction, provided that you duplicate all of the
