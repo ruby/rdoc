@@ -1,4 +1,6 @@
-# SPDX-License-Identifier: Ruby or GPL-2
+:stopdoc:
+# SPDX-License-Identifier: Ruby or GPL-2.0-or-later
+:startdoc:
 
 = License
 

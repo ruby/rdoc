@@ -26,7 +26,7 @@ RDoc produces HTML and command-line documentation for Ruby projects.
 RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentation from the command-line.
   DESCRIPTION
   s.homepage = "https://ruby.github.io/rdoc"
-  s.licenses = ["Ruby", "GPL"]
+  s.licenses = ["Ruby", "GPL-2.0-or-later"]
 
   s.metadata["homepage_uri"] = s.homepage
   s.metadata["source_code_uri"] = "https://github.com/ruby/rdoc"
