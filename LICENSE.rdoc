@@ -1,5 +1,5 @@
 :stopdoc:
-SPDX-License-Identifier: Ruby or GPL-2.0-or-later
+SPDX-License-Identifier: Ruby or GPL-2.0-only
 :startdoc:
 
 = License
