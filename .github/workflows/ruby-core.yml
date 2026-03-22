@@ -66,9 +66,9 @@ jobs:
           gem install rdoc-*.gem
           bundle exec rake build:local_ruby
         working-directory: ruby/rdoc
-      - name: Run RDoc coverage check on C extensions
-        run: bundle exec rdoc -C -q ../ruby/ext/io/console
-        working-directory: ruby/rdoc
+      - name: Core docs coverage
+        run: make XRUBY=ruby RDOC_DEPENDS= RBCONFIG=update-rbconfig rdoc-coverage
+        working-directory: ruby/ruby
       - name: Generate Documentation with RDoc
         run: make html
         working-directory: ruby/ruby
