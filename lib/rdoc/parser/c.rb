@@ -1016,7 +1016,7 @@ class RDoc::Parser::C < RDoc::Parser
         file_name = File.join @file_dir, source_file
 
         if File.exist? file_name then
-          file_content = File.read file_name
+          file_content = RDoc::Encoding.read_file file_name, @options.encoding
         else
           @options.warn "unknown source #{source_file} for #{meth_name} in #{@file_name}"
         end
