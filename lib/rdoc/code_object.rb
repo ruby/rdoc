@@ -204,6 +204,7 @@ class RDoc::CodeObject
 
   def done_documenting=(value)
     return unless @track_visibility
+    return if @done_documenting == value
     @done_documenting  = value
     @document_self     = !value
     @document_children = @document_self
