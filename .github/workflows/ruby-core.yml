@@ -67,7 +67,12 @@ jobs:
           bundle exec rake build:local_ruby
         working-directory: ruby/rdoc
       - name: Core docs coverage
-        run: make XRUBY=ruby RDOC_DEPENDS= RBCONFIG=update-rbconfig rdoc-coverage
+        run: >
+          BUNDLE_GEMFILE=../rdoc/Gemfile bundle exec rdoc --quiet -C
+          -x ^ext/json -x ^ext/openssl -x ^ext/psych
+          -x ^lib/bundler -x ^lib/rubygems
+          -x ^lib/did_you_mean -x ^lib/error_highlight -x ^lib/syntax_suggest
+          .
         working-directory: ruby/ruby
       - name: Generate Documentation with RDoc
         run: make html
