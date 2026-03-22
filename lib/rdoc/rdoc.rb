@@ -342,7 +342,7 @@ option)
 
     # restart documentation for the classes & modules found
     top_level.classes_or_modules.each do |cm|
-      cm.done_documenting = false
+      cm.done_documenting = false if cm.document_self
     end
 
     top_level
