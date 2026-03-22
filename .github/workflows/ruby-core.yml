@@ -66,12 +66,17 @@ jobs:
           gem install rdoc-*.gem
           bundle exec rake build:local_ruby
         working-directory: ruby/rdoc
+      - name: Generate rbconfig.rb
+        run: make update-rbconfig
+        working-directory: ruby/ruby
       - name: Core docs coverage
         # Exclusions match RDOC_COVERAGE_EXCLUDES in ruby/ruby's common.mk.
-        # Use -I to load the locally checked out RDoc, matching how
-        # tool/rdoc-srcdir overrides the load path in ruby/ruby.
+        # Use -I to load the locally checked out RDoc and bypass exe/rdoc's
+        # gem activation which could override the load path.
         run: >
-          ruby -I../rdoc/lib ../rdoc/exe/rdoc --quiet -C
+          ruby -I../rdoc/lib -r rdoc/rdoc
+          -e 'RDoc::RDoc.new.document ARGV' --
+          --quiet -C
           -x ^ext/json -x ^ext/openssl -x ^ext/psych
           -x ^lib/bundler -x ^lib/rubygems
           -x ^lib/did_you_mean -x ^lib/error_highlight -x ^lib/syntax_suggest
