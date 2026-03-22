@@ -125,6 +125,7 @@ class RDoc::CodeObject
     @received_nodoc      = false
     @ignored             = false
     @suppressed          = false
+    @stopped_doc         = false
     @track_visibility    = true
   end
 
@@ -204,9 +205,8 @@ class RDoc::CodeObject
 
   def done_documenting=(value)
     return unless @track_visibility
-    return if @done_documenting == value
     @done_documenting  = value
-    @document_self     = !value
+    @document_self     = !value unless @stopped_doc
     @document_children = @document_self
   end
 
@@ -344,6 +344,7 @@ class RDoc::CodeObject
     @document_children = true
     @ignored    = false
     @suppressed = false
+    @stopped_doc = false
   end
 
   ##
@@ -354,6 +355,7 @@ class RDoc::CodeObject
 
     @document_self = false
     @document_children = false
+    @stopped_doc = true
   end
 
   ##
