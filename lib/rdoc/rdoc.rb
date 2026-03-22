@@ -340,7 +340,8 @@ option)
 
     parser.scan
 
-    # restart documentation for the classes & modules found
+    # restart documentation for the classes & modules found,
+    # but preserve explicit :stopdoc: directives
     top_level.classes_or_modules.each do |cm|
       cm.done_documenting = false if cm.document_self
     end
