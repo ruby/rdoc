@@ -2292,6 +2292,42 @@ void Init_Blah(void) {
     assert_include method_names, 'baz'
   end
 
+  def test_handle_method_source_file_with_non_ascii
+    # Regression test: when the C parser reads an external source file
+    # (via "/* in file.c */"), it must use RDoc::Encoding.read_file instead
+    # of File.read. On systems where Encoding.default_external is US-ASCII,
+    # bare File.read produces a US-ASCII string that raises ArgumentError
+    # on String#scan when the file contains non-ASCII bytes.
+    source_path = File.join(File.dirname(@fn), 'greet.c')
+    File.binwrite source_path, <<~C.encode('UTF-8')
+      /*
+       * Returns a greeting \u2014 "h\u00e9llo w\u00f6rld"
+       */
+      VALUE
+      rb_greet(VALUE obj) {
+        return rb_str_new2("hello");
+      }
+    C
+
+    parser = util_parser <<~C
+      void Init_Foo(void) {
+        VALUE cFoo = rb_define_class("Foo", rb_cObject);
+        rb_define_method(cFoo, "greet", rb_greet, 0); /* in greet.c */
+      }
+    C
+
+    parser.scan
+
+    foo = @top_level.find_module_named 'Foo'
+    assert foo, 'Foo class should be found'
+
+    greet = foo.method_list.first
+    assert greet, 'greet method should be found'
+    assert_equal 'greet', greet.name
+  ensure
+    File.delete source_path if source_path && File.exist?(source_path)
+  end
+
   def util_get_class(content, name = nil)
     @parser = util_parser content
     @parser.scan
