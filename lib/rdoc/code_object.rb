@@ -355,7 +355,6 @@ class RDoc::CodeObject
 
     @document_self = false
     @document_children = false
-    @stopped_doc = true
   end
 
   ##
