@@ -67,6 +67,7 @@ jobs:
           bundle exec rake build:local_ruby
         working-directory: ruby/rdoc
       - name: Core docs coverage
+        # Exclusions match RDOC_COVERAGE_EXCLUDES in ruby/ruby's common.mk
         run: >
           BUNDLE_GEMFILE=../rdoc/Gemfile bundle exec rdoc --quiet -C
           -x ^ext/json -x ^ext/openssl -x ^ext/psych
