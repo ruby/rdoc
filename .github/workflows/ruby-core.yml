@@ -66,14 +66,21 @@ jobs:
           gem install rdoc-*.gem
           bundle exec rake build:local_ruby
         working-directory: ruby/rdoc
-      - name: Core docs coverage
-        # Exclusions match RDOC_COVERAGE_EXCLUDES in ruby/ruby's common.mk
+      - name: Core docs coverage (excluding io-console)
+        # Exclusions match RDOC_COVERAGE_EXCLUDES in ruby/ruby's common.mk,
+        # plus ext/io/console which is checked separately below.
         run: >
           BUNDLE_GEMFILE=../rdoc/Gemfile bundle exec rdoc --quiet -C
           -x ^ext/json -x ^ext/openssl -x ^ext/psych
           -x ^lib/bundler -x ^lib/rubygems
           -x ^lib/did_you_mean -x ^lib/error_highlight -x ^lib/syntax_suggest
+          -x ^ext/io/console
           .
+        working-directory: ruby/ruby
+      - name: Core docs coverage (io-console)
+        run: >
+          BUNDLE_GEMFILE=../rdoc/Gemfile bundle exec rdoc --quiet -C
+          ext/io/console
         working-directory: ruby/ruby
       - name: Generate Documentation with RDoc
         run: make html
