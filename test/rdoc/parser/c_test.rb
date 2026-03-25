@@ -2328,6 +2328,32 @@ void Init_Blah(void) {
     File.delete source_path if source_path && File.exist?(source_path)
   end
 
+  def test_stopdoc_class_display
+    content = <<~C
+      /* Document-class: Parent
+       * This is the Parent class
+       */
+      VALUE rb_cParent = rb_define_class("Parent", rb_cObject);
+
+      /* :stopdoc: */
+      VALUE cInternal = rb_define_class_under(rb_cParent, "Internal", rb_cObject);
+      /* :startdoc: */
+    C
+
+    util_get_class content, 'cInternal'
+
+    # Simulate parse_file's done_documenting reset
+    @top_level.classes_or_modules.each do |cm|
+      cm.done_documenting = false
+    end
+
+    parent = @store.find_class_named 'Parent'
+    internal = @store.find_class_named 'Parent::Internal'
+
+    assert parent.display?, 'Parent should be displayed'
+    refute internal.display?, 'stopdoc class should not be displayed'
+  end
+
   def util_get_class(content, name = nil)
     @parser = util_parser content
     @parser.scan

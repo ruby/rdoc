@@ -231,7 +231,7 @@ class RDoc::Markup::PreProcess
     when 'stopdoc' then
       return blankline unless code_object
 
-      code_object.stop_doc
+      code_object.stop_doc(from_directive: true)
 
       blankline
     when 'yield', 'yields' then
