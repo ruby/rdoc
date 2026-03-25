@@ -1,3 +1,7 @@
+:stopdoc:
+SPDX-License-Identifier: Ruby or GPL-2.0-only
+:startdoc:
+
 = License
 
 RDoc is copyrighted free software.
