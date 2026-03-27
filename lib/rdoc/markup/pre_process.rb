@@ -232,6 +232,7 @@ class RDoc::Markup::PreProcess
       return blankline unless code_object
 
       code_object.stop_doc
+      code_object.instance_variable_set(:@stopped_doc, true)
 
       blankline
     when 'yield', 'yields' then
