@@ -291,19 +291,7 @@ class RDoc::CodeObject
     return @parent if @parent
     return nil unless @parent_name
 
-    if @parent_class == RDoc::TopLevel then
-      @parent = @store.add_file @parent_name
-    else
-      @parent = @store.find_class_or_module @parent_name
-
-      return @parent if @parent
-
-      begin
-        @parent = @store.load_class @parent_name
-      rescue RDoc::Store::MissingFileError
-        nil
-      end
-    end
+    @parent = @store&.resolve_parent(@parent_name, @parent_class)
   end
 
   ##
@@ -360,6 +348,10 @@ class RDoc::CodeObject
 
   def store=(store)
     @store = store
+
+    # When a CodeObject is loaded from Marshal data, its @file is a standalone
+    # TopLevel that needs to be replaced with the canonical one from the store.
+    @file = @store.add_file @file.full_name if @file && @store
 
     return unless @track_visibility
 

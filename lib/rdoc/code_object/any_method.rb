@@ -307,15 +307,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   end
 
   ##
-  # Sets the store for this method and its referenced code objects.
-
-  def store=(store)
-    super
-
-    @file = @store.add_file @file.full_name if @file
-  end
-
-  ##
   # For methods that +super+, find the superclass method that would be called.
 
   def superclass_method
