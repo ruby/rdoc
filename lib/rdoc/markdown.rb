@@ -1656,7 +1656,7 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # BlockQuoteRaw = @StartList:a (">" " "? Line:l { a << l } (!">" !@BlankLine Line:c { a << c })* (@BlankLine:n { a << n })*)+ { inner_parse a.join }
+  # BlockQuoteRaw = @StartList:a (">" " "? Line:l { a << l } (!">" !@BlankLine !AtxStart !Bullet !Enumerator !Ticks3 Line:c { a << c })* (">" @BlankLine:n { a << n })*)+ { inner_parse a.join }
   def _BlockQuoteRaw
 
     _save = self.pos
@@ -1718,6 +1718,38 @@ class RDoc::Markdown
               self.pos = _save5
               break
             end
+            _save8 = self.pos
+            _tmp = apply(:_AtxStart)
+            _tmp = _tmp ? nil : true
+            self.pos = _save8
+            unless _tmp
+              self.pos = _save5
+              break
+            end
+            _save9 = self.pos
+            _tmp = apply(:_Bullet)
+            _tmp = _tmp ? nil : true
+            self.pos = _save9
+            unless _tmp
+              self.pos = _save5
+              break
+            end
+            _save10 = self.pos
+            _tmp = apply(:_Enumerator)
+            _tmp = _tmp ? nil : true
+            self.pos = _save10
+            unless _tmp
+              self.pos = _save5
+              break
+            end
+            _save11 = self.pos
+            _tmp = apply(:_Ticks3)
+            _tmp = _tmp ? nil : true
+            self.pos = _save11
+            unless _tmp
+              self.pos = _save5
+              break
+            end
             _tmp = apply(:_Line)
             c = @result
             unless _tmp
@@ -1741,18 +1773,23 @@ class RDoc::Markdown
         end
         while true
 
-          _save9 = self.pos
+          _save13 = self.pos
           while true # sequence
+            _tmp = match_string(">")
+            unless _tmp
+              self.pos = _save13
+              break
+            end
             _tmp = _BlankLine()
             n = @result
             unless _tmp
-              self.pos = _save9
+              self.pos = _save13
               break
             end
             @result = begin;  a << n ; end
             _tmp = true
             unless _tmp
-              self.pos = _save9
+              self.pos = _save13
             end
             break
           end # end sequence
@@ -1769,87 +1806,94 @@ class RDoc::Markdown
       if _tmp
         while true
 
-          _save10 = self.pos
+          _save14 = self.pos
           while true # sequence
             _tmp = match_string(">")
             unless _tmp
-              self.pos = _save10
+              self.pos = _save14
               break
             end
-            _save11 = self.pos
+            _save15 = self.pos
             _tmp = match_string(" ")
             unless _tmp
               _tmp = true
-              self.pos = _save11
+              self.pos = _save15
             end
             unless _tmp
-              self.pos = _save10
+              self.pos = _save14
               break
             end
             _tmp = apply(:_Line)
             l = @result
             unless _tmp
-              self.pos = _save10
+              self.pos = _save14
               break
             end
             @result = begin;  a << l ; end
             _tmp = true
             unless _tmp
-              self.pos = _save10
-              break
-            end
-            while true
-
-              _save13 = self.pos
-              while true # sequence
-                _save14 = self.pos
-                _tmp = match_string(">")
-                _tmp = _tmp ? nil : true
-                self.pos = _save14
-                unless _tmp
-                  self.pos = _save13
-                  break
-                end
-                _save15 = self.pos
-                _tmp = _BlankLine()
-                _tmp = _tmp ? nil : true
-                self.pos = _save15
-                unless _tmp
-                  self.pos = _save13
-                  break
-                end
-                _tmp = apply(:_Line)
-                c = @result
-                unless _tmp
-                  self.pos = _save13
-                  break
-                end
-                @result = begin;  a << c ; end
-                _tmp = true
-                unless _tmp
-                  self.pos = _save13
-                end
-                break
-              end # end sequence
-
-              break unless _tmp
-            end
-            _tmp = true
-            unless _tmp
-              self.pos = _save10
+              self.pos = _save14
               break
             end
             while true
 
               _save17 = self.pos
               while true # sequence
-                _tmp = _BlankLine()
-                n = @result
+                _save18 = self.pos
+                _tmp = match_string(">")
+                _tmp = _tmp ? nil : true
+                self.pos = _save18
                 unless _tmp
                   self.pos = _save17
                   break
                 end
-                @result = begin;  a << n ; end
+                _save19 = self.pos
+                _tmp = _BlankLine()
+                _tmp = _tmp ? nil : true
+                self.pos = _save19
+                unless _tmp
+                  self.pos = _save17
+                  break
+                end
+                _save20 = self.pos
+                _tmp = apply(:_AtxStart)
+                _tmp = _tmp ? nil : true
+                self.pos = _save20
+                unless _tmp
+                  self.pos = _save17
+                  break
+                end
+                _save21 = self.pos
+                _tmp = apply(:_Bullet)
+                _tmp = _tmp ? nil : true
+                self.pos = _save21
+                unless _tmp
+                  self.pos = _save17
+                  break
+                end
+                _save22 = self.pos
+                _tmp = apply(:_Enumerator)
+                _tmp = _tmp ? nil : true
+                self.pos = _save22
+                unless _tmp
+                  self.pos = _save17
+                  break
+                end
+                _save23 = self.pos
+                _tmp = apply(:_Ticks3)
+                _tmp = _tmp ? nil : true
+                self.pos = _save23
+                unless _tmp
+                  self.pos = _save17
+                  break
+                end
+                _tmp = apply(:_Line)
+                c = @result
+                unless _tmp
+                  self.pos = _save17
+                  break
+                end
+                @result = begin;  a << c ; end
                 _tmp = true
                 unless _tmp
                   self.pos = _save17
@@ -1861,7 +1905,37 @@ class RDoc::Markdown
             end
             _tmp = true
             unless _tmp
-              self.pos = _save10
+              self.pos = _save14
+              break
+            end
+            while true
+
+              _save25 = self.pos
+              while true # sequence
+                _tmp = match_string(">")
+                unless _tmp
+                  self.pos = _save25
+                  break
+                end
+                _tmp = _BlankLine()
+                n = @result
+                unless _tmp
+                  self.pos = _save25
+                  break
+                end
+                @result = begin;  a << n ; end
+                _tmp = true
+                unless _tmp
+                  self.pos = _save25
+                end
+                break
+              end # end sequence
+
+              break unless _tmp
+            end
+            _tmp = true
+            unless _tmp
+              self.pos = _save14
             end
             break
           end # end sequence
@@ -16457,7 +16531,7 @@ class RDoc::Markdown
   Rules[:_SetextHeading2] = rule_info("SetextHeading2", "&(@RawLine SetextBottom2) @StartList:a (!@Endline Inline:b { a << b })+ @Sp @Newline SetextBottom2 { RDoc::Markup::Heading.new(2, a.join) }")
   Rules[:_Heading] = rule_info("Heading", "(SetextHeading | AtxHeading)")
   Rules[:_BlockQuote] = rule_info("BlockQuote", "BlockQuoteRaw:a { RDoc::Markup::BlockQuote.new(*a) }")
-  Rules[:_BlockQuoteRaw] = rule_info("BlockQuoteRaw", "@StartList:a (\">\" \" \"? Line:l { a << l } (!\">\" !@BlankLine Line:c { a << c })* (@BlankLine:n { a << n })*)+ { inner_parse a.join }")
+  Rules[:_BlockQuoteRaw] = rule_info("BlockQuoteRaw", "@StartList:a (\">\" \" \"? Line:l { a << l } (!\">\" !@BlankLine !AtxStart !Bullet !Enumerator !Ticks3 Line:c { a << c })* (\">\" @BlankLine:n { a << n })*)+ { inner_parse a.join }")
   Rules[:_NonblankIndentedLine] = rule_info("NonblankIndentedLine", "!@BlankLine IndentedLine")
   Rules[:_VerbatimChunk] = rule_info("VerbatimChunk", "@BlankLine*:a NonblankIndentedLine+:b { a.concat b }")
   Rules[:_Verbatim] = rule_info("Verbatim", "VerbatimChunk+:a { RDoc::Markup::Verbatim.new(*a.flatten) }")
