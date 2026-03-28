@@ -125,6 +125,8 @@ Where name can be:
 
   Class::method | Class#method | Class.method | method
 
+  $global_variable | PREDEFINED_CONSTANT
+
   gem_name: | gem_name:README | gem_name:History
 
   ruby: | ruby:NEWS | ruby:globals
@@ -152,9 +154,12 @@ For example:
     #{opt.program_name} zip
     #{opt.program_name} rdoc:README
     #{opt.program_name} ruby:comments
+    #{opt.program_name} ARGF
+    #{opt.program_name} '$<'
+    #{opt.program_name} '$LOAD_PATH'
 
 Note that shell quoting or escaping may be required for method names
-containing punctuation:
+containing punctuation or for global variables:
 
     #{opt.program_name} 'Array.[]'
     #{opt.program_name} compact\\!
@@ -844,12 +849,135 @@ or the PAGER environment variable.
   end
 
   ##
+  # Pre-defined global constants that can be looked up from globals.rdoc
+
+  PREDEFINED_GLOBAL_CONSTANTS = %w[
+    STDIN STDOUT STDERR ARGV ARGF DATA TOPLEVEL_BINDING
+  ].freeze
+
+  ##
+  # Prefixes for pre-defined global constants
+
+  PREDEFINED_GLOBAL_CONSTANT_PREFIXES = %w[RUBY_].freeze
+
+  ##
+  # Returns true if +name+ is a pre-defined global constant like STDIN, STDOUT,
+  # RUBY_VERSION, etc.
+
+  def predefined_global_constant?(name)
+    PREDEFINED_GLOBAL_CONSTANTS.include?(name) ||
+      PREDEFINED_GLOBAL_CONSTANT_PREFIXES.any? { |prefix| name.start_with?(prefix) }
+  end
+
+  ##
+  # Outputs formatted RI data for the global variable or pre-defined constant
+  # +name+. Looks up the documentation in the globals.rdoc page from the system
+  # store.
+
+  def display_global(name)
+    store = @stores.find { |s| s.type == :system }
+
+    raise NotFoundError, name unless store
+
+    begin
+      page = store.load_page('globals.rdoc')
+    rescue RDoc::Store::MissingFileError
+      raise NotFoundError, name
+    end
+
+    document = page.comment.parse
+    section = extract_global_section(document, name)
+
+    raise NotFoundError, name unless section
+
+    display section
+
+    true
+  end
+
+  ##
+  # Extracts the section for global +name+ from +document+.
+  # Returns an RDoc::Markup::Document containing just that section,
+  # or nil if not found.
+  #
+  # The globals.rdoc document has a hierarchical structure with headings:
+  #   = Pre-Defined Global Variables (level 1)
+  #   == Streams (level 2)
+  #   === $< (ARGF or $stdin) (level 3)
+  #       paragraph content...
+  #   === $> (Default Output) (level 3)
+  #       paragraph content...
+  #
+  # This method finds the heading matching +name+ and collects all content
+  # until the next heading at the same or higher level.
+
+  def extract_global_section(document, name)
+    result = RDoc::Markup::Document.new
+    in_section = false  # true once we find the matching heading
+    section_level = nil # heading level of the matched section (e.g., 3 for ===)
+
+    document.parts.each do |part|
+      if RDoc::Markup::Heading === part
+        if heading_matches_global?(part, name)
+          # Found our target heading - start capturing content
+          in_section = true
+          section_level = part.level
+          result << part
+        elsif in_section && part.level <= section_level
+          # Hit next section at same or higher level - stop capturing
+          break
+        elsif in_section
+          # Sub-heading within our section - include it
+          result << part
+        end
+      elsif in_section
+        # Non-heading content (paragraphs, code blocks, etc.) - include it
+        result << part
+      end
+    end
+
+    result.empty? ? nil : result
+  end
+
+  ##
+  # Returns true if +heading+ matches the global +name+.
+  # Handles formats like "$< (ARGF or $stdin)", "<tt>$<</tt> (ARGF...)", or just "STDOUT".
+
+  def heading_matches_global?(heading, name)
+    text = heading.text
+
+    # Direct match: "STDOUT" or "$<"
+    return true if text == name
+    return true if text.start_with?("#{name} ") || text.start_with?("#{name}\t")
+
+    # Match with <tt> wrapper: "<tt>$<</tt> (description)"
+    tt_wrapped = "<tt>#{name}</tt>"
+    return true if text.start_with?(tt_wrapped)
+    return true if text.start_with?("#{tt_wrapped} ")
+
+    false
+  end
+
+  ##
   # Outputs formatted RI data for the class or method +name+.
   #
   # Returns true if +name+ was found, false if it was not an alternative could
   # be guessed, raises an error if +name+ couldn't be guessed.
 
   def display_name(name)
+    # Handle global variables immediately (classes can't start with $)
+    return display_global(name) if name.start_with?('$')
+
+    # Try predefined constants BEFORE class lookup to avoid case-insensitive
+    # filesystem matching (e.g., DATA matching Data class on macOS)
+    if predefined_global_constant?(name)
+      begin
+        return display_global(name)
+      rescue NotFoundError
+        # Fall through to class lookup
+      end
+    end
+
     if name =~ /\w:(\w|$)/ then
       display_page name
       return true
@@ -862,7 +990,7 @@ or the PAGER environment variable.
     true
   rescue NotFoundError
     matches = list_methods_matching name if name =~ /::|#|\./
-    matches = classes.keys.grep(/^#{Regexp.escape name}/) if matches.empty?
+    matches = classes.keys.grep(/^#{Regexp.escape name}/) if matches.nil? || matches.empty?
 
     raise if matches.empty?
 
@@ -983,6 +1111,12 @@ or the PAGER environment variable.
   # #expand_class.
 
   def expand_name(name)
+    # Global variables don't need expansion
+    return name if name.start_with?('$')
+
+    # Predefined global constants don't need expansion
+    return name if predefined_global_constant?(name)
+
     klass, selector, method = parse_name name
 
     return [selector, method].join if klass.empty?
