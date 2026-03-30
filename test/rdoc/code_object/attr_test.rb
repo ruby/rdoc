@@ -74,6 +74,23 @@ class RDocAttrTest < RDoc::TestCase
     assert_equal section,      loaded.section
   end
 
+  def test_marshal_dump_with_type_signature
+    @store.path = Dir.tmpdir
+    top_level = @store.add_file 'file.rb'
+
+    a = RDoc::Attr.new nil, 'name', 'R', 'a comment'
+    a.type_signature = 'String'
+    a.record_location top_level
+
+    cm = top_level.add_class RDoc::ClassModule, 'Klass'
+    cm.add_attribute a
+
+    loaded = Marshal.load Marshal.dump a
+    loaded.store = @store
+
+    assert_equal 'String', loaded.type_signature
+  end
+
   def test_marshal_dump_singleton
     tl = @store.add_file 'file.rb'
 

@@ -141,6 +141,26 @@ class RDoc::MethodAttr
     src
   end
 
+  ##
+  # Returns the type signature as HTML with type names linked to their
+  # documentation pages. Delegates to RDoc::RbsSupport for RBS-aware parsing.
+  #
+  # Falls back to escaped HTML without links when the store or parent
+  # path is unavailable (e.g. in ri mode).
+
+  def type_signature_html
+    return unless @type_signature
+
+    store = @store || parent&.store
+    from_path = parent&.path
+    lookup = store&.type_name_lookup
+
+    RDoc::RbsSupport.signature_to_html(@type_signature, lookup: lookup) do |name, target_path|
+      href = RDoc::Markup::ToHtml.gen_relative_url(from_path, target_path)
+      "<a href=\"#{href}\" class=\"rbs-type\">#{ERB::Util.html_escape(name)}</a>"
+    end
+  end
+
 end
 
 class RDoc::ClassModule
