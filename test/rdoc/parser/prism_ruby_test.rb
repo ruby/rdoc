@@ -2374,6 +2374,160 @@ module RDocParserPrismTestCases
     assert_equal "foo1\nbar1", m1.call_seq.chomp
     assert_equal "ARGF.readlines(a)\nARGF.readlines(b)\nARGF.readlines(c)\nARGF.readlines(d)", m2.call_seq.chomp
   end
+
+  # Type signature tests — Prism parser only (Ripper doesn't extract #: annotations)
+
+  def test_method_type_signature
+    omit 'Prism parser only' if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        # A greeting method
+        #: (String, Integer) -> void
+        def greet(name, count); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    greet = klass.method_list.first
+    assert_equal 'greet', greet.name
+    assert_equal '(String, Integer) -> void', greet.type_signature
+    assert_equal 'A greeting method', greet.comment.text.strip
+  end
+
+  def test_attribute_type_signature
+    omit 'Prism parser only' if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        #: String
+        attr_reader :name
+
+        #: Integer
+        attr_accessor :count
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    attrs = klass.attributes.sort_by(&:name)
+    assert_equal 'count', attrs[0].name
+    assert_equal 'Integer', attrs[0].type_signature
+    assert_equal 'name', attrs[1].name
+    assert_equal 'String', attrs[1].type_signature
+  end
+
+  def test_method_type_signature_multiple_overloads
+    omit 'Prism parser only' if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        # Convert a value
+        #: (String) -> Integer
+        #: (Integer) -> String
+        def convert(value); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    convert = klass.method_list.first
+    assert_equal "(String) -> Integer\n(Integer) -> String", convert.type_signature
+    assert_equal 'Convert a value', convert.comment.text.strip
+  end
+
+  def test_method_without_type_signature
+    util_parser <<~RUBY
+      class Foo
+        # A plain method
+        def plain; end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    plain = klass.method_list.first
+    assert_nil plain.type_signature
+    assert_equal 'A plain method', plain.comment.text.strip
+  end
+
+  def test_method_type_signature_only
+    omit 'Prism parser only' if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        #: (Integer) -> void
+        def bar(x); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    bar = klass.method_list.first
+    assert_equal '(Integer) -> void', bar.type_signature
+  end
+
+  def test_method_type_signature_with_blank_line_separation
+    omit 'Prism parser only' if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        # Documentation here
+        #
+        #: (String) -> void
+        def bar(x); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    bar = klass.method_list.first
+    assert_equal '(String) -> void', bar.type_signature
+    assert_includes bar.comment.text, 'Documentation here'
+  end
+
+  def test_method_type_signature_with_override_comment
+    omit 'Prism parser only' if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        # @override
+        #: (untyped) -> void
+        def accept(visitor); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    accept = klass.method_list.first
+    assert_equal '(untyped) -> void', accept.type_signature
+    assert_includes accept.comment.text, '@override'
+  end
+
+  def test_type_signature_real_file
+    content = File.read(File.expand_path('../../../lib/rdoc/markup/heading.rb', __dir__))
+    top_level = @store.add_file 'lib/rdoc/markup/heading.rb'
+    parser = RDoc::Parser::PrismRuby.new(top_level, content, @options, @stats)
+    parser.scan
+
+    heading_class = @store.find_class_named('RDoc::Markup::Heading')
+    assert heading_class, 'RDoc::Markup::Heading should be found'
+
+    label_method = heading_class.method_list.find { |m| m.name == 'label' }
+    assert label_method, 'label method should be found'
+    assert_equal '(RDoc::Context?) -> String', label_method.type_signature
+
+    aref_method = heading_class.method_list.find { |m| m.name == 'aref' }
+    assert aref_method, 'aref method should be found'
+    assert_equal '() -> String', aref_method.type_signature
+
+    accept_method = heading_class.method_list.find { |m| m.name == 'accept' }
+    assert accept_method, 'accept method should be found'
+    assert_equal '(untyped) -> void', accept_method.type_signature
+  end
+
+  def test_type_signature_invalid_still_stored
+    omit 'Prism parser only' if accept_legacy_bug?
+    util_parser <<~RUBY
+      class Foo
+        #: (String ->
+        def bar(x); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    bar = klass.method_list.first
+    # Invalid sigs are still stored (don't block display)
+    assert_equal '(String ->', bar.type_signature
+  end
 end
 
 class RDocParserPrismRubyTest < RDoc::TestCase

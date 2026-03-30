@@ -118,6 +118,21 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
   end
 
   ##
+  # Returns the type signature of +method_attr+ as HTML with linked type names.
+  # Returns nil if no type signature is present.
+
+  def type_signature_html(method_attr, from_path)
+    lines = method_attr.type_signature_lines
+    return unless lines
+
+    RDoc::RbsHelper.signature_to_html(
+      lines,
+      lookup: @store.type_name_lookup,
+      from_path: from_path
+    )
+  end
+
+  ##
   # Resolves a URL for use in templates. Absolute URLs are returned unchanged.
   # Relative URLs are prefixed with rel_prefix to ensure they resolve correctly from any page.
 
