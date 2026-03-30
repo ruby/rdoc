@@ -59,6 +59,12 @@ class RDoc::MethodAttr < RDoc::CodeObject
   attr_accessor :call_seq
 
   ##
+  # RBS type signature lines from inline annotations or loaded .rbs files.
+  # Each entry is one overload or type expression.
+
+  attr_accessor :type_signature_lines
+
+  ##
   # The call_seq or the param_seq with method name, if there is no call_seq.
 
   attr_reader :arglists
@@ -86,6 +92,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @block_params = nil
     @call_seq     = nil
     @params       = nil
+    @type_signature_lines = nil
   end
 
   ##

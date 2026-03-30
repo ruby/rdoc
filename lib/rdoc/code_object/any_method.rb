@@ -13,8 +13,10 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # 3::
   #   RDoc 4.1
   #   Added is_alias_for
+  # 4::
+  #   Added type_signature_lines (serialized as joined string)
 
-  MARSHAL_VERSION = 3 # :nodoc:
+  MARSHAL_VERSION = 4 # :nodoc:
 
   ##
   # Don't rename \#initialize to \::new
@@ -60,6 +62,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     method.visibility = self.visibility
     method.comment = an_alias.comment
     method.is_alias_for = self
+    method.type_signature_lines = self.type_signature_lines
     @aliases << method
     context.add_method method if context
     method
@@ -166,6 +169,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       @parent.class,
       @section.title,
       is_alias_for,
+      @type_signature_lines&.join("\n"),
     ]
   end
 
@@ -204,6 +208,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @parent_title  = array[13]
     @section_title = array[14]
     @is_alias_for  = array[15]
+    @type_signature_lines = array[16]&.split("\n")
 
     array[8].each do |new_name, document|
       add_alias RDoc::Alias.new(nil, @name, new_name, RDoc::Comment.from_document(document), singleton: @singleton)

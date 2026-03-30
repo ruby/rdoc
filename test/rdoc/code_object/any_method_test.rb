@@ -242,6 +242,40 @@ each_line(foo)
     assert_equal section,        loaded.section
   end
 
+  def test_marshal_dump_with_type_signature
+    @store.path = Dir.tmpdir
+    top_level = @store.add_file 'file.rb'
+
+    m = RDoc::AnyMethod.new nil, 'method'
+    m.type_signature_lines = ['(String) -> Integer']
+    m.record_location top_level
+
+    cm = top_level.add_class RDoc::ClassModule, 'Klass'
+    cm.add_method m
+
+    loaded = Marshal.load Marshal.dump m
+    loaded.store = @store
+
+    assert_equal ['(String) -> Integer'], loaded.type_signature_lines
+  end
+
+  def test_add_alias_copies_type_signature
+    @store.path = Dir.tmpdir
+    top_level = @store.add_file 'file.rb'
+    cm = top_level.add_class RDoc::ClassModule, 'Klass'
+
+    m = RDoc::AnyMethod.new nil, 'original'
+    m.type_signature_lines = ['(String) -> void']
+    m.record_location top_level
+    cm.add_method m
+
+    a = RDoc::Alias.new nil, 'original', 'aliased', ''
+    a.record_location top_level
+
+    aliased = m.add_alias a, cm
+    assert_equal ['(String) -> void'], aliased.type_signature_lines
+  end
+
   def test_marshal_load_aliased_method
     aliased_method = Marshal.load Marshal.dump(@c2_a)
 
