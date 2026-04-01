@@ -15,49 +15,49 @@
 
 /* Light Theme (Default) */
 :root {
-  /* Color Palette - Primary */
-  --color-primary-50: #fdeae9;
-  --color-primary-100: #fadad3;
-  --color-primary-200: #f8bfbd;
-  --color-primary-300: #f5a9a7;
-  --color-primary-400: #f07f7b;
-  --color-primary-500: #eb544f;
-  --color-primary-600: #e62923;
-  --color-primary-700: #b8211c;
-  --color-primary-800: #8a1915;
-  --color-primary-900: #5c100e;
+  /* Color Palette - Primary (warm coral-red, OKLCH-refined) */
+  --color-primary-50: oklch(95.5% 0.02 20deg);
+  --color-primary-100: oklch(91% 0.04 20deg);
+  --color-primary-200: oklch(83% 0.08 18deg);
+  --color-primary-300: oklch(75% 0.12 16deg);
+  --color-primary-400: oklch(65% 0.17 15deg);
+  --color-primary-500: oklch(58% 0.19 18deg);
+  --color-primary-600: oklch(52% 0.2 20deg);
+  --color-primary-700: oklch(44% 0.17 20deg);
+  --color-primary-800: oklch(36% 0.13 20deg);
+  --color-primary-900: oklch(28% 0.09 20deg);
 
-  /* Color Palette - Neutral */
-  --color-neutral-50: #fafaf9;
-  --color-neutral-100: #f5f5f4;
-  --color-neutral-200: #e7e5e4;
-  --color-neutral-300: #d6d3d1;
-  --color-neutral-400: #a8a29e;
-  --color-neutral-500: #78716c;
-  --color-neutral-600: #57534e;
-  --color-neutral-700: #44403c;
-  --color-neutral-800: #292524;
-  --color-neutral-900: #1c1917;
+  /* Color Palette - Neutral (warm-tinted toward primary hue) */
+  --color-neutral-50: oklch(98.5% 0.005 55deg);
+  --color-neutral-100: oklch(96.5% 0.005 55deg);
+  --color-neutral-200: oklch(92% 0.008 55deg);
+  --color-neutral-300: oklch(87% 0.008 50deg);
+  --color-neutral-400: oklch(71% 0.01 50deg);
+  --color-neutral-500: oklch(57% 0.01 50deg);
+  --color-neutral-600: oklch(46% 0.01 50deg);
+  --color-neutral-700: oklch(38% 0.01 45deg);
+  --color-neutral-800: oklch(26% 0.01 40deg);
+  --color-neutral-900: oklch(20% 0.01 35deg);
 
-  /* Code highlighting colors - neutral palette for all syntax highlighters */
-  --code-blue: #1d4ed8;
-  --code-green: #047857;
-  --code-orange: #d97706;
-  --code-purple: #7e22ce;
-  --code-red: #dc2626;
-  --code-cyan: #0891b2;
-  --code-gray: #78716c;
+  /* Code highlighting colors - OKLCH for perceptual uniformity */
+  --code-blue: oklch(47% 0.17 260deg);
+  --code-green: oklch(47% 0.14 165deg);
+  --code-orange: oklch(60% 0.16 60deg);
+  --code-purple: oklch(45% 0.2 300deg);
+  --code-red: oklch(52% 0.2 25deg);
+  --code-cyan: oklch(52% 0.12 210deg);
+  --code-gray: oklch(57% 0.01 50deg);
 
   /* Color Palette - Green (for success states) */
-  --color-green-400: #4ade80;
-  --color-green-500: #22c55e;
-  --color-green-600: #16a34a;
+  --color-green-400: oklch(75% 0.16 155deg);
+  --color-green-500: oklch(65% 0.19 155deg);
+  --color-green-600: oklch(55% 0.17 155deg);
 
   /* Semantic Colors - Light Theme */
   --color-text-primary: var(--color-neutral-900);
   --color-text-secondary: var(--color-neutral-600);
   --color-text-tertiary: var(--color-neutral-500);
-  --color-background-primary: #fff;
+  --color-background-primary: oklch(99.5% 0.003 55deg);
   --color-background-secondary: var(--color-neutral-50);
   --color-background-tertiary: var(--color-neutral-100);
   --color-border-default: var(--color-neutral-300);
@@ -68,27 +68,25 @@
   --color-accent-primary: var(--color-primary-600);
   --color-accent-hover: var(--color-primary-700);
   --color-accent-subtle: var(--color-primary-50);
-  --color-code-bg: #f6f8fa;
+  --color-code-bg: oklch(97% 0.005 55deg);
   --color-code-border: var(--color-neutral-300);
-  --color-nav-bg: #fff;
+  --color-nav-bg: oklch(99.5% 0.003 55deg);
   --color-nav-text: var(--color-neutral-700);
   --color-th-background: var(--color-neutral-100);
   --color-td-background: var(--color-neutral-50);
 
   /* Search Type Badge Colors */
-  --color-search-type-class-bg: #e6f0ff;
-  --color-search-type-class-text: #0050a0;
-  --color-search-type-module-bg: #e6ffe6;
-  --color-search-type-module-text: #060;
-  --color-search-type-constant-bg: #fff0e6;
-  --color-search-type-constant-text: #995200;
-  --color-search-type-method-bg: #f0e6ff;
-  --color-search-type-method-text: #5200a0;
+  --color-search-type-class-bg: oklch(93% 0.04 250deg);
+  --color-search-type-class-text: oklch(40% 0.14 250deg);
+  --color-search-type-module-bg: oklch(93% 0.04 155deg);
+  --color-search-type-module-text: oklch(38% 0.12 155deg);
+  --color-search-type-constant-bg: oklch(93% 0.04 70deg);
+  --color-search-type-constant-text: oklch(42% 0.12 60deg);
+  --color-search-type-method-bg: oklch(93% 0.04 300deg);
+  --color-search-type-method-text: oklch(38% 0.15 300deg);
 
   /* RGBA Colors (theme-agnostic) */
   --color-overlay: rgb(0 0 0 / 50%);
-  --color-emphasis-bg: rgb(255 111 97 / 10%);
-  --color-emphasis-decoration: rgb(52 48 64 / 25%);
   --color-search-highlight-bg: rgb(224 108 117 / 10%);
   --color-success-bg: rgb(34 197 94 / 10%);
 
@@ -104,9 +102,9 @@
   --font-size-5xl: 3rem;      /* 48px */
 
   /* Font Families */
-  --font-family-base: -apple-system, blinkmacsystemfont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+  --font-family-base: 'Inter', system-ui, -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
   --font-family-heading: var(--font-family-base);
-  --font-family-mono: ui-monospace, 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+  --font-family-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', 'Menlo', 'Consolas', monospace;
 
   /* Font Weights */
   --font-weight-normal: 400;
@@ -120,9 +118,9 @@
   --font-code: var(--font-family-mono);
 
   /* Line Heights */
-  --line-height-tight: 1.25;
+  --line-height-tight: 1.2;
   --line-height-normal: 1.5;
-  --line-height-relaxed: 1.625;
+  --line-height-relaxed: 1.7;
 
   /* Spacing Scale */
   --space-1: 0.25rem;   /* 4px */
@@ -136,15 +134,15 @@
   --space-16: 4rem;     /* 64px */
 
   /* Border Radius */
-  --radius-sm: 0.25rem;   /* 4px */
-  --radius-md: 0.375rem;  /* 6px */
-  --radius-lg: 0.5rem;    /* 8px */
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
-  --shadow-md: 0 2px 8px rgb(0 0 0 / 10%);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%);
+  /* Shadows (warm-tinted to match neutral hue) */
+  --shadow-sm: 0 1px 2px 0 oklch(25% 0.01 40deg / 8%), 0 1px 3px -1px oklch(25% 0.01 40deg / 6%);
+  --shadow-md: 0 2px 6px -1px oklch(25% 0.01 40deg / 10%), 0 1px 3px -1px oklch(25% 0.01 40deg / 6%);
+  --shadow-lg: 0 8px 20px -4px oklch(25% 0.01 40deg / 12%), 0 4px 8px -4px oklch(25% 0.01 40deg / 6%);
+  --shadow-xl: 0 16px 32px -6px oklch(25% 0.01 40deg / 14%), 0 8px 14px -6px oklch(25% 0.01 40deg / 8%);
 
   /* Layout Dimensions */
   --layout-sidebar-width: 300px;
@@ -156,15 +154,18 @@
   --layout-header-height: 64px;
   --layout-search-width: 400px;
 
-  /* Transitions */
-  --transition-fast: 150ms ease-in-out;
-  --transition-base: 200ms ease-in-out;
-  --transition-slow: 350ms ease-in-out;
-  --ease-out-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Easing curves */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Transitions (using exponential ease-out for natural deceleration) */
+  --transition-fast: 150ms var(--ease-out-quart);
+  --transition-base: 200ms var(--ease-out-quart);
+  --transition-slow: 350ms var(--ease-out-expo);
 
   /* Animation Durations */
-  --duration-fast: 250ms;
-  --duration-base: 300ms;
+  --duration-fast: 200ms;
+  --duration-base: 280ms;
   --duration-medium: 350ms;
 
   /* Z-Index Scale */
@@ -176,53 +177,53 @@
 
 /* Dark Theme */
 [data-theme="dark"] {
-  /* Code highlighting colors - neutral palette for all syntax highlighters */
-  --code-blue: #93c5fd;
-  --code-green: #34d399;
-  --code-orange: #fbbf24;
-  --code-purple: #c084fc;
-  --code-red: #f87171;
-  --code-cyan: #22d3ee;
-  --code-gray: #a8a29e;
+  /* Code highlighting colors - OKLCH for perceptual uniformity */
+  --code-blue: oklch(76% 0.1 250deg);
+  --code-green: oklch(72% 0.12 165deg);
+  --code-orange: oklch(78% 0.13 75deg);
+  --code-purple: oklch(74% 0.12 300deg);
+  --code-red: oklch(72% 0.13 20deg);
+  --code-cyan: oklch(76% 0.1 210deg);
+  --code-gray: oklch(71% 0.01 50deg);
 
-  /* Semantic Colors - Dark Theme */
-  --color-text-primary: var(--color-neutral-50);
+  /* Semantic Colors - Dark Theme (softened contrast) */
+  --color-text-primary: oklch(94% 0.005 55deg);
   --color-text-secondary: var(--color-neutral-200);
   --color-text-tertiary: var(--color-neutral-400);
-  --color-background-primary: var(--color-neutral-900);
-  --color-background-secondary: var(--color-neutral-800);
+  --color-background-primary: oklch(22% 0.01 40deg);
+  --color-background-secondary: oklch(26% 0.01 40deg);
   --color-background-tertiary: var(--color-neutral-700);
   --color-border-default: var(--color-neutral-600);
   --color-border-subtle: var(--color-neutral-700);
   --color-border-emphasis: var(--color-neutral-300);
-  --color-link-default: var(--color-neutral-50);
-  --color-link-hover: var(--color-primary-500);
-  --color-accent-primary: var(--color-primary-500);
-  --color-accent-hover: var(--color-primary-400);
-  --color-accent-subtle: rgb(235 84 79 / 10%);
-  --color-accent-subtle-hover: rgb(235 84 79 / 20%);
-  --color-code-bg: var(--color-neutral-800);
-  --color-code-border: var(--color-neutral-700);
-  --color-nav-bg: var(--color-neutral-900);
-  --color-nav-text: var(--color-neutral-50);
+  --color-link-default: oklch(94% 0.005 55deg);
+  --color-link-hover: oklch(62% 0.15 20deg);
+  --color-accent-primary: oklch(62% 0.15 20deg);
+  --color-accent-hover: oklch(68% 0.14 18deg);
+  --color-accent-subtle: oklch(52% 0.08 20deg / 12%);
+  --color-accent-subtle-hover: oklch(52% 0.08 20deg / 22%);
+  --color-code-bg: oklch(26% 0.01 40deg);
+  --color-code-border: oklch(32% 0.01 40deg);
+  --color-nav-bg: oklch(22% 0.01 40deg);
+  --color-nav-text: oklch(94% 0.005 55deg);
   --color-th-background: var(--color-background-tertiary);
   --color-td-background: var(--color-background-secondary);
 
   /* Search Type Badge Colors - Dark Theme */
-  --color-search-type-class-bg: #1e3a5f;
-  --color-search-type-class-text: #93c5fd;
-  --color-search-type-module-bg: #14532d;
-  --color-search-type-module-text: #86efac;
-  --color-search-type-constant-bg: #451a03;
-  --color-search-type-constant-text: #fcd34d;
-  --color-search-type-method-bg: #3b0764;
-  --color-search-type-method-text: #d8b4fe;
+  --color-search-type-class-bg: oklch(28% 0.06 250deg);
+  --color-search-type-class-text: oklch(76% 0.1 250deg);
+  --color-search-type-module-bg: oklch(26% 0.06 155deg);
+  --color-search-type-module-text: oklch(75% 0.1 155deg);
+  --color-search-type-constant-bg: oklch(28% 0.06 60deg);
+  --color-search-type-constant-text: oklch(80% 0.1 75deg);
+  --color-search-type-method-bg: oklch(25% 0.06 300deg);
+  --color-search-type-method-text: oklch(78% 0.1 300deg);
 
-  /* Dark theme shadows (slightly more subtle) */
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 40%), 0 1px 2px -1px rgb(0 0 0 / 40%);
-  --shadow-md: 0 2px 8px rgb(0 0 0 / 40%);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 40%), 0 4px 6px -4px rgb(0 0 0 / 40%);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 40%), 0 8px 10px -6px rgb(0 0 0 / 40%);
+  /* Dark theme shadows */
+  --shadow-sm: 0 1px 2px 0 oklch(10% 0.01 40deg / 30%), 0 1px 3px -1px oklch(10% 0.01 40deg / 20%);
+  --shadow-md: 0 2px 6px -1px oklch(10% 0.01 40deg / 35%), 0 1px 3px -1px oklch(10% 0.01 40deg / 20%);
+  --shadow-lg: 0 8px 20px -4px oklch(10% 0.01 40deg / 40%), 0 4px 8px -4px oklch(10% 0.01 40deg / 25%);
+  --shadow-xl: 0 16px 32px -6px oklch(10% 0.01 40deg / 45%), 0 8px 14px -6px oklch(10% 0.01 40deg / 30%);
 
 }
 
@@ -235,6 +236,9 @@ body {
   line-height: var(--line-height-relaxed);
   margin: 0;
   overflow-wrap: break-word; /* Avoid overflow on mobile */
+  transition:
+    background-color var(--transition-slow),
+    color var(--transition-slow);
 
   /* Grid layout with header, sidebar, main, and footer */
   display: grid;
@@ -385,9 +389,9 @@ code {
   font-family: var(--font-code);
   background-color: var(--color-code-bg);
   border: 1px solid var(--color-border-subtle);
-  padding: 0.125rem 0.375rem;
+  padding: 0.15rem 0.4rem;
   border-radius: var(--radius-sm);
-  font-size: 0.9em;
+  font-size: 0.875em;
 }
 
 pre code {
@@ -419,6 +423,11 @@ table tr th {
 
 table tr:nth-child(even) td {
   background-color: var(--color-td-background);
+}
+
+table tr:hover td {
+  background-color: var(--color-background-tertiary);
+  transition: background-color var(--transition-fast);
 }
 
 /* 6. Header (Top Navbar) */
@@ -510,7 +519,7 @@ header.top-navbar .navbar-search form {
 
 .theme-toggle-icon {
   display: inline-block;
-  transition: transform var(--duration-base) var(--ease-out-smooth);
+  transition: transform var(--duration-base) var(--ease-out-quart);
 }
 
 .theme-toggle:hover .theme-toggle-icon {
@@ -670,14 +679,17 @@ nav ul li {
 }
 
 nav ul li a {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2));
+  border-radius: var(--radius-sm);
   transition:
     color var(--transition-fast),
-    transform var(--transition-fast),
-    padding var(--transition-fast);
+    background-color var(--transition-fast);
 }
 
 nav ul li a:hover {
-  padding-left: var(--space-1);
+  background-color: var(--color-background-tertiary);
 }
 
 nav ul ul {
@@ -774,14 +786,19 @@ nav .nav-section-header {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) 0;
+  padding: var(--space-3) var(--space-2);
+  margin-left: calc(-1 * var(--space-2));
+  margin-right: calc(-1 * var(--space-2));
+  border-radius: var(--radius-sm);
   cursor: pointer;
   list-style: none;
   user-select: none;
   -webkit-user-select: none;
   border-bottom: 1px solid var(--color-border-default);
   margin-bottom: var(--space-3);
-  transition: color var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
 }
 
 nav .nav-section-header::-webkit-details-marker {
@@ -790,6 +807,7 @@ nav .nav-section-header::-webkit-details-marker {
 
 nav .nav-section-header:hover {
   color: var(--color-accent-primary);
+  background-color: var(--color-background-tertiary);
 }
 
 nav .nav-section-icon {
@@ -855,6 +873,15 @@ nav .nav-section-collapsible .nav-list .link-list {
   border-left: none;
   margin-left: 0;
   padding-left: var(--space-5);
+}
+
+/* Match spacing for nested link-list inside details with sibling items */
+nav li details > ul.link-list {
+  margin: var(--space-2) 0 0;
+}
+
+nav li details > ul.link-list > li:last-child {
+  margin-bottom: 0;
 }
 
 /*
@@ -959,6 +986,7 @@ main h1 {
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-4);
   line-height: var(--line-height-tight);
+  letter-spacing: -0.025em;
 }
 
 main h2 {
@@ -967,6 +995,7 @@ main h2 {
   margin-top: var(--space-8);
   margin-bottom: var(--space-4);
   line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
 }
 
 main h3 {
@@ -975,6 +1004,7 @@ main h3 {
   margin-top: var(--space-6);
   margin-bottom: var(--space-3);
   line-height: var(--line-height-tight);
+  letter-spacing: -0.015em;
 }
 
 main h4 {
@@ -982,6 +1012,7 @@ main h4 {
   font-weight: var(--font-weight-medium);
   margin-top: var(--space-4);
   margin-bottom: var(--space-2);
+  letter-spacing: -0.01em;
 }
 
 main h5, main h6 {
@@ -1073,15 +1104,14 @@ main h6 a:hover {
 
 /* Emphasis */
 em {
-  text-decoration-color: var(--color-emphasis-decoration);
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
+  text-decoration: none;
+  font-style: italic;
+  color: var(--color-text-primary);
 }
 
-strong,
-em {
-  color: var(--color-accent-primary);
-  background-color: var(--color-emphasis-bg);
+strong {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Paragraphs */
@@ -1104,15 +1134,20 @@ main pre {
 
 /* Horizontal Rules */
 main hr {
-  margin: 1.5em 1em;
-  border: 2px solid var(--color-border-default);
+  margin: var(--space-8) 0;
+  border: none;
+  height: 1px;
+  background: var(--color-border-subtle);
 }
 
 /* Blockquotes */
 main blockquote {
-  margin: 0 2em 1.2em 1.2em;
-  padding-left: 0.5em;
-  border-left: 2px solid var(--color-border-default);
+  margin: var(--space-4) 0;
+  padding: var(--space-3) var(--space-6);
+  border-left: 3px solid var(--color-accent-primary);
+  background: var(--color-background-secondary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--color-text-secondary);
 }
 
 /* Lists */
@@ -1156,14 +1191,16 @@ main dd p:first-child {
 main header h2 {
   margin-top: 2em;
   border-width: 0;
-  border-top: 4px solid var(--color-border-default);
+  border-top: 2px solid var(--color-border-default);
+  padding-top: var(--space-6);
   font-size: 130%;
 }
 
 main header h3 {
   margin: 2em 0 1.5em;
   border-width: 0;
-  border-top: 3px solid var(--color-border-default);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-4);
   font-size: 120%;
 }
 
@@ -1230,7 +1267,7 @@ main .method-source-code {
   opacity: 0;
   transform: translateY(-8px);
   transition:
-    max-height var(--duration-medium) var(--ease-out-smooth),
+    max-height var(--duration-medium) var(--ease-out-quart),
     visibility var(--duration-medium),
     opacity var(--duration-fast) ease-out,
     transform var(--duration-fast) ease-out;
@@ -1318,7 +1355,7 @@ main .method-controls {
 
 main .method-controls summary {
   display: inline-block;
-  line-height: 20px;
+  line-height: var(--line-height-normal);
   color: var(--color-accent-primary);
   cursor: pointer;
   padding: var(--space-1) var(--space-3);
@@ -1363,7 +1400,7 @@ main .aliases {
 }
 
 main .aliases {
-  padding-top: 4px;
+  padding-top: var(--space-1);
   font-style: italic;
   cursor: default;
 }
@@ -1411,7 +1448,7 @@ main .attribute-access-type {
   }
 
   main .method-controls {
-    margin-top: 10px;
+    margin-top: var(--space-3);
     float: none;
   }
 }
@@ -1471,6 +1508,12 @@ main .attribute-access-type {
   inset: 0;
   background: var(--color-overlay);
   z-index: 1;
+  animation: modal-backdrop-in var(--duration-fast) var(--ease-out-quart);
+}
+
+@keyframes modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .search-modal-content {
@@ -1484,6 +1527,19 @@ main .attribute-access-type {
   max-height: 80vh;
   display: flex;
   flex-direction: column;
+  animation: modal-content-in var(--duration-base) var(--ease-out-expo);
+}
+
+@keyframes modal-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .search-modal-header {
@@ -1560,12 +1616,18 @@ main .attribute-access-type {
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast);
   margin-bottom: var(--space-2);
 }
 
 .search-modal-results li:hover {
   background: var(--color-background-secondary);
+}
+
+.search-modal-results li:active {
+  transform: scale(0.99);
 }
 
 .search-modal-results a {
@@ -1685,7 +1747,9 @@ aside.table-of-contents .toc-list > .toc-h3 {
   display: block;
   color: var(--color-text-secondary);
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast);
   line-height: var(--line-height-relaxed);
   overflow-wrap: break-word;
   hyphens: auto;
@@ -1795,7 +1859,7 @@ footer.site-footer .footer-bottom:first-child {
   width: 100%;
   padding: var(--space-2) var(--space-4) var(--space-2) 2.5rem;
   border: 1px solid var(--color-border-default);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-lg);
   font-size: var(--font-size-sm);
   outline: none;
   transition: border-color var(--transition-base);
@@ -1841,8 +1905,10 @@ footer.site-footer .footer-bottom:first-child {
 }
 
 .search-results .search-selected {
-  background: var(--color-code-bg);
+  background: var(--color-accent-subtle);
+  border-left: 3px solid var(--color-accent-primary);
   border-bottom: 1px solid transparent;
+  border-radius: var(--radius-sm);
 }
 
 .search-results li {
@@ -1952,4 +2018,16 @@ header.top-navbar #search-results-desktop.initially-hidden {
 
 header.top-navbar #search-results-desktop[aria-expanded="false"] {
   display: none;
+}
+
+/* Reduced Motion: respect user preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
