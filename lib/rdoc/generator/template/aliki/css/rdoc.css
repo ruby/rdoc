@@ -1908,23 +1908,27 @@ footer.site-footer .footer-bottom:first-child {
   background: var(--color-accent-subtle);
   border-left: 3px solid var(--color-accent-primary);
   border-bottom: 1px solid transparent;
-  border-radius: var(--radius-sm);
 }
 
 .search-results li {
   list-style: none;
-  border-bottom: 1px solid var(--color-border-default);
-  margin-bottom: 0.5em;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: 0;
+  transition: background-color var(--transition-fast);
+}
+
+.search-results li:hover {
+  background-color: var(--color-background-secondary);
 }
 
 .search-results li:last-child {
   border-bottom: none;
-  margin-bottom: 0;
 }
 
 .search-results li p {
   padding: 0;
-  margin: 0.5em;
+  margin: var(--space-1) 0;
 }
 
 .search-results .search-namespace {
@@ -1976,13 +1980,16 @@ footer.site-footer .footer-bottom:first-child {
 
 header.top-navbar #search-field {
   width: 100%;
+  box-sizing: border-box;
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-md);
   font-size: var(--font-size-base);
   background: var(--color-background-primary);
   color: var(--color-text-primary);
-  transition: border-color var(--transition-fast);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 header.top-navbar #search-field:focus {
@@ -1998,18 +2005,37 @@ header.top-navbar #search-field::placeholder {
 /* Search results dropdown in navbar */
 header.top-navbar #search-results-desktop {
   position: absolute;
-  top: calc(100% + var(--space-2));
+  top: calc(100% + var(--space-1));
   left: 0;
-  width: var(--layout-search-width);
+  right: 0;
   max-height: 60vh;
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  overflow-y: auto;
+  overflow: hidden auto;
   z-index: var(--z-popover);
   margin: 0;
   padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+
+header.top-navbar #search-results-desktop::-webkit-scrollbar {
+  width: 6px;
+}
+
+header.top-navbar #search-results-desktop::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+header.top-navbar #search-results-desktop::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-sm);
+}
+
+header.top-navbar #search-results-desktop::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-emphasis);
 }
 
 header.top-navbar #search-results-desktop.initially-hidden {
