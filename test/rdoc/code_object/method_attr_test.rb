@@ -207,4 +207,53 @@ class RDocMethodAttrTest < XrefTestCase
     assert_equal 'RDoc::AnyMethod: C1::m', @c1__m.to_s
   end
 
+  def test_type_signature_html_links_known_types
+    @c1_m.type_signature = "(C2) -> C1"
+
+    result = @c1_m.type_signature_html
+    assert_includes result, '<a href='
+    assert_includes result, 'class="rbs-type"'
+    assert_includes result, '>C2</a>'
+    assert_includes result, '>C1</a>'
+    assert_includes result, '&rarr;'
+  end
+
+  def test_type_signature_html_leaves_unknown_types_plain
+    @c1_m.type_signature = "(UnknownType) -> void"
+
+    result = @c1_m.type_signature_html
+    refute_includes result, '<a'
+    assert_includes result, 'UnknownType'
+    assert_includes result, 'void'
+  end
+
+  def test_type_signature_html_handles_qualified_names
+    @c1_m.type_signature = "(C2::C3) -> void"
+
+    result = @c1_m.type_signature_html
+    assert_includes result, '>C2::C3</a>'
+  end
+
+  def test_type_signature_html_nil_without_signature
+    assert_nil @c1_m.type_signature_html
+  end
+
+  def test_type_signature_html_multiline
+    @c1_m.type_signature = "(C1) -> C2\n(C2) -> C1"
+
+    result = @c1_m.type_signature_html
+    assert_includes result, '>C1</a>'
+    assert_includes result, '>C2</a>'
+    assert_includes result, "\n"
+  end
+
+  def test_type_signature_html_escapes_html
+    @c1_m.type_signature = "(Array[String]) -> void"
+
+    result = @c1_m.type_signature_html
+    refute_includes result, '<a'
+    assert_includes result, 'Array[String]'
+    assert_includes result, '&rarr;'
+  end
+
 end

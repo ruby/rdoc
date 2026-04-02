@@ -14,7 +14,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   #   RDoc 4.1
   #   Added is_alias_for
 
-  MARSHAL_VERSION = 3 # :nodoc:
+  MARSHAL_VERSION = 4 # :nodoc:
 
   ##
   # Don't rename \#initialize to \::new
@@ -166,6 +166,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       @parent.class,
       @section.title,
       is_alias_for,
+      @type_signature,
     ]
   end
 
@@ -204,6 +205,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @parent_title  = array[13]
     @section_title = array[14]
     @is_alias_for  = array[15]
+    @type_signature = array[16]
 
     array[8].each do |new_name, document|
       add_alias RDoc::Alias.new(nil, @name, new_name, RDoc::Comment.from_document(document), singleton: @singleton)

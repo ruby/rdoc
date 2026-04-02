@@ -344,6 +344,22 @@ class RDoc::Store
   end
 
   ##
+  # Returns a hash mapping class/module names to their paths, for use
+  # by type signature linking. Maps both full names (Foo::Bar) and
+  # short names (Bar). Cached after first call.
+
+  def type_name_lookup
+    @type_name_lookup ||= begin
+      lookup = {}
+      all_classes_and_modules.each do |cm|
+        lookup[cm.full_name] = cm.path
+        lookup[cm.name] = cm.path unless lookup.key?(cm.name)
+      end
+      lookup
+    end
+  end
+
+  ##
   # All TopLevels known to RDoc
 
   def all_files
@@ -443,6 +459,7 @@ class RDoc::Store
   # See also RDoc::Context#remove_from_documentation?
 
   def complete(min_visibility)
+    @type_name_lookup = nil
     fix_basic_object_inheritance
 
     # cache included modules before they are removed from the documentation
