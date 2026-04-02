@@ -70,6 +70,8 @@
   --color-accent-subtle: var(--color-primary-50);
   --color-code-bg: #f6f8fa;
   --color-code-border: var(--color-neutral-300);
+  --color-sig-bg: var(--color-neutral-100);
+  --color-sig-border: var(--color-primary-200);
   --color-nav-bg: #fff;
   --color-nav-text: var(--color-neutral-700);
   --color-th-background: var(--color-neutral-100);
@@ -203,6 +205,8 @@
   --color-accent-subtle-hover: rgb(235 84 79 / 20%);
   --color-code-bg: var(--color-neutral-800);
   --color-code-border: var(--color-neutral-700);
+  --color-sig-bg: #211f1e; /* between neutral-900 and neutral-800 */
+  --color-sig-border: var(--color-accent-primary);
   --color-nav-bg: var(--color-neutral-900);
   --color-nav-text: var(--color-neutral-50);
   --color-th-background: var(--color-background-tertiary);
@@ -1282,6 +1286,7 @@ main .method-description .method-calls-super {
 }
 
 main .method-detail {
+  position: relative;
   margin-bottom: 2.5em;
 }
 
@@ -1292,16 +1297,33 @@ main .method-detail:target {
 }
 
 main .method-header {
-  display: inline-block;
-  max-width: calc(100% - 6em); /* 6em is the width of the source code toggle */
+  background: var(--color-sig-bg);
+  border-left: 3px solid var(--color-sig-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
 }
 
 main .method-heading {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   font-family: var(--font-code);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-3);
+  line-height: var(--line-height-normal);
+}
+
+main .method-heading a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main .method-heading a:hover {
+  color: var(--color-accent-primary);
+}
+
+main .method-heading .method-callseq {
+  display: block;
 }
 
 main .method-heading .method-name {
@@ -1313,7 +1335,9 @@ main .method-heading .method-args {
 }
 
 main .method-controls {
-  float: right;
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
 }
 
 main .method-controls summary {
@@ -1356,14 +1380,16 @@ main .method-controls summary:active {
   border-color: var(--color-primary-500);
 }
 
-main .method-description,
-main .aliases {
-  margin-top: 0.75em;
+main .method-description {
+  margin-top: var(--space-5);
+  padding-left: var(--space-2);
   color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
 }
 
 main .aliases {
-  padding-top: 4px;
+  margin-top: var(--space-4);
+  padding-top: var(--space-1);
   font-style: italic;
   cursor: default;
 }
@@ -1410,9 +1436,17 @@ main .attribute-access-type {
     white-space: nowrap;
   }
 
+  main .method-heading {
+    font-size: var(--font-size-base);
+  }
+
+  main .method-header {
+    padding: var(--space-2);
+  }
+
   main .method-controls {
-    margin-top: 10px;
-    float: none;
+    position: static;
+    margin-top: var(--space-2);
   }
 }
 
