@@ -321,11 +321,11 @@ class RDoc::Store
   end
 
   ##
-  # Sets the parser of +absolute_name+, unless it from a source code file.
+  # Sets the parser of +relative_name+, unless it from a source code file.
 
-  def update_parser_of_file(absolute_name, parser)
-    if top_level = @files_hash[absolute_name] then
-      @text_files_hash[absolute_name] = top_level if top_level.text?
+  def update_parser_of_file(relative_name, parser)
+    if top_level = @files_hash[relative_name] then
+      @text_files_hash[relative_name] = top_level if top_level.text?
     end
   end
 

@@ -348,6 +348,13 @@ class RDocStoreTest < XrefTestCase
     assert_equal page, @store.find_text_page('PAGE.txt')
   end
 
+  def test_find_text_page_when_parser_set_after_add_file
+    page = @store.add_file '/absolute/path/to/PAGE.md', relative_name: 'PAGE.md'
+    page.parser = RDoc::Parser::Simple
+
+    assert_equal page, @store.find_text_page('PAGE.md')
+  end
+
   def test_friendly_path
     @orig_xdg_data_home = ENV.delete('XDG_DATA_HOME')
 
