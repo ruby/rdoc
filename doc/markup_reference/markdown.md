@@ -98,7 +98,9 @@ Use triple backticks with an optional language identifier:
     end
     ```
 
-Supported language for syntax highlighting: `ruby`, `rb` (alias to `ruby`), and `c`.
+Supported languages for syntax highlighting: `ruby` (and `rb` alias) with server-side
+highlighting, and `c`, `bash`/`sh`/`shell`/`console` with client-side JavaScript highlighting.
+Other info strings are accepted and added as a CSS class but receive no highlighting.
 
 ### Blockquotes
 
@@ -420,6 +422,9 @@ For example:
 * [Link to Blockquotes](#blockquotes)
 * [Link to Anchor Links](#anchor-links)
 
+When multiple headings produce the same anchor, RDoc appends `-1`, `-2`, etc.
+to subsequent duplicates, matching GitHub's behavior.
+
 ## Footnotes
 
 ### Reference Footnotes
@@ -535,7 +540,7 @@ See [rdoc.rdoc](rdoc.rdoc) for complete directive documentation.
 | Headings | `= Heading` | `# Heading` |
 | Bold | `*word*` | `**word**` |
 | Italic | `_word_` | `*word*` |
-| Monospace | `+word+` | `` `word` `` |
+| Monospace | `+word+` or `` `word` `` | `` `word` `` |
 | Links | `{text}[url]` | `[text](url)` |
 | Code blocks | Indent beyond margin | Indent 4 spaces or fence |
 | Block quotes | `>>>` | `>` |
@@ -551,8 +556,104 @@ See [rdoc.rdoc](rdoc.rdoc) for complete directive documentation.
 
 3. **Footnotes are collapsed** - Multiple paragraphs in a footnote become a single paragraph.
 
-4. **Syntax highlighting** - Only `ruby` and `c` are supported for fenced code blocks.
+4. **Syntax highlighting** - Only `ruby`/`rb` (server-side) and `c`, `bash`/`sh`/`shell`/`console` (client-side) receive syntax highlighting. Other info strings are accepted but not highlighted.
 
 5. **Fenced code blocks** - Only triple backticks are supported. Tilde fences (`~~~`) are not supported as they conflict with strikethrough syntax. Four or more backticks for nesting are also not supported.
 
 6. **Auto-linking** - RDoc automatically links class and method names in output, even without explicit link syntax.
+
+## Comparison with GitHub Flavored Markdown (GFM)
+
+This section compares RDoc's Markdown implementation with the
+[GitHub Flavored Markdown Spec](https://github.github.com/gfm/) (Version 0.29-gfm, 2019-04-06).
+
+### Block Elements
+
+| Feature | GFM | RDoc | Notes |
+|---------|:---:|:----:|-------|
+| ATX Headings (`#`) | ✅ | ✅ | Both support levels 1-6, optional closing `#` |
+| Setext Headings | ✅ | ✅ | `=` for H1, `-` for H2 |
+| Paragraphs | ✅ | ✅ | Full match |
+| Indented Code Blocks | ✅ | ✅ | 4 spaces or 1 tab |
+| Fenced Code (backticks) | ✅ 3+ | ⚠️ 3 only | RDoc doesn't support 4+ backticks for nesting |
+| Fenced Code (tildes) | ✅ `~~~` | ❌ | Conflicts with strikethrough syntax |
+| Info strings (language) | ✅ any | ⚠️ limited | `ruby`/`rb`, `c`, and `bash`/`sh`/`shell`/`console` highlighted; others accepted as CSS class |
+| Blockquotes | ✅ | ✅ | Full match, nested supported |
+| Lazy Continuation | ✅ | ⚠️ | Continuation text is included in blockquote but line break is lost (becomes a space) |
+| Bullet Lists | ✅ | ✅ | `*`, `+`, `-` supported |
+| Ordered Lists | ✅ `.` `)` | ⚠️ `.` only | RDoc doesn't support `)` delimiter; numbers are always renumbered from 1 |
+| Nested Lists | ✅ | ✅ | 4-space indentation |
+| Tables | ✅ | ✅ | Full alignment support |
+| Thematic Breaks | ✅ | ✅ | `---`, `***`, `___` |
+| HTML Blocks | ✅ 7 types | ⚠️ | See below |
+
+#### HTML Blocks
+
+GFM defines 7 types of HTML blocks:
+
+| Type | Description | GFM | RDoc | Notes |
+|------|-------------|:---:|:----:|-------|
+| 1 | `<script>`, `<pre>` | ✅ | ✅ | |
+| 1 | `<style>` | ✅ | ❌ | Available via `css` extension (disabled by default) |
+| 2 | HTML comments `<!-- -->` | ✅ | ✅ | |
+| 3 | Processing instructions `<? ?>` | ✅ | ❌ | |
+| 4 | Declarations `<!DOCTYPE>` | ✅ | ❌ | |
+| 5 | CDATA `<![CDATA[ ]]>` | ✅ | ❌ | |
+| 6 | Block-level tags | ✅ | ⚠️ | |
+| 7 | Any complete open/close tag | ✅ | ❌ | |
+
+RDoc uses a whitelist of block-level tags defined in
+[lib/rdoc/markdown.kpeg](https://github.com/ruby/rdoc/blob/master/lib/rdoc/markdown.kpeg)
+(see `HtmlBlockInTags`). HTML5 semantic elements like `<article>`, `<section>`,
+`<nav>`, `<header>`, `<footer>` are not supported.
+
+### Inline Elements
+
+| Feature | GFM | RDoc | Notes |
+|---------|:---:|:----:|-------|
+| Emphasis `*text*` `_text_` | ✅ | ⚠️ | Intraword emphasis not supported (see [Notes](#notes-and-limitations)) |
+| Strong `**text**` `__text__` | ✅ | ✅ | Full match |
+| Combined `***text***` | ✅ | ✅ | Full match |
+| Code spans | ✅ | ✅ | Multiple backticks supported |
+| Inline links | ✅ | ✅ | Full match |
+| Reference links | ✅ | ✅ | Full match |
+| Link titles | ✅ | ⚠️ | Parsed but not rendered |
+| Images | ✅ | ✅ | Full match |
+| Autolinks `<url>` | ✅ | ✅ | Full match |
+| Hard line breaks | ✅ | ⚠️ | 2+ trailing spaces only; backslash `\` at EOL not supported |
+| Backslash escapes | ✅ | ⚠️ | Subset of GFM's escapable characters (e.g., `~` not escapable) |
+| HTML entities | ✅ | ✅ | Named, decimal, hex |
+| Inline HTML | ✅ | ⚠️ | `<b>` converted to `<strong>`, `<i>` to `<em>`; `<strong>` itself is escaped |
+
+### GFM Extensions
+
+| Feature | GFM | RDoc | Notes |
+|---------|:---:|:----:|-------|
+| Strikethrough `~~text~~` | ✅ | ✅ | Full match |
+| Task Lists `[ ]` `[x]` | ✅ | ❌ | Not supported |
+| Extended Autolinks | ✅ | ⚠️ | See below |
+| Disallowed Raw HTML | ✅ | ❌ | No security filtering |
+
+#### GFM Extended Autolinks
+
+GFM automatically converts certain text patterns into links without requiring
+angle brackets (`<>`). RDoc also auto-links URLs and `www.` prefixes through
+its cross-reference system, but the behavior differs from GFM.
+
+GFM recognizes these patterns:
+
+- `www.example.com` — text starting with `www.` followed by a valid domain
+- `https://example.com` — URLs starting with `http://` or `https://`
+- `user@example.com` — valid email addresses
+
+RDoc auto-links `www.` prefixes and `http://`/`https://` URLs similarly to GFM.
+However, bare email addresses like `user@example.com` are not auto-linked;
+use `<user@example.com>` instead.
+
+### RDoc-Specific Features (not in GFM)
+
+- [Definition Lists](#definition-lists)
+- [Footnotes](#footnotes)
+- [Cross-references](#cross-references)
+- [Anchor Links](#anchor-links)
+- [Directives](#directives)
