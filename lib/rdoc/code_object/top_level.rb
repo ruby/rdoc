@@ -66,7 +66,7 @@ class RDoc::TopLevel < RDoc::Context
 
   def parser=(val)
     @parser = val
-    @store.update_parser_of_file(absolute_name, val) if @store
+    @store.update_parser_of_file(relative_name, val) if @store
     @parser
   end
 
