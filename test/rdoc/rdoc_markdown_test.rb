@@ -1242,6 +1242,21 @@ and an extra note.[^2]
     assert_equal expected, doc
   end
 
+  def test_code_fence_preserves_text_indentation
+    doc = parse <<~MD
+    ```ruby
+      foo()
+      bar()
+    ```
+    MD
+
+    expected = doc(
+      verb("  foo()\n  bar()\n").tap { |v| v.format = :ruby }
+    )
+
+    assert_equal expected, doc
+  end
+
   def test_gfm_table
     doc = parse <<~MD
     |      |                 |compare-ruby|built-ruby|

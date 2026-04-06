@@ -15570,7 +15570,7 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # CodeFence = &{ github? } Ticks3 (@Sp StrChunk:format)? Spnl < ((!"`" Nonspacechar)+ | !Ticks3 /`+/ | Spacechar | @Newline)+ > Ticks3 @Sp @Newline* { verbatim = RDoc::Markup::Verbatim.new text               verbatim.format = format.intern if format.instance_of?(String)               verbatim             }
+  # CodeFence = &{ github? } Ticks3 (@Sp StrChunk:format)? @Sp @Newline? < ((!"`" Nonspacechar)+ | !Ticks3 /`+/ | Spacechar | @Newline)+ > Ticks3 @Sp @Newline* { verbatim = RDoc::Markup::Verbatim.new text               verbatim.format = format.intern if format.instance_of?(String)               verbatim             }
   def _CodeFence
 
     _save = self.pos
@@ -15612,31 +15612,41 @@ class RDoc::Markdown
         self.pos = _save
         break
       end
-      _tmp = apply(:_Spnl)
+      _tmp = _Sp()
+      unless _tmp
+        self.pos = _save
+        break
+      end
+      _save4 = self.pos
+      _tmp = _Newline()
+      unless _tmp
+        _tmp = true
+        self.pos = _save4
+      end
       unless _tmp
         self.pos = _save
         break
       end
       _text_start = self.pos
-      _save4 = self.pos
-
       _save5 = self.pos
-      while true # choice
-        _save6 = self.pos
 
+      _save6 = self.pos
+      while true # choice
         _save7 = self.pos
+
+        _save8 = self.pos
         while true # sequence
-          _save8 = self.pos
+          _save9 = self.pos
           _tmp = match_string("`")
           _tmp = _tmp ? nil : true
-          self.pos = _save8
+          self.pos = _save9
           unless _tmp
-            self.pos = _save7
+            self.pos = _save8
             break
           end
           _tmp = apply(:_Nonspacechar)
           unless _tmp
-            self.pos = _save7
+            self.pos = _save8
           end
           break
         end # end sequence
@@ -15644,19 +15654,19 @@ class RDoc::Markdown
         if _tmp
           while true
 
-            _save9 = self.pos
+            _save10 = self.pos
             while true # sequence
-              _save10 = self.pos
+              _save11 = self.pos
               _tmp = match_string("`")
               _tmp = _tmp ? nil : true
-              self.pos = _save10
+              self.pos = _save11
               unless _tmp
-                self.pos = _save9
+                self.pos = _save10
                 break
               end
               _tmp = apply(:_Nonspacechar)
               unless _tmp
-                self.pos = _save9
+                self.pos = _save10
               end
               break
             end # end sequence
@@ -15665,59 +15675,59 @@ class RDoc::Markdown
           end
           _tmp = true
         else
-          self.pos = _save6
+          self.pos = _save7
         end
         break if _tmp
-        self.pos = _save5
+        self.pos = _save6
 
-        _save11 = self.pos
+        _save12 = self.pos
         while true # sequence
-          _save12 = self.pos
+          _save13 = self.pos
           _tmp = apply(:_Ticks3)
           _tmp = _tmp ? nil : true
-          self.pos = _save12
+          self.pos = _save13
           unless _tmp
-            self.pos = _save11
+            self.pos = _save12
             break
           end
           _tmp = scan(/\G(?-mix:`+)/)
           unless _tmp
-            self.pos = _save11
+            self.pos = _save12
           end
           break
         end # end sequence
 
         break if _tmp
-        self.pos = _save5
+        self.pos = _save6
         _tmp = apply(:_Spacechar)
         break if _tmp
-        self.pos = _save5
+        self.pos = _save6
         _tmp = _Newline()
         break if _tmp
-        self.pos = _save5
+        self.pos = _save6
         break
       end # end choice
 
       if _tmp
         while true
 
-          _save13 = self.pos
+          _save14 = self.pos
           while true # choice
-            _save14 = self.pos
-
             _save15 = self.pos
+
+            _save16 = self.pos
             while true # sequence
-              _save16 = self.pos
+              _save17 = self.pos
               _tmp = match_string("`")
               _tmp = _tmp ? nil : true
-              self.pos = _save16
+              self.pos = _save17
               unless _tmp
-                self.pos = _save15
+                self.pos = _save16
                 break
               end
               _tmp = apply(:_Nonspacechar)
               unless _tmp
-                self.pos = _save15
+                self.pos = _save16
               end
               break
             end # end sequence
@@ -15725,19 +15735,19 @@ class RDoc::Markdown
             if _tmp
               while true
 
-                _save17 = self.pos
+                _save18 = self.pos
                 while true # sequence
-                  _save18 = self.pos
+                  _save19 = self.pos
                   _tmp = match_string("`")
                   _tmp = _tmp ? nil : true
-                  self.pos = _save18
+                  self.pos = _save19
                   unless _tmp
-                    self.pos = _save17
+                    self.pos = _save18
                     break
                   end
                   _tmp = apply(:_Nonspacechar)
                   unless _tmp
-                    self.pos = _save17
+                    self.pos = _save18
                   end
                   break
                 end # end sequence
@@ -15746,36 +15756,36 @@ class RDoc::Markdown
               end
               _tmp = true
             else
-              self.pos = _save14
+              self.pos = _save15
             end
             break if _tmp
-            self.pos = _save13
+            self.pos = _save14
 
-            _save19 = self.pos
+            _save20 = self.pos
             while true # sequence
-              _save20 = self.pos
+              _save21 = self.pos
               _tmp = apply(:_Ticks3)
               _tmp = _tmp ? nil : true
-              self.pos = _save20
+              self.pos = _save21
               unless _tmp
-                self.pos = _save19
+                self.pos = _save20
                 break
               end
               _tmp = scan(/\G(?-mix:`+)/)
               unless _tmp
-                self.pos = _save19
+                self.pos = _save20
               end
               break
             end # end sequence
 
             break if _tmp
-            self.pos = _save13
+            self.pos = _save14
             _tmp = apply(:_Spacechar)
             break if _tmp
-            self.pos = _save13
+            self.pos = _save14
             _tmp = _Newline()
             break if _tmp
-            self.pos = _save13
+            self.pos = _save14
             break
           end # end choice
 
@@ -15783,7 +15793,7 @@ class RDoc::Markdown
         end
         _tmp = true
       else
-        self.pos = _save4
+        self.pos = _save5
       end
       if _tmp
         text = get_text(_text_start)
@@ -16677,7 +16687,7 @@ class RDoc::Markdown
   Rules[:_InlineNote] = rule_info("InlineNote", "&{ notes? } \"^[\" @StartList:a (!\"]\" Inline:l { a << l })+ \"]\" { ref = [:inline, @note_order.length]                @footnotes[ref] = paragraph a                 note_for ref              }")
   Rules[:_Notes] = rule_info("Notes", "(Note | SkipBlock)*")
   Rules[:_RawNoteBlock] = rule_info("RawNoteBlock", "@StartList:a (!@BlankLine !RawNoteReference OptionallyIndentedLine:l { a << l })+ < @BlankLine* > { a << text } { a }")
-  Rules[:_CodeFence] = rule_info("CodeFence", "&{ github? } Ticks3 (@Sp StrChunk:format)? Spnl < ((!\"`\" Nonspacechar)+ | !Ticks3 /`+/ | Spacechar | @Newline)+ > Ticks3 @Sp @Newline* { verbatim = RDoc::Markup::Verbatim.new text               verbatim.format = format.intern if format.instance_of?(String)               verbatim             }")
+  Rules[:_CodeFence] = rule_info("CodeFence", "&{ github? } Ticks3 (@Sp StrChunk:format)? @Sp @Newline? < ((!\"`\" Nonspacechar)+ | !Ticks3 /`+/ | Spacechar | @Newline)+ > Ticks3 @Sp @Newline* { verbatim = RDoc::Markup::Verbatim.new text               verbatim.format = format.intern if format.instance_of?(String)               verbatim             }")
   Rules[:_Table] = rule_info("Table", "&{ github? } TableHead:header TableLine:line TableRow+:body {           table = RDoc::Markup::Table.new(header, line, body)           parse_table_cells(table)         }")
   Rules[:_TableHead] = rule_info("TableHead", "TableItem2+:items \"|\"? @Newline { items }")
   Rules[:_TableRow] = rule_info("TableRow", "((TableItem:item1 TableItem2+:items { [item1, *items] }):row | TableItem2+:row) \"|\"? @Newline { row }")
