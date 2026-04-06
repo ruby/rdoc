@@ -673,7 +673,7 @@ class RDoc::ClassModule < RDoc::Context
   # module or class return the name of the latter.
 
   def name_for_path
-    is_alias_for ? is_alias_for.full_name : full_name
+    is_alias_for ? is_alias_for.name_for_path : full_name
   end
 
   ##
@@ -848,6 +848,13 @@ class RDoc::ClassModule < RDoc::Context
   def update_aliases
     constants.each do |const|
       next unless cm = const.is_alias_for
+
+      # Resolve chained aliases (A = B = C) to the real class/module.
+      cm = @store.find_class_or_module(cm.full_name) || cm
+      while (target = cm.is_alias_for)
+        cm = target
+      end
+
       cm_alias = cm.dup
       cm_alias.name = const.name
 

@@ -610,6 +610,43 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     assert_include(content, '<link rel="canonical" href="https://docs.ruby-lang.org/en/master/Klass/Inner.html">')
   end
 
+  def test_generate_chained_alias_sidebar_links
+    # Reproduces ruby/rdoc#1664:
+    #   class Original < Base
+    #   DirectAlias = Original           # alias of real class
+    #   ChainedAlias = DirectAlias       # alias of an alias
+    #
+    # ChainedAlias's sidebar link must point to Original.html, not DirectAlias.html
+    # (which is never generated because aliases don't get their own files).
+    parent = @top_level.add_module RDoc::NormalModule, 'Parent'
+    original = parent.add_class RDoc::NormalClass, 'Original'
+
+    direct_alias_const = RDoc::Constant.new 'DirectAlias', nil, ''
+    direct_alias_const.record_location @top_level
+    direct_alias_const.is_alias_for = original
+    parent.add_constant direct_alias_const
+    parent.update_aliases
+
+    direct_alias = @store.find_class_or_module 'Parent::DirectAlias'
+
+    chained_alias_const = RDoc::Constant.new 'ChainedAlias', nil, ''
+    chained_alias_const.record_location @top_level
+    chained_alias_const.is_alias_for = direct_alias
+    parent.add_constant chained_alias_const
+    parent.update_aliases
+
+    @store.complete :private
+    @g.generate
+
+    assert_file 'Parent/Original.html'
+    refute File.exist?('Parent/DirectAlias.html'), 'alias should not get its own file'
+    refute File.exist?('Parent/ChainedAlias.html'), 'chained alias should not get its own file'
+
+    index_html = File.binread('index.html')
+    assert_match %r{href="\./Parent/Original\.html">DirectAlias<}, index_html
+    assert_match %r{href="\./Parent/Original\.html">ChainedAlias<}, index_html
+  end
+
   def test_canonical_url_for_rdoc_files
     @store.add_file("CONTRIBUTING.rdoc", parser: RDoc::Parser::Simple)
 
