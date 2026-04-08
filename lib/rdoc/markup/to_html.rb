@@ -40,6 +40,82 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   # :section:
 
+  # Maps an encoding to a Hash of characters properly transcoded for that
+  # encoding.
+  #
+  # See also encode_fallback.
+
+  TO_HTML_CHARACTERS = Hash.new do |h, encoding|
+    h[encoding] = {
+      :close_dquote => encode_fallback('”', encoding, '"'),
+      :close_squote => encode_fallback('’', encoding, '\''),
+      :copyright    => encode_fallback('©', encoding, '(c)'),
+      :ellipsis     => encode_fallback('…', encoding, '...'),
+      :dot_ellipsis     => encode_fallback('.…', encoding, '....'),
+      :em_dash      => encode_fallback('—', encoding, '---'),
+      :en_dash      => encode_fallback('–', encoding, '--'),
+      :open_dquote  => encode_fallback('“', encoding, '"'),
+      :open_squote  => encode_fallback('‘', encoding, '\''),
+      :trademark    => encode_fallback('®', encoding, '(r)'),
+    }
+  end
+
+  HTML_CHARACTER_ALIASES = {
+    '(c)' => :copyright,
+    '(C)' => :copyright,
+    '(r)' => :trademark,
+    '(R)' => :trademark,
+    '---' => :em_dash,
+    '--'  => :en_dash,
+    '....' => :dot_ellipsis,
+    '...' => :ellipsis,
+    '``' => :open_dquote,
+    "''" => :close_dquote,
+  }
+
+  # Transcodes +character+ to +encoding+ with a +fallback+ character.
+
+  def self.encode_fallback(character, encoding, fallback)
+    character.encode(encoding, :fallback => { character => fallback },
+                    :undef => :replace, :replace => fallback)
+  end
+
+  # Converts ascii quote pairs to multibyte quote characters
+  class QuoteConverter
+
+    def initialize
+      @in_dquote = false
+      @in_squote = false
+    end
+
+    def convert(quote, after_word:)
+      case quote
+      when '"'
+        type = @in_dquote ? :close_dquote : :open_dquote
+        @in_dquote = !@in_dquote
+      when "'"
+        if @insquotes
+          type = :close_squote
+          @insquotes = false
+        elsif after_word
+          # Mary's dog, my parents' house: do not start paired quotes
+          type = :close_squote
+        else
+          type = :open_squote
+          @insquotes = true
+        end
+      when '`'
+        # Opening quote of <tt>`quoted sentence'</tt>.
+        # This will conflict with code blocks <tt>`puts('hello')`</tt> in the future.
+        if !@insquotes && !after_word
+          type = :open_squote
+          @insquotes = true
+        end
+      end
+      TO_HTML_CHARACTERS[quote.encoding][type] if type
+    end
+  end
+
   ##
   # Creates a new formatter that will output HTML
 
@@ -53,6 +129,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @in_list_entry = nil
     @list = nil
     @th = nil
+    @quote_converter = nil
     @in_tidylink_label = false
     @hard_break = "<br>\n"
 
@@ -76,6 +153,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
     # suppress crossref: \#method \::method \ClassName \method_with_underscores
     @markup.add_regexp_handling(/\\(?:[#:A-Z]|[a-z]+_[a-z0-9])/, :SUPPRESSED_CROSSREF)
+
+    @markup.add_regexp_handling(Regexp.union(HTML_CHARACTER_ALIASES.keys), :HTML_CHARACTERS)
+
+    @markup.add_regexp_handling(/\b['"`]/, :QUOTE_AFTER_WORD)
+    @markup.add_regexp_handling(/\B['"`]/, :QUOTE_NOT_AFTER_WORD)
 
     init_link_notation_regexp_handlings
   end
@@ -229,10 +311,26 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def handle_inline(text) # :nodoc:
     @inline_output = +''
+    @quote_converter = QuoteConverter.new
     super
     out = @inline_output
     @inline_output = nil
+    @quote_converter = nil
     out
+  end
+
+  # Converts <tt>(c), (r), --, --- , ..., ...., ``, ""</tt> to HTML characters.
+  def handle_regexp_HTML_CHARACTERS(text)
+    name = HTML_CHARACTER_ALIASES[text]
+    TO_HTML_CHARACTERS[text.encoding][name] if name
+  end
+
+  def handle_regexp_QUOTE_NOT_AFTER_WORD(text)
+    @quote_converter.convert(text, after_word: false) || convert_string(text)
+  end
+
+  def handle_regexp_QUOTE_AFTER_WORD(text)
+    @quote_converter.convert(text, after_word: true) || convert_string(text)
   end
 
   # Converts suppressed cross-reference +text+ to HTML by removing the leading backslash.
@@ -582,9 +680,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Converts +item+ to HTML using RDoc::Text#to_html
 
   def to_html(item)
-    # Ideally, we should convert html characters at handle_PLAIN_TEXT or somewhere else,
-    # but we need to convert it here for now because to_html_characters converts pair of backticks to ’‘ and pair of double backticks to ”“.
-    # Known bugs: `...` in `<code>def f(...); end</code>` and `(c) in `<a href="(c)">` will be wrongly converted.
-    to_html_characters(handle_inline(item))
+    handle_inline(item)
   end
 end

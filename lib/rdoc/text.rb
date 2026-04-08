@@ -30,34 +30,6 @@ module RDoc::Text
   MARKUP_FORMAT.default = RDoc::Markup
 
   ##
-  # Maps an encoding to a Hash of characters properly transcoded for that
-  # encoding.
-  #
-  # See also encode_fallback.
-
-  TO_HTML_CHARACTERS = Hash.new do |h, encoding|
-    h[encoding] = {
-      :close_dquote => encode_fallback('”', encoding, '"'),
-      :close_squote => encode_fallback('’', encoding, '\''),
-      :copyright    => encode_fallback('©', encoding, '(c)'),
-      :ellipsis     => encode_fallback('…', encoding, '...'),
-      :em_dash      => encode_fallback('—', encoding, '---'),
-      :en_dash      => encode_fallback('–', encoding, '--'),
-      :open_dquote  => encode_fallback('“', encoding, '"'),
-      :open_squote  => encode_fallback('‘', encoding, '\''),
-      :trademark    => encode_fallback('®', encoding, '(r)'),
-    }
-  end
-
-  ##
-  # Transcodes +character+ to +encoding+ with a +fallback+ character.
-
-  def self.encode_fallback(character, encoding, fallback)
-    character.encode(encoding, :fallback => { character => fallback },
-                     :undef => :replace, :replace => fallback)
-  end
-
-  ##
   # Expands tab characters in +text+ to eight spaces
 
   module_function def expand_tabs(text)
@@ -191,95 +163,6 @@ module RDoc::Text
     empty = ''
     empty = RDoc::Encoding.change_encoding empty, encoding if encoding
     text.gsub(/^\s+$/, empty)
-  end
-
-  def to_html(text)
-    to_html_characters(text)
-  end
-
-  ##
-  # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
-  # trademark symbols in +text+ to properly encoded characters.
-
-  def to_html_characters(text)
-    html = (''.encode text.encoding).dup
-
-    encoded = RDoc::Text::TO_HTML_CHARACTERS[text.encoding]
-
-    s = StringScanner.new text
-    insquotes = false
-    indquotes = false
-    after_word = nil
-
-    until s.eos? do
-      case
-      when s.scan(/<(tt|code)>.*?<\/\1>/) then # skip contents of tt
-        html << s.matched
-      when s.scan(/<(tt|code)>.*?/) then
-        warn "mismatched <#{s[1]}> tag" # TODO signal file/line
-        html << s.matched
-      when s.scan(/<[^>]+\/?s*>/) then # skip HTML tags
-        html << s.matched
-      when s.scan(/\.\.\.(\.?)/) then
-        html << s[1] << encoded[:ellipsis]
-        after_word = nil
-      when s.scan(/\(c\)/i) then
-        html << encoded[:copyright]
-        after_word = nil
-      when s.scan(/\(r\)/i) then
-        html << encoded[:trademark]
-        after_word = nil
-      when s.scan(/---/) then
-        html << encoded[:em_dash]
-        after_word = nil
-      when s.scan(/--/) then
-        html << encoded[:en_dash]
-        after_word = nil
-      when s.scan(/&quot;|"/) then
-        html << encoded[indquotes ? :close_dquote : :open_dquote]
-        indquotes = !indquotes
-        after_word = nil
-      when s.scan(/``/) then # backtick double quote
-        html << encoded[:open_dquote]
-        after_word = nil
-      when s.scan(/(?:&#39;|'){2}/) then # tick double quote
-        html << encoded[:close_dquote]
-        after_word = nil
-      when s.scan(/`/) then # backtick
-        if insquotes or after_word
-          html << '`'
-          after_word = false
-        else
-          html << encoded[:open_squote]
-          insquotes = true
-        end
-      when s.scan(/&#39;|'/) then # single quote
-        if insquotes
-          html << encoded[:close_squote]
-          insquotes = false
-        elsif after_word
-          # Mary's dog, my parents' house: do not start paired quotes
-          html << encoded[:close_squote]
-        else
-          html << encoded[:open_squote]
-          insquotes = true
-        end
-
-        after_word = nil
-      else # advance to the next potentially significant character
-        match = s.scan(/.+?(?=[<\\.("'`&-])/) #"
-
-        if match then
-          html << match
-          after_word = match =~ /\w$/
-        else
-          html << s.rest
-          break
-        end
-      end
-    end
-
-    html
   end
 
   ##
