@@ -407,7 +407,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_link
-    assert_equal 'n', @to.link('n', 'n')
+    assert_nil @to.link('n', 'n')
 
     assert_equal '<a href="C1.html#method-c-m"><code>m</code></a>', @to.link('m', 'm')
   end
@@ -422,6 +422,20 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal '<a href="Parent.html#method-c-m"><code>Parent::m</code></a>',
                  @to.link('Parent::m', 'Parent::m')
   end
+
+  def test_handle_regexp_CROSSREF_hash_preserved_for_unresolved
+    @to.show_hash = false
+
+    # #no should not lose its '#' when it doesn't resolve to a method
+    assert_equal "#no", REGEXP_HANDLING('#no')
+  end
+
+  def test_cross_reference_preserves_explicit_text_for_unresolved
+    # When explicit text is provided, it should be preserved on unresolved refs
+    assert_equal "Foo", @to.cross_reference("Missing", "Foo")
+  end
+
+  private
 
   def para(text)
     "\n<p>#{text}</p>\n"
