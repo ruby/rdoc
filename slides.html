@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Future of Ruby Documentation — Stan Lo — RubyKaigi 2026</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Nunito:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/monokai.css">
+
+  <style>
+    /* Minimal overrides — let reveal.js white theme do the work */
+    .accent { color: #cc342d; }
+    .dim { color: #888; }
+    .reveal h1, .reveal h2, .reveal h3 { text-transform: none; }
+    .reveal .slides section { text-align: left; }
+    .section-divider { text-align: center !important; }
+
+    /* Layout helpers */
+    .two-col { display: flex; gap: 30px; }
+    .two-col > * { flex: 1; min-width: 0; }
+    .diagram { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+    .diagram-box { background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; padding: 8px 14px; font-size: 14px; text-align: center; }
+    .diagram-box.hl { border-color: #cc342d; background: rgba(204,52,45,0.06); }
+    .diagram-arrow { color: #aaa; }
+
+    /* Content helpers */
+    .placeholder { background: #f8f8f8; border: 2px dashed #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #bbb; font-size: 14px; }
+    .summary-table { width: 100%; border-collapse: collapse; }
+    .summary-table th { text-align: left; padding: 8px 16px; border-bottom: 2px solid #333; color: #cc342d; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .summary-table td { padding: 8px 16px; border-bottom: 1px solid #eee; }
+    .badge { display: inline-block; font-size: 14px; background: #cc342d; color: #fff; padding: 2px 8px; border-radius: 3px; }
+    .feature-card { padding: 8px 14px; background: rgba(204,52,45,0.05); border-left: 3px solid #cc342d; margin-bottom: 6px; }
+    .feature-card .sub { color: #999; font-size: 14px; }
+    .quote { border-left: 3px solid #cc342d; padding-left: 16px; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <h1 style="font-size:42px;margin-bottom:16px">The Future of <span class="accent">Ruby</span> Documentation</h1>
+        <p style="font-size:18px;color:var(--text)"><strong>Stan Lo</strong></p>
+        <aside class="notes">Title slide. Pause, let audience settle.</aside>
+      </section>
+
+      <!-- Slide 2: About me -->
+      <section>
+        <h2 style="font-size:32px">About me</h2>
+        <ul>
+          <li>Ruby committer, RDoc maintainer</li>
+          <li>Shopify — Ruby & Rails Infrastructure team</li>
+          <li>I work on developer tools: IRB, Ruby LSP, RDoc, debug.gem</li>
+        </ul>
+        <aside class="notes">Introduce yourself. Ruby committer, RDoc maintainer. Work at Shopify on Developer Experience.</aside>
+      </section>
+
+      <!-- Slide 3: Overview -->
+      <section>
+        <h2 style="font-size:32px">This past year, I've been working on RDoc.</h2>
+        <p style="margin-bottom:16px">I want to share what's changed, what's in progress, and how I'm thinking about what comes next.</p>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:'Archivo';font-weight:900;font-size:28px;color:var(--accent)">01</span><div><strong style="color:var(--text)">Caught up</strong><br><span style="color:var(--text-secondary);font-size:16px">New theme, live preview, Prism parser</span></div></div>
+          <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:'Archivo';font-weight:900;font-size:28px;color:var(--accent)">02</span><div><strong style="color:var(--text)">Getting there</strong><br><span style="color:var(--text-secondary);font-size:16px">Markdown support, RBS type signatures</span></div></div>
+          <div style="display:flex;align-items:baseline;gap:12px"><span style="font-family:'Archivo';font-weight:900;font-size:28px;color:var(--accent)">03</span><div><strong style="color:var(--text)">Getting ahead</strong><br><span style="color:var(--text-secondary);font-size:16px">AI and documentation</span></div></div>
+        </div>
+        <aside class="notes">Frame the talk as a three-part arc. RDoc hasn't had major investment in years — that changed this past year.</aside>
+      </section>
+
+      <!-- Slide 4: What RDoc does -->
+      <section>
+        <h2 style="font-size:32px">What RDoc does</h2>
+        <ul>
+          <li>Ruby's default documentation tool — ships with Ruby since 1.8</li>
+          <li>Parses Ruby source, C extensions, and markup files</li>
+          <li>Generates HTML docs and <code>ri</code> terminal docs</li>
+          <li>Supported markup: RDoc, Markdown, RD, TomDoc</li>
+          <li>Powers <strong style="color:var(--text)">docs.ruby-lang.org</strong></li>
+        </ul>
+        <aside class="notes">Quick primer. Most people have seen RDoc output but don't think about the tool itself.</aside>
+      </section>
+
+      <!-- Slide 5: Context -->
+      <section>
+        <h2 style="font-size:32px">Some context</h2>
+        <p style="margin-bottom:12px">RDoc has been Ruby's documentation tool for 20+ years. It works. But a lot has changed since it was written.</p>
+        <ul>
+          <li>Developers expect dark mode, mobile support, live preview</li>
+          <li>Markdown became the standard way to write documentation</li>
+          <li>Ruby syntax grew beyond what the parser was built for</li>
+          <li>Type annotations exist now — documentation doesn't show them</li>
+        </ul>
+        <aside class="notes">Be factual about where things stood. Not blaming — the ecosystem changed.</aside>
+      </section>
+
+      <!-- Slide 6: Section divider — Caught up -->
+      <section data-background-color="#cc342d" class="section-divider">
+        <div style="font-family:'Archivo';font-weight:900;font-size:120px;color:rgba(255,255,255,0.3);line-height:1">01</div>
+        <h2 style="font-size:48px;color:#fff">Caught up</h2>
+        <aside class="notes">These are table-stakes features that modern documentation should have. Now we have them.</aside>
+      </section>
+
+      <!-- Slide 7: Before — Darkfish -->
+      <section>
+        <h2 style="font-size:32px">Before: Darkfish</h2>
+        <div class="placeholder" style="height:240px">[ Insert Darkfish screenshot ]</div>
+        <p style="font-size:14px;color:var(--text-dim);margin-top:8px">No dark mode · Limited mobile · Dated design · Basic search · Embedded fonts</p>
+        <aside class="notes">Point out: two-column layout, no dark mode, dated visual design, basic search.</aside>
+      </section>
+
+      <!-- Slide 8: After — Aliki -->
+      <section>
+        <h2 style="font-size:32px">Aliki</h2>
+        <div class="placeholder" style="height:200px">[ Insert Aliki screenshot ]</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;font-size:16px;color:var(--text-secondary)">
+          <div>· Three-column layout with TOC</div><div>· Dark mode with system detection</div>
+          <div>· Fuzzy search with type badges</div><div>· Mobile-first responsive</div>
+          <div>· Method signature cards</div><div>· C & bash syntax highlighting</div>
+        </div>
+        <p style="font-size:13px;color:var(--text-dim);margin-top:6px">(Named after my cat.)</p>
+        <aside class="notes">Walk through improvements. Three columns: sidebar, content, TOC with scroll-spy. Dark mode respects system preferences. Named after my cat.</aside>
+      </section>
+
+      <!-- Slide 9: Search -->
+      <section>
+        <h2 style="font-size:32px">Aliki: Search</h2>
+        <div class="placeholder" style="height:220px">[ Insert search UI screenshot ]</div>
+        <ul style="margin-top:8px">
+          <li>Tiered scoring: exact > prefix > substring > fuzzy</li>
+          <li>Namespace-aware: <code>String#</code> filters to String methods</li>
+          <li>Type badges: classes · modules · methods · pages</li>
+        </ul>
+        <aside class="notes">Search rebuilt from scratch — own index as .js to avoid CORS with file:// protocol. Type-aware ranking.</aside>
+      </section>
+
+      <!-- Slide 10: Dark mode & mobile -->
+      <section>
+        <h2 style="font-size:32px">Aliki: Dark mode & mobile</h2>
+        <div class="placeholder" style="height:320px">[ Insert light/dark + mobile screenshots ]</div>
+        <aside class="notes">Side-by-side light and dark mode. CSS custom properties — 1994 lines with tokens.</aside>
+      </section>
+
+      <!-- Slide 11: Server mode -->
+      <section>
+        <h2 style="font-size:32px"><code>rdoc --server</code></h2>
+        <div class="placeholder" style="height:180px">[ Insert live-reload demo ]</div>
+        <ul style="margin-top:8px">
+          <li>Live-reloading documentation preview</li>
+          <li>Zero dependencies — uses Ruby's <code>TCPServer</code></li>
+          <li>Incremental re-parsing — only changed files</li>
+          <li>Also: <code>make html-server</code> in ruby/ruby</li>
+        </ul>
+        <aside class="notes">One of the most requested features. Zero external deps — just TCPServer. Watcher polls mtimes. Also added make html-server to ruby/ruby.</aside>
+      </section>
+
+      <!-- Slide 12: Prism migration -->
+      <section>
+        <h2 style="font-size:32px">Prism migration <span style="font-weight:400;font-size:22px;color:var(--text-dim)">— tompng</span></h2>
+        <p style="margin-bottom:10px;font-size:17px">I want to highlight tompng's (Tomoya Ishida) work — <strong>3 major subsystem rewrites</strong>:</p>
+        <div class="feature-card"><strong>Ruby parser</strong>: Ripper → Prism AST visitor <span class="sub">· 20-month effort · 7+ issues fixed</span></div>
+        <div class="feature-card"><strong>Comment directive parser</strong> <span class="sub">· Fixed double-parsing architecture</span></div>
+        <div class="feature-card"><strong>Inline formatting engine</strong> <span class="sub">· Replaced string macros with structured parser</span></div>
+        <p style="font-size:13px;color:var(--text-dim);margin-top:8px">43 PRs. Invisible to users, foundational for everything else.</p>
+        <aside class="notes">Shout out tompng specifically. 43 PRs. 20-month Prism effort. Also rewrote comment directive parser and inline formatting engine. Three major subsystem rewrites.</aside>
+      </section>
+
+      <!-- Slide 13: Transition -->
+      <section style="text-align:center">
+        <h2 style="font-size:32px">What "caught up" means</h2>
+        <div style="display:flex;gap:40px;margin-top:20px;justify-content:center">
+          <div><div style="font-family:'Archivo';font-weight:900;font-size:28px;color:var(--accent)">Reading</div><div style="font-size:16px;color:var(--text-secondary)">Aliki theme</div></div>
+          <div><div style="font-family:'Archivo';font-weight:900;font-size:28px;color:var(--accent)">Authoring</div><div style="font-size:16px;color:var(--text-secondary)">Server mode</div></div>
+          <div><div style="font-family:'Archivo';font-weight:900;font-size:28px;color:var(--accent)">Parsing</div><div style="font-size:16px;color:var(--text-secondary)">Prism</div></div>
+        </div>
+        <p style="margin-top:20px;font-size:18px;color:var(--text-secondary)">These are things modern documentation tools should have. Now RDoc has them too.</p>
+        <aside class="notes">Brief transition. These bring RDoc up to what users expect.</aside>
+      </section>
+
+      <!-- Slide 14: Section divider — Getting there -->
+      <section data-background-color="#cc342d" class="section-divider">
+        <div style="font-family:'Archivo';font-weight:900;font-size:120px;color:rgba(255,255,255,0.3);line-height:1">02</div>
+        <h2 style="font-size:48px;color:#fff">Getting there</h2>
+        <aside class="notes">Meatiest part — active work not yet complete.</aside>
+      </section>
+
+      <!-- Slide 15: Why Markdown -->
+      <section>
+        <h2 style="font-size:32px">Why Markdown?</h2>
+        <ul>
+          <li>Markdown is the industry standard</li>
+          <li>RDoc markup is Ruby-specific — even within the community, it's not widely known</li>
+          <li>Many contributors already write Markdown in RDoc comments without realizing it doesn't render correctly</li>
+        </ul>
+        <p style="margin-top:16px;font-size:18px;color:var(--text-secondary)">If you can write a GitHub README, you can contribute to Ruby documentation.</p>
+        <aside class="notes">Case for Markdown is straightforward. URL for standard library docs already changed in Ruby 3.4+.</aside>
+      </section>
+
+      <!-- Slide 16: Pipeline diagram -->
+      <section>
+        <h2 style="font-size:32px">Why it took so long</h2>
+        <div class="diagram">
+          <div class="diagram-box">Markdown<br>parser</div><div class="diagram-arrow">&rarr;</div>
+          <div class="diagram-box" style="min-width:170px">RDoc::Markup nodes<br><span style="font-size:11px;color:var(--text-dim)">with RDoc strings inside</span></div><div class="diagram-arrow">&rarr;</div>
+          <div class="diagram-box hl">Shared<br>InlineParser<br>&amp; Formatters</div><div class="diagram-arrow">&rarr;</div>
+          <div class="diagram-box">HTML</div>
+        </div>
+        <div class="diagram" style="margin-top:0">
+          <div class="diagram-box">RDoc<br>parser</div><div class="diagram-arrow">&rarr;</div>
+          <div style="min-width:170px"></div><div class="diagram-arrow" style="visibility:hidden">&rarr;</div>
+          <div style="font-family:'Archivo';font-weight:800;font-size:13px;color:var(--accent)">&uarr; same code path</div>
+        </div>
+        <p style="font-size:17px">Markdown was added ~2012 by reusing RDoc's pipeline. <strong style="color:var(--text)">Every Markdown fix is a two-format fix.</strong></p>
+        <aside class="notes">Two parsers feeding into one shared pipeline. Markdown parser outputs RDoc markup strings. Shared InlineParser re-parses them.</aside>
+      </section>
+
+      <!-- Slide 17: Strikethrough example -->
+      <section>
+        <h2 style="font-size:32px">Example: <code>~~strikethrough~~</code></h2>
+        <pre><code class="language-ruby" data-noescape># Markdown parser outputs:
+~~text~~  →  "&lt;del&gt;text&lt;/del&gt;"  # plain string!
+
+# Shared InlineParser receives that string
+# ...but didn't recognize &lt;del&gt;
+# Strikethrough was silently broken for years
+
+# Fix: modify the shared InlineParser
+#   → must verify RDoc markup still works too</code></pre>
+        <p class="quote" style="margin-top:12px">Every Markdown fix is a two-format fix.</p>
+        <aside class="notes">One concrete example. Fix required changing shared InlineParser — must test both formats.</aside>
+      </section>
+
+      <!-- Slide 18: What's improved -->
+      <section>
+        <h2 style="font-size:32px">What's improved</h2>
+        <ul>
+          <li><code>~~Strikethrough~~</code> aligned with GFM spec</li>
+          <li>GitHub-style heading anchors (<code>#heading-name</code>)</li>
+          <li>Table parsing: inline markdown, incomplete rows</li>
+          <li>Bash/shell syntax highlighting</li>
+          <li>Backtick quoting in RDoc markup too</li>
+          <li><code>break_on_newline</code> enabled by default</li>
+        </ul>
+        <p style="margin-top:8px"><span class="badge">NEW</span> <span style="font-size:16px;color:var(--text-secondary);margin-left:6px">GFM spec comparison test suite</span></p>
+        <aside class="notes">Walk through improvements. GFM spec comparison test suite systematically tracks compatibility.</aside>
+      </section>
+
+      <!-- Slide 19: Before/after -->
+      <section>
+        <h2 style="font-size:32px">RDoc markup vs Markdown</h2>
+        <div class="two-col">
+          <div>
+            <h3 style="font-size:20px;color:var(--text-dim)">RDoc markup</h3>
+            <pre><code data-noescape>= Heading
+*bold*  _italic_  +code+
+{link text}[url]
+* bullet item</code></pre>
+          </div>
+          <div>
+            <h3 style="font-size:20px;color:var(--accent)">Markdown</h3>
+            <pre><code data-noescape># Heading
+**bold**  *italic*  `code`
+[link text](url)
+- bullet item</code></pre>
+          </div>
+        </div>
+        <aside class="notes">Same documentation in both formats. Markdown immediately recognizable to any developer.</aside>
+      </section>
+
+      <!-- Slide 20: Migration plan -->
+      <section>
+        <h2 style="font-size:32px">Migration plan</h2>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:baseline;gap:8px"><span class="badge">1</span><span style="font-size:18px">Get Markdown to GFM-level quality <span class="dim">&larr; in progress</span></span></div>
+          <div style="display:flex;align-items:baseline;gap:8px"><span class="badge" style="background:var(--text-dim)">2</span><span style="font-size:18px">Build migration tooling (RDoc markup &rarr; Markdown)</span></div>
+          <div style="display:flex;align-items:baseline;gap:8px"><span class="badge" style="background:var(--text-dim)">3</span><span style="font-size:18px">Migrate ruby-core documentation</span></div>
+          <div style="display:flex;align-items:baseline;gap:8px"><span class="badge" style="background:var(--text-dim)">4</span><span style="font-size:18px">Deprecate RDoc markup? <span class="dim">(open question)</span></span></div>
+        </div>
+        <p style="margin-top:16px;font-size:17px;color:var(--text-secondary)">The URL already changed: <code>standard_library_rdoc.html</code> &rarr; <code>standard_library_md.html</code> in Ruby 3.4+</p>
+        <aside class="notes">Multi-step process. Step 1 is where we are now. Note the URL change in Ruby 3.4+.</aside>
+      </section>
+
+      <!-- Slide 21: RBS in docs -->
+      <section>
+        <h2 style="font-size:32px">RBS type signatures in documentation</h2>
+        <pre><code class="language-ruby"># Inline RBS annotation
+#: (String name, ?Integer age) -> User
+def create_user(name, age = nil)
+  # ...
+end</code></pre>
+        <p style="margin-top:14px;font-size:17px">RDoc extracts <code>#:</code> annotations and displays type signatures in HTML and <code>ri</code>. Type names are linked to their documentation.</p>
+        <aside class="notes">RBS inline annotations use #: syntax. RDoc parses, validates via RBS parser, displays in HTML and ri.</aside>
+      </section>
+
+      <!-- Slide 22: RBS HTML demo -->
+      <section>
+        <h2 style="font-size:32px">RBS in HTML output</h2>
+        <div class="placeholder" style="height:280px">[ Insert HTML output screenshot with type signatures ]</div>
+        <p style="font-size:13px;color:var(--text-dim);margin-top:8px">Type names link to documentation · Signature cards with types · Powered by RBS gem &ge; 4.0</p>
+        <aside class="notes">Show type signatures in Aliki theme. Clicking type name navigates to that type's docs.</aside>
+      </section>
+
+      <!-- Slide 23: RBS ri demo -->
+      <section>
+        <h2 style="font-size:32px">RBS in <code>ri</code></h2>
+        <div class="placeholder" style="height:300px">[ Insert ri terminal output with type signatures ]</div>
+        <aside class="notes">Terminal output showing type information alongside method documentation.</aside>
+      </section>
+
+      <!-- Slide 24: call-seq vs RBS -->
+      <section>
+        <h2 style="font-size:32px">Can RBS replace <code>:call-seq:</code>?</h2>
+        <div class="two-col">
+          <div>
+            <h3 style="font-size:18px;color:var(--text-dim)">:call-seq:</h3>
+            <pre><code data-noescape># :call-seq:
+#   readlines(sep=$/)     -> array
+#   readlines(limit)      -> array
+#   readlines(sep, limit) -> array</code></pre>
+          </div>
+          <div>
+            <h3 style="font-size:18px;color:var(--accent)">RBS #:</h3>
+            <pre><code data-noescape>#: (?String sep) -> Array[String]
+#: (Integer limit) -> Array[String]
+#: (String, Integer) -> Array[String]</code></pre>
+          </div>
+        </div>
+        <p style="margin-top:10px;font-size:16px">The overlap is significant. For a language that doesn't want typing, writing type signatures for documentation is a big shift. But I think it's the right direction.</p>
+        <aside class="notes">Raise as a question, not statement. For a language that doesn't want typing, this is significant.</aside>
+      </section>
+
+      <!-- Slide 25: Default values gap -->
+      <section>
+        <h2 style="font-size:32px">The gap: default values</h2>
+        <div class="two-col">
+          <div>
+            <h3 style="font-size:18px">:call-seq:</h3>
+            <pre><code data-noescape>commercial(cwyear, cweek=1, cwday=1, sg=nil)</code></pre>
+            <p style="font-size:13px;color:var(--text-dim);margin-top:6px">Shows actual default values</p>
+          </div>
+          <div>
+            <h3 style="font-size:18px">RBS:</h3>
+            <pre><code data-noescape>(Integer, ?Integer, ?Integer, ?Symbol?) -> Date</code></pre>
+            <p style="font-size:13px;color:var(--text-dim);margin-top:6px">Only says "optional" — default is lost</p>
+          </div>
+        </div>
+        <p class="quote" style="margin-top:16px">If we want to migrate, RBS needs default value support.</p>
+        <aside class="notes">Concrete blocker. call-seq captures actual default values. RBS can't express this.</aside>
+      </section>
+
+      <!-- Slide 26: RBS next -->
+      <section>
+        <h2 style="font-size:32px">Where this stands</h2>
+        <ul>
+          <li>I'm aiming to ship RBS display on <strong style="color:var(--text)">docs.ruby-lang.org</strong></li>
+          <li>The call-seq migration depends on RBS supporting default values — that's not solved yet</li>
+          <li>This needs community discussion, not just my opinion</li>
+        </ul>
+        <p style="margin-top:14px;font-size:17px">But the direction seems clear: structured, machine-readable signatures are better than free-form text.</p>
+        <aside class="notes">Status update. call-seq migration needs community input.</aside>
+      </section>
+
+      <!-- Slide 27: Section divider — Getting ahead -->
+      <section data-background-color="#cc342d" class="section-divider">
+        <div style="font-family:'Archivo';font-weight:900;font-size:120px;color:rgba(255,255,255,0.3);line-height:1">03</div>
+        <h2 style="font-size:48px;color:#fff">Getting ahead</h2>
+        <aside class="notes">How do we avoid falling behind again?</aside>
+      </section>
+
+      <!-- Slide 28: llms.txt -->
+      <section>
+        <h2 style="font-size:32px">llms.txt: I prototyped it</h2>
+        <p style="margin-bottom:10px">Then I looked at the data:</p>
+        <ul>
+          <li><strong style="color:var(--text)">10% adoption</strong> across 300K domains</li>
+          <li><strong style="color:var(--accent)">Zero measurable impact</strong> on AI citations</li>
+          <li>ML model improved when llms.txt was <em>removed</em></li>
+          <li>Zero bot visits from GPTBot, ClaudeBot, etc.</li>
+          <li>No major LLM provider officially supports it</li>
+        </ul>
+        <p style="margin-top:8px;font-size:17px">The trade-off is generation time and code complexity for every RDoc user, for a benefit that doesn't exist yet. So I decided not to pursue it — at least for now.</p>
+        <aside class="notes">Sources: SE Ranking 300K domain study. XGBoost improved when llms.txt removed. Zero bot visits.</aside>
+      </section>
+
+      <!-- Slide 29: Better foundations -->
+      <section>
+        <h2 style="font-size:32px">What I think actually helps</h2>
+        <p style="margin-bottom:10px">Instead of generating special files for LLMs, I'd rather make the documentation itself better:</p>
+        <ul>
+          <li><strong style="color:var(--text)">Markdown</strong> — any tool can parse it, humans and machines alike</li>
+          <li><strong style="color:var(--text)">RBS types</strong> — structured data instead of free-form text</li>
+          <li><strong style="color:var(--text)">Clean architecture</strong> — makes it easier to build things we haven't thought of yet</li>
+        </ul>
+        <p style="margin-top:12px;font-size:17px">On the tooling side, I've been building <code>github.com/st0012/ruby-skills</code> — Claude Code plugins for Ruby development. No RDoc-specific skills yet, but that's coming once the Markdown work is further along.</p>
+        <aside class="notes">Don't chase trends. Build foundations for all consumers. ruby-skills has 109 stars.</aside>
+      </section>
+
+      <!-- Slide 30: Philosophy -->
+      <section>
+        <h2 style="font-size:32px">How I think about this</h2>
+        <ul>
+          <li>Check the data before building a feature — llms.txt looked promising until I looked at the numbers</li>
+          <li>Invest in foundations that serve multiple purposes — Markdown, types, and clean architecture all make docs better for everyone, including future tools</li>
+          <li>As a maintainer, I'd rather ship fewer things that are solid than chase every trend</li>
+        </ul>
+        <aside class="notes">Tie it together. Data over hype. Foundations over band-aids.</aside>
+      </section>
+
+      <!-- Slide 31: Summary -->
+      <section style="text-align:center">
+        <h2 style="font-size:32px;margin-bottom:16px">Summary</h2>
+        <table class="summary-table">
+          <thead><tr><th>Caught up</th><th>Getting there</th><th>Getting ahead</th></tr></thead>
+          <tbody>
+            <tr><td>Aliki theme</td><td>Markdown / GFM</td><td>Evaluate with data</td></tr>
+            <tr><td>Server mode</td><td>RBS type signatures</td><td>Build foundations</td></tr>
+            <tr><td>Prism parser</td><td>call-seq &rarr; RBS?</td><td>Serve all consumers</td></tr>
+          </tbody>
+        </table>
+        <aside class="notes">Pause — let audience take in the full picture.</aside>
+      </section>
+
+      <!-- Slide 32: Call to action -->
+      <section>
+        <h2 style="font-size:32px">Try it today</h2>
+        <ul>
+          <li>Contribute to Ruby docs — <strong style="color:var(--accent)">it's Markdown now!</strong></li>
+          <li>Try <code>rdoc --server</code> for your own projects</li>
+        </ul>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:6px">
+          <code style="font-size:17px;background:none;color:var(--text)">github.com/ruby/rdoc</code>
+          <code style="font-size:17px;background:none;color:var(--text)">docs.ruby-lang.org</code>
+          <code style="font-size:17px;background:none;color:var(--text)">github.com/st0012/ruby-skills</code>
+        </div>
+        <aside class="notes">Most important message: now much easier to contribute to Ruby documentation.</aside>
+      </section>
+
+      <!-- Slide 33: Thank you -->
+      <section style="text-align:center">
+        <h1 style="font-size:48px">Thank you!</h1>
+        <p style="font-size:18px;color:var(--text-secondary);margin-top:16px">tompng, the Shopify Ruby DX team,<br>and the Ruby committers who reviewed all those PRs</p>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--accent);margin-top:8px">@st0012</p>
+        <aside class="notes">Thank tompng, Shopify DX team, Ruby committers. Open for questions.</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'none',
+      width: 960,
+      height: 540,
+      margin: 0.04,
+      center: false,
+      plugins: [RevealHighlight, RevealNotes]
+    });
+  </script>
+</body>
+</html>
