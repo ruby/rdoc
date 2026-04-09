@@ -118,9 +118,8 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
   <div class="deco-rect" style="width:clamp(40px,6vw,80px);height:clamp(40px,6vw,80px);bottom:15%;right:18%"></div>
   <div class="corner-label">RubyKaigi 2026</div>
   <div class="slide-content" style="max-width:min(85vw,900px)">
-    <p class="reveal" style="font-family:var(--font-mono);font-size:var(--small-size);color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:var(--content-gap)">RubyKaigi 2026</p>
-    <h1 class="reveal">The Future of <span class="accent">Ruby</span> Documentation</h1>
-    <p class="reveal" style="font-size:var(--body-size);color:var(--text-secondary);margin-top:var(--content-gap)"><strong style="color:var(--text)">Stan Lo</strong> — Ruby Committer · RDoc Maintainer · Shopify</p>
+    <h1 class="reveal" style="margin-bottom:var(--content-gap)">The Future of <span class="accent">Ruby</span> Documentation</h1>
+    <p class="reveal" style="font-size:var(--body-size);color:var(--text-secondary)"><strong style="color:var(--text)">Stan Lo</strong></p>
   </div>
   <div class="slide-num">01</div>
 </section>
@@ -129,20 +128,20 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
   <h2 class="reveal">About me</h2>
   <ul class="reveal">
-    <li>Ruby committer &amp; RDoc maintainer</li>
-    <li>Shopify — Developer Experience (Ruby &amp; Rails Infrastructure)</li>
-    <li>Working on: IRB, Ruby LSP, RDoc, debugging tools</li>
+    <li>Ruby committer, RDoc maintainer</li>
+    <li>Shopify — Ruby &amp; Rails Infrastructure team</li>
+    <li>I work on developer tools: IRB, Ruby LSP, RDoc, debug.gem</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--content-gap);color:var(--text-dim);font-size:var(--small-size)">Team &amp; collaborators: tompng, Shopify DX team, Ruby committers</p>
 </div><div class="slide-num">02</div></section>
 
 <!-- SLIDE 3: WHAT WE'LL COVER -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">What we'll cover</h2>
-  <div class="reveal" style="display:flex;flex-direction:column;gap:var(--content-gap);margin-top:var(--element-gap)">
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">01</span><div><strong style="color:var(--text)">Long overdue — caught up</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">Aliki theme · Server mode · Prism parser</span></div></div>
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">02</span><div><strong style="color:var(--text)">Long overdue — getting there</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">Markdown support · RBS type signatures</span></div></div>
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">03</span><div><strong style="color:var(--text)">Getting ahead</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">AI, documentation, and the future</span></div></div>
+  <h2 class="reveal">This past year, I've been working on RDoc.</h2>
+  <p class="reveal" style="margin-bottom:var(--content-gap)">I want to share what's changed, what's in progress, and how I'm thinking about what comes next.</p>
+  <div class="reveal" style="display:flex;flex-direction:column;gap:var(--content-gap)">
+    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">01</span><div><strong style="color:var(--text)">Caught up</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">New theme, live preview, Prism parser</span></div></div>
+    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">02</span><div><strong style="color:var(--text)">Getting there</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">Markdown support, RBS type signatures</span></div></div>
+    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">03</span><div><strong style="color:var(--text)">Getting ahead</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">AI and documentation</span></div></div>
   </div>
 </div><div class="slide-num">03</div></section>
 
@@ -160,15 +159,14 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 
 <!-- SLIDE 5: WHERE WE WERE -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">Where we were</h2>
-  <p class="reveal" style="margin-bottom:var(--content-gap)">RDoc has served Ruby well for 20+ years. But the ecosystem evolved — and so did expectations.</p>
+  <h2 class="reveal">Some context</h2>
+  <p class="reveal" style="margin-bottom:var(--content-gap)">RDoc has been Ruby's documentation tool for 20+ years. It works. But a lot has changed since it was written.</p>
   <ul class="reveal">
-    <li>Developers now expect dark mode, mobile support, live preview</li>
-    <li>Markdown became the universal documentation format</li>
+    <li>Developers expect dark mode, mobile support, live preview</li>
+    <li>Markdown became the standard way to write documentation</li>
     <li>Ruby syntax grew beyond what the parser was built for</li>
-    <li>Type systems emerged — documentation didn't reflect them</li>
+    <li>Type annotations exist now — documentation doesn't show them</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">This past year, we focused on closing that gap.</p>
 </div><div class="slide-num">05</div></section>
 
 <!-- SLIDE 6: SECTION DIVIDER -->
@@ -183,13 +181,14 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 
 <!-- SLIDE 8: ALIKI AFTER -->
 <section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">After: <span class="accent">Aliki</span></h2>
+  <h2 class="reveal">Aliki</h2>
   <div class="reveal placeholder" style="min-height:min(35vh,260px)">[ Insert Aliki screenshot ]</div>
   <ul class="reveal" style="margin-top:var(--element-gap);display:grid;grid-template-columns:1fr 1fr;gap:var(--element-gap)">
-    <li>Three-column layout with TOC</li><li>Dark mode + system detection</li>
-    <li>Advanced fuzzy search</li><li>Mobile-first responsive</li>
+    <li>Three-column layout with TOC</li><li>Dark mode with system detection</li>
+    <li>Fuzzy search with type badges</li><li>Mobile-first responsive</li>
     <li>Method signature cards</li><li>C &amp; bash syntax highlighting</li>
   </ul>
+  <p class="reveal dim" style="font-size:var(--small-size);margin-top:var(--element-gap)">(Named after my cat.)</p>
 </div><div class="slide-num">08</div></section>
 
 <!-- SLIDE 9: SEARCH -->
@@ -224,7 +223,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 <!-- SLIDE 12: PRISM MIGRATION -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
   <h2 class="reveal">Prism migration <span class="dim" style="font-weight:400;font-size:var(--h3-size)">— tompng</span></h2>
-  <p class="reveal" style="margin-bottom:var(--content-gap)">Tomoya Ishida rewrote <strong>3 major subsystems</strong>:</p>
+  <p class="reveal" style="margin-bottom:var(--content-gap)">I want to specifically highlight tompng's (Tomoya Ishida) work. He rewrote <strong>3 major subsystems</strong>:</p>
   <div class="reveal" style="display:flex;flex-direction:column;gap:var(--element-gap)">
     <div style="padding:clamp(0.5rem,1vw,0.8rem) clamp(0.8rem,1.5vw,1.2rem);background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Ruby parser</strong>: Ripper → Prism AST visitor<br><span class="dim" style="font-size:var(--small-size)">20-month effort · Fixes 7+ tracked issues · Modern syntax support</span></div>
     <div style="padding:clamp(0.5rem,1vw,0.8rem) clamp(0.8rem,1.5vw,1.2rem);background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Comment directive parser</strong>: <code>:call-seq:</code>, <code>:nodoc:</code>, etc.<br><span class="dim" style="font-size:var(--small-size)">Fixed double-parsing architecture</span></div>
@@ -241,7 +240,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <div style="text-align:center"><div style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">Authoring</div><div style="font-size:var(--body-size);color:var(--text-secondary)">Server mode</div></div>
     <div style="text-align:center"><div style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">Parsing</div><div style="font-size:var(--body-size);color:var(--text-secondary)">Prism</div></div>
   </div>
-  <p class="reveal quote" style="margin-top:var(--content-gap)">These were table stakes. Now let's talk about what's next.</p>
+  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">These are things modern documentation tools should have. Now RDoc has them too.</p>
 </div><div class="slide-num">13</div></section>
 
 <!-- SLIDE 14: SECTION DIVIDER -->
@@ -252,10 +251,10 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
   <h2 class="reveal">Why Markdown?</h2>
   <ul class="reveal">
     <li>Markdown is the industry standard</li>
-    <li>RDoc markup is Ruby-specific — not widely adopted even in the community</li>
-    <li>Lowers the barrier for contributing to Ruby core docs</li>
+    <li>RDoc markup is Ruby-specific — even within the community, it's not widely known</li>
+    <li>Many contributors already write Markdown in RDoc comments without realizing it doesn't render correctly</li>
   </ul>
-  <p class="reveal quote" style="margin-top:var(--content-gap)">If you can write a GitHub README, you can write Ruby documentation.</p>
+  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">If you can write a GitHub README, you can contribute to Ruby documentation.</p>
 </div><div class="slide-num">15</div></section>
 
 <!-- SLIDE 16: PIPELINE DIAGRAM -->
@@ -367,7 +366,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 <span style="color:#7ee787">#: (Integer limit) -&gt; Array[String]</span>
 <span style="color:#7ee787">#: (String, Integer) -&gt; Array[String]</span></div></div>
   </div>
-  <p class="reveal" style="margin-top:var(--element-gap);font-size:var(--body-size)">The overlap is significant. <strong style="color:var(--text)">For a language that doesn't want typing, writing type signatures for documentation is huge.</strong></p>
+  <p class="reveal" style="margin-top:var(--element-gap);font-size:var(--body-size)">The overlap is significant. For a language that doesn't want typing, writing type signatures for documentation is a big shift. But I think it's the right direction — structured signatures are better for both humans and tools.</p>
 </div><div class="slide-num">24</div></section>
 
 <!-- SLIDE 25: DEFAULT VALUES GAP -->
@@ -382,13 +381,13 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 
 <!-- SLIDE 26: RBS NEXT -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">What's next for RBS in docs</h2>
+  <h2 class="reveal">Where this stands</h2>
   <ul class="reveal">
-    <li>Aiming to ship on <strong style="color:var(--text)">docs.ruby-lang.org</strong></li>
-    <li>Migration path from call-seq: TBD — depends on RBS default value support</li>
-    <li>Community discussion needed</li>
+    <li>I'm aiming to ship RBS display on <strong style="color:var(--text)">docs.ruby-lang.org</strong></li>
+    <li>The call-seq migration depends on RBS supporting default values — that's not solved yet</li>
+    <li>This needs community discussion, not just my opinion</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size)">Long-term: <strong style="color:var(--text)">structured, machine-readable signatures</strong> replace free-form text</p>
+  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size)">But the direction seems clear: structured, machine-readable signatures are better than free-form text.</p>
 </div><div class="slide-num">26</div></section>
 
 <!-- SLIDE 27: SECTION DIVIDER -->
@@ -396,8 +395,8 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 
 <!-- SLIDE 28: LLMS.TXT -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
-  <h2 class="reveal">llms.txt: we evaluated it</h2>
-  <p class="reveal" style="font-size:var(--body-size);margin-bottom:var(--content-gap)">We prototyped it. Then we looked at the data:</p>
+  <h2 class="reveal">llms.txt: I prototyped it</h2>
+  <p class="reveal" style="font-size:var(--body-size);margin-bottom:var(--content-gap)">Then I looked at the data:</p>
   <ul class="reveal">
     <li><strong style="color:var(--text)">10% adoption</strong> across 300K domains</li>
     <li><strong style="color:var(--accent)">Zero measurable impact</strong> on AI citations</li>
@@ -405,29 +404,29 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>Zero bot visits from GPTBot, ClaudeBot, etc.</li>
     <li>No major LLM provider officially supports it</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--element-gap);font-size:var(--body-size)">Trade-off: generation time + code complexity for negligible benefit → <strong style="color:var(--text)">not pursuing</strong></p>
+  <p class="reveal" style="margin-top:var(--element-gap);font-size:var(--body-size)">The trade-off is generation time and code complexity for every RDoc user, for a benefit that doesn't exist yet. So I decided not to pursue it — at least for now.</p>
 </div><div class="slide-num">28</div></section>
 
 <!-- SLIDE 29: BETTER FOUNDATIONS -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">Better foundations</h2>
-  <p class="reveal" style="font-size:var(--body-size);margin-bottom:var(--content-gap)">Instead of special files for LLMs:</p>
+  <h2 class="reveal">What I think actually helps</h2>
+  <p class="reveal" style="font-size:var(--body-size);margin-bottom:var(--content-gap)">Instead of generating special files for LLMs, I'd rather make the documentation itself better:</p>
   <ul class="reveal">
-    <li><strong style="color:var(--text)">Markdown</strong> — universally understood by humans AND machines</li>
-    <li><strong style="color:var(--text)">RBS types</strong> — structured, machine-readable signatures</li>
-    <li><strong style="color:var(--text)">Clean architecture</strong> — enables tooling we can't predict</li>
+    <li><strong style="color:var(--text)">Markdown</strong> — any tool can parse it, humans and machines alike</li>
+    <li><strong style="color:var(--text)">RBS types</strong> — structured data instead of free-form text</li>
+    <li><strong style="color:var(--text)">Clean architecture</strong> — makes it easier to build things we haven't thought of yet</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size)"><code>github.com/st0012/ruby-skills</code> — practical AI tooling for Ruby (109 stars)</p>
+  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size)">On the tooling side, I've been building <code>github.com/st0012/ruby-skills</code> — Claude Code plugins for Ruby development. No RDoc-specific skills yet, but that's coming once the Markdown work is further along.</p>
 </div><div class="slide-num">29</div></section>
 
 <!-- SLIDE 30: PHILOSOPHY -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px);text-align:center;align-items:center">
-  <div class="reveal" style="display:flex;flex-direction:column;gap:var(--content-gap)">
-    <div><div style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--text)">Evaluate before building</div><div style="font-size:var(--body-size);color:var(--text-secondary)">Data over hype</div></div>
-    <div><div style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--text)">Invest in foundations</div><div style="font-size:var(--body-size);color:var(--text-secondary)">Prism · Markdown · Types</div></div>
-    <div><div style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--text)">Make docs first-class</div><div style="font-size:var(--body-size);color:var(--text-secondary)">in the Ruby experience</div></div>
-  </div>
-  <p class="reveal quote" style="margin-top:var(--content-gap)">The best way to prepare for the future is to get the present right.</p>
+  <h2 class="reveal">How I think about this</h2>
+  <ul class="reveal">
+    <li>Check the data before building a feature — llms.txt looked promising until I looked at the numbers</li>
+    <li>Invest in foundations that serve multiple purposes — Markdown, types, and clean architecture all make docs better for everyone, including future tools</li>
+    <li>As a maintainer, I'd rather ship fewer things that are solid than chase every trend</li>
+  </ul>
 </div><div class="slide-num">30</div></section>
 
 <!-- SLIDE 31: SUMMARY -->
@@ -461,7 +460,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 <section class="slide" style="background-image:none;background:radial-gradient(ellipse at 50% 50%,var(--accent-glow) 0%,transparent 60%),linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:100% 100%,60px 60px,60px 60px;background-color:var(--bg)">
   <div class="slide-content" style="text-align:center;align-items:center">
     <h1 class="reveal" style="font-size:clamp(2rem,6vw,4.5rem)">Thank you!</h1>
-    <p class="reveal" style="font-size:var(--body-size);color:var(--text-secondary);margin-top:var(--content-gap)">tompng · Shopify DX team · Ruby committers</p>
+    <p class="reveal" style="font-size:var(--body-size);color:var(--text-secondary);margin-top:var(--content-gap)">tompng, the Shopify Ruby DX team,<br>and the Ruby committers who reviewed all those PRs</p>
     <p class="reveal" style="font-family:var(--font-mono);font-size:var(--body-size);color:var(--accent);margin-top:var(--element-gap)">@st0012</p>
   </div>
   <div class="slide-num">33</div>

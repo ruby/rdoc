@@ -300,3 +300,32 @@ All supporting research is in `research/`:
 | 5. Getting ahead | 3 min | 4 |
 | 6. Recap | 1 min | 3 |
 | **Total** | **~28-30 min** | **~32** |
+
+## Working with the Slides
+
+### Editing
+
+Open `the-future-of-ruby-documentation.html` in a browser. Press **E** or hover the top-left corner to enter edit mode. Click any text to edit. **Ctrl+S** saves directly back to the file (Chrome/Edge only — first save prompts for file location, subsequent saves are instant).
+
+### Exporting to PDF
+
+Requires Playwright and pdf-lib. One-time setup:
+
+```bash
+mkdir -p /tmp/playwright-export && cd /tmp/playwright-export
+pnpm init && pnpm add playwright pdf-lib
+pnpx playwright install chromium
+```
+
+Then export:
+
+```bash
+cd /tmp/playwright-export
+node /path/to/export-slides.mjs /path/to/the-future-of-ruby-documentation.html
+```
+
+Output: `the-future-of-ruby-documentation.pdf` next to the HTML file. Captures at 960x540 viewport with 2x DPR for sharp, readable text.
+
+### Google Slides
+
+Upload the exported PDF to Google Drive. Right-click → Open with → Google Slides. Each page becomes a slide with the content as an image. You can then add speaker notes in Google Slides directly.
