@@ -61,6 +61,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   def cross_reference(name, text = nil, code = true, rdoc_ref: false)
     lookup = name
 
+    display_name = name
     name = name[1..-1] unless @show_hash if name[0, 1] == '#'
 
     if !name.end_with?('+@', '-@') && match = name.match(/(.*[^#:])?@(.*)/)
@@ -73,7 +74,15 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       text ||= name
     end
 
-    link lookup, text, code, rdoc_ref: rdoc_ref
+    result = link lookup, text, code, rdoc_ref: rdoc_ref
+
+    # If the cross-reference didn't resolve to a link, restore the original
+    # text including the '#' prefix that was stripped above.
+    if result == text && display_name != name && !text.start_with?('#')
+      display_name
+    else
+      result
+    end
   end
 
   ##

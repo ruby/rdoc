@@ -435,6 +435,13 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     "rdoc-ref:#{reference}"
   end
 
+  def test_handle_regexp_CROSSREF_hash_preserved_for_unresolved
+    @to.show_hash = false
+
+    # #no should not lose its '#' when it doesn't resolve to a method
+    assert_equal "#no", REGEXP_HANDLING('#no')
+  end
+
   def tidy(reference)
     "{tidy}[rdoc-ref:#{reference}]"
   end
