@@ -182,15 +182,6 @@ class RDoc::Constant < RDoc::CodeObject
     end
   end
 
-  ##
-  # Sets the store for this class or module and its contained code objects.
-
-  def store=(store)
-    super
-
-    @file = @store.add_file @file.full_name if @file
-  end
-
   def to_s # :nodoc:
     parent_name = parent ? parent.full_name : '(unknown)'
     if is_alias_for
