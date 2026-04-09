@@ -1249,7 +1249,7 @@ RawNoteBlock = @StartList:a
 # Markdown extensions added by RDoc follow
 
 CodeFence = &{ github? }
-            Ticks3 (@Sp StrChunk:format)? Spnl < (
+            Ticks3 (@Sp StrChunk:format)? @Sp @Newline? < (
               ( !"`" Nonspacechar )+ |
               !Ticks3 /`+/ |
               Spacechar |
