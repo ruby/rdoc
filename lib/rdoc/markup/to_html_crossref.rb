@@ -59,21 +59,24 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   # given it is used as the link text, otherwise +name+ is used.
 
   def cross_reference(name, text = nil, code = true, rdoc_ref: false)
-    lookup = name
+    # What to show when the reference doesn't resolve to a link:
+    # caller-provided text if any, otherwise the original name (preserving '#').
+    fallback = text || name
 
-    name = name[1..-1] unless @show_hash if name[0, 1] == '#'
+    # Strip '#' for link display text (e.g. #method shows as "method" in links)
+    display = !@show_hash && name.start_with?('#') ? name[1..] : name
 
-    if !name.end_with?('+@', '-@') && match = name.match(/(.*[^#:])?@(.*)/)
+    if !display.end_with?('+@', '-@') && match = display.match(/(.*[^#:])?@(.*)/)
       context_name = match[1]
       label = RDoc::Text.decode_legacy_label(match[2])
       text ||= "#{label} at <code>#{context_name}</code>" if context_name
       text ||= label
       code = false
     else
-      text ||= name
+      text ||= display
     end
 
-    link lookup, text, code, rdoc_ref: rdoc_ref
+    link(name, text, code, rdoc_ref: rdoc_ref) || fallback
   end
 
   ##
@@ -150,6 +153,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
   ##
   # Creates an HTML link to +name+ with the given +text+.
+  # Returns the link HTML string, or +nil+ if the reference could not be resolved.
 
   def link(name, text, code = true, rdoc_ref: false)
     if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
@@ -162,56 +166,60 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
     # Non-text source files (C, Ruby, etc.) don't get HTML pages generated,
     # so don't auto-link to them. Explicit rdoc-ref: links are still allowed.
     if !rdoc_ref && RDoc::TopLevel === ref && !ref.text?
-      return text
+      return
     end
 
     case ref
-    when String then
+    when String
       if rdoc_ref && @warn_missing_rdoc_ref
         puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{text}`"
       end
-      ref
+      return
+    when nil
+      # A bare label reference like @foo still produces a valid anchor link
+      return unless label
+      path = +""
     else
-      path = ref ? ref.as_href(@from_path) : +""
+      path = ref.as_href(@from_path)
 
       if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
         text = "<code>#{CGI.escapeHTML text}</code>"
       end
-
-      if label
-        # Decode legacy labels (e.g., "What-27s+Here" -> "What's Here")
-        # then convert to GitHub-style anchor format
-        decoded_label = RDoc::Text.decode_legacy_label(label)
-        formatted_label = RDoc::Text.to_anchor(decoded_label)
-
-        # Case 1: Path already has an anchor (e.g., method link)
-        #   Input:  C1#method@label -> path="C1.html#method-i-m"
-        #   Output: C1.html#method-i-m-label
-        if path =~ /#/
-          path << "-#{formatted_label}"
-
-        # Case 2: Label matches a section title
-        #   Input:  C1@Section -> path="C1.html", section "Section" exists
-        #   Output: C1.html#section (uses section.aref for GitHub-style)
-        elsif (section = ref&.sections&.find { |s| decoded_label == s.title })
-          path << "##{section.aref}"
-
-        # Case 3: Ref has an aref (class/module context)
-        #   Input:  C1@heading -> path="C1.html", ref=C1 class
-        #   Output: C1.html#class-c1-heading
-        elsif ref.respond_to?(:aref)
-          path << "##{ref.aref}-#{formatted_label}"
-
-        # Case 4: No context, just the label (e.g., TopLevel/file)
-        #   Input:  README@section -> path="README_md.html"
-        #   Output: README_md.html#section
-        else
-          path << "##{formatted_label}"
-        end
-      end
-
-      "<a href=\"#{path}\">#{text}</a>"
     end
+
+    if label
+      # Decode legacy labels (e.g., "What-27s+Here" -> "What's Here")
+      # then convert to GitHub-style anchor format
+      decoded_label = RDoc::Text.decode_legacy_label(label)
+      formatted_label = RDoc::Text.to_anchor(decoded_label)
+
+      # Case 1: Path already has an anchor (e.g., method link)
+      #   Input:  C1#method@label -> path="C1.html#method-i-m"
+      #   Output: C1.html#method-i-m-label
+      if path =~ /#/
+        path << "-#{formatted_label}"
+
+      # Case 2: Label matches a section title
+      #   Input:  C1@Section -> path="C1.html", section "Section" exists
+      #   Output: C1.html#section (uses section.aref for GitHub-style)
+      elsif (section = ref&.sections&.find { |s| decoded_label == s.title })
+        path << "##{section.aref}"
+
+      # Case 3: Ref has an aref (class/module context)
+      #   Input:  C1@heading -> path="C1.html", ref=C1 class
+      #   Output: C1.html#class-c1-heading
+      elsif ref.respond_to?(:aref)
+        path << "##{ref.aref}-#{formatted_label}"
+
+      # Case 4: No context, just the label (e.g., TopLevel/file)
+      #   Input:  README@section -> path="README_md.html"
+      #   Output: README_md.html#section
+      else
+        path << "##{formatted_label}"
+      end
+    end
+
+    "<a href=\"#{path}\">#{text}</a>"
   end
 
   def handle_TT(code)
