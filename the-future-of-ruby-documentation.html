@@ -103,6 +103,13 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 @media (max-height: 500px) { :root { --slide-padding: clamp(0.4rem, 2vw, 1rem); --title-size: clamp(1rem, 3.5vw, 1.5rem); --h2-size: clamp(0.9rem, 2.5vw, 1.25rem); --body-size: clamp(0.65rem, 1vw, 0.85rem); } }
 @media (max-width: 600px) { :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); } .two-col { flex-direction: column !important; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; } html { scroll-behavior: auto; } }
+.notes-panel { position: fixed; bottom: 0; left: 0; right: 0; height: 180px; background: #1a1a2e; border-top: 2px solid #cc342d; display: none; flex-direction: column; z-index: 9000; font-family: var(--font-body); }
+.notes-panel.active { display: flex; }
+.notes-panel-header { display: flex; justify-content: space-between; align-items: center; padding: 6px 16px; background: #252540; font-size: 12px; color: #888; }
+.notes-panel-header .notes-label { font-weight: 600; color: #ccc; }
+.notes-panel-header .notes-status { font-style: italic; }
+.notes-panel textarea { flex: 1; background: #1a1a2e; color: #e0e0e0; border: none; padding: 12px 16px; font-family: var(--font-body); font-size: 15px; line-height: 1.5; resize: none; outline: none; }
+.notes-panel textarea::placeholder { color: #555; }
 .speaker-notes { display: none; }
 .blackout-overlay { position: fixed; inset: 0; background: #000; z-index: 10000; display: none; }
 .blackout-overlay.active { display: block; }
@@ -115,6 +122,13 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 <button class="edit-toggle" id="editToggle" title="Edit mode (E)">✎</button>
 <div class="edit-banner" id="editBanner">EDIT MODE — Click any text to edit · Ctrl+S to save</div>
 <div class="blackout-overlay" id="blackoutOverlay"></div>
+<div class="notes-panel" id="notesPanel">
+  <div class="notes-panel-header">
+    <span class="notes-label">Speaker Notes (slide <span id="noteSlideNum">1</span>/33)</span>
+    <span class="notes-status" id="noteStatus">Press N to toggle</span>
+  </div>
+  <textarea id="notesTextarea" placeholder="Type your speaker notes here..."></textarea>
+</div>
 
 <!-- SLIDE 1: TITLE -->
 <section class="slide title-slide visible">
@@ -565,7 +579,7 @@ class SlidePresentation {
   }
   setupKeyboardNav() {
     document.addEventListener('keydown', (e) => {
-      if (e.target.getAttribute('contenteditable')) return;
+      if (e.target.getAttribute('contenteditable') || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
       switch(e.key) {
         case 'ArrowDown': case 'ArrowRight': case ' ': case 'PageDown':
           e.preventDefault(); this.goToSlide(this.currentSlide + 1); break;
@@ -622,7 +636,8 @@ class SlidePresentation {
   }
 }
 class InlineEditor {
-  constructor() {
+  constructor(notesEditor) {
+    this.notesEditor = notesEditor;
     this.isActive = false;
     this.setupHotzone();
     this.setupKeyboard();
@@ -665,6 +680,7 @@ class InlineEditor {
     }
   }
   async exportFile() {
+    if (this.notesEditor) this.notesEditor.syncToDOM();
     const editableEls = Array.from(document.querySelectorAll('[contenteditable]'));
     editableEls.forEach(el => el.removeAttribute('contenteditable'));
     document.body.classList.remove('edit-active');
@@ -672,6 +688,8 @@ class InlineEditor {
     const banner = document.getElementById('editBanner');
     if (toggle) { toggle.classList.remove('active', 'show'); }
     if (banner) { banner.classList.remove('active'); }
+    const notesPanel = document.getElementById('notesPanel');
+    if (notesPanel) notesPanel.classList.remove('active');
     const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
     document.body.classList.add('edit-active');
     editableEls.forEach(el => el.setAttribute('contenteditable', 'true'));
@@ -705,6 +723,99 @@ class InlineEditor {
     a.download = 'the-future-of-ruby-documentation.html';
     a.click();
     URL.revokeObjectURL(a.href);
+  }
+}
+class NotesEditor {
+  constructor(slidePresentation) {
+    this.sp = slidePresentation;
+    this.panel = document.getElementById('notesPanel');
+    this.textarea = document.getElementById('notesTextarea');
+    this.slideNumEl = document.getElementById('noteSlideNum');
+    this.statusEl = document.getElementById('noteStatus');
+    this.isOpen = false;
+    this.storagePrefix = 'slide-notes-';
+    this.loadAllFromStorage();
+    this.setupKeyboard();
+    this.setupAutoSave();
+    this.setupSlideTracking();
+  }
+  setupKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target === this.textarea) return;
+      if ((e.key === 'n' || e.key === 'N') && !e.target.getAttribute('contenteditable')) this.toggle();
+    });
+    this.textarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { this.toggle(); e.preventDefault(); }
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        this.syncToDOM();
+        this.statusEl.textContent = 'Notes synced to HTML';
+        clearTimeout(this._statusTimeout);
+        this._statusTimeout = setTimeout(() => { this.statusEl.textContent = ''; }, 1500);
+      }
+    });
+  }
+  setupAutoSave() {
+    this.textarea.addEventListener('input', () => {
+      const idx = this.sp.currentSlide;
+      localStorage.setItem(this.storagePrefix + idx, this.textarea.value);
+      this.statusEl.textContent = 'Saved';
+      clearTimeout(this._statusTimeout);
+      this._statusTimeout = setTimeout(() => { this.statusEl.textContent = ''; }, 1500);
+    });
+  }
+  setupSlideTracking() {
+    let lastSlide = -1;
+    setInterval(() => {
+      if (this.sp.currentSlide !== lastSlide) {
+        lastSlide = this.sp.currentSlide;
+        this.loadNoteForSlide(lastSlide);
+      }
+    }, 300);
+  }
+  loadNoteForSlide(idx) {
+    this.slideNumEl.textContent = idx + 1;
+    const stored = localStorage.getItem(this.storagePrefix + idx);
+    if (stored !== null) {
+      this.textarea.value = stored;
+    } else {
+      const slide = this.sp.slides[idx];
+      const notesEl = slide ? slide.querySelector('.speaker-notes') : null;
+      this.textarea.value = notesEl ? notesEl.textContent.trim() : '';
+    }
+  }
+  loadAllFromStorage() {
+    this.sp.slides.forEach((slide, idx) => {
+      if (localStorage.getItem(this.storagePrefix + idx) === null) {
+        const notesEl = slide.querySelector('.speaker-notes');
+        if (notesEl && notesEl.textContent.trim()) {
+          localStorage.setItem(this.storagePrefix + idx, notesEl.textContent.trim());
+        }
+      }
+    });
+  }
+  toggle() {
+    this.isOpen = !this.isOpen;
+    this.panel.classList.toggle('active', this.isOpen);
+    if (this.isOpen) {
+      this.loadNoteForSlide(this.sp.currentSlide);
+      this.textarea.focus();
+    }
+  }
+  syncToDOM() {
+    this.sp.slides.forEach((slide, idx) => {
+      const stored = localStorage.getItem(this.storagePrefix + idx);
+      if (stored !== null) {
+        let notesEl = slide.querySelector('.speaker-notes');
+        if (!notesEl) {
+          notesEl = document.createElement('div');
+          notesEl.className = 'speaker-notes';
+          notesEl.hidden = true;
+          slide.appendChild(notesEl);
+        }
+        notesEl.textContent = stored;
+      }
+    });
   }
 }
 class PresenterMode {
@@ -900,7 +1011,8 @@ document.addEventListener('keydown', (e) => {
 }
 
 const sp = new SlidePresentation();
-new InlineEditor();
+const notesEditor = new NotesEditor(sp);
+const editor = new InlineEditor(notesEditor);
 new PresenterMode(sp);
 </script>
 
