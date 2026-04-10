@@ -358,6 +358,30 @@ class RDocRDocTest < RDoc::TestCase
     tf.close!
   end
 
+  def test_parse_file_stopdoc_in_c
+    @rdoc.store = RDoc::Store.new(@options)
+
+    temp_dir do |dir|
+      @rdoc.options.root = Pathname(Dir.pwd)
+
+      File.write 'test.c', <<~C
+        void Init_test(void) {
+            VALUE rb_cParent = rb_define_class("Parent", rb_cObject);
+
+            /* :stopdoc: */
+            VALUE cInternal = rb_define_class_under(rb_cParent, "Internal", rb_cObject);
+            /* :startdoc: */
+        }
+      C
+
+      top_level = @rdoc.parse_file 'test.c'
+
+      internal = @rdoc.store.find_class_named 'Parent::Internal'
+      assert internal, 'Parent::Internal should exist'
+      refute internal.document_self, 'Parent::Internal should have document_self=false after :stopdoc:'
+    end
+  end
+
   def test_parse_file_forbidden
     omit 'chmod not supported' if Gem.win_platform?
     omit "assumes that euid is not root" if Process.euid == 0
