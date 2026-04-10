@@ -579,7 +579,7 @@ This section compares RDoc's Markdown implementation with the
 | Fenced Code (tildes) | ✅ `~~~` | ❌ | Conflicts with strikethrough syntax |
 | Info strings (language) | ✅ any | ⚠️ limited | `ruby`/`rb`, `c`, and `bash`/`sh`/`shell`/`console` highlighted; others accepted as CSS class |
 | Blockquotes | ✅ | ✅ | Full match, nested supported |
-| Lazy Continuation | ✅ | ⚠️ | Continuation text is included in blockquote but line break is lost (becomes a space) |
+| Lazy Continuation | ✅ | ⚠️ | Continuation text is included in blockquote; line break is preserved as `<br>` |
 | Bullet Lists | ✅ | ✅ | `*`, `+`, `-` supported |
 | Ordered Lists | ✅ `.` `)` | ⚠️ `.` only | RDoc doesn't support `)` delimiter; numbers are always renumbered from 1 |
 | Nested Lists | ✅ | ✅ | 4-space indentation |
@@ -620,6 +620,7 @@ RDoc uses a whitelist of block-level tags defined in
 | Link titles | ✅ | ⚠️ | Parsed but not rendered |
 | Images | ✅ | ✅ | Full match |
 | Autolinks `<url>` | ✅ | ✅ | Full match |
+| Soft line breaks | ✅ | ⚠️ | Newlines within paragraphs produce `<br>`; GFM spec renders as a space |
 | Hard line breaks | ✅ | ⚠️ | 2+ trailing spaces only; backslash `\` at EOL not supported |
 | Backslash escapes | ✅ | ⚠️ | Subset of GFM's escapable characters (e.g., `~` not escapable) |
 | HTML entities | ✅ | ✅ | Named, decimal, hex |

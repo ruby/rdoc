@@ -139,8 +139,8 @@ class RDocMarkdownTestTest < RDoc::TestCase
         para("Plus: <code>\\+</code>"),
         para("Minus: <code>\\-</code>"),
 
-        para("These should get escaped, even though they're matching pairs for\n" +
-             "other Markdown constructs:"),
+        para("These should get escaped, even though they're matching pairs for",
+             hard_break, "other Markdown constructs:"),
 
         para("\\*asterisks\\*"),
         para("\\_underscores\\_"),
@@ -221,13 +221,13 @@ class RDocMarkdownTestTest < RDoc::TestCase
 
     expected =
       doc(
-        para("In Markdown 1.0.0 and earlier. Version\n" +
-             "8. This line turns into a list item.\n"   +
-             "Because a hard-wrapped line in the\n"     +
-             "middle of a paragraph looked like a\n"    +
-             "list item."),
-        para("Here's one with a bullet.\n" +
-             "\\* criminey."))
+        para("In Markdown 1.0.0 and earlier. Version",
+             hard_break, "8. This line turns into a list item.",
+             hard_break, "Because a hard-wrapped line in the",
+             hard_break, "middle of a paragraph looked like a",
+             hard_break, "list item."),
+        para("Here's one with a bullet.",
+             hard_break, "\\* criminey."))
 
     assert_equal expected, doc
   end
@@ -502,33 +502,33 @@ foo
 
         head(2, "Getting the Gist of Markdown's Formatting Syntax"),
 
-        para("This page offers a brief overview of what it's like to use Markdown.\n" +
-             "The {syntax page}[/projects/markdown/syntax] provides complete, detailed documentation for\n" +
-             "every feature, but Markdown should be very easy to pick up simply by\n" +
-             "looking at a few examples of it in action. The examples on this page\n" +
-             "are written in a before/after style, showing example syntax and the\n" +
-             "HTML output produced by Markdown."),
+        para("This page offers a brief overview of what it's like to use Markdown.",
+             hard_break, "The {syntax page}[/projects/markdown/syntax] provides complete, detailed documentation for",
+             hard_break, "every feature, but Markdown should be very easy to pick up simply by",
+             hard_break, "looking at a few examples of it in action. The examples on this page",
+             hard_break, "are written in a before/after style, showing example syntax and the",
+             hard_break, "HTML output produced by Markdown."),
 
-        para("It's also helpful to simply try Markdown out; the {Dingus}[/projects/markdown/dingus] is a\n" +
-             "web application that allows you type your own Markdown-formatted text\n" +
-             "and translate it to XHTML."),
+        para("It's also helpful to simply try Markdown out; the {Dingus}[/projects/markdown/dingus] is a",
+             hard_break, "web application that allows you type your own Markdown-formatted text",
+             hard_break, "and translate it to XHTML."),
 
-        para("<b>Note:</b> This document is itself written using Markdown; you\n" +
-             "can {see the source for it by adding '.text' to the URL}[/projects/markdown/basics.text]."),
+        para("<b>Note:</b> This document is itself written using Markdown; you",
+             hard_break, "can {see the source for it by adding '.text' to the URL}[/projects/markdown/basics.text]."),
 
         head(2, "Paragraphs, Headers, Blockquotes"),
 
-        para("A paragraph is simply one or more consecutive lines of text, separated\n" +
-             "by one or more blank lines. (A blank line is any line that looks like a\n" +
-             "blank line -- a line containing nothing spaces or tabs is considered\n" +
-             "blank.) Normal paragraphs should not be intended with spaces or tabs."),
+        para("A paragraph is simply one or more consecutive lines of text, separated",
+             hard_break, "by one or more blank lines. (A blank line is any line that looks like a",
+             hard_break, "blank line -- a line containing nothing spaces or tabs is considered",
+             hard_break, "blank.) Normal paragraphs should not be intended with spaces or tabs."),
 
-        para("Markdown offers two styles of headers: _Setext_ and _atx_.\n" +
-             "Setext-style headers for <code><h1></code> and <code><h2></code> are created by\n" +
-             "\"underlining\" with equal signs (<code>=</code>) and hyphens (<code>-</code>), respectively.\n" +
-             "To create an atx-style header, you put 1-6 hash marks (<code>#</code>) at the\n" +
-             "beginning of the line -- the number of hashes equals the resulting\n" +
-             "HTML header level."),
+        para("Markdown offers two styles of headers: _Setext_ and _atx_.",
+             hard_break, "Setext-style headers for <code><h1></code> and <code><h2></code> are created by",
+             hard_break, "\"underlining\" with equal signs (<code>=</code>) and hyphens (<code>-</code>), respectively.",
+             hard_break, "To create an atx-style header, you put 1-6 hash marks (<code>#</code>) at the",
+             hard_break, "beginning of the line -- the number of hashes equals the resulting",
+             hard_break, "HTML header level."),
 
         para("Blockquotes are indicated using email-style '<code>></code>' angle brackets."),
 
@@ -599,9 +599,9 @@ foo
 
         head(2, "Lists"),
 
-        para("Unordered (bulleted) lists use asterisks, pluses, and hyphens (<code>*</code>,\n" +
-             "<code>+</code>, and <code>-</code>) as list markers. These three markers are\n" +
-             "interchangeable; this:"),
+        para("Unordered (bulleted) lists use asterisks, pluses, and hyphens (<code>*</code>,",
+             hard_break, "<code>+</code>, and <code>-</code>) as list markers. These three markers are",
+             hard_break, "interchangeable; this:"),
 
         verb("*   Candy.\n",
              "*   Gum.\n",
@@ -627,8 +627,8 @@ foo
              "<li>Booze.</li>\n",
              "</ul>\n"),
 
-        para("Ordered (numbered) lists use regular numbers, followed by periods, as\n" +
-             "list markers:"),
+        para("Ordered (numbered) lists use regular numbers, followed by periods, as",
+             hard_break, "list markers:"),
 
         verb("1.  Red\n",
              "2.  Green\n",
@@ -642,9 +642,9 @@ foo
              "<li>Blue</li>\n",
              "</ol>\n"),
 
-        para("If you put blank lines between items, you'll get <code><p></code> tags for the\n" +
-             "list item text. You can create multi-paragraph list items by indenting\n" +
-             "the paragraphs by 4 spaces or 1 tab:"),
+        para("If you put blank lines between items, you'll get <code><p></code> tags for the",
+             hard_break, "list item text. You can create multi-paragraph list items by indenting",
+             hard_break, "the paragraphs by 4 spaces or 1 tab:"),
 
         verb("*   A list item.\n",
              "\n",
@@ -662,12 +662,12 @@ foo
 
         head(3, "Links"),
 
-        para("Markdown supports two styles for creating links: _inline_ and\n" +
-             "_reference_. With both styles, you use square brackets to delimit the\n" +
-             "text you want to turn into a link."),
+        para("Markdown supports two styles for creating links: _inline_ and",
+             hard_break, "_reference_. With both styles, you use square brackets to delimit the",
+             hard_break, "text you want to turn into a link."),
 
-        para("Inline-style links use parentheses immediately after the link text.\n" +
-             "For example:"),
+        para("Inline-style links use parentheses immediately after the link text.",
+             hard_break, "For example:"),
 
         verb("This is an [example link](http://example.com/).\n"),
 
@@ -685,8 +685,8 @@ foo
         verb("<p>This is an <a href=\"http://example.com/\" title=\"With a Title\">\n",
              "example link</a>.</p>\n"),
 
-        para("Reference-style links allow you to refer to your links by names, which\n" +
-             "you define elsewhere in your document:"),
+        para("Reference-style links allow you to refer to your links by names, which",
+             hard_break, "you define elsewhere in your document:"),
 
         verb("I get 10 times more traffic from [Google][1] than from\n",
              "[Yahoo][2] or [MSN][3].\n",
@@ -702,8 +702,8 @@ foo
              "title=\"Yahoo Search\">Yahoo</a> or <a href=\"http://search.msn.com/\"\n",
              "title=\"MSN Search\">MSN</a>.</p>\n"),
 
-        para("The title attribute is optional. Link names may contain letters,\n" +
-             "numbers and spaces, but are _not_ case sensitive:"),
+        para("The title attribute is optional. Link names may contain letters,",
+             hard_break, "numbers and spaces, but are _not_ case sensitive:"),
 
         verb("I start my morning with a cup of coffee and\n",
              "[The New York Times][NY Times].\n",
@@ -735,10 +735,10 @@ foo
 
         head(3, "Code"),
 
-        para("In a regular paragraph, you can create code span by wrapping text in\n" +
-             "backtick quotes. Any ampersands (<code>&</code>) and angle brackets (<code><</code> or\n" +
-             "<code>></code>) will automatically be translated into HTML entities. This makes\n" +
-             "it easy to use Markdown to write about HTML example code:"),
+        para("In a regular paragraph, you can create code span by wrapping text in",
+             hard_break, "backtick quotes. Any ampersands (<code>&</code>) and angle brackets (<code><</code> or",
+             hard_break, "<code>></code>) will automatically be translated into HTML entities. This makes",
+             hard_break, "it easy to use Markdown to write about HTML example code:"),
 
         verb(
              "I strongly recommend against using any `<blink>` tags.\n",
@@ -755,9 +755,9 @@ foo
              "<code>&amp;mdash;</code> instead of decimal-encoded\n",
              "entities like <code>&amp;#8212;</code>.</p>\n"),
 
-        para("To specify an entire block of pre-formatted code, indent every line of\n" +
-             "the block by 4 spaces or 1 tab. Just like with code spans, <code>&</code>, <code><</code>,\n" +
-             "and <code>></code> characters will be escaped automatically."),
+        para("To specify an entire block of pre-formatted code, indent every line of",
+             hard_break, "the block by 4 spaces or 1 tab. Just like with code spans, <code>&</code>, <code><</code>,",
+             hard_break, "and <code>></code> characters will be escaped automatically."),
 
         para("Markdown:"),
 
@@ -844,8 +844,8 @@ foo
               item(nil,
                 para("{Automatic Links}[#autolink]"))))),
 
-        para("<b>Note:</b> This document is itself written using Markdown; you\n" +
-             "can {see the source for it by adding '.text' to the URL}[/projects/markdown/syntax.text]."),
+        para("<b>Note:</b> This document is itself written using Markdown; you",
+             hard_break, "can {see the source for it by adding '.text' to the URL}[/projects/markdown/syntax.text]."),
 
         rule(1),
 
@@ -855,45 +855,45 @@ foo
 
         para("Markdown is intended to be as easy-to-read and easy-to-write as is feasible."),
 
-        para("Readability, however, is emphasized above all else. A Markdown-formatted\n" +
-             "document should be publishable as-is, as plain text, without looking\n" +
-             "like it's been marked up with tags or formatting instructions. While\n" +
-             "Markdown's syntax has been influenced by several existing text-to-HTML\n" +
-             "filters -- including {Setext}[http://docutils.sourceforge.net/mirror/setext.html], {atx}[http://www.aaronsw.com/2002/atx/], {Textile}[http://textism.com/tools/textile/], {reStructuredText}[http://docutils.sourceforge.net/rst.html],\n" +
-             "{Grutatext}[http://www.triptico.com/software/grutatxt.html], and {EtText}[http://ettext.taint.org/doc/] -- the single biggest source of\n" +
-             "inspiration for Markdown's syntax is the format of plain text email."),
+        para("Readability, however, is emphasized above all else. A Markdown-formatted",
+             hard_break, "document should be publishable as-is, as plain text, without looking",
+             hard_break, "like it's been marked up with tags or formatting instructions. While",
+             hard_break, "Markdown's syntax has been influenced by several existing text-to-HTML",
+             hard_break, "filters -- including {Setext}[http://docutils.sourceforge.net/mirror/setext.html], {atx}[http://www.aaronsw.com/2002/atx/], {Textile}[http://textism.com/tools/textile/], {reStructuredText}[http://docutils.sourceforge.net/rst.html],",
+             hard_break, "{Grutatext}[http://www.triptico.com/software/grutatxt.html], and {EtText}[http://ettext.taint.org/doc/] -- the single biggest source of",
+             hard_break, "inspiration for Markdown's syntax is the format of plain text email."),
 
-        para("To this end, Markdown's syntax is comprised entirely of punctuation\n" +
-             "characters, which punctuation characters have been carefully chosen so\n" +
-             "as to look like what they mean. E.g., asterisks around a word actually\n" +
-             "look like \\*emphasis\\*. Markdown lists look like, well, lists. Even\n" +
-             "blockquotes look like quoted passages of text, assuming you've ever\n" +
-             "used email."),
+        para("To this end, Markdown's syntax is comprised entirely of punctuation",
+             hard_break, "characters, which punctuation characters have been carefully chosen so",
+             hard_break, "as to look like what they mean. E.g., asterisks around a word actually",
+             hard_break, "look like \\*emphasis\\*. Markdown lists look like, well, lists. Even",
+             hard_break, "blockquotes look like quoted passages of text, assuming you've ever",
+             hard_break, "used email."),
 
         raw("<h3 id=\"html\">Inline HTML</h3>"),
 
-        para("Markdown's syntax is intended for one purpose: to be used as a\n" +
-             "format for _writing_ for the web."),
+        para("Markdown's syntax is intended for one purpose: to be used as a",
+             hard_break, "format for _writing_ for the web."),
 
-        para("Markdown is not a replacement for HTML, or even close to it. Its\n" +
-             "syntax is very small, corresponding only to a very small subset of\n" +
-             "HTML tags. The idea is _not_ to create a syntax that makes it easier\n" +
-             "to insert HTML tags. In my opinion, HTML tags are already easy to\n" +
-             "insert. The idea for Markdown is to make it easy to read, write, and\n" +
-             "edit prose. HTML is a _publishing_ format; Markdown is a _writing_\n" +
-             "format. Thus, Markdown's formatting syntax only addresses issues that\n" +
-             "can be conveyed in plain text."),
+        para("Markdown is not a replacement for HTML, or even close to it. Its",
+             hard_break, "syntax is very small, corresponding only to a very small subset of",
+             hard_break, "HTML tags. The idea is _not_ to create a syntax that makes it easier",
+             hard_break, "to insert HTML tags. In my opinion, HTML tags are already easy to",
+             hard_break, "insert. The idea for Markdown is to make it easy to read, write, and",
+             hard_break, "edit prose. HTML is a _publishing_ format; Markdown is a _writing_",
+             hard_break, "format. Thus, Markdown's formatting syntax only addresses issues that",
+             hard_break, "can be conveyed in plain text."),
 
-        para("For any markup that is not covered by Markdown's syntax, you simply\n" +
-             "use HTML itself. There's no need to preface it or delimit it to\n" +
-             "indicate that you're switching from Markdown to HTML; you just use\n" +
-             "the tags."),
+        para("For any markup that is not covered by Markdown's syntax, you simply",
+             hard_break, "use HTML itself. There's no need to preface it or delimit it to",
+             hard_break, "indicate that you're switching from Markdown to HTML; you just use",
+             hard_break, "the tags."),
 
-        para("The only restrictions are that block-level HTML elements -- e.g. <code><div></code>,\n" +
-             "<code><table></code>, <code><pre></code>, <code><p></code>, etc. -- must be separated from surrounding\n" +
-             "content by blank lines, and the start and end tags of the block should\n" +
-             "not be indented with tabs or spaces. Markdown is smart enough not\n" +
-             "to add extra (unwanted) <code><p></code> tags around HTML block-level tags."),
+        para("The only restrictions are that block-level HTML elements -- e.g. <code><div></code>,",
+             hard_break, "<code><table></code>, <code><pre></code>, <code><p></code>, etc. -- must be separated from surrounding",
+             hard_break, "content by blank lines, and the start and end tags of the block should",
+             hard_break, "not be indented with tabs or spaces. Markdown is smart enough not",
+             hard_break, "to add extra (unwanted) <code><p></code> tags around HTML block-level tags."),
 
         para("For example, to add an HTML table to a Markdown article:"),
 
@@ -907,30 +907,30 @@ foo
              "\n",
              "This is another regular paragraph.\n"),
 
-        para("Note that Markdown formatting syntax is not processed within block-level\n" +
-             "HTML tags. E.g., you can't use Markdown-style <code>*emphasis*</code> inside an\n" +
-             "HTML block."),
+        para("Note that Markdown formatting syntax is not processed within block-level",
+             hard_break, "HTML tags. E.g., you can't use Markdown-style <code>*emphasis*</code> inside an",
+             hard_break, "HTML block."),
 
-        para("Span-level HTML tags -- e.g. <code><span></code>, <code><cite></code>, or <code><del></code> -- can be\n" +
-             "used anywhere in a Markdown paragraph, list item, or header. If you\n" +
-             "want, you can even use HTML tags instead of Markdown formatting; e.g. if\n" +
-             "you'd prefer to use HTML <code><a></code> or <code><img></code> tags instead of Markdown's\n" +
-             "link or image syntax, go right ahead."),
+        para("Span-level HTML tags -- e.g. <code><span></code>, <code><cite></code>, or <code><del></code> -- can be",
+             hard_break, "used anywhere in a Markdown paragraph, list item, or header. If you",
+             hard_break, "want, you can even use HTML tags instead of Markdown formatting; e.g. if",
+             hard_break, "you'd prefer to use HTML <code><a></code> or <code><img></code> tags instead of Markdown's",
+             hard_break, "link or image syntax, go right ahead."),
 
-        para("Unlike block-level HTML tags, Markdown syntax _is_ processed within\n" +
-             "span-level tags."),
+        para("Unlike block-level HTML tags, Markdown syntax _is_ processed within",
+             hard_break, "span-level tags."),
 
         raw("<h3 id=\"autoescape\">Automatic Escaping for Special Characters</h3>"),
 
-        para("In HTML, there are two characters that demand special treatment: <code><</code>\n" +
-             "and <code>&</code>. Left angle brackets are used to start tags; ampersands are\n" +
-             "used to denote HTML entities. If you want to use them as literal\n" +
-             "characters, you must escape them as entities, e.g. <code>&lt;</code>, and\n" +
-             "<code>&amp;</code>."),
+        para("In HTML, there are two characters that demand special treatment: <code><</code>",
+             hard_break, "and <code>&</code>. Left angle brackets are used to start tags; ampersands are",
+             hard_break, "used to denote HTML entities. If you want to use them as literal",
+             hard_break, "characters, you must escape them as entities, e.g. <code>&lt;</code>, and",
+             hard_break, "<code>&amp;</code>."),
 
-        para("Ampersands in particular are bedeviling for web writers. If you want to\n" +
-             "write about 'AT&T', you need to write '<code>AT&amp;T</code>'. You even need to\n" +
-             "escape ampersands within URLs. Thus, if you want to link to:"),
+        para("Ampersands in particular are bedeviling for web writers. If you want to",
+             hard_break, "write about 'AT&T', you need to write '<code>AT&amp;T</code>'. You even need to",
+             hard_break, "escape ampersands within URLs. Thus, if you want to link to:"),
 
         verb("http://images.google.com/images?num=30&q=larry+bird\n"),
 
@@ -938,14 +938,14 @@ foo
 
         verb("http://images.google.com/images?num=30&amp;q=larry+bird\n"),
 
-        para("in your anchor tag <code>href</code> attribute. Needless to say, this is easy to\n" +
-             "forget, and is probably the single most common source of HTML validation\n" +
-             "errors in otherwise well-marked-up web sites."),
+        para("in your anchor tag <code>href</code> attribute. Needless to say, this is easy to",
+             hard_break, "forget, and is probably the single most common source of HTML validation",
+             hard_break, "errors in otherwise well-marked-up web sites."),
 
-        para("Markdown allows you to use these characters naturally, taking care of\n" +
-             "all the necessary escaping for you. If you use an ampersand as part of\n" +
-             "an HTML entity, it remains unchanged; otherwise it will be translated\n" +
-             "into <code>&amp;</code>."),
+        para("Markdown allows you to use these characters naturally, taking care of",
+             hard_break, "all the necessary escaping for you. If you use an ampersand as part of",
+             hard_break, "an HTML entity, it remains unchanged; otherwise it will be translated",
+             hard_break, "into <code>&amp;</code>."),
 
         para("So, if you want to include a copyright symbol in your article, you can write:"),
 
@@ -959,9 +959,9 @@ foo
 
         verb("AT&amp;T\n"),
 
-        para("Similarly, because Markdown supports {inline HTML}[#html], if you use\n" +
-             "angle brackets as delimiters for HTML tags, Markdown will treat them as\n" +
-             "such. But if you write:"),
+        para("Similarly, because Markdown supports {inline HTML}[#html], if you use",
+             hard_break, "angle brackets as delimiters for HTML tags, Markdown will treat them as",
+             hard_break, "such. But if you write:"),
 
         verb("4 < 5\n"),
 
@@ -969,11 +969,11 @@ foo
 
         verb("4 &lt; 5\n"),
 
-        para("However, inside Markdown code spans and blocks, angle brackets and\n" +
-             "ampersands are _always_ encoded automatically. This makes it easy to use\n" +
-             "Markdown to write about HTML code. (As opposed to raw HTML, which is a\n" +
-             "terrible format for writing about HTML syntax, because every single <code><</code>\n" +
-             "and <code>&</code> in your example code needs to be escaped.)"),
+        para("However, inside Markdown code spans and blocks, angle brackets and",
+             hard_break, "ampersands are _always_ encoded automatically. This makes it easy to use",
+             hard_break, "Markdown to write about HTML code. (As opposed to raw HTML, which is a",
+             hard_break, "terrible format for writing about HTML syntax, because every single <code><</code>",
+             hard_break, "and <code>&</code> in your example code needs to be escaped.)"),
 
         rule(1),
 
@@ -981,31 +981,31 @@ foo
 
         raw("<h3 id=\"p\">Paragraphs and Line Breaks</h3>"),
 
-        para("A paragraph is simply one or more consecutive lines of text, separated\n" +
-             "by one or more blank lines. (A blank line is any line that looks like a\n" +
-             "blank line -- a line containing nothing but spaces or tabs is considered\n" +
-             "blank.) Normal paragraphs should not be intended with spaces or tabs."),
+        para("A paragraph is simply one or more consecutive lines of text, separated",
+             hard_break, "by one or more blank lines. (A blank line is any line that looks like a",
+             hard_break, "blank line -- a line containing nothing but spaces or tabs is considered",
+             hard_break, "blank.) Normal paragraphs should not be intended with spaces or tabs."),
 
-        para("The implication of the \"one or more consecutive lines of text\" rule is\n" +
-             "that Markdown supports \"hard-wrapped\" text paragraphs. This differs\n" +
-             "significantly from most other text-to-HTML formatters (including Movable\n" +
-             "Type's \"Convert Line Breaks\" option) which translate every line break\n" +
-             "character in a paragraph into a <code><br /></code> tag."),
+        para("The implication of the \"one or more consecutive lines of text\" rule is",
+             hard_break, "that Markdown supports \"hard-wrapped\" text paragraphs. This differs",
+             hard_break, "significantly from most other text-to-HTML formatters (including Movable",
+             hard_break, "Type's \"Convert Line Breaks\" option) which translate every line break",
+             hard_break, "character in a paragraph into a <code><br /></code> tag."),
 
-        para("When you _do_ want to insert a <code><br /></code> break tag using Markdown, you\n" +
-             "end a line with two or more spaces, then type return."),
+        para("When you _do_ want to insert a <code><br /></code> break tag using Markdown, you",
+             hard_break, "end a line with two or more spaces, then type return."),
 
-        para("Yes, this takes a tad more effort to create a <code><br /></code>, but a simplistic\n" +
-             "\"every line break is a <code><br /></code>\" rule wouldn't work for Markdown.\n" +
-             "Markdown's email-style {blockquoting}[#blockquote] and multi-paragraph {list items}[#list]\n" +
-             "work best -- and look better -- when you format them with hard breaks."),
+        para("Yes, this takes a tad more effort to create a <code><br /></code>, but a simplistic",
+             hard_break, "\"every line break is a <code><br /></code>\" rule wouldn't work for Markdown.",
+             hard_break, "Markdown's email-style {blockquoting}[#blockquote] and multi-paragraph {list items}[#list]",
+             hard_break, "work best -- and look better -- when you format them with hard breaks."),
 
         raw("<h3 id=\"header\">Headers</h3>"),
 
         para("Markdown supports two styles of headers, {Setext}[http://docutils.sourceforge.net/mirror/setext.html] and {atx}[http://www.aaronsw.com/2002/atx/]."),
 
-        para("Setext-style headers are \"underlined\" using equal signs (for first-level\n" +
-             "headers) and dashes (for second-level headers). For example:"),
+        para("Setext-style headers are \"underlined\" using equal signs (for first-level",
+             hard_break, "headers) and dashes (for second-level headers). For example:"),
 
         verb("This is an H1\n",
              "=============\n",
@@ -1015,8 +1015,8 @@ foo
 
         para("Any number of underlining <code>=</code>'s or <code>-</code>'s will work."),
 
-        para("Atx-style headers use 1-6 hash characters at the start of the line,\n" +
-             "corresponding to header levels 1-6. For example:"),
+        para("Atx-style headers use 1-6 hash characters at the start of the line,",
+             hard_break, "corresponding to header levels 1-6. For example:"),
 
         verb("# This is an H1\n",
              "\n",
@@ -1024,11 +1024,11 @@ foo
              "\n",
              "###### This is an H6\n"),
 
-        para("Optionally, you may \"close\" atx-style headers. This is purely\n" +
-             "cosmetic -- you can use this if you think it looks better. The\n" +
-             "closing hashes don't even need to match the number of hashes\n" +
-             "used to open the header. (The number of opening hashes\n" +
-             "determines the header level.) :"),
+        para("Optionally, you may \"close\" atx-style headers. This is purely",
+             hard_break, "cosmetic -- you can use this if you think it looks better. The",
+             hard_break, "closing hashes don't even need to match the number of hashes",
+             hard_break, "used to open the header. (The number of opening hashes",
+             hard_break, "determines the header level.) :"),
 
         verb("# This is an H1 #\n",
              "\n",
@@ -1039,10 +1039,10 @@ foo
         raw("<h3 id=\"blockquote\">Blockquotes</h3>"),
 
         para(
-             "Markdown uses email-style <code>></code> characters for blockquoting. If you're\n" +
-             "familiar with quoting passages of text in an email message, then you\n" +
-             "know how to create a blockquote in Markdown. It looks best if you hard\n" +
-             "wrap the text and put a <code>></code> before every line:"),
+             "Markdown uses email-style <code>></code> characters for blockquoting. If you're",
+             hard_break, "familiar with quoting passages of text in an email message, then you",
+             hard_break, "know how to create a blockquote in Markdown. It looks best if you hard",
+             hard_break, "wrap the text and put a <code>></code> before every line:"),
 
         verb("> This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,\n",
              "> consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.\n",
@@ -1051,8 +1051,8 @@ foo
              "> Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse\n",
              "> id sem consectetuer libero luctus adipiscing.\n"),
 
-        para("Markdown allows you to be lazy and only put the <code>></code> before the first\n" +
-             "line of a hard-wrapped paragraph:"),
+        para("Markdown allows you to be lazy and only put the <code>></code> before the first",
+             hard_break, "line of a hard-wrapped paragraph:"),
 
         verb("> This is a blockquote with two paragraphs. Lorem ipsum dolor sit amet,\n",
              "consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus.\n",
@@ -1061,8 +1061,8 @@ foo
              "> Donec sit amet nisl. Aliquam semper ipsum sit amet velit. Suspendisse\n",
              "id sem consectetuer libero luctus adipiscing.\n"),
 
-        para("Blockquotes can be nested (i.e. a blockquote-in-a-blockquote) by\n" +
-             "adding additional levels of <code>></code>:"),
+        para("Blockquotes can be nested (i.e. a blockquote-in-a-blockquote) by",
+             hard_break, "adding additional levels of <code>></code>:"),
 
         verb("> This is the first level of quoting.\n",
              ">\n",
@@ -1070,8 +1070,8 @@ foo
              ">\n",
              "> Back to the first level.\n"),
 
-        para("Blockquotes can contain other Markdown elements, including headers, lists,\n" +
-             "and code blocks:"),
+        para("Blockquotes can contain other Markdown elements, including headers, lists,",
+             hard_break, "and code blocks:"),
 
         verb("> ## This is a header.\n",
              "> \n",
@@ -1082,16 +1082,16 @@ foo
              "> \n",
              ">     return shell_exec(\"echo $input | $markdown_script\");\n"),
 
-        para("Any decent text editor should make email-style quoting easy. For\n" +
-             "example, with BBEdit, you can make a selection and choose Increase\n" +
-             "Quote Level from the Text menu."),
+        para("Any decent text editor should make email-style quoting easy. For",
+             hard_break, "example, with BBEdit, you can make a selection and choose Increase",
+             hard_break, "Quote Level from the Text menu."),
 
         raw("<h3 id=\"list\">Lists</h3>"),
 
         para("Markdown supports ordered (numbered) and unordered (bulleted) lists."),
 
-        para("Unordered lists use asterisks, pluses, and hyphens -- interchangeably\n" +
-             "-- as list markers:"),
+        para("Unordered lists use asterisks, pluses, and hyphens -- interchangeably",
+             hard_break, "-- as list markers:"),
 
         verb("*   Red\n",
              "*   Green\n",
@@ -1115,9 +1115,9 @@ foo
              "2.  McHale\n",
              "3.  Parish\n"),
 
-        para("It's important to note that the actual numbers you use to mark the\n" +
-             "list have no effect on the HTML output Markdown produces. The HTML\n" +
-             "Markdown produces from the above list is:"),
+        para("It's important to note that the actual numbers you use to mark the",
+             hard_break, "list have no effect on the HTML output Markdown produces. The HTML",
+             hard_break, "Markdown produces from the above list is:"),
 
         verb("<ol>\n",
              "<li>Bird</li>\n",
@@ -1137,18 +1137,18 @@ foo
              "1. McHale\n",
              "8. Parish\n"),
 
-        para("you'd get the exact same HTML output. The point is, if you want to,\n" +
-             "you can use ordinal numbers in your ordered Markdown lists, so that\n" +
-             "the numbers in your source match the numbers in your published HTML.\n" +
-             "But if you want to be lazy, you don't have to."),
+        para("you'd get the exact same HTML output. The point is, if you want to,",
+             hard_break, "you can use ordinal numbers in your ordered Markdown lists, so that",
+             hard_break, "the numbers in your source match the numbers in your published HTML.",
+             hard_break, "But if you want to be lazy, you don't have to."),
 
-        para("If you do use lazy list numbering, however, you should still start the\n" +
-             "list with the number 1. At some point in the future, Markdown may support\n" +
-             "starting ordered lists at an arbitrary number."),
+        para("If you do use lazy list numbering, however, you should still start the",
+             hard_break, "list with the number 1. At some point in the future, Markdown may support",
+             hard_break, "starting ordered lists at an arbitrary number."),
 
-        para("List markers typically start at the left margin, but may be indented by\n" +
-             "up to three spaces. List markers must be followed by one or more spaces\n" +
-             "or a tab."),
+        para("List markers typically start at the left margin, but may be indented by",
+             hard_break, "up to three spaces. List markers must be followed by one or more spaces",
+             hard_break, "or a tab."),
 
         para("To make lists look nice, you can wrap items with hanging indents:"),
 
@@ -1166,8 +1166,8 @@ foo
              "*   Donec sit amet nisl. Aliquam semper ipsum sit amet velit.\n",
              "Suspendisse id sem consectetuer libero luctus adipiscing.\n"),
 
-        para("If list items are separated by blank lines, Markdown will wrap the\n" +
-             "items in <code><p></code> tags in the HTML output. For example, this input:"),
+        para("If list items are separated by blank lines, Markdown will wrap the",
+             hard_break, "items in <code><p></code> tags in the HTML output. For example, this input:"),
 
         verb("*   Bird\n",
              "*   Magic\n"),
@@ -1192,9 +1192,9 @@ foo
              "<li><p>Magic</p></li>\n",
              "</ul>\n"),
 
-        para("List items may consist of multiple paragraphs. Each subsequent\n" +
-             "paragraph in a list item must be intended by either 4 spaces\n" +
-             "or one tab:"),
+        para("List items may consist of multiple paragraphs. Each subsequent",
+             hard_break, "paragraph in a list item must be intended by either 4 spaces",
+             hard_break, "or one tab:"),
 
         verb("1.  This is a list item with two paragraphs. Lorem ipsum dolor\n",
              "    sit amet, consectetuer adipiscing elit. Aliquam hendrerit\n",
@@ -1206,9 +1206,9 @@ foo
              "\n",
              "2.  Suspendisse id sem consectetuer libero luctus adipiscing.\n"),
 
-        para("It looks nice if you indent every line of the subsequent\n" +
-             "paragraphs, but here again, Markdown will allow you to be\n" +
-             "lazy:"),
+        para("It looks nice if you indent every line of the subsequent",
+             hard_break, "paragraphs, but here again, Markdown will allow you to be",
+             hard_break, "lazy:"),
 
         verb("*   This is a list item with two paragraphs.\n",
              "\n",
@@ -1218,8 +1218,8 @@ foo
              "\n",
              "*   Another item in the same list.\n"),
 
-        para("To put a blockquote within a list item, the blockquote's <code>></code>\n" +
-             "delimiters need to be indented:"),
+        para("To put a blockquote within a list item, the blockquote's <code>></code>",
+             hard_break, "delimiters need to be indented:"),
 
         verb("*   A list item with a blockquote:\n",
              "\n",
@@ -1227,32 +1227,32 @@ foo
              "    > inside a list item.\n"),
 
         para(
-             "To put a code block within a list item, the code block needs\n" +
-             "to be indented _twice_ -- 8 spaces or two tabs:"),
+             "To put a code block within a list item, the code block needs",
+             hard_break, "to be indented _twice_ -- 8 spaces or two tabs:"),
 
         verb("*   A list item with a code block:\n",
              "\n",
              "        <code goes here>\n"),
 
-        para("It's worth noting that it's possible to trigger an ordered list by\n" +
-             "accident, by writing something like this:"),
+        para("It's worth noting that it's possible to trigger an ordered list by",
+             hard_break, "accident, by writing something like this:"),
 
         verb("1986. What a great season.\n"),
 
-        para("In other words, a <em>number-period-space</em> sequence at the beginning of a\n" +
-             "line. To avoid this, you can backslash-escape the period:"),
+        para("In other words, a <em>number-period-space</em> sequence at the beginning of a",
+             hard_break, "line. To avoid this, you can backslash-escape the period:"),
 
         verb("1986\\. What a great season.\n"),
 
         raw("<h3 id=\"precode\">Code Blocks</h3>"),
 
-        para("Pre-formatted code blocks are used for writing about programming or\n" +
-             "markup source code. Rather than forming normal paragraphs, the lines\n" +
-             "of a code block are interpreted literally. Markdown wraps a code block\n" +
-             "in both <code><pre></code> and <code><code></code> tags."),
+        para("Pre-formatted code blocks are used for writing about programming or",
+             hard_break, "markup source code. Rather than forming normal paragraphs, the lines",
+             hard_break, "of a code block are interpreted literally. Markdown wraps a code block",
+             hard_break, "in both <code><pre></code> and <code><code></code> tags."),
 
-        para("To produce a code block in Markdown, simply indent every line of the\n" +
-             "block by at least 4 spaces or 1 tab. For example, given this input:"),
+        para("To produce a code block in Markdown, simply indent every line of the",
+             hard_break, "block by at least 4 spaces or 1 tab. For example, given this input:"),
 
         verb("This is a normal paragraph:\n",
              "\n",
@@ -1265,8 +1265,8 @@ foo
              "<pre><code>This is a code block.\n",
              "</code></pre>\n"),
 
-        para("One level of indentation -- 4 spaces or 1 tab -- is removed from each\n" +
-             "line of the code block. For example, this:"),
+        para("One level of indentation -- 4 spaces or 1 tab -- is removed from each",
+             hard_break, "line of the code block. For example, this:"),
 
         verb("Here is an example of AppleScript:\n",
              "\n",
@@ -1283,14 +1283,14 @@ foo
              "end tell\n",
              "</code></pre>\n"),
 
-        para("A code block continues until it reaches a line that is not indented\n" +
-             "(or the end of the article)."),
+        para("A code block continues until it reaches a line that is not indented",
+             hard_break, "(or the end of the article)."),
 
-        para("Within a code block, ampersands (<code>&</code>) and angle brackets (<code><</code> and <code>></code>)\n" +
-             "are automatically converted into HTML entities. This makes it very\n" +
-             "easy to include example HTML source code using Markdown -- just paste\n" +
-             "it and indent it, and Markdown will handle the hassle of encoding the\n" +
-             "ampersands and angle brackets. For example, this:"),
+        para("Within a code block, ampersands (<code>&</code>) and angle brackets (<code><</code> and <code>></code>)",
+             hard_break, "are automatically converted into HTML entities. This makes it very",
+             hard_break, "easy to include example HTML source code using Markdown -- just paste",
+             hard_break, "it and indent it, and Markdown will handle the hassle of encoding the",
+             hard_break, "ampersands and angle brackets. For example, this:"),
 
         verb("    <div class=\"footer\">\n",
              "        &copy; 2004 Foo Corporation\n",
@@ -1303,16 +1303,16 @@ foo
              "&lt;/div&gt;\n",
              "</code></pre>\n"),
 
-        para("Regular Markdown syntax is not processed within code blocks. E.g.,\n" +
-             "asterisks are just literal asterisks within a code block. This means\n" +
-             "it's also easy to use Markdown to write about Markdown's own syntax."),
+        para("Regular Markdown syntax is not processed within code blocks. E.g.,",
+             hard_break, "asterisks are just literal asterisks within a code block. This means",
+             hard_break, "it's also easy to use Markdown to write about Markdown's own syntax."),
 
         raw("<h3 id=\"hr\">Horizontal Rules</h3>"),
 
-        para("You can produce a horizontal rule tag (<code><hr /></code>) by placing three or\n" +
-             "more hyphens, asterisks, or underscores on a line by themselves. If you\n" +
-             "wish, you may use spaces between the hyphens or asterisks. Each of the\n" +
-             "following lines will produce a horizontal rule:"),
+        para("You can produce a horizontal rule tag (<code><hr /></code>) by placing three or",
+             hard_break, "more hyphens, asterisks, or underscores on a line by themselves. If you",
+             hard_break, "wish, you may use spaces between the hyphens or asterisks. Each of the",
+             hard_break, "following lines will produce a horizontal rule:"),
 
         verb("* * *\n",
              "\n",
@@ -1336,10 +1336,10 @@ foo
 
         para("In both styles, the link text is delimited by [square brackets]."),
 
-        para("To create an inline link, use a set of regular parentheses immediately\n" +
-             "after the link text's closing square bracket. Inside the parentheses,\n" +
-             "put the URL where you want the link to point, along with an _optional_\n" +
-             "title for the link, surrounded in quotes. For example:"),
+        para("To create an inline link, use a set of regular parentheses immediately",
+             hard_break, "after the link text's closing square bracket. Inside the parentheses,",
+             hard_break, "put the URL where you want the link to point, along with an _optional_",
+             hard_break, "title for the link, surrounded in quotes. For example:"),
 
         verb("This is [an example](http://example.com/ \"Title\") inline link.\n",
              "\n",
@@ -1353,13 +1353,13 @@ foo
              "<p><a href=\"http://example.net/\">This link</a> has no\n",
              "title attribute.</p>\n"),
 
-        para("If you're referring to a local resource on the same server, you can\n" +
-             "use relative paths:"),
+        para("If you're referring to a local resource on the same server, you can",
+             hard_break, "use relative paths:"),
 
         verb("See my [About](/about/) page for details.\n"),
 
-        para("Reference-style links use a second set of square brackets, inside\n" +
-             "which you place a label of your choosing to identify the link:"),
+        para("Reference-style links use a second set of square brackets, inside",
+             hard_break, "which you place a label of your choosing to identify the link:"),
 
         verb("This is [an example][id] reference-style link.\n"),
 
@@ -1367,8 +1367,8 @@ foo
 
         verb("This is [an example] [id] reference-style link.\n"),
 
-        para("Then, anywhere in the document, you define your link label like this,\n" +
-             "on a line by itself:"),
+        para("Then, anywhere in the document, you define your link label like this,",
+             hard_break, "on a line by itself:"),
 
         verb("[id]: http://example.com/  \"Optional Title Here\"\n"),
 
@@ -1376,8 +1376,8 @@ foo
 
         list(:BULLET,
           item(nil,
-            para("Square brackets containing the link identifier (optionally\n" +
-                 "indented from the left margin using up to three spaces);")),
+            para("Square brackets containing the link identifier (optionally",
+                 hard_break, "indented from the left margin using up to three spaces);")),
           item(nil,
             para("followed by a colon;")),
           item(nil,
@@ -1385,21 +1385,21 @@ foo
           item(nil,
             para("followed by the URL for the link;")),
           item(nil,
-            para("optionally followed by a title attribute for the link, enclosed\n" +
-                 "in double or single quotes."))),
+            para("optionally followed by a title attribute for the link, enclosed",
+                 hard_break, "in double or single quotes."))),
 
         para("The link URL may, optionally, be surrounded by angle brackets:"),
 
         verb("[id]: <http://example.com/>  \"Optional Title Here\"\n"),
 
-        para("You can put the title attribute on the next line and use extra spaces\n" +
-             "or tabs for padding, which tends to look better with longer URLs:"),
+        para("You can put the title attribute on the next line and use extra spaces",
+             hard_break, "or tabs for padding, which tends to look better with longer URLs:"),
 
         verb("[id]: http://example.com/longish/path/to/resource/here\n",
              "    \"Optional Title Here\"\n"),
 
-        para("Link definitions are only used for creating links during Markdown\n" +
-             "processing, and are stripped from your document in the HTML output."),
+        para("Link definitions are only used for creating links during Markdown",
+             hard_break, "processing, and are stripped from your document in the HTML output."),
 
         para("Link definition names may consist of letters, numbers, spaces, and punctuation -- but they are _not_ case sensitive. E.g. these two links:"),
 
@@ -1408,10 +1408,10 @@ foo
 
         para("are equivalent."),
 
-        para("The <em>implicit link name</em> shortcut allows you to omit the name of the\n" +
-             "link, in which case the link text itself is used as the name.\n" +
-             "Just use an empty set of square brackets -- e.g., to link the word\n" +
-             "\"Google\" to the google.com web site, you could simply write:"),
+        para("The <em>implicit link name</em> shortcut allows you to omit the name of the",
+             hard_break, "link, in which case the link text itself is used as the name.",
+             hard_break, "Just use an empty set of square brackets -- e.g., to link the word",
+             hard_break, "\"Google\" to the google.com web site, you could simply write:"),
 
         verb("[Google][]\n"),
 
@@ -1419,8 +1419,8 @@ foo
 
         verb("[Google]: http://google.com/\n"),
 
-        para("Because link names may contain spaces, this shortcut even works for\n" +
-            "multiple words in the link text:"),
+        para("Because link names may contain spaces, this shortcut even works for",
+            hard_break, "multiple words in the link text:"),
 
 
         verb("Visit [Daring Fireball][] for more information.\n"),
@@ -1429,10 +1429,10 @@ foo
 
         verb("[Daring Fireball]: http://daringfireball.net/\n"),
 
-        para("Link definitions can be placed anywhere in your Markdown document. I\n" +
-             "tend to put them immediately after each paragraph in which they're\n" +
-             "used, but if you want, you can put them all at the end of your\n" +
-             "document, sort of like footnotes."),
+        para("Link definitions can be placed anywhere in your Markdown document. I",
+             hard_break, "tend to put them immediately after each paragraph in which they're",
+             hard_break, "used, but if you want, you can put them all at the end of your",
+             hard_break, "document, sort of like footnotes."),
 
         para("Here's an example of reference links in action:"),
 
@@ -1459,33 +1459,33 @@ foo
              "<a href=\"http://search.yahoo.com/\" title=\"Yahoo Search\">Yahoo</a>\n",
              "or <a href=\"http://search.msn.com/\" title=\"MSN Search\">MSN</a>.</p>\n"),
 
-        para("For comparison, here is the same paragraph written using\n" +
-             "Markdown's inline link style:"),
+        para("For comparison, here is the same paragraph written using",
+             hard_break, "Markdown's inline link style:"),
 
         verb("I get 10 times more traffic from [Google](http://google.com/ \"Google\")\n",
              "than from [Yahoo](http://search.yahoo.com/ \"Yahoo Search\") or\n",
              "[MSN](http://search.msn.com/ \"MSN Search\").\n"),
 
-        para("The point of reference-style links is not that they're easier to\n" +
-             "write. The point is that with reference-style links, your document\n" +
-             "source is vastly more readable. Compare the above examples: using\n" +
-             "reference-style links, the paragraph itself is only 81 characters\n" +
-             "long; with inline-style links, it's 176 characters; and as raw HTML,\n" +
-             "it's 234 characters. In the raw HTML, there's more markup than there\n" +
-             "is text."),
+        para("The point of reference-style links is not that they're easier to",
+             hard_break, "write. The point is that with reference-style links, your document",
+             hard_break, "source is vastly more readable. Compare the above examples: using",
+             hard_break, "reference-style links, the paragraph itself is only 81 characters",
+             hard_break, "long; with inline-style links, it's 176 characters; and as raw HTML,",
+             hard_break, "it's 234 characters. In the raw HTML, there's more markup than there",
+             hard_break, "is text."),
 
-        para("With Markdown's reference-style links, a source document much more\n" +
-             "closely resembles the final output, as rendered in a browser. By\n" +
-             "allowing you to move the markup-related metadata out of the paragraph,\n" +
-             "you can add links without interrupting the narrative flow of your\n" +
-             "prose."),
+        para("With Markdown's reference-style links, a source document much more",
+             hard_break, "closely resembles the final output, as rendered in a browser. By",
+             hard_break, "allowing you to move the markup-related metadata out of the paragraph,",
+             hard_break, "you can add links without interrupting the narrative flow of your",
+             hard_break, "prose."),
 
         raw("<h3 id=\"em\">Emphasis</h3>"),
 
-        para("Markdown treats asterisks (<code>*</code>) and underscores (<code>_</code>) as indicators of\n" +
-             "emphasis. Text wrapped with one <code>*</code> or <code>_</code> will be wrapped with an\n" +
-             "HTML <code><em></code> tag; double <code>*</code>'s or <code>_</code>'s will be wrapped with an HTML\n" +
-             "<code><strong></code> tag. E.g., this input:"),
+        para("Markdown treats asterisks (<code>*</code>) and underscores (<code>_</code>) as indicators of",
+             hard_break, "emphasis. Text wrapped with one <code>*</code> or <code>_</code> will be wrapped with an",
+             hard_break, "HTML <code><em></code> tag; double <code>*</code>'s or <code>_</code>'s will be wrapped with an HTML",
+             hard_break, "<code><strong></code> tag. E.g., this input:"),
 
         verb("*single asterisks*\n",
              "\n",
@@ -1505,27 +1505,27 @@ foo
              "\n",
              "<strong>double underscores</strong>\n"),
 
-        para("You can use whichever style you prefer; the lone restriction is that\n" +
-             "the same character must be used to open and close an emphasis span."),
+        para("You can use whichever style you prefer; the lone restriction is that",
+             hard_break, "the same character must be used to open and close an emphasis span."),
 
         para("Emphasis can be used in the middle of a word:"),
 
         verb("un*fucking*believable\n"),
 
-        para("But if you surround an <code>*</code> or <code>_</code> with spaces, it'll be treated as a\n" +
-             "literal asterisk or underscore."),
+        para("But if you surround an <code>*</code> or <code>_</code> with spaces, it'll be treated as a",
+             hard_break, "literal asterisk or underscore."),
 
-        para("To produce a literal asterisk or underscore at a position where it\n" +
-             "would otherwise be used as an emphasis delimiter, you can backslash\n" +
-             "escape it:"),
+        para("To produce a literal asterisk or underscore at a position where it",
+             hard_break, "would otherwise be used as an emphasis delimiter, you can backslash",
+             hard_break, "escape it:"),
 
         verb("\\*this text is surrounded by literal asterisks\\*\n"),
 
         raw("<h3 id=\"code\">Code</h3>"),
 
-        para("To indicate a span of code, wrap it with backtick quotes (<code>`</code>).\n" +
-             "Unlike a pre-formatted code block, a code span indicates code within a\n" +
-             "normal paragraph. For example:"),
+        para("To indicate a span of code, wrap it with backtick quotes (<code>`</code>).",
+             hard_break, "Unlike a pre-formatted code block, a code span indicates code within a",
+             hard_break, "normal paragraph. For example:"),
 
         verb("Use the `printf()` function.\n"),
 
@@ -1533,8 +1533,8 @@ foo
 
         verb("<p>Use the <code>printf()</code> function.</p>\n"),
 
-        para("To include a literal backtick character within a code span, you can use\n" +
-             "multiple backticks as the opening and closing delimiters:"),
+        para("To include a literal backtick character within a code span, you can use",
+             hard_break, "multiple backticks as the opening and closing delimiters:"),
 
         verb("``There is a literal backtick (`) here.``\n"),
 
@@ -1542,9 +1542,9 @@ foo
 
         verb("<p><code>There is a literal backtick (`) here.</code></p>\n"),
 
-        para("The backtick delimiters surrounding a code span may include spaces --\n" +
-             "one after the opening, one before the closing. This allows you to place\n" +
-             "literal backtick characters at the beginning or end of a code span:"),
+        para("The backtick delimiters surrounding a code span may include spaces --",
+             hard_break, "one after the opening, one before the closing. This allows you to place",
+             hard_break, "literal backtick characters at the beginning or end of a code span:"),
 
         verb("A single backtick in a code span: `` ` ``\n",
              "\n",
@@ -1556,9 +1556,9 @@ foo
              "\n",
              "<p>A backtick-delimited string in a code span: <code>`foo`</code></p>\n"),
 
-        para("With a code span, ampersands and angle brackets are encoded as HTML\n" +
-             "entities automatically, which makes it easy to include example HTML\n" +
-             "tags. Markdown will turn this:"),
+        para("With a code span, ampersands and angle brackets are encoded as HTML",
+             hard_break, "entities automatically, which makes it easy to include example HTML",
+             hard_break, "tags. Markdown will turn this:"),
 
         verb("Please don't use any `<blink>` tags.\n"),
 
@@ -1577,11 +1577,11 @@ foo
 
         raw("<h3 id=\"img\">Images</h3>"),
 
-        para("Admittedly, it's fairly difficult to devise a \"natural\" syntax for\n" +
-             "placing images into a plain text document format."),
+        para("Admittedly, it's fairly difficult to devise a \"natural\" syntax for",
+             hard_break, "placing images into a plain text document format."),
 
-        para("Markdown uses an image syntax that is intended to resemble the syntax\n" +
-             "for links, allowing for two styles: _inline_ and _reference_."),
+        para("Markdown uses an image syntax that is intended to resemble the syntax",
+             hard_break, "for links, allowing for two styles: _inline_ and _reference_."),
 
         para("Inline image syntax looks like this:"),
 
@@ -1595,25 +1595,25 @@ foo
           item(nil,
             para("An exclamation mark: <code>!</code>;")),
           item(nil,
-            para("followed by a set of square brackets, containing the <code>alt</code>\n" +
-                 "attribute text for the image;")),
+            para("followed by a set of square brackets, containing the <code>alt</code>",
+                 hard_break, "attribute text for the image;")),
           item(nil,
-            para("followed by a set of parentheses, containing the URL or path to\n" +
-                 "the image, and an optional <code>title</code> attribute enclosed in double\n" +
-                 "or single quotes."))),
+            para("followed by a set of parentheses, containing the URL or path to",
+                 hard_break, "the image, and an optional <code>title</code> attribute enclosed in double",
+                 hard_break, "or single quotes."))),
 
         para("Reference-style image syntax looks like this:"),
 
         verb("![Alt text][id]\n"),
 
-        para("Where \"id\" is the name of a defined image reference. Image references\n" +
-             "are defined using syntax identical to link references:"),
+        para("Where \"id\" is the name of a defined image reference. Image references",
+             hard_break, "are defined using syntax identical to link references:"),
 
         verb("[id]: url/to/image  \"Optional title attribute\"\n"),
 
-        para("As of this writing, Markdown has no syntax for specifying the\n" +
-             "dimensions of an image; if this is important to you, you can simply\n" +
-             "use regular HTML <code><img></code> tags."),
+        para("As of this writing, Markdown has no syntax for specifying the",
+             hard_break, "dimensions of an image; if this is important to you, you can simply",
+             hard_break, "use regular HTML <code><img></code> tags."),
 
         rule(1),
 
@@ -1629,10 +1629,10 @@ foo
 
         verb("<a href=\"http://example.com/\">http://example.com/</a>\n"),
 
-        para("Automatic links for email addresses work similarly, except that\n" +
-             "Markdown will also perform a bit of randomized decimal and hex\n" +
-             "entity-encoding to help obscure your address from address-harvesting\n" +
-             "spambots. For example, Markdown will turn this:"),
+        para("Automatic links for email addresses work similarly, except that",
+             hard_break, "Markdown will also perform a bit of randomized decimal and hex",
+             hard_break, "entity-encoding to help obscure your address from address-harvesting",
+             hard_break, "spambots. For example, Markdown will turn this:"),
 
         verb("<address@example.com>\n"),
 
@@ -1645,18 +1645,18 @@ foo
 
         para("which will render in a browser as a clickable link to \"address@example.com\"."),
 
-        para("(This sort of entity-encoding trick will indeed fool many, if not\n" +
-               "most, address-harvesting bots, but it definitely won't fool all of\n" +
-               "them. It's better than nothing, but an address published in this way\n" +
-               "will probably eventually start receiving spam.)"),
+        para("(This sort of entity-encoding trick will indeed fool many, if not",
+               hard_break, "most, address-harvesting bots, but it definitely won't fool all of",
+               hard_break, "them. It's better than nothing, but an address published in this way",
+               hard_break, "will probably eventually start receiving spam.)"),
 
         raw("<h3 id=\"backslash\">Backslash Escapes</h3>"),
 
-        para("Markdown allows you to use backslash escapes to generate literal\n" +
-             "characters which would otherwise have special meaning in Markdown's\n" +
-             "formatting syntax. For example, if you wanted to surround a word with\n" +
-             "literal asterisks (instead of an HTML <code><em></code> tag), you can backslashes\n" +
-             "before the asterisks, like this:"),
+        para("Markdown allows you to use backslash escapes to generate literal",
+             hard_break, "characters which would otherwise have special meaning in Markdown's",
+             hard_break, "formatting syntax. For example, if you wanted to surround a word with",
+             hard_break, "literal asterisks (instead of an HTML <code><em></code> tag), you can backslashes",
+             hard_break, "before the asterisks, like this:"),
 
         verb("\\*literal asterisks\\*\n"),
 
@@ -1769,7 +1769,8 @@ foo
           item(nil,
             para("Item 1, graf one."),
             para("Item 2. graf two. The quick brown fox " +
-                 "jumped over the lazy dog's\nback.")),
+                 "jumped over the lazy dog's", hard_break,
+                 "back.")),
           item(nil, para("Item 2.")),
           item(nil, para("Item 3."))),
 
@@ -1839,9 +1840,9 @@ foo
       doc(
         list(:BULLET,
           item(nil,
-            para("this is a list item\nindented with tabs")),
+            para("this is a list item", hard_break, "indented with tabs")),
           item(nil,
-            para("this is a list item\nindented with spaces"))),
+            para("this is a list item", hard_break, "indented with spaces"))),
 
         para("Code:"),
 
