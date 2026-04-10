@@ -743,7 +743,8 @@ class NotesEditor {
     this.statusEl = document.getElementById('noteStatus');
     this.isOpen = false;
     this.storagePrefix = 'slide-notes-';
-    this.loadAllFromStorage();
+    this.originPrefix = 'slide-notes-origin-';
+    this.syncStorageWithDOM();
     this.setupKeyboard();
     this.setupAutoSave();
     this.setupSlideTracking();
@@ -768,6 +769,7 @@ class NotesEditor {
     this.textarea.addEventListener('input', () => {
       const idx = this.sp.currentSlide;
       localStorage.setItem(this.storagePrefix + idx, this.textarea.value);
+      // Mark as user-edited (origin stays the same — only changes on file reload)
       this.statusEl.textContent = 'Saved';
       clearTimeout(this._statusTimeout);
       this._statusTimeout = setTimeout(() => { this.statusEl.textContent = ''; }, 1500);
@@ -784,6 +786,7 @@ class NotesEditor {
   }
   loadNoteForSlide(idx) {
     this.slideNumEl.textContent = idx + 1;
+    // localStorage has already been synced with DOM in syncStorageWithDOM
     const stored = localStorage.getItem(this.storagePrefix + idx);
     if (stored !== null) {
       this.textarea.value = stored;
@@ -793,14 +796,29 @@ class NotesEditor {
       this.textarea.value = notesEl ? notesEl.textContent.trim() : '';
     }
   }
-  loadAllFromStorage() {
+  // Compare stored "origin" (DOM content at last load) with current DOM.
+  // If DOM changed (file was updated externally), reset localStorage for that slide.
+  // If DOM is the same, keep the user's localStorage edits.
+  syncStorageWithDOM() {
     this.sp.slides.forEach((slide, idx) => {
-      if (localStorage.getItem(this.storagePrefix + idx) === null) {
-        const notesEl = slide.querySelector('.speaker-notes');
-        if (notesEl && notesEl.textContent.trim()) {
-          localStorage.setItem(this.storagePrefix + idx, notesEl.textContent.trim());
+      const notesEl = slide.querySelector('.speaker-notes');
+      const currentDOM = notesEl ? notesEl.textContent.trim() : '';
+      const storedOrigin = localStorage.getItem(this.originPrefix + idx);
+      const storedEdit = localStorage.getItem(this.storagePrefix + idx);
+
+      if (storedOrigin === null) {
+        // First time: seed both origin and edit from DOM
+        if (currentDOM) {
+          localStorage.setItem(this.originPrefix + idx, currentDOM);
+          localStorage.setItem(this.storagePrefix + idx, currentDOM);
         }
+      } else if (storedOrigin !== currentDOM) {
+        // DOM changed externally (file was edited/saved/git pulled)
+        // Reset: new DOM content wins
+        localStorage.setItem(this.originPrefix + idx, currentDOM);
+        localStorage.setItem(this.storagePrefix + idx, currentDOM);
       }
+      // else: DOM unchanged, keep user's localStorage edits
     });
   }
   toggle() {
@@ -823,6 +841,8 @@ class NotesEditor {
           slide.appendChild(notesEl);
         }
         notesEl.textContent = stored;
+        // Update origin so next load knows this was saved
+        localStorage.setItem(this.originPrefix + idx, stored);
       }
     });
   }
