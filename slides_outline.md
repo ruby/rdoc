@@ -7,7 +7,7 @@
 
 ---
 
-## Section 1: Intro (2-3 min)
+## Section 1: The Hook (3-4 min)
 
 ### Slide 1 — Title
 - "The future of Ruby documentation"
@@ -15,120 +15,74 @@
 
 ### Slide 2 — About me
 - Ruby committer, RDoc maintainer
-- Shopify — Developer Experience (Ruby & Rails Infrastructure)
-- Mention the team and key collaborators (tompng, etc.)
+- Ruby DX team @Shopify (Ruby & Rails Infrastructure)
+- Key collaborator: tompng (Tomoya Ishida)
 
-### Slide 3 — What this talk covers
-- Three-part arc:
-  1. Where we've caught up
-  2. Where we're getting there
-  3. How we get ahead next time
-- Frame: "RDoc hasn't had major investment in years. That changed."
+### Slide 3 — Bold claim
+- "The future of Ruby's documentation is about AI"
 
----
+### Slide 4 — What AI needs from documentation
+- AI likes **clear, accurate documentation** — misinformation gets amplified by AI
+- AI likes **Markdown** — it can read and write it natively
+- AI likes **clear intent** — type signatures tell AI what code does without guessing
+- AI likes **quick, deterministic feedback** — coverage checks, missing reference warnings, not "try and see"
 
-## Section 2: RDoc Primer + The Problem (2 min)
+### Slide 5 — The twist
+- "You know what? All of these help human developers too."
+- Clear docs, Markdown, types, fast feedback — these aren't AI requirements, they're good documentation requirements
+- AI just raises the stakes
 
-### Slide 4 — What RDoc does
-- Ruby's default documentation tool (ships with Ruby since 1.8)
-- Parses: Ruby source, C extensions, markup files
-- Generates: HTML docs, `ri` terminal docs
-- Supported markups: RDoc, Markdown, RD, TomDoc
-- Powers docs.ruby-lang.org
-
-### Slide 5 — The honest problem
-- The Darkfish theme hadn't changed meaningfully in years
-- No live preview for doc authors
-- Ruby parser couldn't handle modern syntax (endless methods, etc.)
-- Markdown support was incomplete and buggy
-- No type information in docs
-- Contributors drifted to YARD or abandoned docs entirely
-- "We fell behind. Let's talk about catching up."
+### Slide 6 — The problem
+- RDoc was struggling to provide these to humans
+- Old theme (Darkfish), no live preview, incomplete Markdown, no type info, parser couldn't handle modern Ruby
+- In the AI age, the same RDoc would struggle even more
+- "So here's what we did to make RDoc work for us, and our agents"
 
 ---
 
-## Section 3: Caught Up (6 min)
+## Section 2: Here's What We Did (~18 min)
 
-> *These are table-stakes features modern docs should have. Now we have them.*
+> *Walk through each piece of work, framed by what it enables for humans and AI.*
 
-### Slide 6 — Section title: "Long overdue — caught up"
+### Slide 7 — Aliki theme (quick)
+- Before: Darkfish screenshot → After: Aliki screenshot
+- Clear, accurate presentation of documentation
+- Dark mode, mobile, fuzzy search, method signature cards
+- "Named after my cat. Ships in Ruby 4.0."
 
-### Slide 7 — Aliki theme: before
-- Screenshot of Darkfish (the old theme)
-- Key problems: no dark mode, limited mobile support, dated visual design, basic search
+### Slide 8 — Server mode (~2 min)
+- `rdoc --server` — live-reload documentation preview
+- Demo: edit a file → browser auto-refreshes
+- Zero external dependencies (Ruby's TCPServer)
+- Incremental re-parsing, only changed files
+- **Why it matters**: fast feedback loop for doc authors — humans and AI agents both benefit from seeing changes immediately
 
-### Slide 8 — Aliki theme: after
-- Screenshot of Aliki
-- Key improvements at a glance:
-  - Three-column layout (sidebar + content + right-side TOC)
-  - Dark mode with system preference detection
-  - Advanced search with fuzzy matching and type badges
-  - Mobile-first responsive design
-  - Method signature cards
-  - Copy-to-clipboard on code blocks
-  - C and bash syntax highlighting
-  - SVG icons, no embedded fonts (lighter output)
-- "Named after my cat"
-
-### Slide 9 — Aliki: search
-- Demo/screenshot of the search UI
-- Tiered scoring: exact > prefix > substring > fuzzy
-- Namespace-aware queries (typing `String#` filters to String methods)
-- Type badges distinguish classes, modules, methods, pages
-
-### Slide 10 — Aliki: dark mode + mobile
-- Side-by-side screenshots: light/dark, desktop/mobile
-- System preference detection, localStorage persistence
-
-### Slide 11 — Live-reload server
-- `rdoc --server` or `make html-server` (in ruby/ruby)
-- Pre-recorded demo: edit a file → browser auto-refreshes
-- Technical highlights:
-  - Zero external dependencies (uses Ruby's TCPServer)
-  - Incremental re-parsing (only changed files)
-  - Background file watcher polling mtimes
-  - Page caching with invalidation on change
-- "You can now preview documentation as you write it"
-
-### Slide 12 — Prism migration (tompng shout-out)
-- **The problem**: RDoc's Ruby parser used Ripper (token-stream based)
-  - Couldn't handle modern Ruby syntax
+### Slide 9 — Prism parser: the foundation (~3 min)
+- RDoc's Ruby parser used Ripper (token-stream based)
+  - Couldn't handle modern Ruby syntax (endless methods, pattern matching, etc.)
   - Parser logic and comment handling tightly coupled
   - Even small bugs were hard to fix
-- **The fix**: tompng (Tomoya Ishida) rewrote it using Prism's AST visitor
-  - 20-month effort: opt-in → compatibility fixes → default → post-switch fixes
-  - Fixes 7+ tracked long-standing issues
-  - Old parser still available via `RDOC_USE_RIPPER_PARSER=1`
-- **But that's not all**: tompng also rewrote:
-  - Comment directive parser (`:call-seq:`, `:nodoc:`, etc.) — old system double-parsed
-  - Inline formatting engine — replaced string-replacing AttributeManager with structured InlineParser
+- tompng rewrote it using Prism's AST visitor
+  - 20-month effort, now the default
+  - Fixes 7+ long-standing issues
+- But that's not all — tompng also rewrote:
+  - Comment directive parser (`:call-seq:`, `:nodoc:`, etc.)
+  - Inline formatting engine (replaced string-replacing AttributeManager with structured InlineParser)
 - "Three major subsystem rewrites. Invisible to users, foundational for everything else."
-- Thank tompng specifically
+- **Why it matters**: accurate parsing → accurate documentation → AI and humans both get correct information
+- **Needs visual aids:**
+  - Diagram showing where these 3 subsystems sit in RDoc's pipeline (source → parser → directives → inline formatting → output)
+  - Code examples: before/after for each subsystem (e.g., Ripper token stream vs Prism AST visit, old directive double-parse vs new single-pass, string replacement vs structured nodes)
+  - Keep it concrete — show a real Ruby snippet going through each stage
 
-### Slide 13 — What "caught up" means
-- Modern reading experience (Aliki)
-- Modern authoring experience (server mode)
-- Modern parsing foundation (Prism)
-- "These were table stakes. Now let's talk about what's next."
-
----
-
-## Section 4: Getting There (10 min)
-
-> *Long overdue work that's actively in progress.*
-
-### Slide 14 — Section title: "Long overdue — getting there"
-
-### Part A: Markdown Support (5 min)
-
-### Slide 15 — Why Markdown?
-- Markdown is the industry standard
-- RDoc markup is Ruby-specific, not widely known even within the community
-- Lowering the contributor barrier for Ruby core docs
+### Slide 10 — Markdown support: why it matters (~2 min)
+- Markdown is the universal format — humans write it, AI reads and writes it
+- RDoc markup is Ruby-specific, not widely known
 - "If you can write a GitHub README, you can contribute to Ruby documentation"
+- **For AI**: Markdown output is something AI agents can consume directly
 
-### Slide 16 — Why it took so long: the pipeline
-- **Pipeline diagram**:
+### Slide 11 — Markdown: why it took so long
+- Pipeline diagram:
   ```
   Markdown parser ──┐                    ┌─────────────┐
                     ├─► RDoc::Markup ───►│ Shared       │
@@ -138,39 +92,22 @@
   ```
 - Markdown was added ~2011 by reusing RDoc's internal pipeline
 - Both parsers produce the same node types, share the same inline parser and formatters
-
-### Slide 17 — The coupling problem: concrete example
-- Markdown `~~strikethrough~~` → parser outputs `<del>text</del>` as a plain string
-- That string feeds into the shared InlineParser
-- InlineParser didn't recognize `<del>` → strikethrough silently broken
-- Fix: modify the shared InlineParser → must verify RDoc markup still works
 - "Every Markdown fix is a two-format fix. That's why progress is incremental."
 
-### Slide 18 — What's improved
-- Strikethrough (`~~text~~`) aligned with GFM spec
-- GitHub-style heading anchors (`#heading-name` links)
-- Table parsing fixes (inline markdown in cells, incomplete rows)
-- Bash/shell syntax highlighting
-- Backtick quoting in RDoc markup too
-- **GFM spec comparison test suite** — systematic tracking of compatibility
-- break_on_newline enabled by default
+### Slide 12 — Markdown: concrete coupling example
+- `~~strikethrough~~` → parser outputs `<del>text</del>` as a plain string
+- That string feeds into the shared InlineParser
+- InlineParser didn't recognize `<del>` → strikethrough silently broken
+- Fix requires touching the shared InlineParser → must verify RDoc markup still works
 
-### Slide 19 — Before/after examples
-- Side-by-side: same documentation written in RDoc markup vs Markdown
-- Show the readability difference
-- Show what works today in Markdown that didn't before
+### Slide 13 — Markdown: what's improved
+- Strikethrough, heading anchors, table fixes, syntax highlighting
+- GFM spec comparison test suite for systematic tracking
+- `break_on_newline` enabled by default
+- Migration already started: `standard_library_rdoc.html` → `standard_library_md.html` in Ruby 3.4+
 
-### Slide 20 — Migration plan
-- Step 1: Get Markdown support to GFM-level quality (in progress)
-- Step 2: Migration tooling (converting existing RDoc markup → Markdown)
-- Step 3: Migrate ruby-core documentation
-- Step 4: Eventually deprecate RDoc markup? (open question)
-- "The URL already changed: standard_library_rdoc.html → standard_library_md.html in Ruby 3.4+"
-
-### Part B: RBS Type Signatures (5 min)
-
-### Slide 21 — RBS in documentation
-- The `#:` inline annotation syntax (Sorbet-flavored RBS)
+### Slide 14 — RBS type signatures: clear intent (~3 min)
+- The `#:` inline annotation syntax
 - Example:
   ```ruby
   #: (String name, ?Integer age) -> User
@@ -178,101 +115,89 @@
     # ...
   end
   ```
-- RDoc extracts these and displays type signatures in HTML output and `ri`
+- RDoc extracts these and displays in HTML output and `ri`
+- **Why it matters**: structured, machine-readable signatures — AI knows the types without guessing
 
-### Slide 22 — Demo: RBS in HTML
-- Pre-recorded: show a class page with type signatures rendered
-- Type names are linked to their corresponding documentation pages
-- Method signature cards with types
+### Slide 15 — RBS in HTML demo
+- Pre-recorded: class page with type signatures rendered
+- Type names linked to their documentation pages
 
-### Slide 23 — Demo: RBS in ri
-- Pre-recorded: terminal output showing `ri` with type information
-- Types displayed alongside method documentation
-
-### Slide 24 — The question: can RBS replace call-seq?
-- Show the overlap:
-  ```
-  # call-seq:
-  #   readlines(sep=$/)     -> array
-  #   readlines(limit)      -> array
-
-  #: (?String sep) -> Array[String]
-  #: (Integer limit) -> Array[String]
-  ```
-- Both express: method name, parameters, return type, overloads
-- "For a language that doesn't want typing, writing type signatures for documentation — that's huge"
-
-### Slide 25 — The gap: default values
-- call-seq shows `sep=$/` — the actual default value
-- RBS can only say `?String sep` — optional, but what's the default?
-- This matters especially for C extensions where there's no Ruby source to inspect
-- "If we want to migrate, RBS needs default value support"
-
-### Slide 26 — What's next for RBS in docs
-- Status: aiming to ship on docs.ruby-lang.org (PR #1665)
-- Migration path from call-seq: TBD, depends on RBS default value support
-- Long-term: structured, machine-readable signatures replace free-form text
-- In ruby/ruby, writing type signatures directly for documentation purposes
+### Slide 16 — The AI accelerator (honest aside, ~2 min)
+- RDoc is huge and complex. Without dedicated maintainers, it was impossible to change at pace.
+- When tompng and I became active maintainers in 2024, we made progress — but limited
+- Since mid-2025, AI capabilities helped me greatly increase my output
+  - Writing code, reviewing tompng's PRs, exploring unfamiliar subsystems
+- tompng's work was his own — but AI helped me keep up with reviewing it
+- "The pace is accelerating. Not because we're working harder, but because we have better tools."
 
 ---
 
-## Section 5: Getting Ahead (3 min)
+## Section 3: What's Still Ahead (~6-7 min)
 
-> *How do we avoid falling behind again?*
+### Slide 17 — RDoc's position
+- We prioritize **better contributing experience**
+  - Target: Ruby's official docs (docs.ruby-lang.org) and gem docs
+  - Goal: make documentation easier to write and maintain
+- Support and promote ways to provide more useful information
+  - RBS signatures are a start — structured, machine-readable method contracts
+  - We'll revisit all supported directives to set good standards
+- Whether users adopt type signatures or a type checker is their choice — RDoc supports both
+- `ri` already outputs Markdown (`ri --format=markdown`) — a bridge to AI that exists today
 
-### Slide 27 — Section title: "Getting ahead"
+### Slide 18 — For consuming documentation
+- **For humans**: we improved the reading experience on the web (Aliki theme)
+- **For AI**: we evaluated the options and found nothing proven yet
+  - llms.txt: most complete standard for LLM-friendly docs
+    - We prototyped it. 10% adoption, zero measurable impact on AI citations
+    - No major LLM provider officially consumes it
+  - No standard exists for serving Markdown versions of documentation pages
+  - We considered generating Markdown output from RDoc
+    - Prioritizing this now creates more risk (slowing down generation, complicating internal improvements) than the reward
 
-### Slide 28 — AI & documentation: what we evaluated
-- llms.txt / llms-full.txt: the proposed standard for LLM-friendly docs
-- We prototyped it. Then we looked at the data:
-  - 10% adoption across 300k domains
-  - **Zero measurable impact** on AI citations (SE Ranking / Search Engine Journal study)
-  - XGBoost model improved when llms.txt was *removed* as a variable
-  - Zero bot visits from GPTBot, ClaudeBot, PerplexityBot
-  - No major LLM provider officially supports it
-- "The trade-off: generation time + code complexity for all users, for negligible benefit"
-- Decision: not pursuing. Responsible maintainership > hype.
+### Slide 19 — Other communities are asking the same questions
+- Rustdoc RFC (rust-lang/rfcs#3751): proposed LLM-friendly text output for `cargo doc`
+  - Community rejected it: "This should be an external tool"
+  - T-rustdoc team: "Very likely it is not the desired format within 3 months, never mind 3 years"
+  - Key argument: AI changes faster than language toolchain processes
+- No major doc generator has shipped AI-specific output features
+- All current AI-docs integration happens at the consumption layer (MCP servers, tools like Dash/DevDocs), not the generation layer
+- Our conclusion aligns: doc generators should focus on producing good output, let the ecosystem build consumption tools
 
-### Slide 29 — The real AI play: better foundations
-- Instead of special files for LLMs, build docs that are better for *everyone*:
-  - Markdown: universally understood by humans AND machines
-  - RBS types: structured, machine-readable signatures
-  - Clean architecture: enables future tooling we can't predict yet
-- ruby-skills (github.com/st0012/ruby-skills): practical AI tooling for Ruby development
-  - 109 stars, actively used
-  - Teaches AI assistants about Ruby version management, authoritative doc sources, test framework nuances
-  - Future: RDoc-specific skills once the feature work lands
-- "Don't chase trends. Build good foundations that naturally serve future consumers."
+### Slide 20 — What we're doing for AI, concretely
+- In the AI age, documentation has more leverage — especially core and library docs
+  - docs.ruby-lang.org is what AI models train on and what AI tools reference
+- RDoc can make contributing and maintaining docs easier for both humans and AI:
+  - **Setting good standards**: RBS display is a start. Revisiting directives for clarity.
+  - **Better authoring tools**: server mode for humans. Improved CLI for AI agents.
+    - `rdoc -C` coverage: helps AI know what's missing/incorrect (PR #1659)
+    - `ri --format=markdown`: AI agents can query Ruby docs directly
+  - **Endoh benchmark** (March 2026): Ruby is already #1 for AI code generation ($0.36/run)
+    - Adding a type checker at generation time costs 2-3× overhead
+    - Types already in documentation give AI the information without that cost
+- The AI consumption space moves fast and nothing is proven effective yet
+- So we keep the foundation solid and wait for the dust to settle
 
-### Slide 30 — The philosophy
-- Evaluate before building (data over hype)
-- Invest in foundations (Prism, Markdown, types) not band-aids
-- Make documentation a first-class part of the Ruby experience
+---
+
+## Section 4: Recap + Close (~2 min)
+
+### Slide 21 — Summary
+- In the AI age, documentation has more leverage than ever
+- RDoc's priority: make docs easier to write and maintain
+  - Prism, Markdown, server mode, RBS, Aliki — the foundation is rebuilt
+- For AI: we evaluated, we're honest about what works, and we build good foundations
 - "The best way to prepare for the future is to get the present right"
 
----
-
-## Section 6: Recap (1 min)
-
-### Slide 31 — Summary
-
-| Caught up | Getting there | Getting ahead |
-|-----------|---------------|---------------|
-| Aliki theme | Markdown/GFM | Evaluate with data |
-| Server mode | RBS type sigs | Build foundations |
-| Prism parser | call-seq → RBS? | Serve all consumers |
-
-### Slide 32 — Call to action
+### Slide 22 — Call to action
 - Contribute to Ruby documentation — it's Markdown now!
 - Try `rdoc --server` for your own projects
-- Check out ruby-skills for better AI-assisted Ruby development
 - Links:
   - github.com/ruby/rdoc
   - docs.ruby-lang.org
   - github.com/st0012/ruby-skills
 
-### Slide 33 — Thank you
-- Thank tompng, Shopify team, Ruby committers
+### Slide 23 — Thank you
+- Thank tompng (Tomoya Ishida), Shopify Ruby DX team, Ruby committers
 - Questions?
 
 ---
@@ -288,18 +213,20 @@ All supporting research is in `research/`:
 - `callseq_vs_rbs.md` — call-seq vs RBS comparison
 - `markdown_rdoc_coupling.md` — Markdown/RDoc architectural coupling
 - `tompng_prism_work.md` — tompng's contributions
+- `type_sigs_ai_performance.md` — Deep research: types + AI (10 sources, verified)
+- `ai_documentation_skills.md` — Documentation tools + AI landscape
+- `markdown_for_agents.md` — Markdown for AI agents: approaches and open questions
+- `rustdoc_llm_rfc.md` — Rustdoc LLM RFC discussion (rust-lang/rfcs#3751)
 
 ## Timing Budget
 
 | Section | Time | Slides |
 |---------|------|--------|
-| 1. Intro | 2-3 min | 3 |
-| 2. RDoc primer + problem | 2 min | 2 |
-| 3. Caught up | 6 min | 8 |
-| 4. Getting there | 10 min | 12 |
-| 5. Getting ahead | 3 min | 4 |
-| 6. Recap | 1 min | 3 |
-| **Total** | **~28-30 min** | **~32** |
+| 1. The hook | 3-4 min | 6 |
+| 2. Here's what we did | ~16-18 min | 10 |
+| 3. What's still ahead | ~6-7 min | 4 |
+| 4. Recap + close | ~2 min | 3 |
+| **Total** | **~28-30 min** | **~23** |
 
 ## Working with the Slides
 
