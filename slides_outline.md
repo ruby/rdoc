@@ -303,9 +303,24 @@ All supporting research is in `research/`:
 
 ## Working with the Slides
 
+### Dev Server
+
+Start the dev server (serves files + enables saving):
+
+```bash
+node server.js        # http://localhost:8080
+node server.js 3000   # custom port
+```
+
+Open `http://localhost:8080` in any browser. The slides are served as the default page.
+
 ### Editing
 
-Open `the-future-of-ruby-documentation.html` in a browser. Press **E** or hover the top-left corner to enter edit mode. Click any text to edit. **Ctrl+S** saves directly back to the file (Chrome/Edge only — first save prompts for file location, subsequent saves are instant).
+Press **E** or hover the top-left corner to enter edit mode. Click any text to edit. Press **N** to open the speaker notes editor. **⌘S** saves everything (slide content + notes) back to the file via the dev server — works from anywhere, any browser, no dialogs.
+
+### Presenter Mode
+
+Press **S** to open the presenter window (timer, current/next slide, speaker notes). Press **B** to blackout the main window.
 
 ### Exporting to PDF
 
