@@ -549,6 +549,12 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 </section>
 
 <script>
+// Shared check: is the user typing in a text field?
+function isTyping(e) {
+  const tag = e.target.tagName;
+  return tag === 'TEXTAREA' || tag === 'INPUT' || !!e.target.getAttribute('contenteditable');
+}
+
 class SlidePresentation {
   constructor() {
     this.slides = document.querySelectorAll('.slide');
@@ -579,7 +585,7 @@ class SlidePresentation {
   }
   setupKeyboardNav() {
     document.addEventListener('keydown', (e) => {
-      if (e.target.getAttribute('contenteditable') || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+      if (isTyping(e)) return;
       switch(e.key) {
         case 'ArrowDown': case 'ArrowRight': case ' ': case 'PageDown':
           e.preventDefault(); this.goToSlide(this.currentSlide + 1); break;
@@ -655,7 +661,7 @@ class InlineEditor {
   }
   setupKeyboard() {
     document.addEventListener('keydown', (e) => {
-      if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) this.toggleEditMode();
+      if ((e.key === 'e' || e.key === 'E') && !isTyping(e)) this.toggleEditMode();
       if (e.ctrlKey && e.key === 's' && this.isActive) { e.preventDefault(); this.exportFile(); }
     });
   }
@@ -741,8 +747,8 @@ class NotesEditor {
   }
   setupKeyboard() {
     document.addEventListener('keydown', (e) => {
-      if (e.target === this.textarea) return;
-      if ((e.key === 'n' || e.key === 'N') && !e.target.getAttribute('contenteditable')) this.toggle();
+      if (isTyping(e)) return;
+      if (e.key === 'n' || e.key === 'N') this.toggle();
     });
     this.textarea.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') { this.toggle(); e.preventDefault(); }
@@ -858,7 +864,7 @@ class PresenterMode {
 
   setupKeyboard() {
     document.addEventListener('keydown', (e) => {
-      if (e.target.getAttribute('contenteditable')) return;
+      if (isTyping(e)) return;
       if (e.key === 's' || e.key === 'S') { if (!e.ctrlKey && !e.metaKey) this.openPresenterWindow(); }
       if (e.key === 'b' || e.key === 'B') this.toggleBlackout();
     });
