@@ -116,14 +116,14 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 </head>
 <body class="">
 <div class="progress-bar" id="progressBar" style="width: 6.06061%;"></div>
-<nav class="nav-dots" id="navDots"><button class="dot" aria-label="Go to slide 1"></button><button class="dot active" aria-label="Go to slide 2"></button><button class="dot" aria-label="Go to slide 3"></button><button class="dot" aria-label="Go to slide 4"></button><button class="dot" aria-label="Go to slide 5"></button><button class="dot" aria-label="Go to slide 6"></button><button class="dot" aria-label="Go to slide 7"></button><button class="dot" aria-label="Go to slide 8"></button><button class="dot" aria-label="Go to slide 9"></button><button class="dot" aria-label="Go to slide 10"></button><button class="dot" aria-label="Go to slide 11"></button><button class="dot" aria-label="Go to slide 12"></button><button class="dot" aria-label="Go to slide 13"></button><button class="dot" aria-label="Go to slide 14"></button><button class="dot" aria-label="Go to slide 15"></button><button class="dot" aria-label="Go to slide 16"></button><button class="dot" aria-label="Go to slide 17"></button><button class="dot" aria-label="Go to slide 18"></button><button class="dot" aria-label="Go to slide 19"></button><button class="dot" aria-label="Go to slide 20"></button><button class="dot" aria-label="Go to slide 21"></button><button class="dot" aria-label="Go to slide 22"></button><button class="dot" aria-label="Go to slide 23"></button><button class="dot" aria-label="Go to slide 24"></button><button class="dot" aria-label="Go to slide 25"></button><button class="dot" aria-label="Go to slide 26"></button><button class="dot" aria-label="Go to slide 27"></button><button class="dot" aria-label="Go to slide 28"></button><button class="dot" aria-label="Go to slide 29"></button><button class="dot" aria-label="Go to slide 30"></button><button class="dot" aria-label="Go to slide 31"></button><button class="dot" aria-label="Go to slide 32"></button><button class="dot" aria-label="Go to slide 33"></button></nav>
+<nav class="nav-dots" id="navDots"><button class="dot" aria-label="Go to slide 1"></button><button class="dot active" aria-label="Go to slide 2"></button><button class="dot" aria-label="Go to slide 3"></button><button class="dot" aria-label="Go to slide 4"></button><button class="dot" aria-label="Go to slide 5"></button><button class="dot" aria-label="Go to slide 6"></button><button class="dot" aria-label="Go to slide 7"></button><button class="dot" aria-label="Go to slide 8"></button><button class="dot" aria-label="Go to slide 9"></button><button class="dot" aria-label="Go to slide 10"></button><button class="dot" aria-label="Go to slide 11"></button><button class="dot" aria-label="Go to slide 12"></button><button class="dot" aria-label="Go to slide 13"></button><button class="dot" aria-label="Go to slide 14"></button><button class="dot" aria-label="Go to slide 15"></button><button class="dot" aria-label="Go to slide 16"></button><button class="dot" aria-label="Go to slide 17"></button><button class="dot" aria-label="Go to slide 18"></button><button class="dot" aria-label="Go to slide 19"></button><button class="dot" aria-label="Go to slide 20"></button><button class="dot" aria-label="Go to slide 21"></button><button class="dot" aria-label="Go to slide 22"></button><button class="dot" aria-label="Go to slide 23"></button></nav>
 <div class="edit-hotzone" id="editHotzone"></div>
 <button class="edit-toggle" id="editToggle" title="Edit mode (E)">✓</button>
 <div class="edit-banner" id="editBanner">EDIT MODE — Click any text to edit · ⌘S to save</div>
 <div class="blackout-overlay" id="blackoutOverlay"></div>
 <div class="notes-panel" id="notesPanel">
   <div class="notes-panel-header">
-    <span class="notes-label">Speaker Notes (slide <span id="noteSlideNum">2</span>/33)</span>
+    <span class="notes-label">Speaker Notes (slide <span id="noteSlideNum">1</span>/36)</span>
     <span class="notes-status" id="noteStatus">Saved</span>
   </div>
   <textarea id="notesTextarea" placeholder="Type your speaker notes here..."></textarea>
@@ -143,105 +143,112 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 </section>
 
 <!-- SLIDE 2: ABOUT ME -->
-<section class="slide visible"><div class="slide-content" style="max-width:min(85vw,800px)">
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
   <h2 class="reveal">About me</h2>
   <ul class="reveal">
-    <li>Ruby committer, RDoc maintainer</li>
+    <li>Ruby committer — IRB, RDoc, Ruby LSP, Rubydex, a bit of ZJIT</li>
     <li>Ruby DX team @Shopify</li>
-    <li>I maintain IRB, Reline, RDoc, Ruby LSP, and Rubydex</li>
   </ul>
 </div><div class="slide-num">02</div>
-  <div class="speaker-notes" hidden="">First a quick introduction — I'm Stan Lo, I'm a Ruby committer and I maintain several Ruby tools: IRB, Reline, RDoc, and Ruby LSP.I'm part of the Ruby Developer Experience team at Shopify, where we focus on making Ruby development better for everyone.This past year, RDoc has been my main focus. And that's what this talk is about.</div>
+  <div class="speaker-notes" hidden="">I'm Stan Lo. I'm a Ruby committer and I work on several Ruby tools — IRB, RDoc, Ruby LSP, and a bit of ZJIT. I'm part of the Ruby Developer Experience team at Shopify.</div>
 </section>
 
-<!-- SLIDE 3: WHAT WE'LL COVER -->
+<!-- SLIDE 3: RUBYDEX + COLLEAGUE TALK -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">This past year, I've been working on RDoc.</h2>
-  <p class="reveal" style="margin-bottom:var(--content-gap)">I want to share what's changed, what's in progress, and how I'm thinking about what comes next.</p>
-  <div class="reveal" style="display:flex;flex-direction:column;gap:var(--content-gap)">
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">01</span><div><strong style="color:var(--text)">Caught up</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">New theme, live preview, Prism parser</span></div></div>
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">02</span><div><strong style="color:var(--text)">Getting there</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">Markdown support, RBS type signatures</span></div></div>
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1.5vw,1rem)"><span style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">03</span><div><strong style="color:var(--text)">Getting ahead</strong><br><span style="color:var(--text-secondary);font-size:var(--body-size)">AI and documentation</span></div></div>
+  <h2 class="reveal">Rubydex</h2>
+  <ul class="reveal">
+    <li>A Ruby code indexer — <code>Shopify/rubydex</code></li>
+    <li>Static code intelligence for Ruby</li>
+  </ul>
+  <div class="reveal" style="margin-top:var(--content-gap)">
+    <img src="images/terrasa-talk.png" alt="Alexandre Terrasa — Blazing-fast Code Indexing for Smarter Ruby Tools" style="max-width:min(60vw,400px);border-radius:8px;border:1px solid var(--grid-color)">
   </div>
 </div><div class="slide-num">03</div>
-  <div class="speaker-notes" hidden="">Three-part structure. First: things that were long overdue — we've shipped them. Second: bigger changes still in progress. Third: how I'm thinking about what comes next, especially around AI.RDoc hasn't had major investment in years. That changed this past year.</div>
+  <div class="speaker-notes" hidden="">One project I want to briefly mention is Rubydex — a Ruby code indexer my team is building. It provides static code intelligence for Ruby: class/module resolution, method lookup, reference finding. If you're interested in how this connects with Ruby's type system, my colleague Alexandre Terrasa is giving a talk tomorrow — "Blazing-fast Code Indexing for Smarter Ruby Tools." I'd recommend checking it out.</div>
 </section>
 
-<!-- SLIDE 4: WHAT RDOC DOES -->
-<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">What RDoc does</h2>
-  <ul class="reveal">
-    <li>Ruby's default documentation tool — ships with Ruby since 1.8</li>
-    <li>Parses Ruby source, C extensions, and markup files</li>
-    <li>Generates HTML docs and <code>ri</code> terminal docs</li>
-    <li>Supported markup: RDoc, Markdown, RD, TomDoc</li>
-    <li>Powers <strong style="color:var(--text)">docs.ruby-lang.org</strong></li>
-  </ul>
+<!-- SLIDE 4: BOLD CLAIM -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px);text-align:center;align-items:center">
+  <h2 class="reveal" style="font-size:var(--title-size)">The future of Ruby's documentation is about <span class="accent">AI</span>.</h2>
 </div><div class="slide-num">04</div>
-  <div class="speaker-notes" hidden="">Quick primer for anyone who hasn't thought about RDoc directly. Most people have seen RDoc output — docs.ruby-lang.org is generated by it — but don't think about the tool itself. It ships with Ruby, handles multiple markup formats, and powers both the HTML docs and the ri terminal docs.</div>
+  <div class="speaker-notes" hidden="">I want to start with a direct claim. The future of Ruby's documentation is about AI. That might sound like a stretch, but let me explain what I mean.</div>
 </section>
 
-<!-- SLIDE 5: WHERE WE WERE -->
+<!-- SLIDE 5: WHAT AI NEEDS (PART 1) -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">Some context</h2>
-  <p class="reveal" style="margin-bottom:var(--content-gap)">RDoc has been Ruby's documentation tool for 20+ years. It works. But a lot has changed since it was written.</p>
+  <h2 class="reveal">What AI needs from documentation</h2>
   <ul class="reveal">
-    <li>Developers expect dark mode, mobile support, live preview</li>
-    <li>Markdown became the standard way to write documentation</li>
-    <li>Ruby syntax grew beyond what the parser was built for</li>
-    <li>Type annotations exist now — documentation doesn't show them</li>
+    <li>AI likes <strong style="color:var(--text)">clear, accurate documentation</strong></li>
+    <li>Misinformation gets <strong style="color:var(--accent)">amplified</strong> by AI</li>
   </ul>
 </div><div class="slide-num">05</div>
-  <div class="speaker-notes" hidden="">Be factual about where things stood. This isn't about blaming anyone — the ecosystem changed. Developers now expect things that didn't exist when RDoc was written. Dark mode, mobile layouts, live preview — these are table stakes now, and RDoc didn't have them.</div>
+  <div class="speaker-notes" hidden="">AI models train on documentation and reference it when generating code. If the docs are wrong, the AI amplifies those errors across every developer who uses it. The stakes for documentation accuracy are higher now than they've ever been.</div>
 </section>
 
-<!-- SLIDE 6: SECTION DIVIDER -->
-<section class="slide section-divider"><div class="slide-content"><div class="section-number reveal">01</div><h2 class="reveal">Caught up</h2></div>
-  <div class="speaker-notes" hidden="">These are features that modern documentation tools should already have. RDoc didn't — now it does.</div>
-</section>
-
-<!-- SLIDE 7: DARKFISH BEFORE -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">Before: Darkfish</h2>
-  <div class="reveal placeholder" style="min-height:min(40vh,300px)">[ Insert Darkfish screenshot ]</div>
-  <p class="reveal dim" style="font-size:var(--small-size);margin-top:var(--element-gap)">No dark mode · Limited mobile · Dated design · Basic search · Embedded fonts</p>
-</div><div class="slide-num">07</div>
-  <div class="speaker-notes" hidden="">This is Darkfish — the theme RDoc has shipped for years. Two-column layout, no dark mode, no responsive design, basic search. It works, but it hasn't kept up with what developers expect from documentation sites today.</div>
-</section>
-
-<!-- SLIDE 8: ALIKI AFTER -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">Aliki</h2>
-  <div class="reveal placeholder" style="min-height:min(35vh,260px)">[ Insert Aliki screenshot ]</div>
-  <ul class="reveal" style="margin-top:var(--element-gap);display:grid;grid-template-columns:1fr 1fr;gap:var(--element-gap)">
-    <li>Three-column layout with TOC</li><li>Dark mode with system detection</li>
-    <li>Fuzzy search with type badges</li><li>Mobile-first responsive</li>
-    <li>Method signature cards</li><li>C &amp; bash syntax highlighting</li>
+<!-- SLIDE 5: WHAT AI NEEDS (PART 2) -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">What AI needs from documentation</h2>
+  <ul class="reveal">
+    <li>AI likes <strong style="color:var(--text)">Markdown</strong> — it reads and writes it natively</li>
+    <li>AI likes <strong style="color:var(--text)">clear intent</strong> — type signatures tell it what code does</li>
   </ul>
-  <p class="reveal dim" style="font-size:var(--small-size);margin-top:var(--element-gap)">(Named after my cat.)</p>
-</div><div class="slide-num">08</div>
-  <div class="speaker-notes" hidden="">This is Aliki, the new theme. Three columns: sidebar navigation, content, and a table-of-contents with scroll-spy on the right. Dark mode that respects your system preferences. Fuzzy search with type badges. Mobile-first responsive layout. Method signature cards. C and bash syntax highlighting.Named after my cat.</div>
+</div><div class="slide-num">06</div>
+  <div class="speaker-notes" hidden="">Markdown is the format AI models are most fluent in — they read it, they write it, they reason about it well. Type signatures give AI structured information about what a method expects and returns, which is more reliable than inferring from prose.</div>
 </section>
 
-<!-- SLIDE 9: SEARCH -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">Aliki: Search</h2>
-  <div class="reveal placeholder" style="min-height:min(35vh,260px)">[ Insert search UI screenshot ]</div>
-  <ul class="reveal" style="margin-top:var(--element-gap)">
-    <li>Tiered scoring: exact &gt; prefix &gt; substring &gt; fuzzy</li>
-    <li>Namespace-aware: <code>String#</code> filters to String methods</li>
-    <li>Type badges: classes · modules · methods · pages</li>
+<!-- SLIDE 6: WHAT HELPS AI WRITE DOCUMENTATION -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">What helps AI write documentation</h2>
+  <ul class="reveal">
+    <li><strong style="color:var(--text)">Quick, deterministic feedback</strong></li>
+    <li>Coverage checks, missing reference warnings</li>
+  </ul>
+</div><div class="slide-num">07</div>
+  <div class="speaker-notes" hidden="">When AI agents write or update documentation, they need fast feedback — did I break a cross-reference, is there a missing description? Deterministic checks like coverage reports and reference validation let agents iterate without guessing.</div>
+</section>
+
+<!-- SLIDE 7: THE TWIST -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px);text-align:center;align-items:center">
+  <h2 class="reveal" style="font-size:var(--title-size)">All of these help <span class="accent">human</span> developers too.</h2>
+  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">These aren't AI requirements — they're good documentation requirements.</p>
+</div><div class="slide-num">08</div>
+  <div class="speaker-notes" hidden="">Here's the thing. Everything I just described — clear docs, Markdown, type signatures, fast feedback — these aren't just AI requirements. They're what makes documentation better for everyone. The AI lens just makes the case more urgent.</div>
+</section>
+
+<!-- SLIDE 8: RDOC WASN'T PROVIDING THESE -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">RDoc wasn't providing these</h2>
+  <ul class="reveal">
+    <li>Old theme, no live preview</li>
+    <li>Incomplete Markdown support, no type info</li>
+    <li>Parser couldn't handle modern Ruby</li>
   </ul>
 </div><div class="slide-num">09</div>
-  <div class="speaker-notes" hidden="">Search was rebuilt from scratch. It builds its own index as a JavaScript file — we can't use fetch with the file:// protocol, so the index is loaded as a script tag. Tiered scoring: exact matches rank highest, then prefix, substring, fuzzy. Namespace-aware — typing String# filters to just String's methods.</div>
+  <div class="speaker-notes" hidden="">RDoc has been Ruby's documentation tool for 20+ years. It works. But the theme was dated, there was no live preview for authors, Markdown support was incomplete, type signatures didn't exist in the output, and the parser couldn't handle modern Ruby syntax.</div>
 </section>
 
-<!-- SLIDE 10: DARK MODE & MOBILE -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">Aliki: Dark mode &amp; mobile</h2>
-  <div class="reveal placeholder" style="min-height:min(45vh,340px)">[ Insert light/dark + mobile screenshots ]</div>
+<!-- SLIDE 9: TRANSITION -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px);text-align:center;align-items:center">
+  <h2 class="reveal" style="font-size:var(--title-size)">So here's what we did.</h2>
+  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">...to make RDoc work for us, and our agents.</p>
 </div><div class="slide-num">10</div>
-  <div class="speaker-notes" hidden="">Side-by-side: light and dark mode, desktop and mobile. CSS custom properties throughout — about 1994 lines with design tokens. Dark mode detects your system preference and persists your choice in localStorage.</div>
+  <div class="speaker-notes" hidden="">Rather than wait for a perfect plan, we started fixing things. Here's what changed in the past year and a half.</div>
+</section>
+
+<!-- SLIDE 10: ALIKI THEME -->
+<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
+  <h2 class="reveal">Before &amp; after: Darkfish → Aliki</h2>
+  <div class="reveal two-col">
+    <div><div class="placeholder" style="min-height:min(30vh,220px)">[ Darkfish screenshot ]</div></div>
+    <div><div class="placeholder" style="min-height:min(30vh,220px)">[ Aliki screenshot ]</div></div>
+  </div>
+  <ul class="reveal" style="margin-top:var(--element-gap)">
+    <li>Dark mode, mobile-first, fuzzy search</li>
+    <li>Method signature cards</li>
+    <li>Named after my cat. Ships in Ruby 4.0.</li>
+  </ul>
+</div><div class="slide-num">11</div>
+  <div class="speaker-notes" hidden="">On the left is Darkfish, the old theme. On the right is Aliki — dark mode, mobile-first responsive layout, fuzzy search with type badges, and method signature cards. It ships as the default in Ruby 4.0. Named after my cat.</div>
 </section>
 
 <!-- SLIDE 11: SERVER MODE -->
@@ -252,302 +259,338 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>Live-reloading documentation preview</li>
     <li>Zero dependencies — uses Ruby's <code>TCPServer</code></li>
     <li>Incremental re-parsing — only changed files</li>
-    <li>Also: <code>make html-server</code> in ruby/ruby</li>
   </ul>
-</div><div class="slide-num">11</div>
-  <div class="speaker-notes" hidden="">This was one of the most requested features. rdoc --server gives you a live-reloading documentation preview. Zero external dependencies — it uses Ruby's built-in TCPServer. A background watcher polls file mtimes, and only re-parses files that changed.I also added make html-server to ruby/ruby so you can preview the core documentation the same way.</div>
-</section>
-
-<!-- SLIDE 12: PRISM MIGRATION -->
-<section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
-  <h2 class="reveal">Prism migration <span class="dim" style="font-weight:400;font-size:var(--h3-size)">— tompng</span></h2>
-  <p class="reveal" style="margin-bottom:var(--content-gap)">I want to specifically highlight tompng's (Tomoya Ishida) work. He rewrote <strong>3 major subsystems</strong>:</p>
-  <div class="reveal" style="display:flex;flex-direction:column;gap:var(--element-gap)">
-    <div style="padding:clamp(0.5rem,1vw,0.8rem) clamp(0.8rem,1.5vw,1.2rem);background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Ruby parser</strong>: Ripper → Prism AST visitor<br><span class="dim" style="font-size:var(--small-size)">20-month effort · Fixes 7+ tracked issues · Modern syntax support</span></div>
-    <div style="padding:clamp(0.5rem,1vw,0.8rem) clamp(0.8rem,1.5vw,1.2rem);background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Comment directive parser</strong>: <code>:call-seq:</code>, <code>:nodoc:</code>, etc.<br><span class="dim" style="font-size:var(--small-size)">Fixed double-parsing architecture</span></div>
-    <div style="padding:clamp(0.5rem,1vw,0.8rem) clamp(0.8rem,1.5vw,1.2rem);background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Inline formatting engine</strong><br><span class="dim" style="font-size:var(--small-size)">Replaced string macros with structured parser</span></div>
-  </div>
-  <p class="reveal dim" style="font-size:var(--small-size);margin-top:var(--element-gap)">43 PRs total. Invisible to users, foundational for everything else.</p>
 </div><div class="slide-num">12</div>
-  <div class="speaker-notes" hidden="">I want to specifically thank tompng — Tomoya Ishida. He rewrote three major subsystems in RDoc: the Ruby parser, moving from Ripper to a Prism AST visitor; the comment directive parser that handles things like :call-seq: and :nodoc:; and the inline formatting engine, replacing string-based macros with a structured parser.That's 43 PRs over 20 months. The Prism migration alone took a careful, phased approach — opt-in first, then compatibility fixes, then making it the default. Most users will never notice the difference, and that's the point. These rewrites are invisible, but they're the foundation everything else builds on.</div>
+  <div class="speaker-notes" hidden="">rdoc --server gives you a live-reloading documentation preview. Edit a file, the browser refreshes. Zero external dependencies — it uses Ruby's built-in TCPServer, and only re-parses files that changed.</div>
 </section>
 
-<!-- SLIDE 13: TRANSITION -->
-<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px);text-align:center;align-items:center">
-  <h2 class="reveal">What "caught up" means</h2>
-  <div class="reveal" style="display:flex;gap:clamp(1rem,3vw,3rem);margin-top:var(--content-gap);flex-wrap:wrap;justify-content:center">
-    <div style="text-align:center"><div style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">Reading</div><div style="font-size:var(--body-size);color:var(--text-secondary)">Aliki theme</div></div>
-    <div style="text-align:center"><div style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">Authoring</div><div style="font-size:var(--body-size);color:var(--text-secondary)">Server mode</div></div>
-    <div style="text-align:center"><div style="font-family:var(--font-display);font-weight:900;font-size:var(--h2-size);color:var(--accent)">Parsing</div><div style="font-size:var(--body-size);color:var(--text-secondary)">Prism</div></div>
-  </div>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">These are things modern documentation tools should have. Now RDoc has them too.</p>
+<!-- SLIDE 12: THE PARSER PROBLEM -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">The parser problem</h2>
+  <ul class="reveal">
+    <li>RDoc's Ruby parser used Ripper (token-stream based)</li>
+    <li>Couldn't handle modern Ruby syntax</li>
+    <li>Parser logic and comment handling tightly coupled</li>
+  </ul>
 </div><div class="slide-num">13</div>
-  <div class="speaker-notes" hidden="">These three things — Aliki, server mode, Prism — brought RDoc to where it probably should have been a few years ago. They're shipped, they're stable.But there's bigger work that's still in progress, and honestly, this is the part I find most interesting.</div>
+  <div class="speaker-notes" hidden="">RDoc's Ruby parser was built on Ripper, which gives you a token stream rather than an AST. It couldn't handle modern Ruby syntax — pattern matching, endless methods, and so on. And the parser logic was tightly coupled to comment handling, making fixes risky.</div>
 </section>
 
-<!-- SLIDE 14: SECTION DIVIDER -->
-<section class="slide section-divider"><div class="slide-content"><div class="section-number reveal">02</div><h2 class="reveal">Getting there</h2></div>
-  <div class="speaker-notes" hidden="">This is the meatiest section — active work that isn't finished yet. Two big topics: Markdown support and RBS type signatures.</div>
+<!-- SLIDE 13: TOMPNG'S REWRITES -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
+  <h2 class="reveal">tompng's rewrites</h2>
+  <div class="reveal" style="display:flex;flex-direction:column;gap:var(--element-gap)">
+    <div style="padding:clamp(0.5rem,1vw,0.8rem) clamp(0.8rem,1.5vw,1.2rem);background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Ruby parser</strong> → Prism AST visitor</div>
+    <div style="padding:clamp(0.5rem,1vw,0.8rem) clamp(0.8rem,1.5vw,1.2rem);background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Comment directive parser</strong> (<code>:call-seq:</code>, <code>:nodoc:</code>)</div>
+    <div style="padding:clamp(0.5rem,1vw,0.8rem) clamp(0.8rem,1.5vw,1.2rem);background:var(--accent-light);border-radius:6px;border-left:3px solid var(--accent)"><strong>Inline formatting engine</strong> → structured InlineParser</div>
+  </div>
+  <p class="reveal dim" style="font-size:var(--small-size);margin-top:var(--element-gap)">43 PRs over 20 months</p>
+</div><div class="slide-num">14</div>
+  <div class="speaker-notes" hidden="">tompng — Tomoya Ishida — rewrote three major subsystems in RDoc. The Ruby parser, moving from Ripper to a Prism AST visitor. The comment directive parser that handles :call-seq: and :nodoc:. And the inline formatting engine, replacing string macros with a structured parser. That's 43 PRs over 20 months.</div>
+</section>
+
+<!-- SLIDE 14: WHAT THE REWRITES CHANGED -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
+  <h2 class="reveal">What the rewrites changed</h2>
+  <div class="reveal two-col">
+    <div><h3 style="color:var(--text-dim)">Before (Ripper tokens)</h3><div class="code-block" style="background:#2d2d2d"><span class="cm"># Token-stream parsing</span>
+<span class="cm"># Manual state tracking</span>
+<span class="cm"># Breaks on new syntax</span>
+<span class="kw">case</span> token_type
+<span class="kw">when</span> <span class="str">:on_kw</span>
+  handle_keyword(token)</div></div>
+    <div><h3 style="color:var(--accent)">After (Prism AST)</h3><div class="code-block"><span class="cm"># Structured AST visitor</span>
+<span class="cm"># Node types are explicit</span>
+<span class="cm"># New syntax handled by Prism</span>
+<span class="kw">def</span> <span class="fn">visit_def_node</span>(node)
+  process_method(node)
+<span class="kw">end</span></div></div>
+  </div>
+  <p class="reveal" style="margin-top:var(--element-gap);font-size:var(--body-size);color:var(--text-secondary)">Three subsystem rewrites. Invisible to users, foundational for everything else.</p>
+</div><div class="slide-num">15</div>
+  <div class="speaker-notes" hidden="">The left side is what token-stream parsing looks like — manual state tracking that breaks when new syntax appears. The right side is a Prism AST visitor — explicit node types, new syntax handled by Prism itself. Most users will never notice the difference, and that's the point. So that's the parser foundation. Now let's talk about something that directly affects how people write documentation.</div>
 </section>
 
 <!-- SLIDE 15: WHY MARKDOWN -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
   <h2 class="reveal">Why Markdown?</h2>
   <ul class="reveal">
-    <li>Markdown is the industry standard</li>
-    <li>RDoc markup is Ruby-specific — even within the community, it's not widely known</li>
-    <li>Many contributors already write Markdown in RDoc comments without realizing it doesn't render correctly</li>
+    <li>Universal format — humans and AI both read and write it</li>
+    <li>RDoc markup is Ruby-specific, not widely known</li>
+    <li>If you can write a GitHub README, you can contribute to Ruby docs</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">If you can write a GitHub README, you can contribute to Ruby documentation.</p>
-</div><div class="slide-num">15</div>
-  <div class="speaker-notes" hidden="">The case for Markdown is straightforward. It's the industry standard. RDoc markup is Ruby-specific — even within the Ruby community, it's not widely known. I've seen contributors write Markdown syntax in RDoc comments without realizing it won't render.The URL for standard library documentation already changed in Ruby 3.4: standard_library_rdoc.html became standard_library_md.html. The direction is set.</div>
+</div><div class="slide-num">16</div>
+  <div class="speaker-notes" hidden="">The case for Markdown is straightforward. It's the universal format — developers already know it, and AI models are fluent in it. RDoc markup is Ruby-specific and not widely known, even within the community. I've seen contributors write Markdown syntax in RDoc comments without realizing it won't render correctly.</div>
 </section>
 
-<!-- SLIDE 16: PIPELINE DIAGRAM -->
+<!-- SLIDE 16: MARKDOWN COUPLING DIAGRAM -->
 <section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">Why it took so long</h2>
-  <div class="reveal diagram">
-    <div class="diagram-box">Markdown<br>parser</div><div class="diagram-arrow">→</div>
-    <div class="diagram-box" style="min-width:min(28vw,200px)">RDoc::Markup nodes<br><span style="font-size:0.85em;color:var(--text-dim)">with RDoc strings inside</span></div><div class="diagram-arrow">→</div>
-    <div class="diagram-box highlight">Shared<br>InlineParser<br>&amp; Formatters</div><div class="diagram-arrow">→</div>
-    <div class="diagram-box">HTML</div>
+  <h2 class="reveal">The coupling problem</h2>
+  <div class="reveal" style="display:flex;gap:clamp(1rem,3vw,2.5rem);align-items:stretch;margin-top:var(--content-gap)">
+    <div style="flex:1;display:flex;flex-direction:column;gap:clamp(0.5rem,1.5vw,1rem);align-items:center">
+      <div class="diagram-box">Markdown parser</div>
+      <div style="font-size:var(--body-size);color:var(--text-dim)">↘</div>
+    </div>
+    <div style="flex:1.5;display:flex;flex-direction:column;gap:clamp(0.5rem,1.5vw,1rem);align-items:center;justify-content:center">
+      <div class="diagram-box highlight" style="width:100%;text-align:center">Shared InlineParser &amp; Formatters</div>
+      <div style="font-size:var(--body-size);color:var(--text-dim)">↓</div>
+      <div class="diagram-box" style="width:100%;text-align:center">HTML output</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:clamp(0.5rem,1.5vw,1rem);align-items:center">
+      <div class="diagram-box">RDoc parser</div>
+      <div style="font-size:var(--body-size);color:var(--text-dim)">↗</div>
+    </div>
   </div>
-  <div class="reveal diagram" style="padding-top:0">
-    <div class="diagram-box">RDoc<br>parser</div><div class="diagram-arrow">→</div>
-    <div style="min-width:min(28vw,200px)"></div><div class="diagram-arrow" style="visibility:hidden">→</div>
-    <div style="font-family:var(--font-display);font-weight:800;font-size:var(--small-size);color:var(--accent);text-align:center">↑ same code path</div>
-  </div>
-  <p class="reveal" style="font-size:var(--body-size)">Markdown was added ~2012 by reusing RDoc's pipeline. <strong style="color:var(--text)">Every Markdown fix is a two-format fix.</strong></p>
-</div><div class="slide-num">16</div>
-  <div class="speaker-notes" hidden="">This is why Markdown support took so long. Both parsers — Markdown and RDoc — feed into the same shared pipeline. The Markdown parser outputs RDoc markup strings, which then get re-parsed by the shared InlineParser and formatters.This means every Markdown fix is also a two-format fix. You can't change the shared code without verifying both formats still work.</div>
+  <p class="reveal" style="font-size:var(--body-size);margin-top:var(--content-gap)"><strong style="color:var(--text)">Every Markdown fix is a two-format fix.</strong></p>
+</div><div class="slide-num">17</div>
+  <div class="speaker-notes" hidden="">This is why Markdown support took so long. Both parsers — Markdown and RDoc — feed into the same shared pipeline. The Markdown parser actually outputs RDoc markup strings, which get re-parsed by the shared InlineParser. So you can't change the shared code without verifying both formats still work.</div>
 </section>
 
 <!-- SLIDE 17: STRIKETHROUGH EXAMPLE -->
-<section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
+<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
   <h2 class="reveal">Example: <code>~~strikethrough~~</code></h2>
-  <div class="reveal code-block" style="margin:var(--element-gap) 0"><span class="cm"># Markdown parser outputs:</span>
-~~text~~ <span class="cm">→</span> <span class="str">"&lt;del&gt;text&lt;/del&gt;"</span>  <span class="cm"># plain string!</span>
-
-<span class="cm"># Shared InlineParser receives that string</span>
-<span class="cm"># ...but didn't recognize &lt;del&gt;</span>
-<span class="cm"># Strikethrough was silently broken for years</span>
-
-<span class="cm"># Fix: modify the shared InlineParser</span>
-<span class="cm">#   → must verify RDoc markup still works too</span></div>
-  <p class="reveal quote">Every Markdown fix is a two-format fix.</p>
-</div><div class="slide-num">17</div>
-  <div class="speaker-notes" hidden="">One concrete example. Markdown strikethrough — ~~text~~ — the parser outputs it as a &lt;del&gt; HTML string. That string feeds into the shared InlineParser, which didn't recognize &lt;del&gt;. So strikethrough was silently broken for years.To fix it, you modify the shared InlineParser — but then you have to verify RDoc markup still works too. That's why progress on Markdown has been incremental.</div>
+  <div class="reveal" style="display:flex;align-items:center;gap:clamp(0.5rem,2vw,1.5rem);margin-top:var(--content-gap);flex-wrap:wrap;justify-content:center">
+    <div class="diagram-box" style="font-family:var(--font-mono);font-size:var(--small-size)">~~text~~</div>
+    <div style="font-size:var(--body-size);color:var(--text-dim)">→</div>
+    <div class="diagram-box" style="font-family:var(--font-mono);font-size:var(--small-size)">&lt;del&gt;text&lt;/del&gt;<br><span style="color:var(--text-dim)">(plain string)</span></div>
+    <div style="font-size:var(--body-size);color:var(--text-dim)">→</div>
+    <div class="diagram-box highlight" style="font-size:var(--small-size)">Shared InlineParser<br><span style="color:var(--accent)">doesn't recognize &lt;del&gt;</span></div>
+    <div style="font-size:var(--body-size);color:var(--text-dim)">→</div>
+    <div class="diagram-box" style="font-size:var(--small-size);border-color:var(--accent);color:var(--accent)">Silently broken</div>
+  </div>
+  <p class="reveal" style="font-size:var(--body-size);margin-top:var(--content-gap)">Fix touches shared code → must verify RDoc markup still works too.</p>
+</div><div class="slide-num">18</div>
+  <div class="speaker-notes" hidden="">Here's a concrete example. Markdown strikethrough — tilde-tilde-text — the parser outputs it as a del HTML string. That string goes to the shared InlineParser, which didn't recognize del. So strikethrough was silently broken for years. Fixing it means modifying the shared InlineParser, then verifying RDoc markup still works too.</div>
 </section>
 
-<!-- SLIDE 18: WHAT'S IMPROVED -->
+<!-- SLIDE 18: MARKDOWN IMPROVEMENTS -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
   <h2 class="reveal">What's improved</h2>
   <ul class="reveal">
-    <li><code>~~Strikethrough~~</code> aligned with GFM spec</li>
-    <li>GitHub-style heading anchors (<code>#heading-name</code>)</li>
-    <li>Table parsing: inline markdown, incomplete rows</li>
-    <li>Bash/shell syntax highlighting</li>
-    <li>Backtick quoting in RDoc markup too</li>
+    <li>Strikethrough, heading anchors, table fixes, syntax highlighting</li>
+    <li>GFM spec comparison test suite for systematic tracking</li>
     <li><code>break_on_newline</code> enabled by default</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--element-gap)"><span class="badge">NEW</span> <span style="font-size:var(--body-size);color:var(--text-secondary);margin-left:0.5em">GFM spec comparison test suite</span></p>
-</div><div class="slide-num">18</div>
-  <div class="speaker-notes" hidden="">Walk through the improvements. Strikethrough aligned with the GFM spec. GitHub-style heading anchors. Table parsing handles inline markdown and incomplete rows now. Bash syntax highlighting. Backtick quoting works in RDoc markup too.The big one at the bottom: we now have a GFM spec comparison test suite that systematically tracks our compatibility. Instead of fixing bugs one-by-one, we can see exactly where we stand.</div>
-</section>
-
-<!-- SLIDE 19: BEFORE/AFTER -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">RDoc markup vs Markdown</h2>
-  <div class="reveal two-col">
-    <div><h3 style="color:var(--text-dim)">RDoc markup</h3><div class="code-block" style="background:#2d2d2d"><span class="cm">= Heading</span>
-<span class="kw">*bold*</span>  <span class="kw">_italic_</span>  <span class="kw">+code+</span>
-<span class="str">{link text}[url]</span>
-<span class="cm">* bullet item</span></div></div>
-    <div><h3 style="color:var(--accent)">Markdown</h3><div class="code-block"><span class="cm"># Heading</span>
-<span class="kw">**bold**</span>  <span class="kw">*italic*</span>  <span class="kw">`code`</span>
-<span class="str">[link text](url)</span>
-<span class="cm">- bullet item</span></div></div>
-  </div>
 </div><div class="slide-num">19</div>
-  <div class="speaker-notes" hidden="">Same documentation in both formats. The Markdown version on the right is immediately recognizable to any developer. The RDoc markup on the left — most people have to look up the syntax.</div>
+  <div class="speaker-notes" hidden="">We've fixed strikethrough, heading anchors, table parsing, and added syntax highlighting. The big one: we now have a GFM spec comparison test suite that systematically tracks where we stand against the GitHub Flavored Markdown spec. Instead of fixing bugs one-by-one, we can see exactly what's left.</div>
 </section>
 
-<!-- SLIDE 20: MIGRATION PLAN -->
-<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">Migration plan</h2>
-  <div class="reveal" style="display:flex;flex-direction:column;gap:var(--element-gap)">
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1vw,0.8rem)"><span class="badge">1</span><span style="font-size:var(--body-size)">Get Markdown to GFM-level quality <span class="dim">← in progress</span></span></div>
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1vw,0.8rem)"><span class="badge" style="background:var(--text-dim)">2</span><span style="font-size:var(--body-size)">Build migration tooling (RDoc markup → Markdown)</span></div>
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1vw,0.8rem)"><span class="badge" style="background:var(--text-dim)">3</span><span style="font-size:var(--body-size)">Migrate ruby-core documentation</span></div>
-    <div style="display:flex;align-items:baseline;gap:clamp(0.5rem,1vw,0.8rem)"><span class="badge" style="background:var(--text-dim)">4</span><span style="font-size:var(--body-size)">Deprecate RDoc markup? <span class="dim">(open question)</span></span></div>
-  </div>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">The URL already changed: <code>standard_library_rdoc.html</code> → <code>standard_library_md.html</code> in Ruby 3.4+</p>
-</div><div class="slide-num">20</div>
-  <div class="speaker-notes" hidden="">Multi-step process. Step 1 is where we are now — getting Markdown to GFM-level quality. Steps 2 through 4 are future work. Step 4 is an open question — I'm not sure deprecating RDoc markup is the right move, and that's a community decision, not just mine.Note: the URL already changed in Ruby 3.4. That's a real signal about direction.</div>
-</section>
-
-<!-- SLIDE 21: RBS IN DOCS -->
+<!-- SLIDE 19: RBS TYPE SIGNATURES -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
-  <h2 class="reveal">RBS type signatures in documentation</h2>
-  <div class="reveal code-block"><span class="cm"># Inline RBS annotation</span>
+  <h2 class="reveal">RBS type signatures</h2>
+  <div class="reveal code-block"><span class="cm"># The #: inline annotation syntax</span>
 <span style="color:#7ee787">#: (String name, ?Integer age) -&gt; User</span>
 <span class="kw">def</span> <span class="fn">create_user</span>(name, age = <span class="kw">nil</span>)
   <span class="cm"># ...</span>
 <span class="kw">end</span></div>
   <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size)">RDoc extracts <code>#:</code> annotations and displays type signatures in HTML and <code>ri</code>. Type names are linked to their documentation.</p>
-</div><div class="slide-num">21</div>
-  <div class="speaker-notes" hidden="">RBS inline annotations use the #: syntax. You write the type signature directly above the method. RDoc parses these, validates them through the RBS parser, and displays them in both HTML output and ri terminal docs.The type names in the output are linked — clicking String takes you to String's documentation page.</div>
+</div><div class="slide-num">20</div>
+  <div class="speaker-notes" hidden="">RBS inline annotations use the #: syntax. You write the type signature directly above the method. RDoc parses these, validates them through the RBS parser, and displays them in both HTML output and ri terminal docs. The type names in the output are clickable links.</div>
 </section>
 
-<!-- SLIDE 22: RBS HTML DEMO -->
+<!-- SLIDE 20: RBS HTML DEMO -->
 <section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
   <h2 class="reveal">RBS in HTML output</h2>
   <div class="reveal placeholder" style="min-height:min(45vh,340px)">[ Insert HTML output screenshot with type signatures ]</div>
   <p class="reveal dim" style="font-size:var(--small-size);margin-top:var(--element-gap)">Type names link to documentation · Signature cards with types · Powered by RBS gem ≥ 4.0</p>
+</div><div class="slide-num">21</div>
+  <div class="speaker-notes" hidden="">This is what it looks like in the Aliki theme. The type signature appears as a card above the method documentation — you can see the parameter types and return type at a glance. The type names are clickable links. Types aren't just decoration — they're navigation.</div>
+</section>
+
+<!-- SLIDE 21: AI HELPED US GET HERE -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">AI helped us get here</h2>
+  <ul class="reveal">
+    <li>RDoc is large and complex — change was slow without dedicated maintainers</li>
+    <li>tompng and I became active in 2024 — real progress, but limited capacity</li>
+    <li>Two people maintaining a tool used by the entire Ruby ecosystem</li>
+  </ul>
 </div><div class="slide-num">22</div>
-  <div class="speaker-notes" hidden="">This is what it looks like in the Aliki theme. The type signature appears as a card above the method documentation — you can see the parameter types and return type at a glance.Notice that the type names are clickable links. If you see String in the signature, clicking it takes you to String's documentation. The types aren't just decoration — they're navigation. Powered by the RBS gem, version 4.0 or later.</div>
+  <div class="speaker-notes" hidden="">RDoc is large and complex, and for years there wasn't dedicated investment. tompng and I became active in 2024, and we made real progress, but there are only two of us maintaining a tool used by the entire Ruby ecosystem.</div>
 </section>
 
-<!-- SLIDE 23: RBS RI DEMO -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">RBS in <code>ri</code></h2>
-  <div class="reveal placeholder" style="min-height:min(45vh,340px)">[ Insert ri terminal output with type signatures ]</div>
+<!-- SLIDE 22: AI ACCELERATED THE PACE -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">AI accelerated the pace</h2>
+  <ul class="reveal">
+    <li>Since mid-2025, AI helped me increase my output significantly</li>
+    <li>tompng's work was his own — AI helped me keep up with reviewing it</li>
+  </ul>
+  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">We're not working harder — we just have better tools now.</p>
 </div><div class="slide-num">23</div>
-  <div class="speaker-notes" hidden="">Same information in the terminal. When you run ri, the type signatures appear right below the method name. Same structured data, but formatted for the terminal instead of a browser.This matters because a lot of Ruby developers use ri as their primary documentation tool — especially when working offline or in environments without a browser.</div>
+  <div class="speaker-notes" hidden="">Since mid-2025, AI tools helped me increase my output significantly. tompng's work was entirely his own, but AI helped me keep up with reviewing his 43 PRs while also shipping my own changes. The pace is accelerating not because we're working harder, but because we have better tools.</div>
 </section>
 
-<!-- SLIDE 24: CALL-SEQ VS RBS -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal">Can RBS replace <code>:call-seq:</code>?</h2>
-  <div class="reveal two-col">
-    <div><h3 style="color:var(--text-dim)">:call-seq:</h3><div class="code-block" style="background:#2d2d2d"><span class="cm"># :call-seq:</span>
-<span class="cm">#   readlines(sep=$/)     -&gt; array</span>
-<span class="cm">#   readlines(limit)      -&gt; array</span>
-<span class="cm">#   readlines(sep, limit) -&gt; array</span></div></div>
-    <div><h3 style="color:var(--accent)">RBS #:</h3><div class="code-block"><span style="color:#7ee787">#: (?String sep) -&gt; Array[String]</span>
-<span style="color:#7ee787">#: (Integer limit) -&gt; Array[String]</span>
-<span style="color:#7ee787">#: (String, Integer) -&gt; Array[String]</span></div></div>
-  </div>
-  <p class="reveal" style="margin-top:var(--element-gap);font-size:var(--body-size)">The overlap is significant. For a language that doesn't want typing, writing type signatures for documentation is a big shift. But I think it's the right direction — structured signatures are better for both humans and tools.</p>
+<!-- SLIDE 23: RDOC'S PRIORITY -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">RDoc's priority</h2>
+  <ul class="reveal">
+    <li>Better contributing experience</li>
+    <li>Target: Ruby's official docs and gem docs</li>
+    <li>Make documentation easier to write and maintain</li>
+  </ul>
 </div><div class="slide-num">24</div>
-  <div class="speaker-notes" hidden="">I want to raise this as a question, not a declaration. Look at the overlap — both express the method name, parameters, return type, and overloads. The formats are different, but the information is the same.I think structured types are the right direction for documentation. For a language that has explicitly chosen not to require typing, the fact that people are already writing type signatures for documentation purposes — that's significant. It tells you something about what documentation actually needs.But this is a community decision, not just mine. I have an opinion, and I'll share it, but the migration path needs broader input.</div>
+  <div class="speaker-notes" hidden="">Looking ahead, the priority is clear: make it easier to contribute to Ruby documentation. That means both docs.ruby-lang.org and gem documentation. Lower the barriers for writing, reviewing, and maintaining docs.</div>
 </section>
 
-<!-- SLIDE 25: DEFAULT VALUES GAP -->
-<section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
-  <h2 class="reveal">The gap: default values</h2>
-  <div class="reveal two-col">
-    <div><h3>:call-seq:</h3><div class="code-block" style="background:#2d2d2d;font-size:var(--code-size)">commercial(cwyear, <span style="color:#7ee787">cweek=1</span>, <span style="color:#7ee787">cwday=1</span>, <span style="color:#7ee787">sg=nil</span>)</div><p style="font-size:var(--small-size);color:var(--text-dim);margin-top:var(--element-gap)">Shows actual default values</p></div>
-    <div><h3>RBS:</h3><div class="code-block" style="font-size:var(--code-size)">(Integer, <span class="kw">?Integer</span>, <span class="kw">?Integer</span>, <span class="kw">?Symbol?</span>) -&gt; Date</div><p style="font-size:var(--small-size);color:var(--text-dim);margin-top:var(--element-gap)">Only says "optional" — default is lost</p></div>
-  </div>
-  <p class="reveal quote" style="margin-top:var(--content-gap)">If we want to migrate, RBS needs default value support.</p>
+<!-- SLIDE 24: SETTING GOOD STANDARDS -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">Setting good standards</h2>
+  <ul class="reveal">
+    <li>RBS signatures — structured, machine-readable contracts</li>
+    <li>Revisiting supported directives for clarity</li>
+    <li>Whether users adopt a type checker is their choice — RDoc supports both</li>
+  </ul>
 </div><div class="slide-num">25</div>
-  <div class="speaker-notes" hidden="">Here's the concrete blocker. call-seq shows actual default values — cweek=1, cwday=1. RBS can only say the parameter is optional — it can't express what the default is. This matters especially for C extensions, where there's no Ruby source to inspect.If we want to migrate from call-seq to RBS, RBS needs to support default values. That's not solved yet.</div>
+  <div class="speaker-notes" hidden="">RBS signatures are a start — structured, machine-readable contracts in the source. We'll revisit supported directives to make them clearer. And I want to be explicit: whether users adopt a type checker is their choice. RDoc will support both typed and untyped codebases.</div>
 </section>
 
-<!-- SLIDE 26: RBS NEXT -->
+<!-- SLIDE 25: BETTER TOOLS FOR WRITING -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">Where this stands</h2>
+  <h2 class="reveal">Better tools for writing docs</h2>
   <ul class="reveal">
-    <li>I'm aiming to ship RBS display on <strong style="color:var(--text)">docs.ruby-lang.org</strong></li>
-    <li>The call-seq migration depends on RBS supporting default values — that's not solved yet</li>
-    <li>This needs community discussion, not just my opinion</li>
+    <li>For humans: <code>rdoc --server</code> (live preview)</li>
+    <li>For AI agents: <code>rdoc -C</code> (coverage — what's missing)</li>
+    <li>For AI agents: <code>ri --format=markdown</code> (query docs directly)</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size)">But the direction seems clear: structured, machine-readable signatures are better than free-form text.</p>
 </div><div class="slide-num">26</div>
-  <div class="speaker-notes" hidden="">Status update. I'm aiming to ship RBS display on docs.ruby-lang.org. The call-seq migration is a longer conversation that depends on RBS getting default value support and on community input.But the direction seems clear to me: structured, machine-readable signatures are better than free-form text — for humans reading docs and for tools consuming them.</div>
+  <div class="speaker-notes" hidden="">For humans, server mode gives you live preview while writing. For AI agents, rdoc -C gives coverage reports — what's undocumented, what has broken references. And ri --format=markdown lets agents query Ruby documentation directly in a format they're fluent in.</div>
 </section>
 
-<!-- SLIDE 27: SECTION DIVIDER -->
-<section class="slide section-divider"><div class="slide-content"><div class="section-number reveal">03</div><h2 class="reveal">Getting ahead</h2></div>
-  <div class="speaker-notes" hidden="">So we've caught up on the basics, and we're making real progress on Markdown and types. The question I kept getting asked was: what about AI? What about LLMs?So I looked into it.</div>
-</section>
-
-<!-- SLIDE 28: LLMS.TXT -->
-<section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
-  <h2 class="reveal">llms.txt: I prototyped it</h2>
-  <p class="reveal" style="font-size:var(--body-size);margin-bottom:var(--content-gap)">Then I looked at the data:</p>
-  <ul class="reveal">
-    <li><strong style="color:var(--text)">10% adoption</strong> across 300K domains</li>
-    <li><strong style="color:var(--accent)">Zero measurable impact</strong> on AI citations</li>
-    <li>ML model improved when llms.txt was <em>removed</em></li>
-    <li>Zero bot visits from GPTBot, ClaudeBot, etc.</li>
-    <li>No major LLM provider officially supports it</li>
-  </ul>
-  <p class="reveal" style="margin-top:var(--element-gap);font-size:var(--body-size)">The trade-off is generation time and code complexity for every RDoc user, for a benefit that doesn't exist yet. So I decided not to pursue it — at least for now.</p>
-</div><div class="slide-num">28</div>
-  <div class="speaker-notes" hidden="">I actually prototyped llms.txt generation for RDoc. Then I looked at the data before committing to it.SE Ranking studied 300,000 domains — only 10% adoption. An XGBoost model for predicting AI citations actually improved when llms.txt was removed as a variable. Zero bot visits from GPTBot, ClaudeBot, or PerplexityBot to the docs. No major LLM provider officially supports it.The trade-off is real: generation time and code complexity for every RDoc user, for a benefit that doesn't measurably exist. So I decided not to pursue it — at least for now. If the data changes, I'll revisit.</div>
-</section>
-
-<!-- SLIDE 29: BETTER FOUNDATIONS -->
+<!-- SLIDE 26: FOR CONSUMING DOCUMENTATION -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
-  <h2 class="reveal">What I think actually helps</h2>
-  <p class="reveal" style="font-size:var(--body-size);margin-bottom:var(--content-gap)">Instead of generating special files for LLMs, I'd rather make the documentation itself better:</p>
+  <h2 class="reveal">For consuming documentation</h2>
   <ul class="reveal">
-    <li><strong style="color:var(--text)">Markdown</strong> — any tool can parse it, humans and machines alike</li>
-    <li><strong style="color:var(--text)">RBS types</strong> — structured data instead of free-form text</li>
-    <li><strong style="color:var(--text)">Clean architecture</strong> — makes it easier to build things we haven't thought of yet</li>
+    <li>For humans: Aliki improved the reading experience</li>
+    <li>For AI: we evaluated and found nothing proven yet</li>
   </ul>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size)">On the tooling side, I've been building <code>github.com/st0012/ruby-skills</code> — Claude Code plugins for Ruby development. No RDoc-specific skills yet, but that's coming once the Markdown work is further along.</p>
-</div><div class="slide-num">29</div>
-  <div class="speaker-notes" hidden="">Instead of chasing a trend, I'd rather build foundations that naturally serve all consumers — humans and machines. Markdown is universally parseable. RBS types are structured data. Clean architecture makes it easier to build things we haven't predicted yet.On the tooling side, I've been building ruby-skills — Claude Code plugins that teach AI assistants about Ruby development. 109 stars, actively used. No RDoc-specific skills yet, but that's coming once the Markdown work is further along.</div>
+</div><div class="slide-num">27</div>
+  <div class="speaker-notes" hidden="">On the consumption side, Aliki addressed the human experience — dark mode, search, responsive layout. For AI consumption, we looked at the options and found nothing with proven impact. Let me walk through what we evaluated.</div>
 </section>
 
-<!-- SLIDE 30: PHILOSOPHY -->
-<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px);text-align:center;align-items:center">
-  <h2 class="reveal">How I think about this</h2>
+<!-- SLIDE 27: LLMS.TXT -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,850px)">
+  <h2 class="reveal">We prototyped llms.txt</h2>
   <ul class="reveal">
-    <li>Check the data before building a feature — llms.txt looked promising until I looked at the numbers</li>
-    <li>Invest in foundations that serve multiple purposes — Markdown, types, and clean architecture all make docs better for everyone, including future tools</li>
-    <li>As a maintainer, I'd rather ship fewer things that are solid than chase every trend</li>
+    <li>The most complete standard for LLM-friendly docs</li>
+    <li><strong style="color:var(--text)">10% adoption</strong> across 300K domains, <strong style="color:var(--accent)">zero measurable impact</strong> on AI citations</li>
+    <li>No major LLM provider officially consumes it</li>
+  </ul>
+</div><div class="slide-num">28</div>
+  <div class="speaker-notes" hidden="">I actually prototyped llms.txt generation for RDoc. Then I looked at the data. SE Ranking studied 300,000 domains — only 10% adoption. An XGBoost model for predicting AI citations actually improved when llms.txt was removed as a variable. No major LLM provider officially supports it.</div>
+</section>
+
+<!-- SLIDE 28: MARKDOWN OUTPUT FOR AI -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">Markdown output for AI?</h2>
+  <ul class="reveal">
+    <li>No standard for serving Markdown versions of documentation pages</li>
+    <li>We considered generating Markdown output from RDoc</li>
+    <li>Prioritizing this now creates more risk than reward</li>
+  </ul>
+</div><div class="slide-num">29</div>
+  <div class="speaker-notes" hidden="">We also considered generating Markdown output alongside HTML — a format AI could consume directly. But there's no standard for how to serve it, no consensus on what AI tools would actually use, and the maintenance cost would fall on every RDoc user. The risk outweighs the reward right now.</div>
+</section>
+
+<!-- SLIDE 29: RUSTDOC TRIED THIS -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">Rustdoc tried this too</h2>
+  <ul class="reveal">
+    <li>Rustdoc RFC (rust-lang/rfcs#3751): proposed LLM-friendly text output</li>
+    <li>Community rejected it: "This should be an external tool"</li>
+    <li>T-rustdoc team: "Very likely not the desired format within 3 months, never mind 3 years"</li>
   </ul>
 </div><div class="slide-num">30</div>
-  <div class="speaker-notes" hidden="">Tying it together. Check the data before building — llms.txt looked promising until I checked the numbers. Invest in foundations that serve multiple purposes. As a maintainer, I'd rather ship fewer things that are solid than chase every trend.</div>
+  <div class="speaker-notes" hidden="">We're not the only ones wrestling with this. Rustdoc had an RFC proposing LLM-friendly text output. The community rejected it — the consensus was that this belongs in external tooling, not in the doc generator itself. The Rustdoc team's argument was blunt: the format you build today very likely isn't the format you'll need in three months, let alone three years.</div>
 </section>
 
-<!-- SLIDE 31: SUMMARY -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,950px)">
-  <h2 class="reveal" style="text-align:center;margin-bottom:var(--content-gap)">Summary</h2>
-  <table class="reveal comparison-table">
-    <thead><tr><th style="color:var(--accent)">Caught up</th><th style="color:var(--accent)">Getting there</th><th style="color:var(--accent)">Getting ahead</th></tr></thead>
-    <tbody>
-      <tr><td>Aliki theme</td><td>Markdown / GFM</td><td>Evaluate with data</td></tr>
-      <tr><td>Server mode</td><td>RBS type signatures</td><td>Build foundations</td></tr>
-      <tr><td>Prism parser</td><td>call-seq → RBS?</td><td>Serve all consumers</td></tr>
-    </tbody>
-  </table>
+<!-- SLIDE 30: THE LANDSCAPE -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">No doc tool has shipped AI features yet</h2>
+  <ul class="reveal">
+    <li>No major doc generator has shipped AI-specific output features</li>
+    <li>All AI-docs integration happens at the consumption layer (MCP servers, Dash, DevDocs)</li>
+    <li>Doc generators should focus on producing good output</li>
+  </ul>
+  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">If I missed anything in this space, I'd love to hear about it after the talk.</p>
 </div><div class="slide-num">31</div>
-  <div class="speaker-notes" hidden="">Pause here. Let the audience take in the full picture — all three columns, the whole arc of the talk in one table. Don't rush past this.</div>
+  <div class="speaker-notes" hidden="">As far as I can tell, no major documentation generator — Rustdoc, Javadoc, Sphinx, TypeDoc — has shipped AI-specific output features. All the AI-docs integration is happening at the consumption layer: MCP servers, Dash, DevDocs. Doc generators should focus on producing good, structured output, and let the consumption layer evolve independently. If I missed anything in this space, I'd genuinely like to hear about it.</div>
 </section>
 
-<!-- SLIDE 32: CALL TO ACTION -->
+<!-- SLIDE 31: DOCS.RUBY-LANG.ORG REACHES MORE THAN HUMANS -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">docs.ruby-lang.org reaches more than humans now</h2>
+  <ul class="reveal">
+    <li>AI models train on it. AI tools reference it when generating code.</li>
+    <li>Improving Ruby's docs improves every AI tool that uses them.</li>
+  </ul>
+</div><div class="slide-num">32</div>
+  <div class="speaker-notes" hidden="">docs.ruby-lang.org isn't just read by developers anymore. AI models train on it, and AI coding tools reference it when generating Ruby code. So when we improve Ruby's documentation, we're not just helping the people who read the docs directly — we're improving every AI tool that consumes them.</div>
+</section>
+
+<!-- SLIDE 32: TYPES IN DOCS -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">Types in docs, not type checking at generation</h2>
+  <ul class="reveal">
+    <li>Endoh benchmark (March 2026): Ruby is #1 for AI code generation ($0.36/run)</li>
+    <li>Adding a type checker at generation time costs 2-3x overhead</li>
+    <li>Types already in documentation give AI the information without that cost</li>
+  </ul>
+</div><div class="slide-num">33</div>
+  <div class="speaker-notes" hidden="">Yusuke Endoh's benchmark from March 2026 showed Ruby is number one for AI code generation cost at $0.36 per run. Adding a type checker at generation time would cost 2-3x overhead. But types already present in documentation give AI the same information without that runtime cost. That's the value of RBS in docs.</div>
+</section>
+
+<!-- SLIDE 33: WE DON'T KNOW WHAT AI WILL NEED IN A YEAR -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal">We don't know what AI will need in a year</h2>
+  <ul class="reveal">
+    <li>llms.txt looked promising six months ago. The data says otherwise.</li>
+    <li>Any AI-specific format risks being obsolete in months.</li>
+    <li>So we focus on Markdown, types, clean architecture — things that last.</li>
+  </ul>
+</div><div class="slide-num">34</div>
+  <div class="speaker-notes" hidden="">We don't know what AI tools will need in a year. llms.txt looked promising six months ago — the data says it doesn't help. Any AI-specific format we build today risks being obsolete by the time it ships. The Rust community reached the same conclusion in their rustdoc discussion. So we focus on things that last regardless of how AI evolves: Markdown, type signatures, clean architecture.</div>
+</section>
+
+<!-- SLIDE 34: SUMMARY -->
+<section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
+  <h2 class="reveal" style="text-align:center;margin-bottom:var(--content-gap)">Summary</h2>
+  <ul class="reveal">
+    <li>AI reads Ruby's docs too now — improving them helps everyone</li>
+    <li>RDoc's priority: make docs easier to write and maintain</li>
+    <li>The foundation is rebuilt: Prism, Markdown, server mode, RBS, Aliki</li>
+  </ul>
+</div><div class="slide-num">35</div>
+  <div class="speaker-notes" hidden="">Three takeaways. AI reads Ruby's documentation too now — so improving it helps both developers and the tools they use. RDoc's priority is making docs easier to write and maintain. And the foundation is rebuilt — Prism parser, Markdown support, server mode, RBS type signatures, Aliki theme.</div>
+</section>
+
+<!-- SLIDE 35: CALL TO ACTION -->
 <section class="slide"><div class="slide-content" style="max-width:min(85vw,800px)">
   <h2 class="reveal">Try it today</h2>
   <ul class="reveal">
-    <li>Contribute to Ruby docs — <strong style="color:var(--accent)">it's Markdown now!</strong></li>
+    <li>Contribute to Ruby documentation — <strong style="color:var(--accent)">it's Markdown now</strong></li>
     <li>Try <code>rdoc --server</code> for your own projects</li>
   </ul>
   <div class="reveal" style="margin-top:var(--content-gap);display:flex;flex-direction:column;gap:var(--element-gap)">
     <code style="font-size:var(--body-size);background:none;color:var(--text)">github.com/ruby/rdoc</code>
     <code style="font-size:var(--body-size);background:none;color:var(--text)">docs.ruby-lang.org</code>
-    <code style="font-size:var(--body-size);background:none;color:var(--text)">github.com/st0012/ruby-skills</code>
   </div>
-</div><div class="slide-num">32</div>
-  <div class="speaker-notes" hidden="">The most important message: it's now much easier to contribute to Ruby documentation. If you maintain a gem, try rdoc --server — it takes thirty seconds to set up. If you've ever wanted to improve Ruby's docs but didn't know the markup, that barrier is gone — it's Markdown.ruby-skills is at github.com/st0012/ruby-skills if you want better AI-assisted Ruby development.</div>
+</div><div class="slide-num">36</div>
+  <div class="speaker-notes" hidden="">The most important message: it's now much easier to contribute to Ruby documentation. If you've ever wanted to improve Ruby's docs but didn't know the markup, that barrier is gone — it's Markdown. If you maintain a gem, try rdoc --server. It takes thirty seconds.</div>
 </section>
 
-<!-- SLIDE 33: THANK YOU -->
+<!-- SLIDE 36: THANK YOU -->
 <section class="slide" style="background-image:none;background:radial-gradient(ellipse at 50% 50%,var(--accent-glow) 0%,transparent 60%),linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:100% 100%,60px 60px,60px 60px;background-color:var(--bg)">
   <div class="slide-content" style="text-align:center;align-items:center">
     <h1 class="reveal" style="font-size:clamp(2rem,6vw,4.5rem)">Thank you!</h1>
-    <p class="reveal" style="font-size:var(--body-size);color:var(--text-secondary);margin-top:var(--content-gap)">tompng, the Shopify Ruby DX team,<br>and the Ruby committers who reviewed all those PRs</p>
+    <p class="reveal" style="font-size:var(--body-size);color:var(--text-secondary);margin-top:var(--content-gap)">tompng (Tomoya Ishida), the Shopify Ruby DX team,<br>and the Ruby committers who reviewed all those PRs</p>
     <div class="reveal" style="font-family:var(--font-mono);font-size:var(--small-size);color:var(--text-dim);margin-top:var(--content-gap);display:flex;flex-direction:column;gap:0.2em;align-items:center">
       <span>GitHub: <span style="color:var(--accent)">@st0012</span></span>
       <span>BlueSky: <span style="color:var(--accent)">@st0012.dev</span></span>
     </div>
   </div>
-  <div class="slide-num">33</div>
-  <div class="speaker-notes" hidden="">Thank you so much for your time and attention.I want to thank tompng — Tomoya Ishida — for the three subsystem rewrites that made everything else possible. And I want to thank all my teammates at Shopify's Ruby DX team, who provided countless ideas and knowledge that made these improvements possible.And of course, the Ruby committers who reviewed the many PRs.I'll be around for questions — feel free to chat with me later.</div>
+  <div class="slide-num">37</div>
+  <div class="speaker-notes" hidden="">Thank you for your time. I want to thank tompng — Tomoya Ishida — for the three subsystem rewrites that made everything else possible. The Shopify Ruby DX team for countless ideas and support. And the Ruby committers who reviewed the many PRs. I'll be around for questions.</div>
 </section>
 
 <script>
@@ -843,12 +886,10 @@ class PresenterMode {
     this.channel = new BroadcastChannel('slide-presenter');
     this.navigatingFromRemote = false;
     this.sectionBoundaries = [
-      { start: 0, end: 2, label: 'Intro', budget: '2-3 min' },
-      { start: 3, end: 4, label: 'RDoc Primer', budget: '2 min' },
-      { start: 5, end: 12, label: 'Caught Up', budget: '6 min' },
-      { start: 13, end: 25, label: 'Getting There', budget: '10 min' },
-      { start: 26, end: 29, label: 'Getting Ahead', budget: '3 min' },
-      { start: 30, end: 32, label: 'Recap', budget: '1 min' }
+      { start: 0, end: 9, label: 'The Hook', budget: '3-4 min' },
+      { start: 10, end: 22, label: "Here's What We Did", budget: '14-16 min' },
+      { start: 23, end: 33, label: "What's Still Ahead", budget: '8-9 min' },
+      { start: 34, end: 36, label: 'Recap + Close', budget: '2 min' }
     ];
     this.hookSlideNavigation();
     this.setupKeyboard();
@@ -963,7 +1004,7 @@ body { background: #1a1a1a; color: #e0e0e0; font-family: 'Nunito', sans-serif; h
   <div class="preview-box">
     <div class="preview-label">Current Slide</div>
     <div class="slide-num-display" id="currentNum">1</div>
-    <div class="slide-total" id="slideTotal">/ 33</div>
+    <div class="slide-total" id="slideTotal">/ 37</div>
   </div>
   <div class="preview-box">
     <div class="preview-label">Next Slide</div>
