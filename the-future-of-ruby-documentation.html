@@ -115,15 +115,15 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
 </style>
 </head>
 <body class="">
-<div class="progress-bar" id="progressBar" style="width: 42.5%;"></div>
-<nav class="nav-dots" id="navDots"><button class="dot" aria-label="Go to slide 1"></button><button class="dot" aria-label="Go to slide 2"></button><button class="dot" aria-label="Go to slide 3"></button><button class="dot" aria-label="Go to slide 4"></button><button class="dot" aria-label="Go to slide 5"></button><button class="dot" aria-label="Go to slide 6"></button><button class="dot" aria-label="Go to slide 7"></button><button class="dot" aria-label="Go to slide 8"></button><button class="dot" aria-label="Go to slide 9"></button><button class="dot" aria-label="Go to slide 10"></button><button class="dot" aria-label="Go to slide 11"></button><button class="dot" aria-label="Go to slide 12"></button><button class="dot" aria-label="Go to slide 13"></button><button class="dot" aria-label="Go to slide 14"></button><button class="dot" aria-label="Go to slide 15"></button><button class="dot" aria-label="Go to slide 16"></button><button class="dot active" aria-label="Go to slide 17"></button><button class="dot" aria-label="Go to slide 18"></button><button class="dot" aria-label="Go to slide 19"></button><button class="dot" aria-label="Go to slide 20"></button><button class="dot" aria-label="Go to slide 21"></button><button class="dot" aria-label="Go to slide 22"></button><button class="dot" aria-label="Go to slide 23"></button><button class="dot" aria-label="Go to slide 24"></button><button class="dot" aria-label="Go to slide 25"></button><button class="dot" aria-label="Go to slide 26"></button><button class="dot" aria-label="Go to slide 27"></button><button class="dot" aria-label="Go to slide 28"></button><button class="dot" aria-label="Go to slide 29"></button><button class="dot" aria-label="Go to slide 30"></button><button class="dot" aria-label="Go to slide 31"></button><button class="dot" aria-label="Go to slide 32"></button><button class="dot" aria-label="Go to slide 33"></button><button class="dot" aria-label="Go to slide 34"></button><button class="dot" aria-label="Go to slide 35"></button><button class="dot" aria-label="Go to slide 36"></button><button class="dot" aria-label="Go to slide 37"></button><button class="dot" aria-label="Go to slide 38"></button><button class="dot" aria-label="Go to slide 39"></button><button class="dot" aria-label="Go to slide 40"></button></nav>
+<div class="progress-bar" id="progressBar" style="width: 47.5%;"></div>
+<nav class="nav-dots" id="navDots"><button class="dot" aria-label="Go to slide 1"></button><button class="dot" aria-label="Go to slide 2"></button><button class="dot" aria-label="Go to slide 3"></button><button class="dot" aria-label="Go to slide 4"></button><button class="dot" aria-label="Go to slide 5"></button><button class="dot" aria-label="Go to slide 6"></button><button class="dot" aria-label="Go to slide 7"></button><button class="dot" aria-label="Go to slide 8"></button><button class="dot" aria-label="Go to slide 9"></button><button class="dot" aria-label="Go to slide 10"></button><button class="dot" aria-label="Go to slide 11"></button><button class="dot" aria-label="Go to slide 12"></button><button class="dot" aria-label="Go to slide 13"></button><button class="dot" aria-label="Go to slide 14"></button><button class="dot" aria-label="Go to slide 15"></button><button class="dot" aria-label="Go to slide 16"></button><button class="dot" aria-label="Go to slide 17"></button><button class="dot" aria-label="Go to slide 18"></button><button class="dot active" aria-label="Go to slide 19"></button><button class="dot" aria-label="Go to slide 20"></button><button class="dot" aria-label="Go to slide 21"></button><button class="dot" aria-label="Go to slide 22"></button><button class="dot" aria-label="Go to slide 23"></button><button class="dot" aria-label="Go to slide 24"></button><button class="dot" aria-label="Go to slide 25"></button><button class="dot" aria-label="Go to slide 26"></button><button class="dot" aria-label="Go to slide 27"></button><button class="dot" aria-label="Go to slide 28"></button><button class="dot" aria-label="Go to slide 29"></button><button class="dot" aria-label="Go to slide 30"></button><button class="dot" aria-label="Go to slide 31"></button><button class="dot" aria-label="Go to slide 32"></button><button class="dot" aria-label="Go to slide 33"></button><button class="dot" aria-label="Go to slide 34"></button><button class="dot" aria-label="Go to slide 35"></button><button class="dot" aria-label="Go to slide 36"></button><button class="dot" aria-label="Go to slide 37"></button><button class="dot" aria-label="Go to slide 38"></button><button class="dot" aria-label="Go to slide 39"></button><button class="dot" aria-label="Go to slide 40"></button></nav>
 <div class="edit-hotzone" id="editHotzone"></div>
 <button class="edit-toggle" id="editToggle" title="Edit mode (E)">✓</button>
 <div class="edit-banner" id="editBanner">EDIT MODE — Click any text to edit · ⌘S to save</div>
 <div class="blackout-overlay" id="blackoutOverlay"></div>
 <div class="notes-panel" id="notesPanel">
   <div class="notes-panel-header">
-    <span class="notes-label">Speaker Notes (slide <span id="noteSlideNum">17</span>/36)</span>
+    <span class="notes-label">Speaker Notes (slide <span id="noteSlideNum">19</span>/36)</span>
     <span class="notes-status" id="noteStatus">Saved</span>
   </div>
   <textarea id="notesTextarea" placeholder="Type your speaker notes here..."></textarea>
@@ -344,16 +344,16 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
   <div class="speaker-notes" hidden="">The left side is what token-stream parsing looks like — manual state tracking that breaks when new syntax appears. The right side is a Prism AST visitor — explicit node types, new syntax handled by Prism itself. And it's not just cleaner — we benchmarked both parsers on RDoc's own 112 Ruby files. Prism is about 30% faster than Ripper. So that's the parser foundation. Now let's talk about something that directly affects how people write documentation.</div>
 </section>
 
-<!-- SLIDE 15: WHY MARKDOWN -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,1100px)">
-  <h2 class="reveal">Why Markdown?</h2>
+<!-- SLIDE 15: MARKDOWN IN RDOC -->
+<section class="slide visible"><div class="slide-content" style="max-width:min(90vw,1100px)">
+  <h2 class="reveal">Markdown in RDoc</h2>
   <ul class="reveal">
-    <li>Universal format — humans and AI both read and write it</li>
-    <li>RDoc markup is Ruby-specific, not widely known</li>
-    <li>If you can write a GitHub README, you can contribute to Ruby docs</li>
+    <li>RDoc has supported Markdown since 2011</li>
+    <li>But the parser was buggy — low compatibility with GitHub Flavored Markdown</li>
+    <li>The internal pipeline made fixes difficult</li>
   </ul>
 </div><div class="slide-num">19</div>
-  <div class="speaker-notes" hidden="">The case for Markdown is straightforward. It's the universal format — developers already know it, and AI models are fluent in it. RDoc markup is Ruby-specific and not widely known, even within the community. I've seen contributors write Markdown syntax in RDoc comments without realizing it won't render correctly.</div>
+  <div class="speaker-notes" hidden="">RDoc has actually supported Markdown since 2011. But the support was incomplete and buggy — features like strikethrough, tables, and heading anchors were silently broken. Contributors would use Markdown expecting it to work like GitHub, and it didn't. The reason is the internal pipeline, which I'll show you next.</div>
 </section>
 
 <!-- SLIDE 16: MARKDOWN COUPLING DIAGRAM -->
@@ -361,10 +361,15 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
   <h2 class="reveal">The coupling problem</h2>
   <div class="reveal" style="display:flex;flex-direction:column;align-items:center;gap:clamp(0.8rem,1.5vw,1.2rem);margin-top:var(--content-gap)">
     <div style="display:flex;gap:clamp(2rem,6vw,6rem);justify-content:center">
-      <div class="diagram-box">Markdown parser</div>
-      <div class="diagram-box">RDoc parser</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:clamp(0.5rem,1vw,0.8rem)">
+        <div class="diagram-box">Markdown parser</div>
+        <div style="font-size:var(--h3-size);color:var(--text-dim)">↓</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:clamp(0.5rem,1vw,0.8rem)">
+        <div class="diagram-box">RDoc parser</div>
+        <div style="font-size:var(--h3-size);color:var(--text-dim)">↓</div>
+      </div>
     </div>
-    <div style="font-size:var(--h3-size);color:var(--text-dim)">↓ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↓</div>
     <div class="diagram-box highlight" style="min-width:min(50vw,500px);text-align:center">Shared InlineParser &amp; Formatters</div>
     <div style="font-size:var(--h3-size);color:var(--text-dim)">↓</div>
     <div class="diagram-box" style="text-align:center">HTML output</div>
@@ -1112,4 +1117,4 @@ document.addEventListener('keydown', (e) => {
 </script>
 
 
-<browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><div id="1p-menu-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;">1Password menu is available. Press down arrow to select.</div><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><div id="1p-menu-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;">1Password menu is available. Press down arrow to select.</div><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container></body></html>
+<browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><div id="1p-menu-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;">1Password menu is available. Press down arrow to select.</div><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><div id="1p-menu-live-region" role="status" aria-live="polite" aria-atomic="true" aria-relevant="all" style="clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; overflow: hidden; position: fixed; top: 0px; left: 0px; white-space: nowrap; width: 1px; overflow-wrap: normal;">1Password menu is available. Press down arrow to select.</div><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container><browser-mcp-container data-wxt-shadow-root=""></browser-mcp-container></body></html>
