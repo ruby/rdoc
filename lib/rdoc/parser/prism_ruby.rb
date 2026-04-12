@@ -133,6 +133,9 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   parse_files_matching(/\.rbw?$/) unless ENV['RDOC_USE_RIPPER_PARSER']
 
+  # Matches an RBS inline type annotation line: #: followed by whitespace
+  RBS_SIG_LINE = /\A#:\s/ # :nodoc:
+
   attr_accessor :visibility
   attr_reader :container, :singleton, :in_proc_block
 
@@ -461,10 +464,14 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   def consecutive_comment(line_no)
     return unless @unprocessed_comments.first&.first == line_no
     _line_no, start_line, text = @unprocessed_comments.shift
-    parse_comment_text_to_directives(text, start_line)
+    type_signature = extract_type_signature!(text, start_line)
+    result = parse_comment_text_to_directives(text, start_line)
+    return unless result
+    comment, directives = result
+    [comment, directives, type_signature]
   end
 
-  # Parses comment text and retuns a pair of RDoc::Comment and directives
+  # Parses comment text and returns a pair of RDoc::Comment and directives
 
   def parse_comment_text_to_directives(comment_text, start_line) # :nodoc:
     comment_text, directives = @preprocess.parse_comment(comment_text, start_line, :ruby)
@@ -594,7 +601,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
   # Handles `attr :a, :b`, `attr_reader :a, :b`, `attr_writer :a, :b` and `attr_accessor :a, :b`
 
   def add_attributes(names, rw, line_no)
-    comment, directives = consecutive_comment(line_no)
+    comment, directives, type_signature = consecutive_comment(line_no)
     handle_code_object_directives(@container, directives) if directives
     return unless @container.document_children
 
@@ -602,6 +609,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       a = RDoc::Attr.new(nil, symbol.to_s, rw, comment, singleton: @singleton)
       a.store = @store
       a.line = line_no
+      a.type_signature = type_signature
       record_location(a)
       handle_modifier_directive(a, line_no)
       @container.add_attribute(a) if should_document?(a)
@@ -640,7 +648,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
     receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
-    comment, directives = consecutive_comment(start_line)
+    comment, directives, type_signature = consecutive_comment(start_line)
     handle_code_object_directives(@container, directives) if directives
 
     internal_add_method(
@@ -655,11 +663,12 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
       params: params,
       calls_super: calls_super,
       block_params: block_params,
-      tokens: tokens
+      tokens: tokens,
+      type_signature: type_signature
     )
   end
 
-  private def internal_add_method(method_name, container, comment:, dont_rename_initialize: false, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:) # :nodoc:
+  private def internal_add_method(method_name, container, comment:, dont_rename_initialize: false, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature: nil) # :nodoc:
     meth = RDoc::AnyMethod.new(nil, method_name, singleton: singleton)
     meth.comment = comment
     handle_code_object_directives(meth, directives) if directives
@@ -680,6 +689,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     meth.params ||= params || '()'
     meth.calls_super = calls_super
     meth.block_params ||= block_params if block_params
+    meth.type_signature = type_signature
     record_location(meth)
     meth.start_collecting_tokens(:ruby)
     tokens.each do |token|
@@ -834,6 +844,35 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
     handle_modifier_directive(mod, end_line)
     mod.add_comment(comment, @top_level) if comment
     mod
+  end
+
+  private
+
+  # Extracts RBS type signature lines (#: ...) from raw comment text.
+  # Mutates the input text to remove the extracted lines.
+  # Returns the type signature string, or nil if none found.
+
+  def extract_type_signature!(text, start_line)
+    return nil unless text.include?('#:')
+
+    lines = text.lines
+    sig_lines, doc_lines = lines.partition { |l| l.match?(RBS_SIG_LINE) }
+    return nil if sig_lines.empty?
+
+    text.replace(doc_lines.join)
+    type_sig = sig_lines.map { |l| l.sub(RBS_SIG_LINE, '').chomp }.join("\n")
+    validate_type_signature(type_sig, start_line + doc_lines.size)
+    type_sig
+  end
+
+  def validate_type_signature(sig, line_no)
+    sig.split("\n").each_with_index do |line, i|
+      method_error = RDoc::RbsHelper.validate_method_type(line)
+      next unless method_error
+      type_error = RDoc::RbsHelper.validate_type(line)
+      next unless type_error
+      @options.warn "#{@top_level.relative_name}:#{line_no + i}: invalid RBS type signature: #{line.inspect}"
+    end
   end
 
   class RDocVisitor < Prism::Visitor # :nodoc:

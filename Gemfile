@@ -18,7 +18,5 @@ elsif ENV['PRISM_VERSION']
 end
 
 platforms :ruby do
-  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
-    gem 'mini_racer' # For testing the searcher.js file
-  end
+  gem 'mini_racer' # For testing the searcher.js file
 end

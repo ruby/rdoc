@@ -344,6 +344,61 @@ class RDoc::Store
   end
 
   ##
+  # Returns a hash mapping class/module names to their paths, for use
+  # by type signature linking. Maps both qualified names (Foo::Bar) and
+  # unambiguous unqualified names (Bar). Ambiguous unqualified names
+  # (where multiple classes share the same name) are excluded to avoid
+  # wrong links. Cached after first call.
+
+  def type_name_lookup
+    @type_name_lookup ||= begin
+      lookup = {}
+      unqualified_names = {}
+      ambiguous_names = {}
+      all_classes_and_modules.each do |cm|
+        lookup[cm.full_name] = cm.path
+        unqualified_name = cm.name
+        next if unqualified_name == cm.full_name
+
+        if ambiguous_names[unqualified_name]
+          # already known ambiguous, skip
+        elsif unqualified_names.key?(unqualified_name)
+          unqualified_names.delete(unqualified_name)
+          ambiguous_names[unqualified_name] = true
+        else
+          unqualified_names[unqualified_name] = cm.path
+        end
+      end
+      lookup.merge!(unqualified_names)
+    end
+  end
+
+  ##
+  # Merges RBS type signatures into code objects.
+  # Inline #: annotations take priority and are not overwritten.
+
+  def merge_rbs_signatures(signatures)
+    all_classes_and_modules.each do |cm|
+      cm.method_list.each do |method|
+        next if method.type_signature
+
+        key = method.singleton ? "#{cm.full_name}::#{method.name}" : "#{cm.full_name}##{method.name}"
+        if (sig = signatures[key])
+          method.type_signature = sig
+        end
+      end
+
+      cm.attributes.each do |attr|
+        next if attr.type_signature
+
+        if (sig = signatures["#{cm.full_name}.#{attr.name}"])
+          attr.type_signature = sig
+        end
+      end
+    end
+  end
+
+  ##
   # All TopLevels known to RDoc
 
   def all_files
@@ -443,6 +498,7 @@ class RDoc::Store
   # See also RDoc::Context#remove_from_documentation?
 
   def complete(min_visibility)
+    @type_name_lookup = nil
     fix_basic_object_inheritance
 
     # cache included modules before they are removed from the documentation

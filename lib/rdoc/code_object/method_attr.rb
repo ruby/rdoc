@@ -59,6 +59,18 @@ class RDoc::MethodAttr < RDoc::CodeObject
   attr_accessor :call_seq
 
   ##
+  # RBS type signature from inline annotations or loaded .rbs files
+
+  attr_accessor :type_signature
+
+  ##
+  # Returns the type signature split into individual lines.
+
+  def type_signature_lines
+    @type_signature&.split("\n")
+  end
+
+  ##
   # The call_seq or the param_seq with method name, if there is no call_seq.
 
   attr_reader :arglists
@@ -86,6 +98,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
     @block_params = nil
     @call_seq     = nil
     @params       = nil
+    @type_signature = nil
   end
 
   ##

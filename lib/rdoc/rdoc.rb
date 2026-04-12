@@ -5,6 +5,7 @@ require 'find'
 require 'fileutils'
 require 'pathname'
 require 'time'
+require_relative 'rbs_helper'
 
 ##
 # This is the driver for generating RDoc output.  It handles file parsing and
@@ -491,6 +492,17 @@ The internal error was:
     @options.default_title = "RDoc Documentation"
 
     @store.complete @options.visibility
+
+    # Load RBS type signatures from sig/ directory
+    begin
+      sig_dirs = []
+      sig_dir = File.join(@options.root.to_s, 'sig')
+      sig_dirs << sig_dir if File.directory?(sig_dir)
+      signatures = RDoc::RbsHelper.load_signatures(*sig_dirs)
+      @store.merge_rbs_signatures(signatures) unless signatures.empty?
+    rescue RBS::ParsingError, Errno::ENOENT, LoadError => e
+      @options.warn "Failed to load RBS type signatures: #{e.message}"
+    end
 
     @stats.coverage_level = @options.coverage_report
 

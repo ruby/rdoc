@@ -1311,4 +1311,83 @@ class RDocStoreTest < XrefTestCase
     assert_not_include @s.classes_hash, 'GoneClass'
   end
 
+  def test_merge_rbs_signatures
+    m = RDoc::AnyMethod.new(nil, 'greet')
+    m.params = '(name)'
+    @klass.add_method m
+
+    a = RDoc::Attr.new(nil, 'language', 'R', '')
+    @klass.add_attribute a
+
+    @s.merge_rbs_signatures(
+      'Object#greet' => '(String name) -> void',
+      'Object.language' => 'String'
+    )
+
+    assert_equal '(String name) -> void', m.type_signature
+    assert_equal 'String', a.type_signature
+  end
+
+  def test_merge_rbs_signatures_singleton_method
+    @s.merge_rbs_signatures(
+      'Object::cmethod' => '() -> String'
+    )
+
+    assert_equal '() -> String', @cmeth.type_signature
+  end
+
+  def test_type_name_lookup_full_names
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+    assert_equal @klass.path, lookup['Object']
+    assert_equal @nest_klass.path, lookup['Object::SubClass']
+    assert_equal @mod.path, lookup['Mod']
+  end
+
+  def test_type_name_lookup_unqualified_names
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+    assert_equal @nest_klass.path, lookup['SubClass']
+    assert_equal @mod.path, lookup['Mod']
+  end
+
+  def test_type_name_lookup_ambiguous_unqualified_name_excluded
+    file = @s.add_file 'other.rb'
+    other_klass = file.add_class RDoc::NormalClass, 'Other::SubClass'
+    other_klass.record_location file
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+
+    # Both qualified names are present
+    assert_equal @nest_klass.path, lookup['Object::SubClass']
+    assert_equal other_klass.path, lookup['Other::SubClass']
+
+    # Ambiguous unqualified name is excluded to avoid wrong links
+    refute lookup.key?('SubClass')
+  end
+
+  def test_type_name_lookup_cached
+    @s.complete :public
+
+    lookup1 = @s.type_name_lookup
+    lookup2 = @s.type_name_lookup
+    assert_same lookup1, lookup2
+  end
+
+  def test_merge_rbs_signatures_does_not_overwrite_inline_annotations
+    m = RDoc::AnyMethod.new(nil, 'greet')
+    m.params = '(name)'
+    m.type_signature = '(String) -> void'
+    @klass.add_method m
+
+    @s.merge_rbs_signatures(
+      'Object#greet' => '(String name, ?Integer count) -> void'
+    )
+
+    assert_equal '(String) -> void', m.type_signature
+  end
+
 end
