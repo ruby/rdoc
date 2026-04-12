@@ -527,31 +527,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
   <div class="speaker-notes" hidden="">This is what it looks like in the Aliki theme. The type signature appears as a card above the method documentation — you can see the parameter types and return type at a glance. The type names are clickable links. Types aren't just decoration — they're navigation.</div>
 </section>
 
-<!-- SLIDE 21: AI HELPED US GET HERE -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,1100px)">
-  <h2 class="reveal">AI helped us get here</h2>
-  <ul class="reveal">
-    <li>RDoc is large and complex — change was slow without dedicated maintainers</li>
-    <li>tompng and I became active in 2024 — real progress, but limited capacity</li>
-    <li>Two people maintaining a tool used by the entire Ruby ecosystem</li>
-  </ul>
-</div><div class="slide-num">28</div>
-  <div class="speaker-notes" hidden="">RDoc is large and complex, and for years there wasn't dedicated investment. tompng and I became active in 2024, and we made real progress, but there are only two of us maintaining a tool used by the entire Ruby ecosystem.</div>
-</section>
-
-<!-- SLIDE 22: AI ACCELERATED THE PACE -->
-<section class="slide"><div class="slide-content" style="max-width:min(90vw,1100px)">
-  <h2 class="reveal">AI accelerated the pace</h2>
-  <ul class="reveal">
-    <li>Since mid-2025, AI helped me increase my output significantly</li>
-    <li>tompng's work was his own — AI helped me keep up with reviewing it</li>
-  </ul>
-  <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">We're not working harder — we just have better tools now.</p>
-</div><div class="slide-num">29</div>
-  <div class="speaker-notes" hidden="">Since mid-2025, AI tools helped me increase my output significantly. tompng's work was entirely his own, but AI helped me keep up with reviewing his 43 PRs while also shipping my own changes. The pace is accelerating not because we're working harder, but because we have better tools.</div>
-</section>
-
-<!-- SLIDE 23: RDOC'S PRIORITY -->
+<!-- SLIDE 21: RDOC'S PRIORITY -->
 <section class="slide"><div class="slide-content" style="max-width:min(90vw,1100px)">
   <h2 class="reveal">RDoc's priority</h2>
   <ul class="reveal">
@@ -559,7 +535,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>Target: Ruby's official docs and gem docs</li>
     <li>Make documentation easier to write and maintain</li>
   </ul>
-</div><div class="slide-num">30</div>
+</div><div class="slide-num">28</div>
   <div class="speaker-notes" hidden="">Looking ahead, the priority is clear: make it easier to contribute to Ruby documentation. That means both docs.ruby-lang.org and gem documentation. Lower the barriers for writing, reviewing, and maintaining docs.</div>
 </section>
 
@@ -571,7 +547,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>Revisiting supported directives for clarity</li>
     <li>Whether users adopt a type checker is their choice — RDoc supports both</li>
   </ul>
-</div><div class="slide-num">31</div>
+</div><div class="slide-num">29</div>
   <div class="speaker-notes" hidden="">RBS signatures are a start — structured, machine-readable contracts in the source. We'll revisit supported directives to make them clearer. And I want to be explicit: whether users adopt a type checker is their choice. RDoc will support both typed and untyped codebases.</div>
 </section>
 
@@ -583,7 +559,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>For AI agents: <code>rdoc -C</code> (coverage — what's missing)</li>
     <li>For AI agents: <code>ri --format=markdown</code> (query docs directly)</li>
   </ul>
-</div><div class="slide-num">32</div>
+</div><div class="slide-num">30</div>
   <div class="speaker-notes" hidden="">For humans, server mode gives you live preview while writing. For AI agents, rdoc -C gives coverage reports — what's undocumented, what has broken references. And ri --format=markdown lets agents query Ruby documentation directly in a format they're fluent in.</div>
 </section>
 
@@ -594,7 +570,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>For humans: Aliki improved the reading experience</li>
     <li>For AI: we evaluated and found nothing proven yet</li>
   </ul>
-</div><div class="slide-num">33</div>
+</div><div class="slide-num">31</div>
   <div class="speaker-notes" hidden="">On the consumption side, Aliki addressed the human experience — dark mode, search, responsive layout. For AI consumption, we looked at the options and found nothing with proven impact. Let me walk through what we evaluated.</div>
 </section>
 
@@ -606,7 +582,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li><strong style="color:var(--text)">10% adoption</strong> across 300K domains, <strong style="color:var(--accent)">zero measurable impact</strong> on AI citations</li>
     <li>No major LLM provider officially consumes it</li>
   </ul>
-</div><div class="slide-num">34</div>
+</div><div class="slide-num">32</div>
   <div class="speaker-notes" hidden="">I actually prototyped llms.txt generation for RDoc. Then I looked at the data. SE Ranking studied 300,000 domains — only 10% adoption. An XGBoost model for predicting AI citations actually improved when llms.txt was removed as a variable. No major LLM provider officially supports it.</div>
 </section>
 
@@ -618,7 +594,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>We considered generating Markdown output from RDoc</li>
     <li>Prioritizing this now creates more risk than reward</li>
   </ul>
-</div><div class="slide-num">35</div>
+</div><div class="slide-num">33</div>
   <div class="speaker-notes" hidden="">We also considered generating Markdown output alongside HTML — a format AI could consume directly. But there's no standard for how to serve it, no consensus on what AI tools would actually use, and the maintenance cost would fall on every RDoc user. The risk outweighs the reward right now.</div>
 </section>
 
@@ -630,7 +606,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>Community rejected it: "This should be an external tool"</li>
     <li>T-rustdoc team: "Very likely not the desired format within 3 months, never mind 3 years"</li>
   </ul>
-</div><div class="slide-num">36</div>
+</div><div class="slide-num">34</div>
   <div class="speaker-notes" hidden="">We're not the only ones wrestling with this. Rustdoc had an RFC proposing LLM-friendly text output. The community rejected it — the consensus was that this belongs in external tooling, not in the doc generator itself. The Rustdoc team's argument was blunt: the format you build today very likely isn't the format you'll need in three months, let alone three years.</div>
 </section>
 
@@ -643,7 +619,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>Doc generators should focus on producing good output</li>
   </ul>
   <p class="reveal" style="margin-top:var(--content-gap);font-size:var(--body-size);color:var(--text-secondary)">If I missed anything in this space, I'd love to hear about it after the talk.</p>
-</div><div class="slide-num">37</div>
+</div><div class="slide-num">35</div>
   <div class="speaker-notes" hidden="">As far as I can tell, no major documentation generator — Rustdoc, Javadoc, Sphinx, TypeDoc — has shipped AI-specific output features. All the AI-docs integration is happening at the consumption layer: MCP servers, Dash, DevDocs. Doc generators should focus on producing good, structured output, and let the consumption layer evolve independently. If I missed anything in this space, I'd genuinely like to hear about it.</div>
 </section>
 
@@ -654,7 +630,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>AI models train on it. AI tools reference it when generating code.</li>
     <li>Improving Ruby's docs improves every AI tool that uses them.</li>
   </ul>
-</div><div class="slide-num">38</div>
+</div><div class="slide-num">36</div>
   <div class="speaker-notes" hidden="">docs.ruby-lang.org isn't just read by developers anymore. AI models train on it, and AI coding tools reference it when generating Ruby code. So when we improve Ruby's documentation, we're not just helping the people who read the docs directly — we're improving every AI tool that consumes them.</div>
 </section>
 
@@ -666,7 +642,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>Adding a type checker at generation time costs 2-3x overhead</li>
     <li>Types already in documentation give AI the information without that cost</li>
   </ul>
-</div><div class="slide-num">39</div>
+</div><div class="slide-num">37</div>
   <div class="speaker-notes" hidden="">Yusuke Endoh's benchmark from March 2026 showed Ruby is number one for AI code generation cost at $0.36 per run. Adding a type checker at generation time would cost 2-3x overhead. But types already present in documentation give AI the same information without that runtime cost. That's the value of RBS in docs.</div>
 </section>
 
@@ -678,7 +654,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>Any AI-specific format risks being obsolete in months.</li>
     <li>So we focus on Markdown, types, clean architecture — things that last.</li>
   </ul>
-</div><div class="slide-num">40</div>
+</div><div class="slide-num">38</div>
   <div class="speaker-notes" hidden="">We don't know what AI tools will need in a year. llms.txt looked promising six months ago — the data says it doesn't help. Any AI-specific format we build today risks being obsolete by the time it ships. The Rust community reached the same conclusion in their rustdoc discussion. So we focus on things that last regardless of how AI evolves: Markdown, type signatures, clean architecture.</div>
 </section>
 
@@ -690,7 +666,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <li>RDoc's priority: make docs easier to write and maintain</li>
     <li>The foundation is rebuilt: Prism, Markdown, server mode, RBS, Aliki</li>
   </ul>
-</div><div class="slide-num">41</div>
+</div><div class="slide-num">39</div>
   <div class="speaker-notes" hidden="">Three takeaways. AI reads Ruby's documentation too now — so improving it helps both developers and the tools they use. RDoc's priority is making docs easier to write and maintain. And the foundation is rebuilt — Prism parser, Markdown support, server mode, RBS type signatures, Aliki theme.</div>
 </section>
 
@@ -705,7 +681,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
     <code style="font-size:var(--body-size);background:none;color:var(--text)">github.com/ruby/rdoc</code>
     <code style="font-size:var(--body-size);background:none;color:var(--text)">docs.ruby-lang.org</code>
   </div>
-</div><div class="slide-num">42</div>
+</div><div class="slide-num">40</div>
   <div class="speaker-notes" hidden="">The most important message: it's now much easier to contribute to Ruby documentation. If you've ever wanted to improve Ruby's docs but didn't know the markup, that barrier is gone — it's Markdown. If you maintain a gem, try rdoc --server. It takes thirty seconds.</div>
 </section>
 
@@ -719,7 +695,7 @@ body.edit-active [contenteditable] { outline: 1px dashed var(--accent); outline-
       <span>BlueSky: <span style="color:var(--accent)">@st0012.dev</span></span>
     </div>
   </div>
-  <div class="slide-num">43</div>
+  <div class="slide-num">41</div>
   <div class="speaker-notes" hidden="">Thank you for your time. I want to thank tompng — Tomoya Ishida — for the three subsystem rewrites that made everything else possible. The Shopify Ruby DX team for countless ideas and support. And the Ruby committers who reviewed the many PRs. I'll be around for questions.</div>
 </section>
 
@@ -1019,9 +995,9 @@ class PresenterMode {
     this.navigatingFromRemote = false;
     this.sectionBoundaries = [
       { start: 0, end: 9, label: 'The Hook', budget: '3-4 min' },
-      { start: 10, end: 28, label: "Here's What We Did", budget: '14-16 min' },
-      { start: 29, end: 39, label: "What's Still Ahead", budget: '8-9 min' },
-      { start: 40, end: 42, label: 'Recap + Close', budget: '2 min' }
+      { start: 10, end: 26, label: "Here's What We Did", budget: '14-16 min' },
+      { start: 27, end: 37, label: "What's Still Ahead", budget: '8-9 min' },
+      { start: 38, end: 40, label: 'Recap + Close', budget: '2 min' }
     ];
     this.hookSlideNavigation();
     this.setupKeyboard();
@@ -1136,7 +1112,7 @@ body { background: #1a1a1a; color: #e0e0e0; font-family: 'Nunito', sans-serif; h
   <div class="preview-box">
     <div class="preview-label">Current Slide</div>
     <div class="slide-num-display" id="currentNum">1</div>
-    <div class="slide-total" id="slideTotal">/ 43</div>
+    <div class="slide-total" id="slideTotal">/ 41</div>
   </div>
   <div class="preview-box">
     <div class="preview-label">Next Slide</div>
