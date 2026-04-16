@@ -77,43 +77,9 @@ class RDoc::Mixin < RDoc::CodeObject
 
   def module
     return @module if @module
-
-    # search the current context
     return @name unless parent
-    full_name = parent.child_name(@name)
-    @module = @store.modules_hash[full_name]
-    return @module if @module
-    return @name if @name =~ /^::/
 
-    # search the includes before this one, in reverse order
-    searched = parent.includes.take_while { |i| i != self }.reverse
-    searched.each do |i|
-      inc = i.module
-      next if String === inc
-      full_name = inc.child_name(@name)
-      @module = @store.modules_hash[full_name]
-      return @module if @module
-    end
-
-    # go up the hierarchy of names
-    up = parent.parent
-    while up
-      full_name = up.child_name(@name)
-      @module = @store.modules_hash[full_name]
-      return @module if @module
-      up = up.parent
-    end
-
-    @name
-  end
-
-  ##
-  # Sets the store for this class or module and its contained code objects.
-
-  def store=(store)
-    super
-
-    @file = @store.add_file @file.full_name if @file
+    @module = @store&.resolve_mixin(@name, parent, self) || @name
   end
 
   def to_s # :nodoc:
