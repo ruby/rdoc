@@ -39,25 +39,15 @@ class RDocStatsTest < RDoc::TestCase
 
     a = RDoc::Attr.new nil, 'a', 'RW', nil
     a.record_location @tl
+    a.line = 3
     c.add_attribute a
 
     @store.complete :public
 
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        verb(
-          "class C # is documented\n",
-          "\n",
-          "  attr_accessor :a # in file file.rb\n",
-          "\n",
-          "end\n"),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "The following items are not documented:\n", report
+    assert_match "file.rb:\n  Attribute:\n    C#a file.rb:3\n", report
   end
 
   def test_report_attr_documented
@@ -71,24 +61,7 @@ class RDocStatsTest < RDoc::TestCase
 
     @store.complete :public
 
-    report = @s.report
-
-    assert_equal @s.great_job, report
-  end
-
-  def test_report_attr_line
-    c = @tl.add_class RDoc::NormalClass, 'C'
-    c.record_location @tl
-    c.add_comment 'C', @tl
-
-    a = RDoc::Attr.new nil, 'a', 'RW', nil
-    a.record_location @tl
-    a.line = 3
-    c.add_attribute a
-
-    @store.complete :public
-
-    assert_match '# in file file.rb:3', @s.report.accept(to_rdoc)
+    assert_match "100% documentation!\nGreat Job!\n", @s.report
   end
 
   def test_report_constant
@@ -98,26 +71,15 @@ class RDocStatsTest < RDoc::TestCase
 
     c = RDoc::Constant.new 'C', nil, nil
     c.record_location @tl
+    c.line = 7
     m.add_constant c
 
     @store.complete :public
 
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        verb(
-          "module M # is documented\n",
-          "\n",
-          "  # in file file.rb\n",
-          "  C = nil\n",
-          "\n",
-          "end\n"),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "The following items are not documented:\n", report
+    assert_match "file.rb:\n  Constant:\n    M::C file.rb:7\n", report
   end
 
   def test_report_constant_alias
@@ -133,11 +95,8 @@ class RDocStatsTest < RDoc::TestCase
 
     @store.complete :public
 
-    report = @s.report
-
-    # TODO change this to refute match, aliases should be ignored as they are
-    # programmer convenience constructs
-    assert_match 'class Object', report.accept(to_rdoc)
+    # Constant aliases are skipped in the report
+    refute_match 'CA', @s.report
   end
 
   def test_report_constant_documented
@@ -151,24 +110,7 @@ class RDocStatsTest < RDoc::TestCase
 
     @store.complete :public
 
-    report = @s.report
-
-    assert_equal @s.great_job, report
-  end
-
-  def test_report_constant_line
-    m = @tl.add_module RDoc::NormalModule, 'M'
-    m.record_location @tl
-    m.add_comment 'M', @tl
-
-    c = RDoc::Constant.new 'C', nil, nil
-    c.record_location @tl
-    c.line = 5
-    m.add_constant c
-
-    @store.complete :public
-
-    assert_match '# in file file.rb:5', @s.report.accept(to_rdoc)
+    assert_match "100% documentation!\nGreat Job!\n", @s.report
   end
 
   def test_report_class
@@ -184,18 +126,8 @@ class RDocStatsTest < RDoc::TestCase
 
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        para('In files:'),
-        list(:BULLET, *[
-          item(nil, para('file.rb'))]),
-        blank_line,
-        verb("class C\n", "end\n"),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "The following items are not documented:\n", report
+    assert_match "file.rb:\n  Class:\n    C\n", report
   end
 
   def test_report_skip_object
@@ -209,7 +141,7 @@ class RDocStatsTest < RDoc::TestCase
 
     @store.complete :public
 
-    refute_match %r%^class Object$%, @s.report.accept(to_rdoc)
+    refute_match(/^\s+Object$/, @s.report)
   end
 
   def test_report_class_documented
@@ -224,9 +156,7 @@ class RDocStatsTest < RDoc::TestCase
 
     @store.complete :public
 
-    report = @s.report
-
-    assert_equal @s.great_job, report
+    assert_match "100% documentation!\nGreat Job!\n", @s.report
   end
 
   def test_report_class_documented_level_1
@@ -253,18 +183,8 @@ class RDocStatsTest < RDoc::TestCase
 
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        para('In files:'),
-        list(:BULLET, *[
-          item(nil, para('file.rb'))]),
-        blank_line,
-        verb("class C2\n", "end\n"),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "The following items are not documented:\n", report
+    assert_match "file.rb:\n  Class:\n    C2\n", report
   end
 
   def test_report_class_empty
@@ -274,15 +194,9 @@ class RDocStatsTest < RDoc::TestCase
 
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        para('class C is referenced but empty.'),
-        para("It probably came from another project.  I'm sorry I'm holding it against you."),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "The following items are not documented:\n", report
+    assert_match "C is referenced but empty.\n", report
+    assert_match "It probably came from another project.", report
   end
 
   def test_report_class_empty_2
@@ -296,66 +210,26 @@ class RDocStatsTest < RDoc::TestCase
     @store.complete :public
 
     @s.coverage_level = 1
-    report = @s.report
-
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        para('In files:'),
-        list(:BULLET, *[
-          item(nil, para('file.rb'))]),
-        blank_line,
-        verb("class C1\n", "end\n"),
-        blank_line)
-
-    assert_equal expected, report
-  end
-
-  def test_report_class_method_documented
-    c = @tl.add_class RDoc::NormalClass, 'C'
-    c.record_location @tl
-
-    m = RDoc::AnyMethod.new nil, 'm'
-    m.record_location @tl
-    c.add_method m
-    m.comment = 'm'
-
-    @store.complete :public
 
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        para('In files:'),
-        list(:BULLET, *[
-          item(nil, para('file.rb'))]),
-        blank_line,
-        verb("class C\n", "end\n"),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "The following items are not documented:\n", report
+    assert_match "file.rb:\n  Class:\n    C1\n", report
   end
 
-  def test_report_class_module_ignore
+  def test_report_ignored_class_excluded
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.ignore
 
     @store.complete :public
 
-    report = @s.report_class_module c
-
-    assert_nil report
+    refute_match(/^\s+C$/, @s.report)
   end
 
   def test_report_empty
     @store.complete :public
 
-    report = @s.report
-
-    assert_equal @s.great_job, report
+    assert_match "100% documentation!\nGreat Job!\n", @s.report
   end
 
   def test_report_method
@@ -365,6 +239,7 @@ class RDocStatsTest < RDoc::TestCase
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
     m1.record_location @tl
+    m1.line = 5
     c.add_method m1
 
     m2 = RDoc::AnyMethod.new nil, 'm2'
@@ -376,20 +251,8 @@ class RDocStatsTest < RDoc::TestCase
 
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        verb(*[
-          "class C # is documented\n",
-          "\n",
-          "  # in file file.rb\n",
-          "  def m1; end\n",
-          "\n",
-          "end\n"]),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "The following items are not documented:\n", report
+    assert_match "file.rb:\n  Method:\n    C#m1 file.rb:5\n", report
   end
 
   def test_report_method_class
@@ -399,6 +262,7 @@ class RDocStatsTest < RDoc::TestCase
 
     m1 = RDoc::AnyMethod.new nil, 'm1', singleton: true
     m1.record_location @tl
+    m1.line = 8
     c.add_method m1
 
     m2 = RDoc::AnyMethod.new nil, 'm2', singleton: true
@@ -410,20 +274,8 @@ class RDocStatsTest < RDoc::TestCase
 
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        verb(*[
-          "class C # is documented\n",
-          "\n",
-          "  # in file file.rb\n",
-          "  def self.m1; end\n",
-          "\n",
-          "end\n"]),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "The following items are not documented:\n", report
+    assert_match "file.rb:\n  Method:\n    C.m1 file.rb:8\n", report
   end
 
   def test_report_method_documented
@@ -438,24 +290,7 @@ class RDocStatsTest < RDoc::TestCase
 
     @store.complete :public
 
-    report = @s.report
-
-    assert_equal @s.great_job, report
-  end
-
-  def test_report_method_line
-    c = @tl.add_class RDoc::NormalClass, 'C'
-    c.record_location @tl
-    c.add_comment 'C', @tl
-
-    m1 = RDoc::AnyMethod.new nil, 'm1'
-    m1.record_location @tl
-    m1.line = 4
-    c.add_method m1
-
-    @store.complete :public
-
-    assert_match '# in file file.rb:4', @s.report.accept(to_rdoc)
+    assert_match "100% documentation!\nGreat Job!\n", @s.report
   end
 
   def test_report_method_parameters
@@ -465,6 +300,7 @@ class RDocStatsTest < RDoc::TestCase
 
     m1 = RDoc::AnyMethod.new nil, 'm1'
     m1.record_location @tl
+    m1.line = 10
     m1.params = '(p1, p2)'
     m1.comment = 'Stuff with +p1+'
     c.add_method m1
@@ -477,23 +313,10 @@ class RDocStatsTest < RDoc::TestCase
     @store.complete :public
 
     @s.coverage_level = 1
+
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        verb(*[
-          "class C # is documented\n",
-          "\n",
-          "  # in file file.rb\n",
-          "  # +p2+ is not documented\n",
-          "  def m1(p1, p2); end\n",
-          "\n",
-          "end\n"]),
-        blank_line)
-
-    assert_equal expected, report
+    assert_match "file.rb:\n  Method:\n    C#m1 file.rb:10\n      Undocumented params: p2\n", report
   end
 
   def test_report_method_parameters_documented
@@ -511,9 +334,8 @@ class RDocStatsTest < RDoc::TestCase
     @store.complete :public
 
     @s.coverage_level = 1
-    report = @s.report
 
-    assert_equal @s.great_job, report
+    assert_match "100% documentation!\nGreat Job!\n", @s.report
   end
 
   def test_report_method_parameters_yield
@@ -533,23 +355,196 @@ m(a, b) { |c, d| ... }
     @store.complete :public
 
     @s.coverage_level = 1
+
     report = @s.report
 
-    expected =
-      doc(
-        para('The following items are not documented:'),
-        blank_line,
-        verb(
-          "class C # is documented\n",
-          "\n",
-          "  # in file file.rb\n",
-          "  # +b+, +d+ is not documented\n",
-          "  def m; end\n",
-          "\n",
-          "end\n"),
-        blank_line)
+    assert_match "file.rb:\n  Method:\n    C#m\n      Undocumented params: b, d\n", report
+  end
 
-    assert_equal expected, report
+  def test_report_multiple_files
+    tl2 = @store.add_file 'other.rb'
+    tl2.parser = RDoc::Parser::Ruby
+
+    c1 = @tl.add_class RDoc::NormalClass, 'C1'
+    c1.record_location @tl
+
+    c2 = tl2.add_class RDoc::NormalClass, 'C2'
+    c2.record_location tl2
+
+    @store.complete :public
+
+    report = @s.report
+
+    assert_match "The following items are not documented:\n", report
+    assert_match "file.rb:\n  Class:\n    C1\n", report
+    assert_match "other.rb:\n  Class:\n    C2\n", report
+  end
+
+  def test_report_reopened_class_lists_each_file
+    tl2 = @store.add_file 'other.rb'
+    tl2.parser = RDoc::Parser::Ruby
+
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+
+    reopened = tl2.add_class RDoc::NormalClass, 'C'
+    reopened.record_location tl2
+
+    assert_same c, reopened
+
+    @store.complete :public
+
+    report = @s.report
+
+    assert_match "file.rb:\n  Class:\n    C\n", report
+    assert_match "other.rb:\n  Class:\n    C\n", report
+  end
+
+  def test_report_reopened_class_lists_each_file_regardless_of_parse_order
+    tl2 = @store.add_file 'other.rb'
+    tl2.parser = RDoc::Parser::Ruby
+
+    c = tl2.add_class RDoc::NormalClass, 'C'
+    c.record_location tl2
+
+    reopened = @tl.add_class RDoc::NormalClass, 'C'
+    reopened.record_location @tl
+
+    assert_same c, reopened
+
+    @store.complete :public
+
+    report = @s.report
+
+    assert_match "file.rb:\n  Class:\n    C\n", report
+    assert_match "other.rb:\n  Class:\n    C\n", report
+  end
+
+  def test_report_file_sorting
+    tl_b = @store.add_file 'b.rb'
+    tl_b.parser = RDoc::Parser::Ruby
+    tl_a = @store.add_file 'a.rb'
+    tl_a.parser = RDoc::Parser::Ruby
+
+    c1 = tl_b.add_class RDoc::NormalClass, 'B'
+    c1.record_location tl_b
+
+    c2 = tl_a.add_class RDoc::NormalClass, 'A'
+    c2.record_location tl_a
+
+    @store.complete :public
+
+    report = @s.report
+
+    a_pos = report.index('a.rb:')
+    b_pos = report.index('b.rb:')
+
+    assert a_pos < b_pos, "a.rb should appear before b.rb"
+  end
+
+  def test_report_items_without_line_sort_first
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    m1 = RDoc::AnyMethod.new nil, 'with_line'
+    m1.record_location @tl
+    m1.line = 3
+    c.add_method m1
+
+    m2 = RDoc::AnyMethod.new nil, 'no_line'
+    m2.record_location @tl
+    c.add_method m2
+
+    @store.complete :public
+
+    report = @s.report
+
+    no_line_pos = report.index('no_line')
+    with_line_pos = report.index('with_line')
+
+    assert no_line_pos < with_line_pos,
+      "Items without line numbers should appear before items with line numbers"
+  end
+
+  def test_report_item_sorting_by_line
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    m1 = RDoc::AnyMethod.new nil, 'z_method'
+    m1.record_location @tl
+    m1.line = 5
+    c.add_method m1
+
+    m2 = RDoc::AnyMethod.new nil, 'a_method'
+    m2.record_location @tl
+    m2.line = 10
+    c.add_method m2
+
+    @store.complete :public
+
+    report = @s.report
+
+    z_pos = report.index('z_method')
+    a_pos = report.index('a_method')
+
+    assert z_pos < a_pos, "z_method (line 5) should appear before a_method (line 10)"
+  end
+
+  def test_report_mixed_types_in_file
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    a = RDoc::Attr.new nil, 'a', 'RW', nil
+    a.record_location @tl
+    a.line = 3
+    c.add_attribute a
+
+    k = RDoc::Constant.new 'K', nil, nil
+    k.record_location @tl
+    k.line = 5
+    c.add_constant k
+
+    m = RDoc::AnyMethod.new nil, 'm'
+    m.record_location @tl
+    m.line = 7
+    c.add_method m
+
+    @store.complete :public
+
+    report = @s.report
+
+    assert_match "file.rb:\n", report
+    assert_match "  Constant:\n    C::K file.rb:5\n", report
+    assert_match "  Attribute:\n    C#a file.rb:3\n", report
+    assert_match "  Method:\n    C#m file.rb:7\n", report
+  end
+
+  def test_report_multi_file_class
+    tl2 = @store.add_file 'ext.c'
+    tl2.parser = RDoc::Parser::C
+
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    m1 = RDoc::AnyMethod.new nil, 'ruby_method'
+    m1.record_location @tl
+    m1.line = 10
+    c.add_method m1
+
+    m2 = RDoc::AnyMethod.new nil, 'c_method'
+    m2.record_location tl2
+    c.add_method m2
+
+    @store.complete :public
+
+    report = @s.report
+
+    assert_match "ext.c:\n  Method:\n    C#c_method\n", report
+    assert_match "file.rb:\n  Method:\n    C#ruby_method file.rb:10\n", report
   end
 
   def test_summary
@@ -573,24 +568,24 @@ m(a, b) { |c, d| ... }
 
     @store.complete :public
 
-    summary = @s.summary.accept to_rdoc
-    summary.sub!(/  Elapsed:.*/m, '')
+    summary = @s.summary
+    summary.sub!(/Elapsed:.*/m, '')
 
-    expected = <<-EXPECTED
-  Files:      0
+    expected = <<~EXPECTED
+      Files:      0
 
-  Classes:    1 (1 undocumented)
-  Modules:    1 (1 undocumented)
-  Constants:  1 (1 undocumented)
-  Attributes: 1 (1 undocumented)
-  Methods:    1 (1 undocumented)
+      Classes:    1 (1 undocumented)
+      Modules:    1 (1 undocumented)
+      Constants:  1 (1 undocumented)
+      Attributes: 1 (1 undocumented)
+      Methods:    1 (1 undocumented)
 
-  Total:      5 (5 undocumented)
-    0.00% documented
+      Total:      5 (5 undocumented)
+        0.00% documented
 
     EXPECTED
 
-    assert_equal summary, expected
+    assert_equal expected, summary
   end
 
   def test_summary_level_false
@@ -601,24 +596,24 @@ m(a, b) { |c, d| ... }
 
     @s.coverage_level = false
 
-    summary = @s.summary.accept to_rdoc
-    summary.sub!(/  Elapsed:.*/m, '')
+    summary = @s.summary
+    summary.sub!(/Elapsed:.*/m, '')
 
-    expected = <<-EXPECTED
-  Files:      0
+    expected = <<~EXPECTED
+      Files:      0
 
-  Classes:    1 (1 undocumented)
-  Modules:    0 (0 undocumented)
-  Constants:  0 (0 undocumented)
-  Attributes: 0 (0 undocumented)
-  Methods:    0 (0 undocumented)
+      Classes:    1 (1 undocumented)
+      Modules:    0 (0 undocumented)
+      Constants:  0 (0 undocumented)
+      Attributes: 0 (0 undocumented)
+      Methods:    0 (0 undocumented)
 
-  Total:      1 (1 undocumented)
-    0.00% documented
+      Total:      1 (1 undocumented)
+        0.00% documented
 
     EXPECTED
 
-    assert_equal summary, expected
+    assert_equal expected, summary
   end
 
   def test_summary_level_1
@@ -637,29 +632,25 @@ m(a, b) { |c, d| ... }
     @s.coverage_level = 1
     @s.report
 
-    summary = @s.summary.accept to_rdoc
-    summary.sub!(/  Elapsed:.*/m, '')
+    summary = @s.summary
+    summary.sub!(/Elapsed:.*/m, '')
 
-    expected = <<-EXPECTED
-  Files:      0
+    expected = <<~EXPECTED
+      Files:      0
 
-  Classes:    1 (0 undocumented)
-  Modules:    0 (0 undocumented)
-  Constants:  0 (0 undocumented)
-  Attributes: 0 (0 undocumented)
-  Methods:    1 (0 undocumented)
-  Parameters: 2 (1 undocumented)
+      Classes:    1 (0 undocumented)
+      Modules:    0 (0 undocumented)
+      Constants:  0 (0 undocumented)
+      Attributes: 0 (0 undocumented)
+      Methods:    1 (0 undocumented)
+      Parameters: 2 (1 undocumented)
 
-  Total:      4 (1 undocumented)
-   75.00% documented
+      Total:      4 (1 undocumented)
+       75.00% documented
 
     EXPECTED
 
-    assert_equal summary, expected
-  end
-
-  def to_rdoc
-    RDoc::Markup::ToRdoc.new
+    assert_equal expected, summary
   end
 
   def test_undoc_params
