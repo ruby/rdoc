@@ -36,7 +36,7 @@ module RDoc
 
       ##
       # Loads RBS signatures from the given directories.
-      # Returns a Hash mapping "ClassName#method_name" => "type sig string".
+      # Returns a Hash mapping "ClassName#method_name" => ["type sig string", ...].
 
       def load_signatures(*dirs)
         loader = RBS::EnvironmentLoader.new
