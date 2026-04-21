@@ -851,7 +851,8 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
 
   # Extracts RBS type signature lines (#: ...) from raw comment text.
   # Mutates the input text to remove the extracted lines.
-  # Returns the type signature string, or nil if none found.
+  # Returns an array of extracted type signature lines, or nil if none are
+  # found. The array may contain multiple lines for overloaded signatures.
 
   def extract_type_signature!(text, start_line)
     return nil unless text.include?('#:')
