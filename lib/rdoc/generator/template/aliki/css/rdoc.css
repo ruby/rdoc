@@ -1075,6 +1075,20 @@ main h6 a:hover {
   font-style: italic;
 }
 
+/* RBS Type Signature Links — linked types get subtle underline */
+a.rbs-type {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-default);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--transition-fast), color var(--transition-fast);
+}
+
+a.rbs-type:hover {
+  color: var(--color-link-hover);
+  text-decoration-color: var(--color-link-hover);
+}
+
 /* Emphasis */
 em {
   text-decoration-color: var(--color-emphasis-decoration);
@@ -1335,6 +1349,49 @@ main .method-heading .method-args {
   font-weight: var(--font-weight-normal);
 }
 
+/* Type signatures — overloads stack as a code block under the method name */
+pre.method-type-signature {
+  position: relative;
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) 0 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  font-family: var(--font-code);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  line-height: var(--line-height-tight);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+pre.method-type-signature::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px dotted var(--color-border-default);
+}
+
+pre.method-type-signature code {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+}
+
+/* Attribute type sigs render inline after the [RW] badge */
+main .method-heading > .method-type-signature {
+  display: inline;
+  margin-left: var(--space-2);
+  font-family: var(--font-code);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
 main .method-controls {
   position: absolute;
   top: var(--space-3);
@@ -1442,6 +1499,10 @@ main .attribute-access-type {
 
   main .method-heading {
     font-size: var(--font-size-base);
+  }
+
+  pre.method-type-signature {
+    font-size: var(--font-size-xs);
   }
 
   main .method-header {

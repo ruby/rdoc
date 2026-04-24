@@ -1311,4 +1311,109 @@ class RDocStoreTest < XrefTestCase
     assert_not_include @s.classes_hash, 'GoneClass'
   end
 
+  def test_merge_rbs_signatures
+    m = RDoc::AnyMethod.new(nil, 'greet')
+    m.params = '(name)'
+    @klass.add_method m
+
+    a = RDoc::Attr.new(nil, 'language', 'R', '')
+    @klass.add_attribute a
+
+    @s.merge_rbs_signatures(
+      'Object#greet' => ['(String name) -> void'],
+      'Object#language' => ['String']
+    )
+
+    assert_equal ['(String name) -> void'], m.type_signature_lines
+    assert_equal ['String'], a.type_signature_lines
+  end
+
+  def test_merge_rbs_signatures_singleton_method
+    @s.merge_rbs_signatures(
+      'Object.cmethod' => ['() -> String']
+    )
+
+    assert_equal ['() -> String'], @cmeth.type_signature_lines
+  end
+
+  def test_merge_rbs_signatures_constructor
+    ctor = RDoc::AnyMethod.new nil, 'new', singleton: true
+    ctor.record_location @top_level
+    @klass.add_method ctor
+
+    @s.merge_rbs_signatures(
+      'Object#initialize' => ['(String name) -> void']
+    )
+
+    assert_equal ['(String name) -> void'], ctor.type_signature_lines
+  end
+
+  def test_type_name_lookup
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+    assert_equal @klass.path, lookup['Object']
+    assert_equal @nest_klass.path, lookup['Object::SubClass']
+    assert_equal @mod.path, lookup['Mod']
+    assert_equal @nest_klass.path, lookup['SubClass']
+  end
+
+  def test_type_name_lookup_ambiguous_unqualified_name_excluded
+    file = @s.add_file 'other.rb'
+    other_klass = file.add_class RDoc::NormalClass, 'Other::SubClass'
+    other_klass.record_location file
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+
+    # Both qualified names are present
+    assert_equal @nest_klass.path, lookup['Object::SubClass']
+    assert_equal other_klass.path, lookup['Other::SubClass']
+
+    # Ambiguous unqualified name is excluded to avoid wrong links
+    refute lookup.key?('SubClass')
+  end
+
+  def test_type_name_lookup_top_level_class_wins_over_nested_namesake
+    top_level_string = @top_level.add_class RDoc::NormalClass, 'String'
+    top_level_string.record_location @top_level
+
+    nested_string = @top_level.add_class RDoc::NormalClass, 'Gem::Elements::String'
+    nested_string.record_location @top_level
+
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+
+    # Top-level class retains its own path; nested namesake does not
+    # hijack the unqualified name.
+    assert_equal top_level_string.path, lookup['String']
+    assert_equal nested_string.path, lookup['Gem::Elements::String']
+  end
+
+
+  def test_merge_rbs_signatures_does_not_overwrite_inline_annotations
+    m = RDoc::AnyMethod.new(nil, 'greet')
+    m.params = '(name)'
+    m.type_signature_lines = ['(String) -> void']
+    @klass.add_method m
+
+    @s.merge_rbs_signatures(
+      'Object#greet' => ['(String name, ?Integer count) -> void']
+    )
+
+    assert_equal ['(String) -> void'], m.type_signature_lines
+  end
+
+  def test_merge_rbs_signatures_unmatched_key
+    @s.merge_rbs_signatures(
+      'Object#nonexistent' => ['(String) -> void']
+    )
+
+    # No method matches — nothing should blow up, no sigs assigned
+    @klass.method_list.each do |m|
+      assert_nil m.type_signature_lines
+    end
+  end
+
 end

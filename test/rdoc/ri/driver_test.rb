@@ -737,6 +737,20 @@ class RDocRIDriverTest < RDoc::TestCase
     assert_match %r%blah.6%,        out
   end
 
+  def test_display_method_with_type_signature
+    util_store
+
+    @blah.type_signature_lines = ['(Integer) -> String']
+    @store1.save
+
+    out, = capture_output do
+      @driver.display_method 'Foo::Bar#blah'
+    end
+
+    assert_match %r%Foo::Bar#blah%, out
+    assert_match %r%\(Integer\) -> String%, out
+  end
+
   def test_display_method_attribute
     util_store
 

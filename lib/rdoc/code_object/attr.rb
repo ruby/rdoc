@@ -10,8 +10,10 @@ class RDoc::Attr < RDoc::MethodAttr
   #   RDoc 4
   #    Added parent name and class
   #    Added section title
+  # 4::
+  #   Added type_signature_lines (serialized as joined string)
 
-  MARSHAL_VERSION = 3 # :nodoc:
+  MARSHAL_VERSION = 4 # :nodoc:
 
   ##
   # Is the attribute readable ('R'), writable ('W') or both ('RW')?
@@ -48,6 +50,7 @@ class RDoc::Attr < RDoc::MethodAttr
     new_attr.record_location an_alias.file
     new_attr.visibility = self.visibility
     new_attr.is_alias_for = self
+    new_attr.type_signature_lines = self.type_signature_lines
     @aliases << new_attr
     context.add_attribute new_attr
     new_attr
@@ -108,7 +111,8 @@ class RDoc::Attr < RDoc::MethodAttr
       @file.relative_name,
       @parent.full_name,
       @parent.class,
-      @section.title
+      @section.title,
+      @type_signature_lines&.join("\n"),
     ]
   end
 
@@ -140,6 +144,7 @@ class RDoc::Attr < RDoc::MethodAttr
     @parent_name   = array[8]
     @parent_class  = array[9]
     @section_title = array[10]
+    @type_signature_lines = array[11]&.split("\n")
 
     @file = RDoc::TopLevel.new array[7] if version > 1
 
