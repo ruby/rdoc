@@ -358,7 +358,6 @@ class RDoc::Store
       all_classes_and_modules.each do |cm|
         lookup[cm.full_name] = cm.path
         unqualified_name = cm.name
-        next if unqualified_name == cm.full_name
 
         if ambiguous_names[unqualified_name]
           # already known ambiguous, skip
