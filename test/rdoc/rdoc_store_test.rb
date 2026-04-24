@@ -1374,6 +1374,23 @@ class RDocStoreTest < XrefTestCase
     refute lookup.key?('SubClass')
   end
 
+  def test_type_name_lookup_top_level_class_wins_over_nested_namesake
+    top_level_string = @top_level.add_class RDoc::NormalClass, 'String'
+    top_level_string.record_location @top_level
+
+    nested_string = @top_level.add_class RDoc::NormalClass, 'Gem::Elements::String'
+    nested_string.record_location @top_level
+
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+
+    # Top-level class retains its own path; nested namesake does not
+    # hijack the unqualified name.
+    assert_equal top_level_string.path, lookup['String']
+    assert_equal nested_string.path, lookup['Gem::Elements::String']
+  end
+
 
   def test_merge_rbs_signatures_does_not_overwrite_inline_annotations
     m = RDoc::AnyMethod.new(nil, 'greet')
