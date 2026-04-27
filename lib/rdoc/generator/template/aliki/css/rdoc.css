@@ -1329,6 +1329,7 @@ main .method-heading .method-callseq {
 
 main .method-heading .method-name {
   font-weight: var(--font-weight-semibold);
+  overflow-wrap: anywhere;
 }
 
 main .method-heading .method-args {
