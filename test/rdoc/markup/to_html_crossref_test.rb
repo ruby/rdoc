@@ -435,6 +435,40 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal "Foo", @to.cross_reference("Missing", "Foo")
   end
 
+  # Regression test for https://github.com/ruby/rdoc/issues/1684
+  # `<code>#method</code>` should keep its inline code formatting and `#`
+  # prefix when `#method` does not resolve to a known method.
+  def test_handle_TT_unresolved_hash_method_preserves_code
+    @to = RDoc::Markup::ToHtmlCrossref.new 'index.html', @top_level,
+      hyperlink_all: false, warn_missing_rdoc_ref: true
+
+    # The exact wording from doc/syntax/calling_methods.rdoc that triggered the bug
+    result = @to.convert 'If the object responds to a <code>#to_hash</code> method'
+    assert_equal para('If the object responds to a <code>#to_hash</code> method'), result
+
+    # The `<tt>` form is the legacy alias for `<code>` and must behave identically
+    result = @to.convert 'If the object responds to a <tt>#to_hash</tt> method'
+    assert_equal para('If the object responds to a <code>#to_hash</code> method'), result
+
+    # Methods ending with `?` and `!` are also unresolved here and must be preserved
+    result = @to.convert '<code>#empty?</code> and <code>#freeze!</code>'
+    assert_equal para('<code>#empty?</code> and <code>#freeze!</code>'), result
+  end
+
+  def test_handle_TT_unresolved_hash_method_preserves_code_with_hyperlink_all
+    # Same scenario but with --hyperlink-all enabled (the default for @to)
+    result = @to.convert 'If the object responds to a <code>#to_hash</code> method'
+    assert_equal para('If the object responds to a <code>#to_hash</code> method'), result
+  end
+
+  def test_handle_TT_unresolved_hash_method_alongside_resolved_class
+    # Mixes the bug scenario with a resolvable class reference (`C1`).
+    # The unresolved `<code>#nope</code>` must stay verbatim while `C1`
+    # still becomes an auto-link, mirroring the live `Hash` linking from the issue.
+    result = @to.convert '<code>#nope</code> on C1'
+    assert_equal para('<code>#nope</code> on <a href="C1.html"><code>C1</code></a>'), result
+  end
+
   private
 
   def para(text)
