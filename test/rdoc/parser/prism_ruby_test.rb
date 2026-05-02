@@ -1828,6 +1828,39 @@ module RDocParserPrismTestCases
     assert_empty bar_foo.aliases
   end
 
+  def test_constant_alias_collision_does_not_mismark_constant_as_alias
+    util_parser <<~RUBY
+      class Foo
+        def real_method; end
+      end
+      class Bar
+        def other_method; end
+      end
+      Foo = Bar
+    RUBY
+    @store.complete(:public)
+    foo_const = @store.classes_hash['Object'].find_constant_named('Foo')
+    refute_nil foo_const
+    assert_nil foo_const.is_alias_for, 'collision-skipped alias must not persist is_alias_for'
+  end
+
+  def test_qualified_constant_alias_registers_in_owner_namespace
+    util_parser <<~RUBY
+      class Bar
+        def bar_method; end
+      end
+      module Outer
+      end
+      Outer::Foo = Bar
+    RUBY
+    @store.complete(:public)
+    outer_foo = @store.classes_hash['Outer::Foo']
+    refute_nil outer_foo, 'Outer::Foo should be registered'
+    refute_nil outer_foo.is_alias_for
+    assert_equal 'Bar', outer_foo.is_alias_for.full_name
+    assert_nil @store.classes_hash['Foo'], 'qualified alias should not leak into top-level namespace'
+  end
+
   def test_constant_alias_then_class_reopen_keeps_added_methods
     util_parser <<~RUBY
       class Bar

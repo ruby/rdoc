@@ -790,7 +790,7 @@ class RDoc::Parser::PrismRuby < RDoc::Parser
         @store.find_class_or_module(full_name)
       end
     if mod && constant.document_self
-      a = @container.add_module_alias(mod, alias_path, constant, @top_level)
+      a = owner.add_module_alias(mod, alias_path, constant, @top_level)
       a.store = @store
       a.line = start_line
       record_location(a)

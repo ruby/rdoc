@@ -848,13 +848,7 @@ class RDoc::ClassModule < RDoc::Context
   def update_aliases
     constants.each do |const|
       cm = const.is_alias_for
-      if !cm && const.is_a?(RDoc::Constant)
-        cm = const.resolved_alias_target
-        # Persist the forward-reference resolution on the source constant
-        # so Stats#report_constants and Constant#marshal_dump observe the
-        # alias relationship that the lazy lookup found.
-        const.is_alias_for = cm if cm
-      end
+      cm ||= const.resolved_alias_target if const.is_a?(RDoc::Constant)
       next unless cm
 
       # Resolve chained aliases (A = B = C) to the real class/module.
@@ -881,6 +875,11 @@ class RDoc::ClassModule < RDoc::Context
       # so they're still overwritable here.
       existing = @store.find_class_or_module(cm_alias.full_name)
       next if existing && !existing.is_alias_for
+
+      # Persist a lazy-resolved target so Stats#report_constants and
+      # Constant#marshal_dump observe the alias relationship. Skipped
+      # aliases (above) intentionally leave the constant unmarked.
+      const.is_alias_for ||= cm
 
       cm_alias.aliases.clear
       cm_alias.is_alias_for = cm
