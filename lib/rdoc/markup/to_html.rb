@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'cgi/escape'
 require 'cgi/util' unless defined?(CGI::EscapeExt)
+require 'prism'
 
 ##
 # Outputs RDoc markup as HTML.
@@ -568,14 +569,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Returns true if text is valid ruby syntax
 
   def parseable?(text)
-    verbose, $VERBOSE = $VERBOSE, nil
-    catch(:valid) do
-      eval("BEGIN { throw :valid, true }\n#{text}")
-    end
-  rescue SyntaxError
-    false
-  ensure
-    $VERBOSE = verbose
+    Prism.parse_success?(text)
   end
 
   ##
