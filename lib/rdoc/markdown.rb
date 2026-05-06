@@ -9787,7 +9787,7 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Inline = (Str | @Endline | UlOrStarLine | @Space | Strong | Emph | Strike | Image | Link | NoteReference | InlineNote | Code | RawHtml | Entity | EscapedChar | Symbol)
+  # Inline = (Str | @Endline | UlOrStarLine | @Space | Strong | Emph | Strike | Image | Link | NoteReference | InlineNote | Code | RawHtml | StrippedComment | Entity | EscapedChar | Symbol)
   def _Inline
 
     _save = self.pos
@@ -9829,6 +9829,9 @@ class RDoc::Markdown
       break if _tmp
       self.pos = _save
       _tmp = apply(:_RawHtml)
+      break if _tmp
+      self.pos = _save
+      _tmp = apply(:_StrippedComment)
       break if _tmp
       self.pos = _save
       _tmp = apply(:_Entity)
@@ -14131,7 +14134,7 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RawHtml = < (HtmlComment | HtmlBlockScript | HtmlTag) > { if html? then text else '' end }
+  # RawHtml = < (HtmlBlockScript | HtmlTag) > { html? ? text : '' }
   def _RawHtml
 
     _save = self.pos
@@ -14140,9 +14143,6 @@ class RDoc::Markdown
 
       _save1 = self.pos
       while true # choice
-        _tmp = apply(:_HtmlComment)
-        break if _tmp
-        self.pos = _save1
         _tmp = apply(:_HtmlBlockScript)
         break if _tmp
         self.pos = _save1
@@ -14159,7 +14159,7 @@ class RDoc::Markdown
         self.pos = _save
         break
       end
-      @result = begin;  if html? then text else '' end ; end
+      @result = begin;  html? ? text : '' ; end
       _tmp = true
       unless _tmp
         self.pos = _save
@@ -14168,6 +14168,32 @@ class RDoc::Markdown
     end # end sequence
 
     set_failed_rule :_RawHtml unless _tmp
+    return _tmp
+  end
+
+  # StrippedComment = < HtmlComment > { '' }
+  def _StrippedComment
+
+    _save = self.pos
+    while true # sequence
+      _text_start = self.pos
+      _tmp = apply(:_HtmlComment)
+      if _tmp
+        text = get_text(_text_start)
+      end
+      unless _tmp
+        self.pos = _save
+        break
+      end
+      @result = begin;  '' ; end
+      _tmp = true
+      unless _tmp
+        self.pos = _save
+      end
+      break
+    end # end sequence
+
+    set_failed_rule :_StrippedComment unless _tmp
     return _tmp
   end
 
@@ -16733,7 +16759,7 @@ class RDoc::Markdown
   Rules[:_InStyleTags] = rule_info("InStyleTags", "StyleOpen (!StyleClose .)* StyleClose")
   Rules[:_StyleBlock] = rule_info("StyleBlock", "< InStyleTags > @BlankLine* { if css? then                     RDoc::Markup::Raw.new text                   end }")
   Rules[:_Inlines] = rule_info("Inlines", "(!@Endline Inline:i { i } | @Endline:c !(&{ github? } Ticks3 /[^`\\n]*$/) &Inline { c })+:chunks @Endline? { chunks }")
-  Rules[:_Inline] = rule_info("Inline", "(Str | @Endline | UlOrStarLine | @Space | Strong | Emph | Strike | Image | Link | NoteReference | InlineNote | Code | RawHtml | Entity | EscapedChar | Symbol)")
+  Rules[:_Inline] = rule_info("Inline", "(Str | @Endline | UlOrStarLine | @Space | Strong | Emph | Strike | Image | Link | NoteReference | InlineNote | Code | RawHtml | StrippedComment | Entity | EscapedChar | Symbol)")
   Rules[:_Space] = rule_info("Space", "@Spacechar+ { \" \" }")
   Rules[:_Str] = rule_info("Str", "@StartList:a < @NormalChar+ > { a = text } (StrChunk:c { a << c })* { rdoc_escape(a) }")
   Rules[:_StrChunk] = rule_info("StrChunk", "< (@NormalChar | /_+/ &Alphanumeric)+ > { text }")
@@ -16785,7 +16811,8 @@ class RDoc::Markdown
   Rules[:_Ticks4] = rule_info("Ticks4", "\"````\" !\"`\"")
   Rules[:_Ticks5] = rule_info("Ticks5", "\"`````\" !\"`\"")
   Rules[:_Code] = rule_info("Code", "(Ticks1 < ((!\"`\" Nonspacechar)+ | !Ticks1 /`+/ | !Ticks1 (@Spacechar | @Newline !@BlankLine))+ > Ticks1 | Ticks2 < ((!\"`\" Nonspacechar)+ | !Ticks2 /`+/ | !Ticks2 (@Spacechar | @Newline !@BlankLine))+ > Ticks2 | Ticks3 < ((!\"`\" Nonspacechar)+ | !Ticks3 /`+/ | !Ticks3 (@Spacechar | @Newline !@BlankLine))+ > Ticks3 | Ticks4 < ((!\"`\" Nonspacechar)+ | !Ticks4 /`+/ | !Ticks4 (@Spacechar | @Newline !@BlankLine))+ > Ticks4 | Ticks5 < ((!\"`\" Nonspacechar)+ | !Ticks5 /`+/ | !Ticks5 (@Spacechar | @Newline !@BlankLine))+ > Ticks5) { code text }")
-  Rules[:_RawHtml] = rule_info("RawHtml", "< (HtmlComment | HtmlBlockScript | HtmlTag) > { if html? then text else '' end }")
+  Rules[:_RawHtml] = rule_info("RawHtml", "< (HtmlBlockScript | HtmlTag) > { html? ? text : '' }")
+  Rules[:_StrippedComment] = rule_info("StrippedComment", "< HtmlComment > { '' }")
   Rules[:_BlankLine] = rule_info("BlankLine", "@Sp @Newline { \"\\n\" }")
   Rules[:_Quoted] = rule_info("Quoted", "(\"\\\"\" (!\"\\\"\" .)* \"\\\"\" | \"'\" (!\"'\" .)* \"'\")")
   Rules[:_HtmlAttribute] = rule_info("HtmlAttribute", "(AlphanumericAscii | \"-\")+ Spnl (\"=\" Spnl (Quoted | (!\">\" Nonspacechar)+))? Spnl")

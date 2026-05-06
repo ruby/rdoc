@@ -1590,4 +1590,21 @@ and an extra note.[^2]
     assert_match(/\\~/, html)
   end
 
+  def test_html_comment_suppressed
+    # Standalone HTML block tags and comments are preserved as raw text.
+    # But if comments are inside a paragraph, they should be stripped
+    # because raw inside para is not permitted and RDoc format doesn't have comment nodes.
+    markdown = <<~MARKDOWN
+      <!-- comment -->
+      a<!-- comment -->b
+      <!-- comment -->
+      c
+    MARKDOWN
+
+    expected_doc = doc(raw('<!-- comment -->'), para("ab\n\nc"))
+    assert_equal expected_doc, parse(markdown)
+
+    expected_html = "<!-- comment -->\n<p>ab c</p>\n"
+    assert_equal expected_html, render(markdown)
+  end
 end
