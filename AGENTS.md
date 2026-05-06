@@ -238,7 +238,7 @@ exe/
 - **Parsers:** Prism-based Ruby (`RDoc::Parser::Ruby`), C, Markdown, RD
 - **Generators:** HTML/Aliki (default), HTML/Darkfish (deprecated), RI, POT (gettext), JSON, Markup
 
-Parser tests live in the `RDocParserRubyTestCases` module (`test/rdoc/parser/ruby_test.rb`) and are included by `RDocParserRubyTest`. Add new parser tests to the mixin.
+Parser tests live in the `RDocParserRubyTest` class (`test/rdoc/parser/ruby_test.rb`).
 
 ### Code Object Model and Constant Aliases
 
