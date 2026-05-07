@@ -377,29 +377,57 @@ class RDoc::Store
   # Inline #: annotations take priority and are not overwritten.
 
   def merge_rbs_signatures(signatures)
+    clear_rbs_signatures
+
     all_classes_and_modules.each do |cm|
       cm.method_list.each do |method|
         next if method.type_signature_lines
 
-        key = method.singleton ? "#{cm.full_name}.#{method.name}" : "#{cm.full_name}##{method.name}"
-        sig = signatures[key]
+        sig = signatures[rbs_key(cm, method)]
 
         # RBS keys constructors as #initialize, but RDoc renames them to .new
         if !sig && method.name == 'new' && method.singleton
           sig = signatures["#{cm.full_name}#initialize"]
         end
 
-        method.type_signature_lines = sig if sig
+        assign_rbs_signature method, sig if sig
       end
 
       cm.attributes.each do |attr|
         next if attr.type_signature_lines
 
-        if (sig = signatures["#{cm.full_name}##{attr.name}"])
-          attr.type_signature_lines = sig
+        if (sig = signatures[rbs_key(cm, attr)])
+          assign_rbs_signature attr, sig
         end
       end
     end
+  end
+
+  def assign_rbs_signature(method_attr, signature) # :nodoc:
+    @rbs_signature_method_attrs ||= []
+
+    method_attr.type_signature_lines = signature
+    @rbs_signature_method_attrs << method_attr
+
+    method_attr.aliases.each do |aliased|
+      next if aliased.type_signature_lines
+      aliased.type_signature_lines = signature
+      @rbs_signature_method_attrs << aliased
+    end
+  end
+
+  def clear_rbs_signatures # :nodoc:
+    return unless @rbs_signature_method_attrs
+
+    @rbs_signature_method_attrs.each do |method_attr|
+      method_attr.type_signature_lines = nil
+    end
+
+    @rbs_signature_method_attrs.clear
+  end
+
+  def rbs_key(cm, method_attr) # :nodoc:
+    method_attr.singleton ? "#{cm.full_name}.#{method_attr.name}" : "#{cm.full_name}##{method_attr.name}"
   end
 
   ##

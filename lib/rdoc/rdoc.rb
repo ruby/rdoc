@@ -430,7 +430,7 @@ The internal error was:
 
   def remove_unparseable(files)
     files.reject do |file, *|
-      file =~ /\.(?:class|eps|erb|scpt\.txt|svg|ttf|yml)$/i or
+      file =~ /\.(?:class|eps|erb|rbs|scpt\.txt|svg|ttf|yml)$/i or
         (file =~ /tags$/i and
          /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(File.binread(file, 100)))
     end
@@ -470,6 +470,7 @@ The internal error was:
       @store.load_cache
 
       parse_files @options.files
+      record_rbs_signature_mtimes
 
       @options.default_title = "RDoc Documentation"
 
@@ -488,7 +489,14 @@ The internal error was:
 
     @store.load_cache
 
+    rbs_signatures_changed = rbs_signatures_changed?
+    # When only sig/*.rbs changed, no Ruby file would be reparsed and the
+    # cached HTML pipeline keeps no in-memory class data across runs, so
+    # force a full reparse to give merge_rbs_signatures a populated store.
+    @last_modified.clear if rbs_signatures_changed
+
     file_info = parse_files @options.files
+    record_rbs_signature_mtimes
 
     @options.default_title = "RDoc Documentation"
 
@@ -502,7 +510,7 @@ The internal error was:
       puts
 
       puts @stats.report
-    elsif file_info.empty? then
+    elsif file_info.empty? && !rbs_signatures_changed then
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
       gen_klass = @options.generator
@@ -553,9 +561,58 @@ The internal error was:
     sig_dir = File.join(@options.root.to_s, 'sig')
     sig_dirs << sig_dir if File.directory?(sig_dir)
     signatures = RDoc::RbsHelper.load_signatures(*sig_dirs)
-    @store.merge_rbs_signatures(signatures) unless signatures.empty?
+    @store.merge_rbs_signatures(signatures)
   rescue RBS::ParsingError, Errno::ENOENT, LoadError => e
     @options.warn "Failed to load RBS type signatures: #{e.message}"
+  end
+
+  ##
+  # Returns all RBS signature files for the project.
+
+  def rbs_signature_files
+    Dir[File.join(@options.root.to_s, 'sig', '**', '*.rbs')].sort
+  end
+
+  ##
+  # Returns true if any RBS signature file has changed since the last run.
+
+  def rbs_signatures_changed?
+    current = rbs_signature_mtimes
+    previous = @last_modified.select { |file, _| File.extname(file) == '.rbs' }
+
+    return true unless (previous.keys - current.keys).empty?
+
+    current.any? do |file, mtime|
+      last_modified = @last_modified[file]
+      last_modified.nil? || mtime.to_i > last_modified.to_i
+    end
+  end
+
+  ##
+  # Records RBS signature file mtimes so normal generation freshness checks
+  # and the live server watcher can see signature-only edits.
+
+  def record_rbs_signature_mtimes
+    @last_modified.reject! { |file, _| File.extname(file) == '.rbs' }
+    @last_modified.merge! rbs_signature_mtimes
+  end
+
+  ##
+  # Files watched by the live preview server.
+
+  def watch_files
+    (@last_modified.keys + rbs_signature_files).uniq
+  end
+
+  def rbs_signature_file?(file) # :nodoc:
+    File.extname(file) == '.rbs'
+  end
+
+  def rbs_signature_mtimes # :nodoc:
+    rbs_signature_files.each_with_object({}) do |file, mtimes|
+      mtime = File.mtime(file) rescue nil
+      mtimes[file] = mtime if mtime
+    end
   end
 
   ##

@@ -40,6 +40,21 @@ class RDocRbsHelperTest < RDoc::TestCase
     end
   end
 
+  def test_load_signatures_keeps_instance_and_singleton_attributes_separate
+    Dir.mktmpdir do |dir|
+      File.write(File.join(dir, 'test.rbs'), <<~RBS)
+        class Greeter
+          attr_reader language: String
+          attr_reader self.language: Integer
+        end
+      RBS
+
+      sigs = RDoc::RbsHelper.load_signatures(dir)
+      assert_equal ['String'], sigs['Greeter#language']
+      assert_equal ['Integer'], sigs['Greeter.language']
+    end
+  end
+
   def test_signature_to_html_links_known_types
     lookup = { 'String' => 'String.html', 'Integer' => 'Integer.html' }
     result = RDoc::RbsHelper.signature_to_html(["(String) -> Integer"], lookup: lookup, from_path: 'Test.html')

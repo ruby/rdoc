@@ -1326,6 +1326,70 @@ class RDocStoreTest < XrefTestCase
     assert_equal ['(String name) -> void'], ctor.type_signature_lines
   end
 
+  def test_merge_rbs_signatures_replaces_previous_rbs_signature
+    @s.merge_rbs_signatures(
+      'Object#method' => ['() -> String']
+    )
+
+    @s.merge_rbs_signatures(
+      'Object#method' => ['() -> Integer']
+    )
+
+    assert_equal ['() -> Integer'], @meth.type_signature_lines
+  end
+
+  def test_merge_rbs_signatures_propagates_to_method_alias
+    original = RDoc::AnyMethod.new nil, 'original'
+    original.record_location @top_level
+    @klass.add_method original
+
+    alias_def = RDoc::Alias.new nil, 'original', 'aliased', ''
+    alias_def.record_location @top_level
+    aliased = original.add_alias alias_def, @klass
+
+    @s.merge_rbs_signatures(
+      'Object#original' => ['() -> String']
+    )
+
+    assert_equal ['() -> String'], original.type_signature_lines
+    assert_equal ['() -> String'], aliased.type_signature_lines
+  end
+
+  def test_merge_rbs_signatures_propagates_to_attribute_alias
+    original = RDoc::Attr.new nil, 'language', 'R', ''
+    original.record_location @top_level
+    @klass.add_attribute original
+
+    alias_def = RDoc::Alias.new nil, 'language', 'locale', ''
+    alias_def.record_location @top_level
+    aliased = original.add_alias alias_def, @klass
+
+    @s.merge_rbs_signatures(
+      'Object#language' => ['String']
+    )
+
+    assert_equal ['String'], original.type_signature_lines
+    assert_equal ['String'], aliased.type_signature_lines
+  end
+
+  def test_merge_rbs_signatures_keeps_instance_and_singleton_attributes_separate
+    instance_attr = RDoc::Attr.new nil, 'language', 'R', ''
+    instance_attr.record_location @top_level
+    @klass.add_attribute instance_attr
+
+    singleton_attr = RDoc::Attr.new nil, 'language', 'R', '', singleton: true
+    singleton_attr.record_location @top_level
+    @klass.add_attribute singleton_attr
+
+    @s.merge_rbs_signatures(
+      'Object#language' => ['String'],
+      'Object.language' => ['Integer']
+    )
+
+    assert_equal ['String'], instance_attr.type_signature_lines
+    assert_equal ['Integer'], singleton_attr.type_signature_lines
+  end
+
   def test_type_name_lookup
     @s.complete :public
 

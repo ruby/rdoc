@@ -58,7 +58,7 @@ module RDoc
                 sigs = member.overloads.map { |o| o.method_type.to_s }
                 signatures[key] ||= sigs
               when RBS::AST::Members::AttrReader, RBS::AST::Members::AttrWriter, RBS::AST::Members::AttrAccessor
-                key = "#{class_name}##{member.name}"
+                key = member.kind == :singleton ? "#{class_name}.#{member.name}" : "#{class_name}##{member.name}"
                 signatures[key] ||= [member.type.to_s]
               end
             end
