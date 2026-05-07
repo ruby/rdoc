@@ -40,6 +40,20 @@ class RDocRbsHelperTest < RDoc::TestCase
     end
   end
 
+  def test_load_signatures_registers_module_function_methods_under_both_keys
+    Dir.mktmpdir do |dir|
+      File.write(File.join(dir, 'test.rbs'), <<~RBS)
+        class Greeter
+          def self?.shout: (String text) -> String
+        end
+      RBS
+
+      sigs = RDoc::RbsHelper.load_signatures(dir)
+      assert_equal ['(String text) -> String'], sigs['Greeter.shout']
+      assert_equal ['(String text) -> String'], sigs['Greeter#shout']
+    end
+  end
+
   def test_load_signatures_keeps_instance_and_singleton_attributes_separate
     Dir.mktmpdir do |dir|
       File.write(File.join(dir, 'test.rbs'), <<~RBS)

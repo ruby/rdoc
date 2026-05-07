@@ -110,6 +110,41 @@ class RDocRDocTest < RDoc::TestCase
     end
   end
 
+  def test_load_rbs_signatures_clears_stale_signatures_on_failure
+    temp_dir do |dir|
+      sig_dir = File.join dir, 'sig'
+      sig = File.join sig_dir, 'example.rbs'
+      FileUtils.mkdir_p sig_dir
+
+      File.write sig, <<~RBS
+        class Example
+          def greet: () -> String
+        end
+      RBS
+
+      @options.root = Pathname(dir)
+      @options.op_dir = dir
+      @rdoc.store = RDoc::Store.new(@options)
+
+      top_level = @rdoc.store.add_file 'example.rb'
+      example = top_level.add_class RDoc::NormalClass, 'Example'
+      method = RDoc::AnyMethod.new nil, 'greet'
+      example.add_method method
+
+      @rdoc.load_rbs_signatures
+      assert_equal ['() -> String'], method.type_signature_lines
+
+      File.write sig, "class Example\n  def greet: ( -> "
+      @options.verbosity = 2
+      _out, err = capture_output do
+        @rdoc.load_rbs_signatures
+      end
+
+      assert_includes err, 'Failed to load RBS type signatures'
+      assert_nil method.type_signature_lines
+    end
+  end
+
   def test_document_with_dry_run # functional test
     options = RDoc::Options.new
     options.files = [File.expand_path('../xref_data.rb', __FILE__)]

@@ -54,9 +54,10 @@ module RDoc
             decl.members.each do |member|
               case member
               when RBS::AST::Members::MethodDefinition
-                key = member.singleton? ? "#{class_name}.#{member.name}" : "#{class_name}##{member.name}"
                 sigs = member.overloads.map { |o| o.method_type.to_s }
-                signatures[key] ||= sigs
+                method_keys_for(class_name, member).each do |key|
+                  signatures[key] ||= sigs
+                end
               when RBS::AST::Members::AttrReader, RBS::AST::Members::AttrWriter, RBS::AST::Members::AttrAccessor
                 key = member.kind == :singleton ? "#{class_name}.#{member.name}" : "#{class_name}##{member.name}"
                 signatures[key] ||= [member.type.to_s]
@@ -86,6 +87,20 @@ module RDoc
       end
 
       private
+
+      # `def self?.foo: ...` produces a member whose kind is :singleton_instance —
+      # it defines both Class.foo (singleton) and a private Class#foo (instance),
+      # so we need to register the signature under both keys.
+      def method_keys_for(class_name, member)
+        case member.kind
+        when :singleton
+          ["#{class_name}.#{member.name}"]
+        when :singleton_instance
+          ["#{class_name}.#{member.name}", "#{class_name}##{member.name}"]
+        else
+          ["#{class_name}##{member.name}"]
+        end
+      end
 
       def link_type_names_in_line(line, lookup, from_path)
         escaped = ERB::Util.html_escape(line)

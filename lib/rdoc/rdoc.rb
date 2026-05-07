@@ -562,7 +562,11 @@ The internal error was:
     sig_dirs << sig_dir if File.directory?(sig_dir)
     signatures = RDoc::RbsHelper.load_signatures(*sig_dirs)
     @store.merge_rbs_signatures(signatures)
-  rescue RBS::ParsingError, Errno::ENOENT, LoadError => e
+  rescue RBS::BaseError, Errno::ENOENT, LoadError => e
+    # In server mode, a previous successful load may have populated the store;
+    # drop those signatures so a now-broken sig file doesn't keep showing
+    # stale types alongside the warning.
+    @store.clear_rbs_signatures
     @options.warn "Failed to load RBS type signatures: #{e.message}"
   end
 
