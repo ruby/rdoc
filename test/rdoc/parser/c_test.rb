@@ -2215,6 +2215,33 @@ void Init_Blah(void) {
     assert_equal("markdown", klass.attributes.find {|a| a.name == "default_format"}.comment.format)
   end
 
+  def test_markup_code
+    # Should not generate line numbers
+    @top_level.store.options.line_numbers = true
+    parser = util_parser <<~C
+      static VALUE
+      rb_hash_has_value(VALUE hash, VALUE val) {
+        return Qtrue;
+      }
+
+      Init_Hash(void)
+      {
+        rb_define_method(rb_cHash, "value?", rb_hash_has_value, 1);
+      }
+    C
+    parser.scan
+
+    hash = @store.classes_hash['Hash']
+    value_method = hash.method_list.find { |m| m.name == 'value?' }
+
+    assert_equal(<<~EXPECTED.chomp, value_method.markup_code)
+      static VALUE
+      rb_hash_has_value(VALUE hash, VALUE val) {
+        return Qtrue;
+      }
+    EXPECTED
+  end
+
   def test_clear_file_contributions_removes_c_methods
     content = <<~C
       /* Document-class: Foo */

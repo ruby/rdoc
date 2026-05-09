@@ -314,7 +314,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     meth.start_collecting_tokens(:ruby)
     node = @line_nodes[line_no]
-    tokens = node ? visible_tokens_from_location(node.location) : [file_line_comment_token(start_line)]
+    tokens = node ? visible_tokens_from_location(node.location) : []
     tokens.each { |token| meth.token_stream << token }
 
     container.add_method meth
@@ -385,7 +385,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         tokens = visible_tokens_from_location(node.location)
         line_no = node.location.start_line
       else
-        tokens = [file_line_comment_token(line_no)]
+        tokens = []
       end
       internal_add_method(
         method_name,
@@ -498,23 +498,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     tokens
   end
 
-  def file_line_comment_token(line_no) # :nodoc:
-    position_comment = RDoc::Parser::RipperStateLex::Token.new(line_no - 1, 0, :on_comment)
-    position_comment[:text] = "# File #{@top_level.relative_name}, line #{line_no}"
-    position_comment
-  end
-
   # Returns tokens from the given location
 
   def visible_tokens_from_location(location)
-    position_comment = file_line_comment_token(location.start_line)
-    newline_token = RDoc::Parser::RipperStateLex::Token.new(0, 0, :on_nl, "\n")
-    indent_token = RDoc::Parser::RipperStateLex::Token.new(location.start_line, 0, :on_sp, ' ' * location.start_character_column)
-    tokens = slice_tokens(
+    slice_tokens(
       [location.start_line, location.start_character_column],
       [location.end_line, location.end_character_column]
     )
-    [position_comment, newline_token, indent_token, *tokens]
   end
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
