@@ -895,7 +895,7 @@ Usage: #{opt.program_name} [options] [names...]
 
       opt.separator nil
 
-      opt.on("--visibility=VISIBILITY", "-V", RDoc::VISIBILITIES + [:nodoc],
+      opt.on("--visibility=VISIBILITY", RDoc::VISIBILITIES + [:nodoc],
              "Minimum visibility to document a method.",
              "One of 'public', 'protected' (the default),",
              "'private' or 'nodoc' (show everything)") do |value|

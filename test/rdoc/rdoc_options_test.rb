@@ -697,6 +697,15 @@ rdoc_include:
     assert_equal :nodoc, @options.visibility
   end
 
+  def test_parse_verbose
+    @options.parse %w[--verbose]
+    assert_equal 2, @options.verbosity
+
+    @options = RDoc::Options.new
+    @options.parse %w[-V]
+    assert_equal 2, @options.verbosity
+  end
+
   def test_parse_write_options
     tmpdir = File.join Dir.tmpdir, "test_rdoc_options_#{$$}"
     FileUtils.mkdir_p tmpdir
