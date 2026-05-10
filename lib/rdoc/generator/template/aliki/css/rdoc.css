@@ -1021,7 +1021,6 @@ main h6 a:hover {
 .ruby-ivar       { color: var(--code-orange); }
 .ruby-operator   { color: var(--code-green); }
 .ruby-identifier { color: var(--code-blue); }
-.ruby-node       { color: var(--code-purple); }
 
 .ruby-comment {
   color: var(--color-neutral-500);
@@ -1037,7 +1036,6 @@ main h6 a:hover {
 [data-theme="dark"] .ruby-ivar       { color: var(--code-orange); }
 [data-theme="dark"] .ruby-operator   { color: var(--code-green); }
 [data-theme="dark"] .ruby-identifier { color: var(--code-blue); }
-[data-theme="dark"] .ruby-node       { color: var(--code-purple); }
 
 [data-theme="dark"] .ruby-comment {
   color: var(--color-neutral-400);

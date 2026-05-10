@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'prism'
-require_relative 'ripper_state_lex'
+require_relative 'ruby_colorizer'
 
 # Parse and collect document from Ruby source code.
 
@@ -198,10 +198,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Scans this Ruby file for Ruby constructs
 
   def scan
-    @tokens = RDoc::Parser::RipperStateLex.parse(@content)
     @lines = @content.lines
-    result = Prism.parse(@content)
-    @program_node = result.value
+    result = Prism.parse_lex(@content)
+    @program_node, unordered_tokens = result.value
+    # Heredoc tokens are not in start_offset order.
+    # Need to sort them to use bsearch for finding tokens from location.
+    @prism_tokens = unordered_tokens.map(&:first).sort_by { |t| t.location.start_offset }
     @line_nodes = {}
     prepare_line_nodes(@program_node)
     prepare_comments(result.comments)
@@ -314,7 +316,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     meth.start_collecting_tokens(:ruby)
     node = @line_nodes[line_no]
-    tokens = node ? visible_tokens_from_location(node.location) : []
+    tokens = node ? syntax_highlighted_tokens(node) : []
     tokens.each { |token| meth.token_stream << token }
 
     container.add_method meth
@@ -382,7 +384,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     elsif line_no || node
       method_name ||= call_node_name_arguments(node).first if is_call_node
       if node
-        tokens = visible_tokens_from_location(node.location)
+        tokens = syntax_highlighted_tokens(node)
         line_no = node.location.start_line
       else
         tokens = []
@@ -490,21 +492,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     comment_text
   end
 
-  def slice_tokens(start_pos, end_pos) # :nodoc:
-    start_index = @tokens.bsearch_index { |t| ([t.line_no, t.char_no] <=> start_pos) >= 0 }
-    end_index = @tokens.bsearch_index { |t| ([t.line_no, t.char_no] <=> end_pos) >= 0 }
-    tokens = @tokens[start_index...end_index]
-    tokens.pop if tokens.last&.kind == :on_nl
-    tokens
-  end
+  # Returns syntax highlighted tokens of the given node
 
-  # Returns tokens from the given location
-
-  def visible_tokens_from_location(location)
-    slice_tokens(
-      [location.start_line, location.start_character_column],
-      [location.end_line, location.end_character_column]
-    )
+  def syntax_highlighted_tokens(node)
+    RDoc::Parser::RubyColorizer.partial_colorize(@content, node, @prism_tokens)
   end
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
@@ -1018,7 +1009,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
       name = node.name.to_s
       params, block_params, calls_super = MethodSignatureVisitor.scan_signature(node)
-      tokens = @scanner.visible_tokens_from_location(node.location)
+      tokens = @scanner.syntax_highlighted_tokens(node)
 
       @scanner.add_method(
         name,

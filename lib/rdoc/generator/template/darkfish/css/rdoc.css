@@ -449,7 +449,6 @@ main h6 {
 .ruby-ivar       { color: #B57614; }  /* Brown */
 .ruby-operator   { color: #427B58; }  /* Dark Teal */
 .ruby-identifier { color: #076678; }  /* Deep Teal */
-.ruby-node       { color: #8F3F71; }  /* Plum */
 .ruby-comment    { color: #928374; font-style: italic; }  /* Gray */
 .ruby-regexp     { color: #8F3F71; }  /* Plum */
 .ruby-value      { color: #AF3A03; }  /* Dark Orange */

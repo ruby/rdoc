@@ -5,17 +5,18 @@ class RDocTokenStreamTest < RDoc::TestCase
 
   def test_class_to_html
     tokens = [
-      { :line_no => 0, :char_no => 0, :kind => :on_const, :text => 'CONSTANT' },
-      { :line_no => 0, :char_no => 0, :kind => :on_kw, :text => 'KW' },
-      { :line_no => 0, :char_no => 0, :kind => :on_ivar, :text => 'IVAR' },
-      { :line_no => 0, :char_no => 0, :kind => :on_op, :text => 'Op' },
-      { :line_no => 0, :char_no => 0, :kind => :on_ident, :text => 'Id' },
-      { :line_no => 0, :char_no => 0, :kind => :on_backref, :text => 'Node' },
-      { :line_no => 0, :char_no => 0, :kind => :on_comment, :text => 'COMMENT' },
-      { :line_no => 0, :char_no => 0, :kind => :on_regexp, :text => 'REGEXP' },
-      { :line_no => 0, :char_no => 0, :kind => :on_tstring, :text => 'STRING' },
-      { :line_no => 0, :char_no => 0, :kind => :on_int, :text => 'Val' },
-      { :line_no => 0, :char_no => 0, :kind => :on_unknown, :text => '\\' }
+      { kind: :constant, text: 'CONSTANT' },
+      { kind: :keyword, text: 'KW' },
+      { kind: :ivar, text: 'IVAR' },
+      { kind: :operator, text: 'Op' },
+      { kind: :identifier, text: 'Id' },
+      { kind: :symbol, text: 'Symbol' },
+      { kind: :x_string, text: 'XString' },
+      { kind: :comment, text: 'COMMENT' },
+      { kind: :regexp, text: 'REGEXP' },
+      { kind: :string, text: 'STRING' },
+      { kind: :value, text: 'Val' },
+      { kind: :plain, text: '\\' }
     ]
 
     expected = [
@@ -24,7 +25,8 @@ class RDocTokenStreamTest < RDoc::TestCase
       '<span class="ruby-ivar">IVAR</span>',
       '<span class="ruby-operator">Op</span>',
       '<span class="ruby-identifier">Id</span>',
-      '<span class="ruby-node">Node</span>',
+      '<span class="ruby-value">Symbol</span>',
+      '<span class="ruby-string">XString</span>',
       '<span class="ruby-comment">COMMENT</span>',
       '<span class="ruby-regexp">REGEXP</span>',
       '<span class="ruby-string">STRING</span>',

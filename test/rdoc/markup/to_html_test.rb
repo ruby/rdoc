@@ -545,17 +545,17 @@ def foo
     "'",
     "\'\"\`",
     "\#",
-    "\#{}",
+    "\#{1}",
     "#",
-    "#{}",
+    "#{1}",
     /'"/,
     /\'\"/,
     /\//,
     /\\/,
     /\#/,
-    /\#{}/,
+    /\#{1}/,
     /#/,
-    /#{}/
+    /#{1}/
   ]
 end
 def bar
@@ -570,22 +570,22 @@ end
 
 <pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier">foo</span>
   [
-    <span class="ruby-string">&#39;\\&#39;</span>,
-    <span class="ruby-string">&#39;\&#39;&#39;</span>,
-    <span class="ruby-string">&quot;&#39;&quot;</span>,
-    <span class="ruby-string">&quot;\&#39;\&quot;\`&quot;</span>,
-    <span class="ruby-string">&quot;\#&quot;</span>,
-    <span class="ruby-string">&quot;\#{}&quot;</span>,
-    <span class="ruby-string">&quot;#&quot;</span>,
-    <span class="ruby-node">&quot;#{}&quot;</span>,
+    <span class="ruby-string">&#39;</span><span class="ruby-string">\\</span><span class="ruby-string">&#39;</span>,
+    <span class="ruby-string">&#39;</span><span class="ruby-string">\&#39;</span><span class="ruby-string">&#39;</span>,
+    <span class="ruby-string">&quot;</span><span class="ruby-string">&#39;</span><span class="ruby-string">&quot;</span>,
+    <span class="ruby-string">&quot;</span><span class="ruby-string">\&#39;\&quot;\`</span><span class="ruby-string">&quot;</span>,
+    <span class="ruby-string">&quot;</span><span class="ruby-string">\#</span><span class="ruby-string">&quot;</span>,
+    <span class="ruby-string">&quot;</span><span class="ruby-string">\#{1}</span><span class="ruby-string">&quot;</span>,
+    <span class="ruby-string">&quot;</span><span class="ruby-string">#</span><span class="ruby-string">&quot;</span>,
+    <span class="ruby-string">&quot;</span><span class="ruby-string">#{</span><span class="ruby-value">1</span><span class="ruby-string">}</span><span class="ruby-string">&quot;</span>,
     <span class="ruby-regexp">/&#39;&quot;/</span>,
     <span class="ruby-regexp">/\&#39;\&quot;/</span>,
     <span class="ruby-regexp">/\//</span>,
     <span class="ruby-regexp">/\\/</span>,
     <span class="ruby-regexp">/\#/</span>,
-    <span class="ruby-regexp">/\#{}/</span>,
+    <span class="ruby-regexp">/\#{1}/</span>,
     <span class="ruby-regexp">/#/</span>,
-    <span class="ruby-regexp">/#{}/</span>
+    <span class="ruby-regexp">/</span><span class="ruby-regexp">#{</span><span class="ruby-value">1</span><span class="ruby-regexp">}</span><span class="ruby-regexp">/</span>
   ]
 <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
@@ -603,9 +603,9 @@ def foo
     `\\`,
     `\'\"\``,
     `\#`,
-    `\#{}`,
+    `\#{1}`,
     `#`,
-    `#{}`
+    `#{1}`
   ]
 end
 def bar
@@ -620,12 +620,12 @@ end
 
 <pre class="ruby"><span class="ruby-keyword">def</span> <span class="ruby-identifier">foo</span>
   [
-    <span class="ruby-string">`\\`</span>,
-    <span class="ruby-string">`\&#39;\&quot;\``</span>,
-    <span class="ruby-string">`\#`</span>,
-    <span class="ruby-string">`\#{}`</span>,
-    <span class="ruby-string">`#`</span>,
-    <span class="ruby-node">`#{}`</span>
+    <span class="ruby-string">`</span><span class="ruby-string">\\</span><span class="ruby-string">`</span>,
+    <span class="ruby-string">`</span><span class="ruby-string">\&#39;\&quot;\`</span><span class="ruby-string">`</span>,
+    <span class="ruby-string">`</span><span class="ruby-string">\#</span><span class="ruby-string">`</span>,
+    <span class="ruby-string">`</span><span class="ruby-string">\#{1}</span><span class="ruby-string">`</span>,
+    <span class="ruby-string">`</span><span class="ruby-string">#</span><span class="ruby-string">`</span>,
+    <span class="ruby-string">`</span><span class="ruby-string">#{</span><span class="ruby-value">1</span><span class="ruby-string">}</span><span class="ruby-string">`</span>
   ]
 <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
