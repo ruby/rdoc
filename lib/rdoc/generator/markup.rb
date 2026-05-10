@@ -86,30 +86,32 @@ end
 class RDoc::MethodAttr
 
   ##
-  # Prepend +src+ with line numbers.  Relies on the first line of a source
-  # code listing having:
-  #
-  #   # File xxxxx, line dddd
-  #
-  # If it has this comment then line numbers are added to +src+ and the <tt>,
-  # line dddd</tt> portion of the comment is removed.
+  # Prepend +src+ with line numbers.
 
   def add_line_numbers(src)
-    return unless src.sub!(/\A(.*)(, line (\d+))/, '\1')
-    first = $3.to_i - 1
-    last  = first + src.count("\n")
-    size = last.to_s.length
+    return if src.empty? || !line
+    start_line = line
+    end_line  = start_line + src.count("\n")
+    number_digits = end_line.to_s.length
 
-    line = first
+    current_line = start_line
     src.gsub!(/^/) do
-      res = if line == first then
-              " " * (size + 1)
-            else
-              "<span class=\"line-num\">%2$*1$d</span> " % [size, line]
-            end
+      res = "<span class=\"line-num\">#{current_line.to_s.rjust(number_digits)}</span> "
 
-      line += 1
+      current_line += 1
       res
+    end
+  end
+
+  ##
+  # Prepend +src+ with a comment that declares its location in the source.
+
+  def add_location_comment(src)
+    path = CGI.escapeHTML(file.relative_name)
+    if options.line_numbers && !src.empty?
+      src.prepend("<span class=\"ruby-comment\"># File #{path}</span>\n")
+    else
+      src.prepend("<span class=\"ruby-comment\"># File #{path}, line #{line}</span>\n")
     end
   end
 
@@ -119,24 +121,25 @@ class RDoc::MethodAttr
   # Prepends line numbers if +options.line_numbers+ is true.
 
   def markup_code
-    return '' unless @token_stream
+    return '' if !@token_stream
 
     src = RDoc::TokenStream.to_html @token_stream
 
-    # dedent the source
-    indent = src.length
-    lines = src.lines.to_a
-    lines.shift if src =~ /\A.*#\ *File/i # remove '# File' comment
-    lines.each do |line|
-      if line =~ /^ *(?=\S)/
-        n = $~.end(0)
-        indent = n if n < indent
-        break if n == 0
-      end
-    end
-    src.gsub!(/^#{' ' * indent}/, '') if indent > 0
+    # add initial whitespace so that the indent gets calculated correctly
+    src.prepend(' ' * @token_stream.first[:char_no]) if source_language == 'ruby' && @token_stream.first
 
-    add_line_numbers(src) if options.line_numbers
+    # dedent the source
+    common_indent = src.length
+    src.scan(/^ *(?=\S)/) do |whitespace|
+      common_indent = whitespace.length if whitespace.length < common_indent
+      break if common_indent == 0
+    end
+    src.gsub!(/^#{' ' * common_indent}/, '') if common_indent > 0
+
+    if source_language == 'ruby'
+      add_line_numbers(src) if options.line_numbers
+      add_location_comment(src)
+    end
 
     src
   end

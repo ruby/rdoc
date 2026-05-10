@@ -2529,6 +2529,105 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal "ARGF.readlines(a)\nARGF.readlines(b)\nARGF.readlines(c)\nARGF.readlines(d)", m2.call_seq.chomp
   end
 
+  def test_markup_code
+    util_parser <<~RUBY
+      class Foo
+        def bar
+        end
+      end
+    RUBY
+
+    m1, = @top_level.classes.first.method_list
+
+    assert_equal <<~EXPECTED.chomp, m1.markup_code
+      <span class="ruby-comment"># File #{@filename}, line 2</span>
+      <span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
+      <span class="ruby-keyword">end</span>
+    EXPECTED
+  end
+
+  def test_markup_code_with_line_numbers
+    @top_level.store.options.line_numbers = true
+    util_parser <<~RUBY
+      class Foo
+        def bar
+        end
+      end
+    RUBY
+
+    m1, = @top_level.classes.first.method_list
+
+    assert_equal <<~EXPECTED.chomp, m1.markup_code
+      <span class="ruby-comment"># File #{@filename}</span>
+      <span class="line-num">2</span> <span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
+      <span class="line-num">3</span> <span class="ruby-keyword">end</span>
+    EXPECTED
+  end
+
+  def test_markup_code_dedent
+    util_parser <<~RUBY
+      class Foo
+        def bar
+        end
+
+        private
+          def baz
+          end
+      end
+    RUBY
+    m1, m2 = @top_level.classes.first.method_list
+
+    assert_equal(<<~EXPECTED.chomp, m1.markup_code)
+      <span class="ruby-comment"># File #{@filename}, line 2</span>
+      <span class="ruby-keyword">def</span> <span class="ruby-identifier">bar</span>
+      <span class="ruby-keyword">end</span>
+    EXPECTED
+    assert_equal(<<~EXPECTED.chomp, m2.markup_code)
+      <span class="ruby-comment"># File #{@filename}, line 6</span>
+      <span class="ruby-keyword">def</span> <span class="ruby-identifier">baz</span>
+      <span class="ruby-keyword">end</span>
+    EXPECTED
+  end
+
+  def test_markup_code_empty
+    util_parser <<~RUBY
+      class Foo
+        ##
+        # :method: ghost_method
+
+        ##
+        # :method:
+        # :call-seq: ghost_method2() -> Integer
+      end
+    RUBY
+
+    m1, m2 = @top_level.classes.first.method_list
+    assert_equal(
+      "<span class=\"ruby-comment\"># File #{@filename}, line 3</span>",
+      m1.markup_code.chomp
+    )
+    assert_equal(
+      "<span class=\"ruby-comment\"># File #{@filename}, line 6</span>",
+      m2.markup_code.chomp
+    )
+  end
+
+  def test_markup_code_empty_line_number
+    @top_level.store.options.line_numbers = true
+    util_parser <<~RUBY
+      class Foo
+        ##
+        # :method: ghost_method
+      end
+    RUBY
+
+    m, = @top_level.classes.first.method_list
+    assert_equal(
+      "<span class=\"ruby-comment\"># File #{@filename}, line 3</span>",
+      m.markup_code.chomp
+    )
+  end
+
   def util_parser(content)
     @parser = RDoc::Parser::Ruby.new @top_level, content, @options, @stats
     @parser.scan
