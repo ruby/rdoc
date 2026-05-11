@@ -308,7 +308,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     name, = signature.split %r%[ \(]%, 2
 
-    meth = RDoc::GhostMethod.new comment.text, name
+    meth = RDoc::AnyMethod.new comment.text, name
     record_location(meth)
     meth.line = start_line
     meth.call_seq = signature

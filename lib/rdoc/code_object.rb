@@ -16,8 +16,6 @@
 # * RDoc::MethodAttr
 #   * RDoc::Attr
 #   * RDoc::AnyMethod
-#     * RDoc::GhostMethod
-#     * RDoc::MetaMethod
 # * RDoc::Alias
 # * RDoc::Constant
 # * RDoc::Require
