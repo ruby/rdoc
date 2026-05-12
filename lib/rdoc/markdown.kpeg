@@ -1154,7 +1154,7 @@ Code = ( Ticks1 < (
        { code text }
 
 RawHtml = < HtmlBlockScript | HtmlTag > { html? ? text : '' }
-StrippedComment = < HtmlComment > { '' }
+StrippedComment = HtmlComment { '' }
 
 BlankLine =     @Sp @Newline { "\n" }
 

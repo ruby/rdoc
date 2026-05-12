@@ -14171,16 +14171,12 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StrippedComment = < HtmlComment > { '' }
+  # StrippedComment = HtmlComment { '' }
   def _StrippedComment
 
     _save = self.pos
     while true # sequence
-      _text_start = self.pos
       _tmp = apply(:_HtmlComment)
-      if _tmp
-        text = get_text(_text_start)
-      end
       unless _tmp
         self.pos = _save
         break
@@ -16812,7 +16808,7 @@ class RDoc::Markdown
   Rules[:_Ticks5] = rule_info("Ticks5", "\"`````\" !\"`\"")
   Rules[:_Code] = rule_info("Code", "(Ticks1 < ((!\"`\" Nonspacechar)+ | !Ticks1 /`+/ | !Ticks1 (@Spacechar | @Newline !@BlankLine))+ > Ticks1 | Ticks2 < ((!\"`\" Nonspacechar)+ | !Ticks2 /`+/ | !Ticks2 (@Spacechar | @Newline !@BlankLine))+ > Ticks2 | Ticks3 < ((!\"`\" Nonspacechar)+ | !Ticks3 /`+/ | !Ticks3 (@Spacechar | @Newline !@BlankLine))+ > Ticks3 | Ticks4 < ((!\"`\" Nonspacechar)+ | !Ticks4 /`+/ | !Ticks4 (@Spacechar | @Newline !@BlankLine))+ > Ticks4 | Ticks5 < ((!\"`\" Nonspacechar)+ | !Ticks5 /`+/ | !Ticks5 (@Spacechar | @Newline !@BlankLine))+ > Ticks5) { code text }")
   Rules[:_RawHtml] = rule_info("RawHtml", "< (HtmlBlockScript | HtmlTag) > { html? ? text : '' }")
-  Rules[:_StrippedComment] = rule_info("StrippedComment", "< HtmlComment > { '' }")
+  Rules[:_StrippedComment] = rule_info("StrippedComment", "HtmlComment { '' }")
   Rules[:_BlankLine] = rule_info("BlankLine", "@Sp @Newline { \"\\n\" }")
   Rules[:_Quoted] = rule_info("Quoted", "(\"\\\"\" (!\"\\\"\" .)* \"\\\"\" | \"'\" (!\"'\" .)* \"'\")")
   Rules[:_HtmlAttribute] = rule_info("HtmlAttribute", "(AlphanumericAscii | \"-\")+ Spnl (\"=\" Spnl (Quoted | (!\">\" Nonspacechar)+))? Spnl")
