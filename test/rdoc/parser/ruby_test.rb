@@ -2845,6 +2845,7 @@ EXPECTED
   end
 
   def test_parse_instance_operation_method
+    omit "TruffleRuby's Ripper tokenizes `def self.&` differently" if RUBY_ENGINE == 'truffleruby'
     util_parser <<-RUBY
 class Foo
   def self.& end
