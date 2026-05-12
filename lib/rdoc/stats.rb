@@ -8,6 +8,19 @@ class RDoc::Stats
   include RDoc::Text
 
   ##
+  # Display order for item types in the coverage report
+
+  TYPE_ORDER = %w[Class Module Constant Attribute Method].freeze
+
+  ##
+  # Message displayed when all items are documented
+
+  GREAT_JOB_MESSAGE = <<~MSG
+    100% documentation!
+    Great Job!
+  MSG
+
+  ##
   # Output level for the coverage report
 
   attr_reader :coverage_level
@@ -194,18 +207,6 @@ class RDoc::Stats
   end
 
   ##
-  # A report that says you did a great job!
-
-  def great_job
-    report = RDoc::Markup::Document.new
-
-    report << RDoc::Markup::Paragraph.new('100% documentation!')
-    report << RDoc::Markup::Paragraph.new('Great Job!')
-
-    report
-  end
-
-  ##
   # Calculates the percentage of items documented.
 
   def percent_doc
@@ -230,164 +231,184 @@ class RDoc::Stats
     if @coverage_level.zero? then
       calculate
 
-      return great_job if @num_items == @doc_items
+      return GREAT_JOB_MESSAGE if @num_items == @doc_items
     end
 
-    ucm = @store.unique_classes_and_modules
-
-    report = RDoc::Markup::Document.new
-    report << RDoc::Markup::Paragraph.new('The following items are not documented:')
-    report << RDoc::Markup::BlankLine.new
-
-    ucm.sort.each do |cm|
-      body = report_class_module(cm) {
-        [
-          report_constants(cm),
-          report_attributes(cm),
-          report_methods(cm),
-        ].compact
-      }
-
-      report << body if body
-    end
+    items, empty_classes = collect_undocumented_items
 
     if @coverage_level > 0 then
       calculate
 
-      return great_job if @num_items == @doc_items
+      return GREAT_JOB_MESSAGE if @num_items == @doc_items
     end
 
-    report
-  end
+    report = +""
+    report << "The following items are not documented:\n\n"
 
-  ##
-  # Returns a report on undocumented attributes in ClassModule +cm+
-
-  def report_attributes(cm)
-    return if cm.attributes.empty?
-
-    report = []
-
-    cm.attributes.each do |attr|
-      next if attr.documented?
-      line = attr.line ? ":#{attr.line}" : nil
-      report << "  #{attr.definition} :#{attr.name} # in file #{attr.file.full_name}#{line}\n"
-      report << "\n"
+    # Referenced-but-empty classes
+    empty_classes.each do |cm|
+      report << "#{cm.full_name} is referenced but empty.\n"
+      report << "It probably came from another project.  I'm sorry I'm holding it against you.\n\n"
     end
 
-    report
-  end
+    # Group items by file, then by type
+    by_file = items.group_by { |item| item[:file] }
 
-  ##
-  # Returns a report on undocumented items in ClassModule +cm+
+    by_file.sort_by { |file, _| file }.each do |file, file_items|
+      report << "#{file}:\n"
 
-  def report_class_module(cm)
-    return if cm.fully_documented? and @coverage_level.zero?
-    return unless cm.display?
+      by_type = file_items.group_by { |item| item[:type] }
 
-    report = RDoc::Markup::Document.new
+      TYPE_ORDER.each do |type|
+        next unless by_type[type]
 
-    if cm.in_files.empty? then
-      report << RDoc::Markup::Paragraph.new("#{cm.definition} is referenced but empty.")
-      report << RDoc::Markup::Paragraph.new("It probably came from another project.  I'm sorry I'm holding it against you.")
+        report << "  #{type}:\n"
 
-      return report
-    elsif cm.documented? then
-      documented = true
-      klass = RDoc::Markup::Verbatim.new("#{cm.definition} # is documented\n")
-    else
-      report << RDoc::Markup::Paragraph.new('In files:')
+        sorted = by_type[type].sort_by { |item| [item[:line] || 0, item[:name]] }
+        name_width = sorted.reduce(0) { |max, item| item[:line] && item[:name].length > max ? item[:name].length : max }
 
-      list = RDoc::Markup::List.new :BULLET
+        sorted.each do |item|
+          if item[:line]
+            report << "    %-*s %s:%d\n" % [name_width, item[:name], item[:file], item[:line]]
+          else
+            report << "    #{item[:name]}\n"
+          end
 
-      cm.in_files.each do |file|
-        para = RDoc::Markup::Paragraph.new file.full_name
-        list << RDoc::Markup::ListItem.new(nil, para)
-      end
-
-      report << list
-      report << RDoc::Markup::BlankLine.new
-
-      klass = RDoc::Markup::Verbatim.new("#{cm.definition}\n")
-    end
-
-    klass << "\n"
-
-    body = yield.flatten # HACK remove #flatten
-
-    if body.empty? then
-      return if documented
-
-      klass.parts.pop
-    else
-      klass.parts.concat body
-    end
-
-    klass << "end\n"
-
-    report << klass
-
-    report
-  end
-
-  ##
-  # Returns a report on undocumented constants in ClassModule +cm+
-
-  def report_constants(cm)
-    return if cm.constants.empty?
-
-    report = []
-
-    cm.constants.each do |constant|
-      # TODO constant aliases are listed in the summary but not reported
-      # figure out what to do here
-      next if constant.documented? || constant.is_alias_for
-
-      line = constant.line ? ":#{constant.line}" : line
-      report << "  # in file #{constant.file.full_name}#{line}\n"
-      report << "  #{constant.name} = nil\n"
-      report << "\n"
-    end
-
-    report
-  end
-
-  ##
-  # Returns a report on undocumented methods in ClassModule +cm+
-
-  def report_methods(cm)
-    return if cm.method_list.empty?
-
-    report = []
-
-    cm.each_method do |method|
-      next if method.documented? and @coverage_level.zero?
-
-      if @coverage_level > 0 then
-        params, undoc = undoc_params method
-
-        @num_params += params
-
-        unless undoc.empty? then
-          @undoc_params += undoc.length
-
-          undoc = undoc.map do |param| "+#{param}+" end
-          param_report = "  # #{undoc.join ', '} is not documented\n"
+          if item[:undoc_params]
+            report << "      Undocumented params: #{item[:undoc_params].join(', ')}\n"
+          end
         end
       end
 
-      next if method.documented? and not param_report
-
-      line = method.line ? ":#{method.line}" : nil
-      scope = method.singleton ? 'self.' : nil
-
-      report << "  # in file #{method.file.full_name}#{line}\n"
-      report << param_report if param_report
-      report << "  def #{scope}#{method.name}#{method.params}; end\n"
       report << "\n"
     end
 
     report
+  end
+
+  ##
+  # Collects all undocumented items across all classes and modules.
+  # Returns [items, empty_classes] where items is an Array of Hashes
+  # with keys :type, :name, :file, :line, and empty_classes is an
+  # Array of ClassModule objects that are referenced but have no files.
+
+  def collect_undocumented_items
+    empty_classes = []
+    items = []
+
+    @store.unique_classes_and_modules.each do |class_module|
+      next unless class_module.display?
+
+      if class_module.in_files.empty?
+        empty_classes << class_module
+        next
+      end
+
+      unless class_module.documented? || class_module.full_name == 'Object'
+        collect_undocumented_class_module(class_module, items)
+      end
+
+      collect_undocumented_constants(class_module, items)
+      collect_undocumented_attributes(class_module, items)
+      collect_undocumented_methods(class_module, items)
+    end
+
+    [items, empty_classes]
+  end
+
+  ##
+  # Collects undocumented classes or modules from +class_module+ into +items+.
+  # Reopened classes/modules are reported in every file they appear in.
+
+  def collect_undocumented_class_module(class_module, items)
+    class_module.in_files.map(&:full_name).uniq.each do |file|
+      items << {
+        type: class_module.type.capitalize,
+        name: class_module.full_name,
+        file: file,
+        line: nil,
+      }
+    end
+  end
+
+  ##
+  # Collects undocumented constants from +class_module+ into +items+.
+
+  def collect_undocumented_constants(class_module, items)
+    class_module.constants.each do |constant|
+      next unless constant.display?
+      next if constant.documented? || constant.is_alias_for
+
+      file = constant.file&.full_name
+      next unless file
+
+      items << {
+        type: "Constant",
+        name: constant.full_name,
+        file: file,
+        line: constant.line,
+      }
+    end
+  end
+
+  ##
+  # Collects undocumented attributes from +class_module+ into +items+.
+
+  def collect_undocumented_attributes(class_module, items)
+    class_module.attributes.each do |attr|
+      next unless attr.display?
+      next if attr.documented?
+
+      file = attr.file&.full_name
+      next unless file
+
+      scope = attr.singleton ? "." : "#"
+      items << {
+        type: "Attribute",
+        name: "#{class_module.full_name}#{scope}#{attr.name}",
+        file: file,
+        line: attr.line,
+      }
+    end
+  end
+
+  ##
+  # Collects undocumented methods from +class_module+ into +items+.
+  # At coverage level > 0, also counts undocumented parameters.
+
+  def collect_undocumented_methods(class_module, items)
+    class_module.each_method do |method|
+      next unless method.display?
+      next if method.documented? && @coverage_level.zero?
+
+      undoc_param_names = nil
+
+      if @coverage_level > 0
+        params, undoc = undoc_params method
+        @num_params += params
+
+        unless undoc.empty?
+          @undoc_params += undoc.length
+          undoc_param_names = undoc
+        end
+      end
+
+      next if method.documented? && !undoc_param_names
+
+      file = method.file&.full_name
+      next unless file
+
+      scope = method.singleton ? "." : "#"
+      item = {
+        type: "Method",
+        name: "#{class_module.full_name}#{scope}#{method.name}",
+        file: file,
+        line: method.line,
+      }
+      item[:undoc_params] = undoc_param_names if undoc_param_names
+
+      items << item
+    end
   end
 
   ##
@@ -407,12 +428,10 @@ class RDoc::Stats
       @undoc_params,
     ].max.to_s.length
 
-    report = RDoc::Markup::Verbatim.new
+    report = +""
 
     report << "Files:      %*d\n" % [num_width, @num_files]
-
     report << "\n"
-
     report << "Classes:    %*d (%*d undocumented)\n" % [
       num_width, @num_classes, undoc_width, @undoc_classes]
     report << "Modules:    %*d (%*d undocumented)\n" % [
@@ -426,17 +445,14 @@ class RDoc::Stats
     report << "Parameters: %*d (%*d undocumented)\n" % [
       num_width, @num_params, undoc_width, @undoc_params] if
         @coverage_level > 0
-
     report << "\n"
-
     report << "Total:      %*d (%*d undocumented)\n" % [
       num_width, @num_items, undoc_width, @undoc_items]
-
     report << "%6.2f%% documented\n" % percent_doc
     report << "\n"
     report << "Elapsed: %0.1fs\n" % (Time.now - @start)
 
-    RDoc::Markup::Document.new report
+    report
   end
 
   ##
