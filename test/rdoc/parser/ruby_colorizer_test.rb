@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require_relative '../helper'
-require 'rdoc/parser/ruby_colorizer'
+require 'prism'
 
 class RDocParserRubyColorizerTest < RDoc::TestCase
   def token(kind, text)

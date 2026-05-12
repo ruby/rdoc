@@ -2,7 +2,6 @@
 require 'cgi/escape'
 require 'cgi/util' unless defined?(CGI::EscapeExt)
 require 'prism'
-require 'rdoc/parser/ruby_colorizer'
 
 ##
 # Outputs RDoc markup as HTML.
