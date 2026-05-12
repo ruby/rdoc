@@ -77,49 +77,6 @@ class RDoc::Comment
   end
 
   ##
-  # Look for a 'call-seq' in the comment to override the normal parameter
-  # handling.  The :call-seq: is indented from the baseline.  All lines of the
-  # same indentation level and prefix are consumed.
-  #
-  # For example, all of the following will be used as the :call-seq:
-  #
-  #   # :call-seq:
-  #   #   ARGF.readlines(sep=$/)     -> array
-  #   #   ARGF.readlines(limit)      -> array
-  #   #   ARGF.readlines(sep, limit) -> array
-  #   #
-  #   #   ARGF.to_a(sep=$/)     -> array
-  #   #   ARGF.to_a(limit)      -> array
-  #   #   ARGF.to_a(sep, limit) -> array
-
-  def extract_call_seq
-    # we must handle situations like the above followed by an unindented first
-    # comment.  The difficulty is to make sure not to match lines starting
-    # with ARGF at the same indent, but that are after the first description
-    # paragraph.
-    if /^(?<S> ((?!\n)\s)*+        (?# whitespaces except newline))
-         :?call-seq:
-           (?<B> \g<S>(?<N>\n|\z)  (?# trailing spaces))?
-         (?<seq>
-           (\g<S>(?!\w)\S.*\g<N>)*
-           (?>
-             (?<H> \g<S>\w+        (?# ' #   ARGF' in the example above))
-             .*\g<N>)?
-           (\g<S>\S.*\g<N>         (?# other non-blank line))*+
-           (\g<B>+(\k<H>.*\g<N>    (?# ARGF.to_a lines))++)*+
-         )
-         (?m:^\s*$|\z)
-        /x =~ @text
-      seq = $~[:seq]
-
-      all_start, all_stop = $~.offset(0)
-      @text.slice! all_start...all_stop
-
-      seq.gsub!(/^\s*/, '')
-    end
-  end
-
-  ##
   # A comment is empty if its text String is empty.
 
   def empty?
@@ -185,28 +142,6 @@ class RDoc::Comment
     @document = super @text, @format
     @document.file = @location
     @document
-  end
-
-  ##
-  # Removes private sections from this comment.  Private sections are flush to
-  # the comment marker and start with <tt>--</tt> and end with <tt>++</tt>.
-  # For C-style comments, a private marker may not start at the opening of the
-  # comment.
-  #
-  #   /*
-  #    *--
-  #    * private
-  #    *++
-  #    * public
-  #    */
-
-  def remove_private
-    # Workaround for gsub encoding for Ruby 1.9.2 and earlier
-    empty = ''
-    empty = RDoc::Encoding.change_encoding empty, @text.encoding
-
-    @text = @text.gsub(%r%^\s*([#*]?)--.*?^\s*(\1)\+\+\n?%m, empty)
-    @text = @text.sub(%r%^\s*[#*]?--.*%m, '')
   end
 
   ##
