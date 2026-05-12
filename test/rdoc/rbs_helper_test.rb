@@ -97,56 +97,34 @@ class RDocRbsHelperTest < RDoc::TestCase
     lookup = { 'String' => 'String.html', 'Integer' => 'Integer.html' }
     result = RDoc::RbsHelper.signature_to_html(["(String) -> Integer", "(Integer) -> String"], lookup: lookup, from_path: 'Test.html')
 
-    assert_includes result, '<a href="String.html" class="rbs-type">String</a>'
-    assert_includes result, '<a href="Integer.html" class="rbs-type">Integer</a>'
-    assert_includes result, "\n"
+    first, second = result.split("\n", 2)
+    assert_match %r{<a href="String\.html"[^>]*>String</a>.*&rarr;.*<a href="Integer\.html"[^>]*>Integer</a>}, first
+    assert_match %r{<a href="Integer\.html"[^>]*>Integer</a>.*&rarr;.*<a href="String\.html"[^>]*>String</a>}, second
   end
 
-  def test_signature_to_html_union_type
-    lookup = { 'String' => 'String.html', 'Integer' => 'Integer.html' }
-    result = RDoc::RbsHelper.signature_to_html(["(String | Integer) -> void"], lookup: lookup, from_path: 'Test.html')
+  def test_signature_to_html_links_types_inside_compound_forms
+    lookup = {
+      'String'     => 'String.html',
+      'Integer'    => 'Integer.html',
+      'Comparable' => 'Comparable.html',
+    }
 
-    assert_includes result, '<a href="String.html" class="rbs-type">String</a>'
-    assert_includes result, '<a href="Integer.html" class="rbs-type">Integer</a>'
-  end
+    cases = [
+      ['union',        "(String | Integer) -> void",        %w[String Integer]],
+      ['optional',     "String?",                           %w[String]],
+      ['tuple',        "[String, Integer]",                 %w[String Integer]],
+      ['intersection', "(String & Comparable) -> void",     %w[String Comparable]],
+      ['proc',         "^(String) -> Integer",              %w[String Integer]],
+      ['block',        "() { (String) -> Integer } -> void", %w[String Integer]],
+    ]
 
-  def test_signature_to_html_optional_type
-    lookup = { 'String' => 'String.html' }
-    result = RDoc::RbsHelper.signature_to_html(["String?"], lookup: lookup, from_path: 'Test.html')
-
-    assert_includes result, '<a href="String.html" class="rbs-type">String</a>'
-  end
-
-  def test_signature_to_html_tuple_type
-    lookup = { 'String' => 'String.html', 'Integer' => 'Integer.html' }
-    result = RDoc::RbsHelper.signature_to_html(["[String, Integer]"], lookup: lookup, from_path: 'Test.html')
-
-    assert_includes result, '<a href="String.html" class="rbs-type">String</a>'
-    assert_includes result, '<a href="Integer.html" class="rbs-type">Integer</a>'
-  end
-
-  def test_signature_to_html_intersection_type
-    lookup = { 'String' => 'String.html', 'Comparable' => 'Comparable.html' }
-    result = RDoc::RbsHelper.signature_to_html(["(String & Comparable) -> void"], lookup: lookup, from_path: 'Test.html')
-
-    assert_includes result, '<a href="String.html" class="rbs-type">String</a>'
-    assert_includes result, '<a href="Comparable.html" class="rbs-type">Comparable</a>'
-  end
-
-  def test_signature_to_html_proc_type
-    lookup = { 'String' => 'String.html', 'Integer' => 'Integer.html' }
-    result = RDoc::RbsHelper.signature_to_html(["^(String) -> Integer"], lookup: lookup, from_path: 'Test.html')
-
-    assert_includes result, '<a href="String.html" class="rbs-type">String</a>'
-    assert_includes result, '<a href="Integer.html" class="rbs-type">Integer</a>'
-  end
-
-  def test_signature_to_html_links_block_return_type
-    lookup = { 'String' => 'String.html', 'Integer' => 'Integer.html' }
-    result = RDoc::RbsHelper.signature_to_html(["() { (String) -> Integer } -> void"], lookup: lookup, from_path: 'Test.html')
-
-    assert_includes result, '<a href="String.html" class="rbs-type">String</a>'
-    assert_includes result, '<a href="Integer.html" class="rbs-type">Integer</a>'
+    cases.each do |form, sig, expected_types|
+      result = RDoc::RbsHelper.signature_to_html([sig], lookup: lookup, from_path: 'Test.html')
+      expected_types.each do |type|
+        assert_includes result, %(<a href="#{lookup[type]}" class="rbs-type">#{type}</a>),
+          "#{form} signature #{sig.inspect} did not link #{type}"
+      end
+    end
   end
 
   def test_signature_to_html_unparseable_signature

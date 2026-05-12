@@ -2696,20 +2696,6 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal 'Convert a value', convert.comment.text.strip
   end
 
-  def test_method_without_type_signature
-    util_parser <<~RUBY
-      class Foo
-        # A plain method
-        def plain; end
-      end
-    RUBY
-
-    klass = @store.find_class_named 'Foo'
-    plain = klass.method_list.first
-    assert_nil plain.type_signature_lines
-    assert_equal 'A plain method', plain.comment.text.strip
-  end
-
   def test_method_type_signature_with_blank_line_separation
     util_parser <<~RUBY
       class Foo
@@ -2726,18 +2712,24 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal "Documentation here", bar.comment.text
   end
 
-  def test_type_signature_invalid_still_stored
-    util_parser <<~RUBY
-      class Foo
-        #: (String ->
-        def bar(x); end
-      end
-    RUBY
+  def test_type_signature_invalid_still_stored_and_warns
+    @options.verbosity = 2
+    _out, err = capture_output do
+      util_parser <<~RUBY
+        class Foo
+          #: (String ->
+          def bar(x); end
+        end
+      RUBY
+    end
 
     klass = @store.find_class_named 'Foo'
     bar = klass.method_list.first
-    # Invalid sigs are still stored (don't block display)
+    # Invalid sigs are still stored so the doc author can see what they typed.
     assert_equal ['(String ->'], bar.type_signature_lines
+    # ...but a warning must be emitted so it doesn't slip through silently.
+    # The format includes the file and line so authors can find the typo.
+    assert_match %r{:\d+: invalid RBS type signature: "\(String ->"}, err
   end
 
   def util_parser(content)

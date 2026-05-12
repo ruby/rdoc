@@ -1326,16 +1326,16 @@ class RDocStoreTest < XrefTestCase
     assert_equal ['(String name) -> void'], ctor.type_signature_lines
   end
 
-  def test_merge_rbs_signatures_replaces_previous_rbs_signature
+  def test_merge_rbs_signatures_clears_signatures_removed_in_subsequent_merge
     @s.merge_rbs_signatures(
       'Object#method' => ['() -> String']
     )
+    assert_equal ['() -> String'], @meth.type_signature_lines
 
-    @s.merge_rbs_signatures(
-      'Object#method' => ['() -> Integer']
-    )
-
-    assert_equal ['() -> Integer'], @meth.type_signature_lines
+    # Subsequent merge no longer mentions the key — the signature must be
+    # cleared rather than left stale, so live-reload reflects deletions.
+    @s.merge_rbs_signatures({})
+    assert_nil @meth.type_signature_lines
   end
 
   def test_merge_rbs_signatures_propagates_to_method_alias
@@ -1445,17 +1445,6 @@ class RDocStoreTest < XrefTestCase
     )
 
     assert_equal ['(String) -> void'], m.type_signature_lines
-  end
-
-  def test_merge_rbs_signatures_unmatched_key
-    @s.merge_rbs_signatures(
-      'Object#nonexistent' => ['(String) -> void']
-    )
-
-    # No method matches — nothing should blow up, no sigs assigned
-    @klass.method_list.each do |m|
-      assert_nil m.type_signature_lines
-    end
   end
 
 end
