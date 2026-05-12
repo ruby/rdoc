@@ -293,5 +293,5 @@ require_relative 'parser/c'
 require_relative 'parser/changelog'
 require_relative 'parser/markdown'
 require_relative 'parser/rd'
-
 require_relative 'parser/ruby'
+require_relative 'parser/ruby_colorizer'

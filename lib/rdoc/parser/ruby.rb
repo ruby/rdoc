@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'prism'
-require_relative 'ruby_colorizer'
 
 # Parse and collect document from Ruby source code.
 
