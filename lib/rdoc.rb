@@ -197,8 +197,6 @@ module RDoc
   autoload :Alias,          "#{__dir__}/rdoc/code_object/alias"
   autoload :AnyMethod,      "#{__dir__}/rdoc/code_object/any_method"
   autoload :MethodAttr,     "#{__dir__}/rdoc/code_object/method_attr"
-  autoload :GhostMethod,    "#{__dir__}/rdoc/code_object/ghost_method"
-  autoload :MetaMethod,     "#{__dir__}/rdoc/code_object/meta_method"
   autoload :Attr,           "#{__dir__}/rdoc/code_object/attr"
 
   autoload :Constant,       "#{__dir__}/rdoc/code_object/constant"
