@@ -93,7 +93,8 @@ class RDoc::Markup::Formatter
         matched << [m.begin(idx), m.end(idx), m[idx], name, priority]
       end
     end
-    # If the start positions are the same, prefer the one with higher priority (registered earlier one)
+    # If the start positions are the same, prefer the earlier-registered one
+    # (lower numeric priority from each_with_index).
     matched.sort_by! {|beg_pos, _, _, _, priority| [beg_pos, priority] }
 
     pos = 0
