@@ -2645,6 +2645,93 @@ class RDocParserRubyTest < RDoc::TestCase
     )
   end
 
+  def test_method_type_signature
+    util_parser <<~RUBY
+      class Foo
+        # A greeting method
+        #: (String, Integer) -> void
+        def greet(name, count); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    greet = klass.method_list.first
+    assert_equal 'greet', greet.name
+    assert_equal ['(String, Integer) -> void'], greet.type_signature_lines
+    assert_equal 'A greeting method', greet.comment.text.strip
+  end
+
+  def test_attribute_type_signature
+    util_parser <<~RUBY
+      class Foo
+        #: String
+        attr_reader :name
+
+        #: Integer
+        attr_accessor :count
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    attrs = klass.attributes.sort_by(&:name)
+    assert_equal 'count', attrs[0].name
+    assert_equal ['Integer'], attrs[0].type_signature_lines
+    assert_equal 'name', attrs[1].name
+    assert_equal ['String'], attrs[1].type_signature_lines
+  end
+
+  def test_method_type_signature_multiple_overloads
+    util_parser <<~RUBY
+      class Foo
+        # Convert a value
+        #: (String) -> Integer
+        #: (Integer) -> String
+        def convert(value); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    convert = klass.method_list.first
+    assert_equal ['(String) -> Integer', '(Integer) -> String'], convert.type_signature_lines
+    assert_equal 'Convert a value', convert.comment.text.strip
+  end
+
+  def test_method_type_signature_with_blank_line_separation
+    util_parser <<~RUBY
+      class Foo
+        # Documentation here
+        #
+        #: (String) -> void
+        def bar(x); end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    bar = klass.method_list.first
+    assert_equal ['(String) -> void'], bar.type_signature_lines
+    assert_equal "Documentation here", bar.comment.text
+  end
+
+  def test_type_signature_invalid_still_stored_and_warns
+    @options.verbosity = 2
+    _out, err = capture_output do
+      util_parser <<~RUBY
+        class Foo
+          #: (String ->
+          def bar(x); end
+        end
+      RUBY
+    end
+
+    klass = @store.find_class_named 'Foo'
+    bar = klass.method_list.first
+    # Invalid sigs are still stored so the doc author can see what they typed.
+    assert_equal ['(String ->'], bar.type_signature_lines
+    # ...but a warning must be emitted so it doesn't slip through silently.
+    # The format includes the file and line so authors can find the typo.
+    assert_match %r{:\d+: invalid RBS type signature: "\(String ->"}, err
+  end
+
   def util_parser(content)
     @parser = RDoc::Parser::Ruby.new @top_level, content, @options, @stats
     @parser.scan

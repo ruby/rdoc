@@ -84,7 +84,7 @@ class RDoc::Server
     @tcp_server = TCPServer.new('127.0.0.1', @port)
     @running = true
 
-    @watcher_thread = start_watcher(@rdoc.last_modified.keys)
+    @watcher_thread = start_watcher(@rdoc.watch_files)
 
     url = "http://localhost:#{@port}"
     $stderr.puts "\nServing documentation at: \e]8;;#{url}\e\\#{url}\e]8;;\e\\"
@@ -294,9 +294,7 @@ class RDoc::Server
   # re-parsing when changes are detected.
 
   def start_watcher(source_files)
-    @file_mtimes = source_files.each_with_object({}) do |f, h|
-      h[f] = File.mtime(f) rescue nil
-    end
+    @file_mtimes = file_mtimes_for(source_files)
 
     Thread.new do
       while @running
@@ -310,6 +308,12 @@ class RDoc::Server
     end
   end
 
+  def file_mtimes_for(files)
+    files.each_with_object({}) do |f, h|
+      h[f] = RDoc.safe_mtime(f)
+    end
+  end
+
   ##
   # Checks for modified, new, and deleted files.  Returns true if any
   # changes were found and processed.
@@ -317,16 +321,28 @@ class RDoc::Server
   def check_for_changes
     changed = []
     removed = []
+    changed_rbs = []
+    removed_rbs = []
 
     @file_mtimes.each do |file, old_mtime|
       unless File.exist?(file)
-        removed << file
+        if @rdoc.rbs_signature_file?(file)
+          removed_rbs << file
+        else
+          removed << file
+        end
         next
       end
 
-      current_mtime = File.mtime(file) rescue nil
+      current_mtime = RDoc.safe_mtime(file)
       next unless current_mtime
-      changed << file if old_mtime.nil? || current_mtime > old_mtime
+      next unless old_mtime.nil? || current_mtime > old_mtime
+
+      if @rdoc.rbs_signature_file?(file)
+        changed_rbs << file
+      else
+        changed << file
+      end
     end
 
     file_list = @rdoc.normalized_file_list(
@@ -341,9 +357,18 @@ class RDoc::Server
       end
     end
 
-    return false if changed.empty? && removed.empty?
+    @rdoc.rbs_signature_files.each do |file|
+      unless @file_mtimes.key?(file)
+        @file_mtimes[file] = nil
+        changed_rbs << file
+      end
+    end
 
-    reparse_and_refresh(changed, removed)
+    return false if changed.empty? && removed.empty? && changed_rbs.empty? && removed_rbs.empty?
+
+    removed_rbs.each { |file| @file_mtimes.delete(file) }
+
+    reparse_and_refresh(changed, removed, rbs_changed: !changed_rbs.empty? || !removed_rbs.empty?)
     true
   end
 
@@ -351,7 +376,7 @@ class RDoc::Server
   # Re-parses changed files, removes deleted files from the store,
   # refreshes the generator, and invalidates caches.
 
-  def reparse_and_refresh(changed_files, removed_files)
+  def reparse_and_refresh(changed_files, removed_files, rbs_changed: false)
     @mutex.synchronize do
       unless removed_files.empty?
         $stderr.puts "Removed: #{removed_files.join(', ')}"
@@ -372,7 +397,7 @@ class RDoc::Server
             begin
               @store.clear_file_contributions(relative, keep_position: true)
               @rdoc.parse_file(f)
-              @file_mtimes[f] = File.mtime(f) rescue nil
+              @file_mtimes[f] = RDoc.safe_mtime(f)
             rescue => e
               $stderr.puts "Error parsing #{f}: #{e.message}"
             end
@@ -383,7 +408,19 @@ class RDoc::Server
         $stderr.puts "Re-parsed #{changed_file_names.join(', ')} (#{duration_ms}ms)"
       end
 
+      if rbs_changed
+        duration_ms = measure do
+          @rdoc.load_rbs_signatures
+          @rdoc.record_rbs_signature_mtimes
+          @rdoc.rbs_signature_files.each do |file|
+            @file_mtimes[file] = RDoc.safe_mtime(file)
+          end
+        end
+        $stderr.puts "Reloaded RBS signatures (#{duration_ms}ms)"
+      end
+
       @store.complete(@options.visibility)
+      @store.invalidate_type_name_lookup unless changed_files.empty? && removed_files.empty?
 
       @generator.refresh_store_data
       @page_cache.clear

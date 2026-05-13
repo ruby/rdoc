@@ -151,6 +151,16 @@ module RDoc
     end
   end
 
+  ##
+  # Returns +File.mtime(file)+, or +nil+ if the file cannot be stat'd
+  # (missing, permission denied, etc.).
+
+  def self.safe_mtime(file)
+    File.mtime(file)
+  rescue SystemCallError
+    nil
+  end
+
   autoload :RDoc,           "#{__dir__}/rdoc/rdoc"
 
   autoload :CrossReference, "#{__dir__}/rdoc/cross_reference"

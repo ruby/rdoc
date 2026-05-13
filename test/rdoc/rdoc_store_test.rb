@@ -1289,4 +1289,168 @@ class RDocStoreTest < XrefTestCase
     assert_not_include @s.classes_hash, 'GoneClass'
   end
 
+  def test_merge_rbs_signatures
+    m = RDoc::AnyMethod.new(nil, 'greet')
+    m.params = '(name)'
+    @klass.add_method m
+
+    a = RDoc::Attr.new(nil, 'language', 'R', '')
+    @klass.add_attribute a
+
+    @s.merge_rbs_signatures(
+      'Object#greet' => ['(String name) -> void'],
+      'Object#language' => ['String']
+    )
+
+    assert_equal ['(String name) -> void'], @s.rbs_signature_for(m)
+    assert_equal ['String'], @s.rbs_signature_for(a)
+    # Inline #: lines on the method are untouched
+    assert_nil m.type_signature_lines
+    assert_nil a.type_signature_lines
+  end
+
+  def test_merge_rbs_signatures_singleton_method
+    @s.merge_rbs_signatures(
+      'Object.cmethod' => ['() -> String']
+    )
+
+    assert_equal ['() -> String'], @s.rbs_signature_for(@cmeth)
+  end
+
+  def test_merge_rbs_signatures_constructor
+    ctor = RDoc::AnyMethod.new nil, 'new', singleton: true
+    ctor.record_location @top_level
+    @klass.add_method ctor
+
+    @s.merge_rbs_signatures(
+      'Object#initialize' => ['(String name) -> void']
+    )
+
+    assert_equal ['(String name) -> void'], @s.rbs_signature_for(ctor)
+  end
+
+  def test_merge_rbs_signatures_clears_signatures_removed_in_subsequent_merge
+    @s.merge_rbs_signatures(
+      'Object#method' => ['() -> String']
+    )
+    assert_equal ['() -> String'], @s.rbs_signature_for(@meth)
+
+    # Subsequent merge no longer mentions the key — the signature must be
+    # cleared rather than left stale, so live-reload reflects deletions.
+    @s.merge_rbs_signatures({})
+    assert_nil @s.rbs_signature_for(@meth)
+  end
+
+  def test_rbs_signature_for_propagates_to_method_alias
+    original = RDoc::AnyMethod.new nil, 'original'
+    original.record_location @top_level
+    @klass.add_method original
+
+    alias_def = RDoc::Alias.new nil, 'original', 'aliased', ''
+    alias_def.record_location @top_level
+    aliased = original.add_alias alias_def, @klass
+
+    @s.merge_rbs_signatures(
+      'Object#original' => ['() -> String']
+    )
+
+    assert_equal ['() -> String'], @s.rbs_signature_for(original)
+    assert_equal ['() -> String'], @s.rbs_signature_for(aliased)
+  end
+
+  def test_rbs_signature_for_propagates_to_attribute_alias
+    original = RDoc::Attr.new nil, 'language', 'R', ''
+    original.record_location @top_level
+    @klass.add_attribute original
+
+    alias_def = RDoc::Alias.new nil, 'language', 'locale', ''
+    alias_def.record_location @top_level
+    aliased = original.add_alias alias_def, @klass
+
+    @s.merge_rbs_signatures(
+      'Object#language' => ['String']
+    )
+
+    assert_equal ['String'], @s.rbs_signature_for(original)
+    assert_equal ['String'], @s.rbs_signature_for(aliased)
+  end
+
+  def test_merge_rbs_signatures_keeps_instance_and_singleton_attributes_separate
+    instance_attr = RDoc::Attr.new nil, 'language', 'R', ''
+    instance_attr.record_location @top_level
+    @klass.add_attribute instance_attr
+
+    singleton_attr = RDoc::Attr.new nil, 'language', 'R', '', singleton: true
+    singleton_attr.record_location @top_level
+    @klass.add_attribute singleton_attr
+
+    @s.merge_rbs_signatures(
+      'Object#language' => ['String'],
+      'Object.language' => ['Integer']
+    )
+
+    assert_equal ['String'], @s.rbs_signature_for(instance_attr)
+    assert_equal ['Integer'], @s.rbs_signature_for(singleton_attr)
+  end
+
+  def test_rbs_signature_for_returns_nil_when_no_signatures_loaded
+    assert_nil @s.rbs_signature_for(@meth)
+  end
+
+  def test_rbs_signature_for_does_not_overwrite_inline_lookup
+    # Inline #: lives on the method itself; sidecar lookup is separate.
+    @meth.type_signature_lines = ['() -> String  # inline']
+    @s.merge_rbs_signatures(
+      'Object#method' => ['() -> String  # sidecar']
+    )
+
+    # Both sources are readable; the consumer chooses precedence (inline wins).
+    assert_equal ['() -> String  # inline'], @meth.type_signature_lines
+    assert_equal ['() -> String  # sidecar'], @s.rbs_signature_for(@meth)
+  end
+
+  def test_type_name_lookup
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+    assert_equal @klass.path, lookup['Object']
+    assert_equal @nest_klass.path, lookup['Object::SubClass']
+    assert_equal @mod.path, lookup['Mod']
+    assert_equal @nest_klass.path, lookup['SubClass']
+  end
+
+  def test_type_name_lookup_ambiguous_unqualified_name_excluded
+    file = @s.add_file 'other.rb'
+    other_klass = file.add_class RDoc::NormalClass, 'Other::SubClass'
+    other_klass.record_location file
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+
+    # Both qualified names are present
+    assert_equal @nest_klass.path, lookup['Object::SubClass']
+    assert_equal other_klass.path, lookup['Other::SubClass']
+
+    # Ambiguous unqualified name is excluded to avoid wrong links
+    refute lookup.key?('SubClass')
+  end
+
+  def test_type_name_lookup_top_level_class_wins_over_nested_namesake
+    top_level_string = @top_level.add_class RDoc::NormalClass, 'String'
+    top_level_string.record_location @top_level
+
+    nested_string = @top_level.add_class RDoc::NormalClass, 'Gem::Elements::String'
+    nested_string.record_location @top_level
+
+    @s.complete :public
+
+    lookup = @s.type_name_lookup
+
+    # Top-level class retains its own path; nested namesake does not
+    # hijack the unqualified name.
+    assert_equal top_level_string.path, lookup['String']
+    assert_equal nested_string.path, lookup['Gem::Elements::String']
+  end
+
+
 end

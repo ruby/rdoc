@@ -10,7 +10,13 @@ class RDocServerTest < RDoc::TestCase
 
     File.write File.join(@dir, "PAGE.md"), "# A Page\n\nSome content.\n"
     File.write File.join(@dir, "NOTES.rdoc"), "= Notes\n\nSome notes.\n"
-    File.write File.join(@dir, "example.rb"), "# A class\nclass Example; end\n"
+    File.write File.join(@dir, "example.rb"), <<~RUBY
+      # A class
+      class Example
+        def greet
+        end
+      end
+    RUBY
 
     @options.files = [@dir]
     @options.op_dir = File.join(@dir, "_site")
@@ -70,5 +76,29 @@ class RDocServerTest < RDoc::TestCase
 
     assert_equal 404, status
     assert_equal 'text/html', content_type
+  end
+
+  def test_check_for_changes_reloads_rbs_signatures
+    @server.instance_variable_set(:@file_mtimes, @rdoc.last_modified.keys.to_h { |file|
+      [file, File.mtime(file)]
+    })
+
+    sig_dir = File.join @dir, 'sig'
+    FileUtils.mkdir_p sig_dir
+    File.write File.join(sig_dir, 'example.rbs'), <<~RBS
+      class Example
+        def greet: () -> String
+      end
+    RBS
+
+    _out, err = capture_output do
+      assert @server.send(:check_for_changes)
+    end
+
+    assert_not_include err, 'Error parsing'
+
+    example = @rdoc.store.find_class_or_module 'Example'
+    greet = example.find_method 'greet', false
+    assert_equal ['() -> String'], @rdoc.store.rbs_signature_for(greet)
   end
 end

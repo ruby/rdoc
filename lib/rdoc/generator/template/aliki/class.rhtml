@@ -93,6 +93,9 @@
             <span class="method-name"><%= h attrib.name %></span>
             <span class="attribute-access-type">[<%= attrib.rw %>]</span>
           </a>
+          <%- if (sig_html = type_signature_html(attrib, klass.path)) %>
+          <span class="method-type-signature"><code><%= sig_html %></code></span>
+          <%- end %>
         </div>
 
         <div class="method-description">
@@ -149,6 +152,10 @@
                 <span class="method-args"><%= h method.param_seq %></span>
               </a>
             </div>
+          <%- end %>
+
+          <%- if (sig_html = type_signature_html(method, klass.path)) %>
+          <pre class="method-type-signature"><code><%= sig_html %></code></pre>
           <%- end %>
         </div>
 

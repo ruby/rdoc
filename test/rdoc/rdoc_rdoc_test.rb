@@ -2,6 +2,19 @@
 require_relative 'helper'
 
 class RDocRDocTest < RDoc::TestCase
+  class RegenerationTrackingGenerator
+    class << self
+      attr_accessor :generated_store
+    end
+
+    def initialize(store, _options)
+      @store = store
+    end
+
+    def generate
+      self.class.generated_store = @store
+    end
+  end
 
   def setup
     super
@@ -38,6 +51,98 @@ class RDocRDocTest < RDoc::TestCase
 
     assert_equal 'MAIN_PAGE.rdoc', store.main
     assert_equal 'title',          store.title
+  end
+
+  def test_document_regenerates_when_rbs_file_changed
+    temp_dir do |dir|
+      source = File.join dir, 'example.rb'
+      sig_dir = File.join dir, 'sig'
+      sig = File.join sig_dir, 'example.rbs'
+      output_dir = File.join dir, 'doc'
+
+      FileUtils.mkdir_p sig_dir
+      FileUtils.mkdir_p output_dir
+
+      File.write source, <<~RUBY
+        class Example
+          def greet
+          end
+        end
+      RUBY
+
+      File.write sig, <<~RBS
+        class Example
+          def greet: () -> String
+        end
+      RBS
+
+      source_mtime = Time.at 1000
+      old_sig_mtime = Time.at 1000
+      new_sig_mtime = Time.at 2000
+      FileUtils.touch source, mtime: source_mtime
+      FileUtils.touch sig, mtime: new_sig_mtime
+
+      File.open @rdoc.output_flag_file(output_dir), 'w' do |io|
+        io.puts Time.at(1500).rfc2822
+        io.puts "#{source}\t#{source_mtime.rfc2822}"
+        io.puts "#{sig}\t#{old_sig_mtime.rfc2822}"
+      end
+
+      options = RDoc::Options.new
+      options.files = [source]
+      options.root = Pathname dir
+      options.op_dir = output_dir
+      options.force_update = false
+      options.quiet = true
+      options.generator = RegenerationTrackingGenerator
+      RegenerationTrackingGenerator.generated_store = nil
+
+      capture_output do
+        RDoc::RDoc.new.document options
+      end
+
+      store = RegenerationTrackingGenerator.generated_store
+      refute_nil store
+
+      example = store.find_class_or_module 'Example'
+      greet = example.find_method 'greet', false
+      assert_equal ['() -> String'], store.rbs_signature_for(greet)
+    end
+  end
+
+  def test_load_rbs_signatures_clears_stale_signatures_on_failure
+    temp_dir do |dir|
+      sig_dir = File.join dir, 'sig'
+      sig = File.join sig_dir, 'example.rbs'
+      FileUtils.mkdir_p sig_dir
+
+      File.write sig, <<~RBS
+        class Example
+          def greet: () -> String
+        end
+      RBS
+
+      @options.root = Pathname(dir)
+      @options.op_dir = dir
+      @rdoc.store = RDoc::Store.new(@options)
+
+      top_level = @rdoc.store.add_file 'example.rb'
+      example = top_level.add_class RDoc::NormalClass, 'Example'
+      method = RDoc::AnyMethod.new nil, 'greet'
+      example.add_method method
+
+      @rdoc.load_rbs_signatures
+      assert_equal ['() -> String'], @rdoc.store.rbs_signature_for(method)
+
+      File.write sig, "class Example\n  def greet: ( -> "
+      @options.verbosity = 2
+      _out, err = capture_output do
+        @rdoc.load_rbs_signatures
+      end
+
+      assert_includes err, 'Failed to load RBS type signatures'
+      assert_nil @rdoc.store.rbs_signature_for(method)
+    end
   end
 
   def test_document_with_dry_run # functional test

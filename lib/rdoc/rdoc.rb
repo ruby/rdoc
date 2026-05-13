@@ -5,6 +5,7 @@ require 'find'
 require 'fileutils'
 require 'pathname'
 require 'time'
+require_relative 'rbs_helper'
 
 ##
 # This is the driver for generating RDoc output.  It handles file parsing and
@@ -429,8 +430,8 @@ The internal error was:
 
   def remove_unparseable(files)
     files.reject do |file, *|
-      file =~ /\.(?:class|eps|erb|scpt\.txt|svg|ttf|yml)$/i or
-        (file =~ /tags$/i and
+      file =~ /\.(?:class|eps|erb|rbs|scpt\.txt|svg|ttf|yml)\z/i or
+        (file =~ /tags\z/i and
          /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(File.binread(file, 100)))
     end
   end
@@ -469,9 +470,11 @@ The internal error was:
       @store.load_cache
 
       parse_files @options.files
+      record_rbs_signature_mtimes
 
       @options.default_title = "RDoc Documentation"
 
+      load_rbs_signatures
       @store.complete @options.visibility
 
       start_server
@@ -486,9 +489,20 @@ The internal error was:
 
     @store.load_cache
 
+    rbs_signatures_changed = rbs_signatures_changed?
+    # When only sig/*.rbs changed, no Ruby file would be reparsed under
+    # normal mtime checks.  The store cache holds class metadata but not
+    # live RDoc::Context objects, so the generator would have nothing to
+    # iterate.  Force a full reparse so updated signatures show up in
+    # the rendered output.
+    @last_modified.clear if rbs_signatures_changed
+
     file_info = parse_files @options.files
+    record_rbs_signature_mtimes
 
     @options.default_title = "RDoc Documentation"
+
+    load_rbs_signatures
 
     @store.complete @options.visibility
 
@@ -498,7 +512,7 @@ The internal error was:
       puts
 
       puts @stats.report
-    elsif file_info.empty? then
+    elsif file_info.empty? && !rbs_signatures_changed then
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
       gen_klass = @options.generator
@@ -537,6 +551,73 @@ The internal error was:
         @generator.generate
         update_output_dir '.', @start_time, @last_modified
       end
+    end
+  end
+
+  ##
+  # Loads RBS type signatures from the project's sig/ directory and
+  # RBS stdlib, then merges them into the store's code objects.
+
+  def load_rbs_signatures
+    sig_dirs = []
+    sig_dir = File.join(@options.root.to_s, 'sig')
+    sig_dirs << sig_dir if File.directory?(sig_dir)
+    signatures = RDoc::RbsHelper.load_signatures(*sig_dirs)
+    @store.merge_rbs_signatures(signatures)
+  rescue RBS::BaseError, Errno::ENOENT, LoadError => e
+    # In server mode, a previous successful load may have populated the store;
+    # drop those signatures so a now-broken sig file doesn't keep showing
+    # stale types alongside the warning.
+    @store.clear_rbs_signatures
+    @options.warn "Failed to load RBS type signatures: #{e.message}"
+  end
+
+  ##
+  # Returns all RBS signature files for the project.
+
+  def rbs_signature_files
+    Dir[File.join(@options.root.to_s, 'sig', '**', '*.rbs')].sort
+  end
+
+  ##
+  # Returns true if any RBS signature file has changed since the last run.
+
+  def rbs_signatures_changed?
+    current = rbs_signature_mtimes
+    previous = @last_modified.select { |file, _| rbs_signature_file?(file) }
+
+    return true unless (previous.keys - current.keys).empty?
+
+    current.any? do |file, mtime|
+      last_modified = @last_modified[file]
+      last_modified.nil? || mtime.to_i > last_modified.to_i
+    end
+  end
+
+  ##
+  # Records RBS signature file mtimes so normal generation freshness checks
+  # and the live server watcher can see signature-only edits.
+
+  def record_rbs_signature_mtimes
+    @last_modified.reject! { |file, _| rbs_signature_file?(file) }
+    @last_modified.merge! rbs_signature_mtimes
+  end
+
+  ##
+  # Files watched by the live preview server.
+
+  def watch_files
+    (@last_modified.keys + rbs_signature_files).uniq
+  end
+
+  def rbs_signature_file?(file) # :nodoc:
+    File.extname(file) == '.rbs'
+  end
+
+  def rbs_signature_mtimes # :nodoc:
+    rbs_signature_files.each_with_object({}) do |file, mtimes|
+      mtime = RDoc.safe_mtime(file)
+      mtimes[file] = mtime if mtime
     end
   end
 

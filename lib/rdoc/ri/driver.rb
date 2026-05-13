@@ -1415,6 +1415,8 @@ or the PAGER environment variable.
     out << RDoc::Markup::Rule.new(1)
 
     render_method_arguments out, method.arglists
+    sig = method.type_signature_lines || store.rbs_signature_for(method)
+    render_method_type_signature out, sig if sig
     render_method_superclass out, method
     if method.is_alias_for
       al = method.is_alias_for
@@ -1450,6 +1452,10 @@ or the PAGER environment variable.
       out << method.comment.parse
       out << RDoc::Markup::BlankLine.new
     end
+  end
+
+  def render_method_type_signature(out, lines) # :nodoc:
+    out << RDoc::Markup::Verbatim.new(*lines.map { |s| s + "\n" })
   end
 
   def render_method_superclass(out, method) # :nodoc:

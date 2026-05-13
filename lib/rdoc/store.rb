@@ -344,6 +344,86 @@ class RDoc::Store
   end
 
   ##
+  # Returns a hash mapping class/module names to their paths, for use
+  # by type signature linking. Maps both qualified names (Foo::Bar) and
+  # unambiguous unqualified names (Bar). Ambiguous unqualified names
+  # (where multiple classes share the same name) are excluded to avoid
+  # wrong links. Cached after first call.
+
+  ##
+  # Invalidates the cached type name lookup.  Server mode calls this after
+  # re-parsing changes the set of classes and modules.
+
+  def invalidate_type_name_lookup # :nodoc:
+    @type_name_lookup = nil
+  end
+
+  def type_name_lookup
+    @type_name_lookup ||= begin
+      lookup = {}
+      unqualified_names = {}
+      ambiguous_names = {}
+      all_classes_and_modules.each do |cm|
+        lookup[cm.full_name] = cm.path
+        unqualified_name = cm.name
+
+        if ambiguous_names[unqualified_name]
+          # already known ambiguous, skip
+        elsif unqualified_names.key?(unqualified_name)
+          unqualified_names.delete(unqualified_name)
+          ambiguous_names[unqualified_name] = true
+        else
+          unqualified_names[unqualified_name] = cm.path
+        end
+      end
+      lookup.merge!(unqualified_names)
+    end
+  end
+
+  ##
+  # Stores RBS type signatures loaded from sidecar .rbs files, keyed by
+  # "ClassName#method" or "ClassName.method".  Replaces any previously
+  # stored set, so passing +{}+ clears it.  Inline +#:+ annotations on
+  # method objects are NOT touched — those are owned by the source file.
+
+  def merge_rbs_signatures(signatures)
+    @rbs_signatures = signatures
+  end
+
+  ##
+  # Returns the RBS type signature lines for +method_attr+ from loaded
+  # sidecar +.rbs+ files, or +nil+ if none.  Falls through to the
+  # canonical method for aliases, and handles +initialize+ -> +.new+
+  # singleton mapping.
+
+  def rbs_signature_for(method_attr)
+    return nil unless @rbs_signatures
+    cm = method_attr.parent
+    return nil unless cm.respond_to?(:full_name)
+
+    key = method_attr.singleton ? "#{cm.full_name}.#{method_attr.name}" : "#{cm.full_name}##{method_attr.name}"
+    sig = @rbs_signatures[key]
+
+    # RBS keys constructors as #initialize, but RDoc renames them to .new
+    if !sig && method_attr.name == 'new' && method_attr.singleton
+      sig = @rbs_signatures["#{cm.full_name}#initialize"]
+    end
+
+    # For aliases, fall through to the canonical method (its inline #:
+    # takes precedence over any sidecar signature on the alias's name).
+    if !sig && method_attr.is_alias_for
+      canonical = method_attr.is_alias_for
+      sig = canonical.type_signature_lines || rbs_signature_for(canonical)
+    end
+
+    sig
+  end
+
+  def clear_rbs_signatures # :nodoc:
+    @rbs_signatures = nil
+  end
+
+  ##
   # All TopLevels known to RDoc
 
   def all_files
