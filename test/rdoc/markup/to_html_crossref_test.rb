@@ -169,7 +169,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_convert_RDOCLINK_rdoc_ref_method_percent
-    m = @c1.add_method RDoc::AnyMethod.new nil, '%'
+    m = @c1.add_method RDoc::AnyMethod.new '%'
 
     result = @to.convert 'rdoc-ref:C1#%'
 
@@ -183,7 +183,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_convert_RDOCLINK_rdoc_ref_method_escape_html
-    m = @c1.add_method RDoc::AnyMethod.new nil, '<<'
+    m = @c1.add_method RDoc::AnyMethod.new '<<'
 
     result = @to.convert 'rdoc-ref:C1#<<'
 
@@ -196,7 +196,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
   end
 
   def test_convert_RDOCLINK_rdoc_ref_method_percent_label
-    m = @c1.add_method RDoc::AnyMethod.new nil, '%'
+    m = @c1.add_method RDoc::AnyMethod.new '%'
 
     result = @to.convert 'rdoc-ref:C1#%@f'
 

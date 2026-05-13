@@ -41,8 +41,8 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
 
     @klass.add_module_alias @klass, @klass.name, @alias_constant, @top_level
 
-    @meth = RDoc::AnyMethod.new nil, 'method'
-    @meth_with_html_tag_yield = RDoc::AnyMethod.new nil, 'method_with_html_tag_yield'
+    @meth = RDoc::AnyMethod.new 'method'
+    @meth_with_html_tag_yield = RDoc::AnyMethod.new 'method_with_html_tag_yield'
     @meth_with_html_tag_yield.block_params = '%<<script>alert("atui")</script>>, yield_arg'
 
     @klass.add_method @meth

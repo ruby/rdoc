@@ -39,10 +39,10 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   include RDoc::TokenStream
 
   ##
-  # Creates a new AnyMethod with a token stream +text+ and +name+
+  # Creates a new AnyMethod with name +name+
 
-  def initialize(text, name, singleton: false)
-    super(text, name, singleton: singleton)
+  def initialize(name, singleton: false)
+    super(name, singleton: singleton)
 
     @c_function = nil
     @dont_rename_initialize = false
@@ -55,7 +55,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # Adds +an_alias+ as an alias for this method in +context+.
 
   def add_alias(an_alias, context = nil)
-    method = self.class.new an_alias.text, an_alias.new_name, singleton: singleton
+    method = self.class.new an_alias.new_name, singleton: singleton
 
     method.record_location an_alias.file
     method.params = self.params
@@ -211,7 +211,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @type_signature_lines = array[16]&.split("\n")
 
     array[8].each do |new_name, document|
-      add_alias RDoc::Alias.new(nil, @name, new_name, RDoc::Comment.from_document(document), singleton: @singleton)
+      add_alias RDoc::Alias.new(@name, new_name, RDoc::Comment.from_document(document), singleton: @singleton)
     end
 
     @parent_name ||= if @full_name =~ /#/ then

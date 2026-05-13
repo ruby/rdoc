@@ -6,11 +6,11 @@ class RDocAttrTest < RDoc::TestCase
   def setup
     super
 
-    @a = RDoc::Attr.new nil, 'attr', 'RW', ''
+    @a = RDoc::Attr.new 'attr', 'RW', ''
   end
 
   def test_aref
-    m = RDoc::Attr.new nil, 'attr', 'RW', nil
+    m = RDoc::Attr.new 'attr', 'RW', nil
 
     assert_equal 'attribute-i-attr', m.aref
   end
@@ -78,7 +78,7 @@ class RDocAttrTest < RDoc::TestCase
     @store.path = Dir.tmpdir
     top_level = @store.add_file 'file.rb'
 
-    a = RDoc::Attr.new nil, 'name', 'R', 'a comment'
+    a = RDoc::Attr.new 'name', 'R', 'a comment'
     a.type_signature_lines = ['String']
     a.record_location top_level
 
@@ -96,12 +96,12 @@ class RDocAttrTest < RDoc::TestCase
     top_level = @store.add_file 'file.rb'
     cm = top_level.add_class RDoc::ClassModule, 'Klass'
 
-    a = RDoc::Attr.new nil, 'name', 'R', ''
+    a = RDoc::Attr.new 'name', 'R', ''
     a.type_signature_lines = ['String']
     a.record_location top_level
     cm.add_attribute a
 
-    al = RDoc::Alias.new nil, 'name', 'label', ''
+    al = RDoc::Alias.new 'name', 'label', ''
     al.record_location top_level
 
     aliased = a.add_alias al, cm
@@ -231,8 +231,8 @@ class RDocAttrTest < RDoc::TestCase
       "test_add_alias_#{an_alias[:new_name]}_for_attr_#{orig_attr[:type]}_sets_correct_rw"
     ) do
       context = RDoc::Context.new
-      attr = RDoc::Attr.new nil, 'bar', orig_attr[:rw], ''
-      als = RDoc::Alias.new nil, an_alias[:old_name], an_alias[:new_name], ''
+      attr = RDoc::Attr.new 'bar', orig_attr[:rw], ''
+      als = RDoc::Alias.new an_alias[:old_name], an_alias[:new_name], ''
 
       new_attr = attr.add_alias als, context
 

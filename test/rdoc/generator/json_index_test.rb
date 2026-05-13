@@ -31,13 +31,13 @@ class RDocGeneratorJsonIndexTest < RDoc::TestCase
 
     @klass = @top_level.add_class RDoc::NormalClass, 'C'
 
-    @meth = @klass.add_method RDoc::AnyMethod.new(nil, 'meth')
+    @meth = @klass.add_method RDoc::AnyMethod.new('meth')
     @meth.record_location @top_level
 
     @nest_klass = @klass.add_class RDoc::NormalClass, 'D'
     @nest_klass.record_location @top_level
 
-    @nest_meth = @nest_klass.add_method RDoc::AnyMethod.new(nil, 'meth')
+    @nest_meth = @nest_klass.add_method RDoc::AnyMethod.new('meth')
 
     @ignored = @top_level.add_class RDoc::NormalClass, 'Ignored'
     @ignored.ignore

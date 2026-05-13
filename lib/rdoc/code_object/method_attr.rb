@@ -22,11 +22,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
   attr_accessor :singleton
 
   ##
-  # Source file token stream
-
-  attr_reader :text
-
-  ##
   # Array of other names for this method/attribute
 
   attr_reader :aliases
@@ -70,15 +65,14 @@ class RDoc::MethodAttr < RDoc::CodeObject
   attr_reader :arglists
 
   ##
-  # Creates a new MethodAttr from token stream +text+ and method or attribute
+  # Creates a new MethodAttr with method or attribute
   # name +name+.
   #
   # Usually this is called by super from a subclass.
 
-  def initialize(text, name, singleton: false)
+  def initialize(name, singleton: false)
     super()
 
-    @text = text
     @name = name
 
     @aliases      = []
@@ -361,13 +355,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
       if alias_for then
         q.breakable
         q.text alias_for
-      end
-
-      if text then
-        q.breakable
-        q.text "text:"
-        q.breakable
-        q.pp @text
       end
 
       unless comment.empty? then

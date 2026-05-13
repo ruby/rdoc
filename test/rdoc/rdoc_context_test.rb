@@ -31,7 +31,7 @@ class RDocContextTest < XrefTestCase
   end
 
   def test_add_alias
-    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
+    as = RDoc::Alias.new 'old_name', 'new_name', 'comment'
 
     @context.add_alias as
 
@@ -50,9 +50,9 @@ class RDocContextTest < XrefTestCase
   def test_add_alias_method_attr
     top_level = @store.add_file 'file.rb'
 
-    attr = RDoc::Attr.new nil, 'old_name', 'R', ''
+    attr = RDoc::Attr.new 'old_name', 'R', ''
 
-    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
+    as = RDoc::Alias.new 'old_name', 'new_name', 'comment'
     as.record_location top_level
     as.parent = @context
 
@@ -70,10 +70,10 @@ class RDocContextTest < XrefTestCase
   def test_add_alias_method
     top_level = @store.add_file 'file.rb'
 
-    meth = RDoc::AnyMethod.new nil, 'old_name'
+    meth = RDoc::AnyMethod.new 'old_name'
     meth.singleton = false
 
-    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
+    as = RDoc::Alias.new 'old_name', 'new_name', 'comment'
     as.record_location top_level
     as.parent = @context
 
@@ -89,9 +89,9 @@ class RDocContextTest < XrefTestCase
   end
 
   def test_add_alias_method_singleton
-    meth = RDoc::AnyMethod.new nil, 'old_name', singleton: true
+    meth = RDoc::AnyMethod.new 'old_name', singleton: true
 
-    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment', singleton: true
+    as = RDoc::Alias.new 'old_name', 'new_name', 'comment', singleton: true
 
     as.parent = @context
 
@@ -193,7 +193,7 @@ class RDocContextTest < XrefTestCase
   end
 
   def test_add_method
-    meth = RDoc::AnyMethod.new nil, 'old_name'
+    meth = RDoc::AnyMethod.new 'old_name'
     meth.visibility = nil
 
     @context.add_method meth
@@ -203,8 +203,8 @@ class RDocContextTest < XrefTestCase
   end
 
   def test_add_method_alias
-    as = RDoc::Alias.new nil, 'old_name', 'new_name', 'comment'
-    meth = RDoc::AnyMethod.new nil, 'old_name'
+    as = RDoc::Alias.new 'old_name', 'new_name', 'comment'
+    meth = RDoc::AnyMethod.new 'old_name'
 
     @context.add_alias as
     refute_empty @context.external_aliases
@@ -219,14 +219,14 @@ class RDocContextTest < XrefTestCase
   def test_add_method_duplicate
     @store.options.verbosity = 2
 
-    meth1 = RDoc::AnyMethod.new nil, 'name'
+    meth1 = RDoc::AnyMethod.new 'name'
     meth1.record_location @store.add_file 'first.rb'
     meth1.visibility = nil
     meth1.comment = comment 'first'
 
     @context.add_method meth1
 
-    meth2 = RDoc::AnyMethod.new nil, 'name'
+    meth2 = RDoc::AnyMethod.new 'name'
     meth2.record_location @store.add_file 'second.rb'
     meth2.comment = comment 'second'
 
@@ -247,14 +247,14 @@ class RDocContextTest < XrefTestCase
   def test_add_method_duplicate_loading
     @context.store = nil
 
-    meth1 = RDoc::AnyMethod.new nil, 'name'
+    meth1 = RDoc::AnyMethod.new 'name'
     meth1.record_location @store.add_file 'first.rb'
     meth1.visibility = nil
     meth1.comment = comment 'first'
 
     @context.add_method meth1
 
-    meth2 = RDoc::AnyMethod.new nil, 'name'
+    meth2 = RDoc::AnyMethod.new 'name'
     meth2.record_location @store.add_file 'second.rb'
     meth2.comment = comment 'second'
 
@@ -620,7 +620,7 @@ class RDocContextTest < XrefTestCase
 
     assert context.fully_documented?
 
-    a = RDoc::Attr.new '', 'a', 'RW', nil
+    a = RDoc::Attr.new 'a', 'RW', nil
 
     context.add_attribute a
 
@@ -812,10 +812,10 @@ class RDocContextTest < XrefTestCase
 
   def test_section_contents
     default = @context.sections.first
-    @context.add_method RDoc::AnyMethod.new(nil, 'm1')
+    @context.add_method RDoc::AnyMethod.new('m1')
 
     b = @context.add_section 'B'
-    m = @context.add_method RDoc::AnyMethod.new(nil, 'm2')
+    m = @context.add_method RDoc::AnyMethod.new('m2')
     m.section = b
 
     assert_equal [default, b], @context.section_contents
@@ -824,7 +824,7 @@ class RDocContextTest < XrefTestCase
   def test_section_contents_no_default
     @context = RDoc::Context.new
     b = @context.add_section 'B'
-    m = @context.add_method RDoc::AnyMethod.new(nil, 'm')
+    m = @context.add_method RDoc::AnyMethod.new('m')
     m.section = b
 
     assert_equal [b], @context.section_contents
@@ -833,7 +833,7 @@ class RDocContextTest < XrefTestCase
   def test_section_contents_only_default
     @context = RDoc::Context.new
 
-    @context.add_method RDoc::AnyMethod.new(nil, 'm')
+    @context.add_method RDoc::AnyMethod.new('m')
 
     assert_empty @context.section_contents
   end
@@ -841,7 +841,7 @@ class RDocContextTest < XrefTestCase
   def test_section_contents_unused
     @context = RDoc::Context.new
 
-    @context.add_method RDoc::AnyMethod.new(nil, 'm')
+    @context.add_method RDoc::AnyMethod.new('m')
     @context.add_section 'B'
 
     assert_empty @context.section_contents
@@ -923,13 +923,13 @@ class RDocContextTest < XrefTestCase
   end
 
   def util_visibilities
-    @pub  = RDoc::AnyMethod.new nil, 'pub'
-    @prot = RDoc::AnyMethod.new nil, 'prot'
-    @priv = RDoc::AnyMethod.new nil, 'priv'
+    @pub  = RDoc::AnyMethod.new 'pub'
+    @prot = RDoc::AnyMethod.new 'prot'
+    @priv = RDoc::AnyMethod.new 'priv'
 
-    @apub  = RDoc::Attr.new nil, 'pub',  'RW', nil
-    @aprot = RDoc::Attr.new nil, 'prot', 'RW', nil
-    @apriv = RDoc::Attr.new nil, 'priv', 'RW', nil
+    @apub  = RDoc::Attr.new 'pub',  'RW', nil
+    @aprot = RDoc::Attr.new 'prot', 'RW', nil
+    @apriv = RDoc::Attr.new 'priv', 'RW', nil
 
     @cpub  = RDoc::Constant.new 'CONST_PUBLIC', nil, nil
     @cpriv = RDoc::Constant.new 'CONST_PRIVATE', nil, nil

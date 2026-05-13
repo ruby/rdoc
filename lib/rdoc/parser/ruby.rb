@@ -311,7 +311,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     name, = signature.split %r%[ \(]%, 2
 
-    meth = RDoc::AnyMethod.new comment.text, name
+    meth = RDoc::AnyMethod.new name
     record_location(meth)
     meth.line = start_line
     meth.call_seq = signature
@@ -377,7 +377,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     if attributes
       attributes.each do |attr|
-        a = RDoc::Attr.new(@container, attr, rw, comment, singleton: @singleton)
+        a = RDoc::Attr.new(attr, rw, comment, singleton: @singleton)
         a.store = @store
         a.line = line_no
         record_location(a)
@@ -562,7 +562,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     comment, directives = consecutive_comment(line_no)
     handle_code_object_directives(@container, directives) if directives
     visibility = @container.find_method(old_name, @singleton)&.visibility || :public
-    a = RDoc::Alias.new(nil, old_name, new_name, comment, singleton: @singleton)
+    a = RDoc::Alias.new(old_name, new_name, comment, singleton: @singleton)
     handle_modifier_directive(a, line_no)
     a.store = @store
     a.line = line_no
@@ -581,7 +581,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return unless @container.document_children
 
     names.each do |symbol|
-      a = RDoc::Attr.new(nil, symbol.to_s, rw, comment, singleton: @singleton)
+      a = RDoc::Attr.new(symbol.to_s, rw, comment, singleton: @singleton)
       a.store = @store
       a.line = line_no
       a.type_signature_lines = type_signature_lines
@@ -644,7 +644,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   private def internal_add_method(method_name, container, comment:, dont_rename_initialize: false, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature_lines: nil) # :nodoc:
-    meth = RDoc::AnyMethod.new(nil, method_name, singleton: singleton)
+    meth = RDoc::AnyMethod.new(method_name, singleton: singleton)
     meth.comment = comment
     handle_code_object_directives(meth, directives) if directives
     modifier_comment_lines&.each do |line|

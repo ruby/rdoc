@@ -4,7 +4,7 @@ require_relative '../xref_test_case'
 class RDocAnyMethodTest < XrefTestCase
 
   def test_aref
-    m = RDoc::AnyMethod.new nil, 'method?'
+    m = RDoc::AnyMethod.new 'method?'
 
     assert_equal 'method-i-method-3F', m.aref
 
@@ -14,7 +14,7 @@ class RDocAnyMethodTest < XrefTestCase
   end
 
   def test_arglists
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
 
     assert_nil m.arglists
 
@@ -40,7 +40,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_call_seq_equals
-    m = RDoc::AnyMethod.new nil, nil
+    m = RDoc::AnyMethod.new nil
 
     m.call_seq = ''
 
@@ -52,8 +52,8 @@ method(a, b) { |c, d| ... }
   end
 
   def test_call_seq_alias_for
-    a = RDoc::AnyMethod.new nil, "each"
-    m = RDoc::AnyMethod.new nil, "each_line"
+    a = RDoc::AnyMethod.new "each"
+    m = RDoc::AnyMethod.new "each_line"
 
     a.call_seq = <<-CALLSEQ
 each(foo)
@@ -70,13 +70,13 @@ each_line(foo)
   end
 
   def test_has_call_seq?
-    m = RDoc::AnyMethod.new nil, "each_line"
-    m2 = RDoc::AnyMethod.new nil, "each"
+    m = RDoc::AnyMethod.new "each_line"
+    m2 = RDoc::AnyMethod.new "each"
     assert_equal false, m.has_call_seq?
     m.call_seq = "each_line()"
     assert_equal true, m.has_call_seq?
 
-    m = RDoc::AnyMethod.new nil, "each_line"
+    m = RDoc::AnyMethod.new "each_line"
     m.is_alias_for = m2
     assert_equal false, m.has_call_seq?
     m2.call_seq = "each_line()"
@@ -93,7 +93,7 @@ each_line(foo)
 
     assert_equal @c2_b, loaded.is_alias_for, 'Marshal.load'
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.store = @store
     m1.instance_variable_set :@is_alias_for, ['Missing', false, 'method']
 
@@ -106,7 +106,7 @@ each_line(foo)
     top_level = @store.add_file 'file.rb'
     cm = top_level.add_class RDoc::ClassModule, 'Klass'
 
-    method_with_call_seq = RDoc::AnyMethod.new(nil, "method_with_call_seq")
+    method_with_call_seq = RDoc::AnyMethod.new("method_with_call_seq")
     method_with_call_seq.call_seq = <<~SEQ
       method_with_call_seq(a)
       method_with_call_seq(a, b)
@@ -116,7 +116,7 @@ each_line(foo)
     cm.add_method(method_with_call_seq)
 
     alias_to_method = method_with_call_seq.add_alias(
-      RDoc::Alias.new(nil, "method_with_call_seq", "alias_to_method", "comment"),
+      RDoc::Alias.new("method_with_call_seq", "alias_to_method", "comment"),
       cm
     )
 
@@ -131,7 +131,7 @@ each_line(foo)
     top_level = @store.add_file 'file.rb'
     cm = top_level.add_class RDoc::ClassModule, 'Klass'
 
-    method_with_call_seq = RDoc::AnyMethod.new(nil, "method_with_call_seq")
+    method_with_call_seq = RDoc::AnyMethod.new("method_with_call_seq")
     method_with_call_seq.call_seq = <<~SEQ
       method_with_call_seq(a)
       method_with_call_seq(a, b)
@@ -139,7 +139,7 @@ each_line(foo)
     cm.add_method(method_with_call_seq)
 
     alias_to_method = method_with_call_seq.add_alias(
-      RDoc::Alias.new(nil, "method_with_call_seq", "alias_to_method", "comment"),
+      RDoc::Alias.new("method_with_call_seq", "alias_to_method", "comment"),
       cm
     )
 
@@ -153,7 +153,7 @@ each_line(foo)
   end
 
   def test_param_seq_with_variable_expansion
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
     m.block_params = '"Hello, #{world}", yield_arg'
     m.params = 'a'
@@ -165,7 +165,7 @@ each_line(foo)
     @store.path = Dir.tmpdir
     top_level = @store.add_file 'file.rb'
 
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.block_params = 'some_block'
     m.call_seq     = 'call_seq'
     m.comment      = 'this is a comment'
@@ -177,7 +177,7 @@ each_line(foo)
 
     section = cm.sections.first
 
-    al = RDoc::Alias.new nil, 'method', 'aliased', 'alias comment'
+    al = RDoc::Alias.new 'method', 'aliased', 'alias comment'
     al_m = m.add_alias al, cm
 
     loaded = Marshal.load Marshal.dump m
@@ -206,7 +206,7 @@ each_line(foo)
     @store.path = Dir.tmpdir
     top_level = @store.add_file 'file.rb'
 
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.type_signature_lines = ['(String) -> Integer']
     m.record_location top_level
 
@@ -224,12 +224,12 @@ each_line(foo)
     top_level = @store.add_file 'file.rb'
     cm = top_level.add_class RDoc::ClassModule, 'Klass'
 
-    m = RDoc::AnyMethod.new nil, 'original'
+    m = RDoc::AnyMethod.new 'original'
     m.type_signature_lines = ['(String) -> void']
     m.record_location top_level
     cm.add_method m
 
-    a = RDoc::Alias.new nil, 'original', 'aliased', ''
+    a = RDoc::Alias.new 'original', 'aliased', ''
     a.record_location top_level
 
     aliased = m.add_alias a, cm
@@ -283,14 +283,14 @@ each_line(foo)
     @store.path = Dir.tmpdir
     top_level = @store.add_file 'file.rb'
 
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
 
     cm = top_level.add_class RDoc::ClassModule, 'Klass'
     cm.add_method m
 
     section = cm.sections.first
 
-    al = RDoc::Alias.new nil, 'method', 'aliased', 'alias comment'
+    al = RDoc::Alias.new 'method', 'aliased', 'alias comment'
     al_m = m.add_alias al, cm
 
     loaded = Marshal.load "\x04\bU:\x14RDoc::AnyMethod[\x0Fi\x00I" +
@@ -331,7 +331,7 @@ each_line(foo)
     @store.path = Dir.tmpdir
     top_level = @store.add_file 'file.rb'
 
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.block_params = 'some_block'
     m.call_seq     = 'call_seq'
     m.comment      = 'this is a comment'
@@ -343,7 +343,7 @@ each_line(foo)
 
     section = cm.sections.first
 
-    al = RDoc::Alias.new nil, 'method', 'aliased', 'alias comment'
+    al = RDoc::Alias.new 'method', 'aliased', 'alias comment'
     al_m = m.add_alias al, cm
 
     loaded = Marshal.load "\x04\bU:\x14RDoc::AnyMethod[\x14i\bI" +
@@ -382,13 +382,13 @@ each_line(foo)
   end
 
   def test_name
-    m = RDoc::AnyMethod.new nil, nil
+    m = RDoc::AnyMethod.new nil
 
     assert_nil m.name
   end
 
   def test_name_call_seq
-    m = RDoc::AnyMethod.new nil, nil
+    m = RDoc::AnyMethod.new nil
 
     m.call_seq = "yields(name)\nyields(name, description)"
 
@@ -396,7 +396,7 @@ each_line(foo)
   end
 
   def test_name_call_seq_dot
-    m = RDoc::AnyMethod.new nil, nil
+    m = RDoc::AnyMethod.new nil
 
     m.call_seq = "obj.yields(name)\nobj.yields(name, description)"
 
@@ -404,7 +404,7 @@ each_line(foo)
   end
 
   def test_param_list_block_params
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     m.block_params = 'c, d'
@@ -413,7 +413,7 @@ each_line(foo)
   end
 
   def test_param_list_call_seq
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     call_seq = <<-SEQ
@@ -427,7 +427,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_param_list_default
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     m.params = '(b = default)'
@@ -436,7 +436,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_param_list_params
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     m.params = '(a, b)'
@@ -445,7 +445,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_param_list_params_block_params
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     m.params = '(a, b)'
@@ -455,7 +455,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_param_list_empty_params_with_block
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     m.params = '()'
@@ -465,7 +465,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_param_list_ampersand_param_block_params
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     m.params = '(a, b, &block)'
@@ -475,7 +475,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_param_list_ampersand_param
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     m.params = '(a, b, &block)'
@@ -484,7 +484,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_param_seq
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
     m.params = 'a'
 
@@ -504,7 +504,7 @@ method(a, b) { |c, d| ... }
   end
 
   def test_param_seq_call_seq
-    m = RDoc::AnyMethod.new nil, 'method'
+    m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
 
     call_seq = <<-SEQ
@@ -524,8 +524,8 @@ method(a, b) { |c, d| ... }
   end
 
   def test_skip_description?
-    m = RDoc::AnyMethod.new nil, "each_line"
-    m2 = RDoc::AnyMethod.new nil, "each"
+    m = RDoc::AnyMethod.new "each_line"
+    m2 = RDoc::AnyMethod.new "each"
     assert_equal false, m.skip_description?
     assert_equal false, m2.skip_description?
 
@@ -556,12 +556,12 @@ method(a, b) { |c, d| ... }
   end
 
   def test_superclass_method
-    m3 = RDoc::AnyMethod.new '', 'no_super'
+    m3 = RDoc::AnyMethod.new 'no_super'
 
-    m2 = RDoc::AnyMethod.new '', 'supers'
+    m2 = RDoc::AnyMethod.new 'supers'
     m2.calls_super = true
 
-    m1 = RDoc::AnyMethod.new '', 'supers'
+    m1 = RDoc::AnyMethod.new 'supers'
 
     c1 = RDoc::NormalClass.new 'Outer'
     c1.store = @store
@@ -580,10 +580,10 @@ method(a, b) { |c, d| ... }
   end
 
   def test_superclass_method_multilevel
-    m2 = RDoc::AnyMethod.new '', 'supers'
+    m2 = RDoc::AnyMethod.new 'supers'
     m2.calls_super = true
 
-    m1 = RDoc::AnyMethod.new '', 'supers'
+    m1 = RDoc::AnyMethod.new 'supers'
 
     c1 = RDoc::NormalClass.new 'Outer'
     c1.store = @store

@@ -148,7 +148,7 @@ contents of a string.
   end
 
   def test_handle_directive_downcase
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
 
     @pp.handle_directive '', 'ARG', 'a, b', method
 
@@ -156,7 +156,7 @@ contents of a string.
   end
 
   def test_handle_directive_arg
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
 
     @pp.handle_directive '', 'arg', 'a, b', method
 
@@ -170,7 +170,7 @@ contents of a string.
   end
 
   def test_handle_directive_args
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
 
     @pp.handle_directive '', 'args', 'a, b', method
 
@@ -255,7 +255,7 @@ contents of a string.
   end
 
   def test_handle_directive_notnew
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
 
     @pp.handle_directive '', 'notnew', nil, m
 
@@ -263,7 +263,7 @@ contents of a string.
   end
 
   def test_handle_directive_not_new
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
 
     @pp.handle_directive '', 'not_new', nil, m
 
@@ -271,7 +271,7 @@ contents of a string.
   end
 
   def test_handle_directive_not_dash_new
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
 
     @pp.handle_directive '', 'not-new', nil, m
 
@@ -435,7 +435,7 @@ contents of a string.
   end
 
   def test_handle_directive_yield
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
     method.params = 'index, &block'
 
     @pp.handle_directive '', 'yield', 'item', method
@@ -445,7 +445,7 @@ contents of a string.
   end
 
   def test_handle_directive_yield_block_param
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
     method.params = '&block'
 
     @pp.handle_directive '', 'yield', 'item', method
@@ -455,7 +455,7 @@ contents of a string.
   end
 
   def test_handle_directive_yield_no_context
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
 
     @pp.handle_directive '', 'yield', 'item', method
 
@@ -463,7 +463,7 @@ contents of a string.
   end
 
   def test_handle_directive_yields
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
 
     @pp.handle_directive '', 'yields', 'item', method
 
