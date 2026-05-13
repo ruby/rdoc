@@ -1302,8 +1302,11 @@ class RDocStoreTest < XrefTestCase
       'Object#language' => ['String']
     )
 
-    assert_equal ['(String name) -> void'], m.type_signature_lines
-    assert_equal ['String'], a.type_signature_lines
+    assert_equal ['(String name) -> void'], @s.rbs_signature_for(m)
+    assert_equal ['String'], @s.rbs_signature_for(a)
+    # Inline #: lines on the method are untouched
+    assert_nil m.type_signature_lines
+    assert_nil a.type_signature_lines
   end
 
   def test_merge_rbs_signatures_singleton_method
@@ -1311,7 +1314,7 @@ class RDocStoreTest < XrefTestCase
       'Object.cmethod' => ['() -> String']
     )
 
-    assert_equal ['() -> String'], @cmeth.type_signature_lines
+    assert_equal ['() -> String'], @s.rbs_signature_for(@cmeth)
   end
 
   def test_merge_rbs_signatures_constructor
@@ -1323,22 +1326,22 @@ class RDocStoreTest < XrefTestCase
       'Object#initialize' => ['(String name) -> void']
     )
 
-    assert_equal ['(String name) -> void'], ctor.type_signature_lines
+    assert_equal ['(String name) -> void'], @s.rbs_signature_for(ctor)
   end
 
   def test_merge_rbs_signatures_clears_signatures_removed_in_subsequent_merge
     @s.merge_rbs_signatures(
       'Object#method' => ['() -> String']
     )
-    assert_equal ['() -> String'], @meth.type_signature_lines
+    assert_equal ['() -> String'], @s.rbs_signature_for(@meth)
 
     # Subsequent merge no longer mentions the key — the signature must be
     # cleared rather than left stale, so live-reload reflects deletions.
     @s.merge_rbs_signatures({})
-    assert_nil @meth.type_signature_lines
+    assert_nil @s.rbs_signature_for(@meth)
   end
 
-  def test_merge_rbs_signatures_propagates_to_method_alias
+  def test_rbs_signature_for_propagates_to_method_alias
     original = RDoc::AnyMethod.new nil, 'original'
     original.record_location @top_level
     @klass.add_method original
@@ -1351,11 +1354,11 @@ class RDocStoreTest < XrefTestCase
       'Object#original' => ['() -> String']
     )
 
-    assert_equal ['() -> String'], original.type_signature_lines
-    assert_equal ['() -> String'], aliased.type_signature_lines
+    assert_equal ['() -> String'], @s.rbs_signature_for(original)
+    assert_equal ['() -> String'], @s.rbs_signature_for(aliased)
   end
 
-  def test_merge_rbs_signatures_propagates_to_attribute_alias
+  def test_rbs_signature_for_propagates_to_attribute_alias
     original = RDoc::Attr.new nil, 'language', 'R', ''
     original.record_location @top_level
     @klass.add_attribute original
@@ -1368,8 +1371,8 @@ class RDocStoreTest < XrefTestCase
       'Object#language' => ['String']
     )
 
-    assert_equal ['String'], original.type_signature_lines
-    assert_equal ['String'], aliased.type_signature_lines
+    assert_equal ['String'], @s.rbs_signature_for(original)
+    assert_equal ['String'], @s.rbs_signature_for(aliased)
   end
 
   def test_merge_rbs_signatures_keeps_instance_and_singleton_attributes_separate
@@ -1386,8 +1389,24 @@ class RDocStoreTest < XrefTestCase
       'Object.language' => ['Integer']
     )
 
-    assert_equal ['String'], instance_attr.type_signature_lines
-    assert_equal ['Integer'], singleton_attr.type_signature_lines
+    assert_equal ['String'], @s.rbs_signature_for(instance_attr)
+    assert_equal ['Integer'], @s.rbs_signature_for(singleton_attr)
+  end
+
+  def test_rbs_signature_for_returns_nil_when_no_signatures_loaded
+    assert_nil @s.rbs_signature_for(@meth)
+  end
+
+  def test_rbs_signature_for_does_not_overwrite_inline_lookup
+    # Inline #: lives on the method itself; sidecar lookup is separate.
+    @meth.type_signature_lines = ['() -> String  # inline']
+    @s.merge_rbs_signatures(
+      'Object#method' => ['() -> String  # sidecar']
+    )
+
+    # Both sources are readable; the consumer chooses precedence (inline wins).
+    assert_equal ['() -> String  # inline'], @meth.type_signature_lines
+    assert_equal ['() -> String  # sidecar'], @s.rbs_signature_for(@meth)
   end
 
   def test_type_name_lookup
@@ -1433,18 +1452,5 @@ class RDocStoreTest < XrefTestCase
     assert_equal nested_string.path, lookup['Gem::Elements::String']
   end
 
-
-  def test_merge_rbs_signatures_does_not_overwrite_inline_annotations
-    m = RDoc::AnyMethod.new(nil, 'greet')
-    m.params = '(name)'
-    m.type_signature_lines = ['(String) -> void']
-    @klass.add_method m
-
-    @s.merge_rbs_signatures(
-      'Object#greet' => ['(String name, ?Integer count) -> void']
-    )
-
-    assert_equal ['(String) -> void'], m.type_signature_lines
-  end
 
 end

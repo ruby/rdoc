@@ -408,10 +408,7 @@ class RDoc::Server
         $stderr.puts "Re-parsed #{changed_file_names.join(', ')} (#{duration_ms}ms)"
       end
 
-      @store.complete(@options.visibility)
-      @store.invalidate_type_name_lookup unless changed_files.empty? && removed_files.empty?
-
-      if rbs_changed || !changed_files.empty?
+      if rbs_changed
         duration_ms = measure do
           @rdoc.load_rbs_signatures
           @rdoc.record_rbs_signature_mtimes
@@ -419,8 +416,11 @@ class RDoc::Server
             @file_mtimes[file] = RDoc.safe_mtime(file)
           end
         end
-        $stderr.puts "Reloaded RBS signatures (#{duration_ms}ms)" if rbs_changed
+        $stderr.puts "Reloaded RBS signatures (#{duration_ms}ms)"
       end
+
+      @store.complete(@options.visibility)
+      @store.invalidate_type_name_lookup unless changed_files.empty? && removed_files.empty?
 
       @generator.refresh_store_data
       @page_cache.clear

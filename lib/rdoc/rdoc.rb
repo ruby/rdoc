@@ -474,8 +474,8 @@ The internal error was:
 
       @options.default_title = "RDoc Documentation"
 
-      @store.complete @options.visibility
       load_rbs_signatures
+      @store.complete @options.visibility
 
       start_server
       exit
@@ -490,9 +490,11 @@ The internal error was:
     @store.load_cache
 
     rbs_signatures_changed = rbs_signatures_changed?
-    # When only sig/*.rbs changed, no Ruby file would be reparsed and the
-    # cached HTML pipeline keeps no in-memory class data across runs, so
-    # force a full reparse to give merge_rbs_signatures a populated store.
+    # When only sig/*.rbs changed, no Ruby file would be reparsed under
+    # normal mtime checks.  The store cache holds class metadata but not
+    # live RDoc::Context objects, so the generator would have nothing to
+    # iterate.  Force a full reparse so updated signatures show up in
+    # the rendered output.
     @last_modified.clear if rbs_signatures_changed
 
     file_info = parse_files @options.files
@@ -500,9 +502,9 @@ The internal error was:
 
     @options.default_title = "RDoc Documentation"
 
-    @store.complete @options.visibility
-
     load_rbs_signatures
+
+    @store.complete @options.visibility
 
     @stats.coverage_level = @options.coverage_report
 

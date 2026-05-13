@@ -1415,7 +1415,8 @@ or the PAGER environment variable.
     out << RDoc::Markup::Rule.new(1)
 
     render_method_arguments out, method.arglists
-    render_method_type_signature out, method.type_signature_lines if method.type_signature_lines
+    sig = method.type_signature_lines || store.rbs_signature_for(method)
+    render_method_type_signature out, sig if sig
     render_method_superclass out, method
     if method.is_alias_for
       al = method.is_alias_for

@@ -106,7 +106,7 @@ class RDocRDocTest < RDoc::TestCase
 
       example = store.find_class_or_module 'Example'
       greet = example.find_method 'greet', false
-      assert_equal ['() -> String'], greet.type_signature_lines
+      assert_equal ['() -> String'], store.rbs_signature_for(greet)
     end
   end
 
@@ -132,7 +132,7 @@ class RDocRDocTest < RDoc::TestCase
       example.add_method method
 
       @rdoc.load_rbs_signatures
-      assert_equal ['() -> String'], method.type_signature_lines
+      assert_equal ['() -> String'], @rdoc.store.rbs_signature_for(method)
 
       File.write sig, "class Example\n  def greet: ( -> "
       @options.verbosity = 2
@@ -141,7 +141,7 @@ class RDocRDocTest < RDoc::TestCase
       end
 
       assert_includes err, 'Failed to load RBS type signatures'
-      assert_nil method.type_signature_lines
+      assert_nil @rdoc.store.rbs_signature_for(method)
     end
   end
 

@@ -99,6 +99,6 @@ class RDocServerTest < RDoc::TestCase
 
     example = @rdoc.store.find_class_or_module 'Example'
     greet = example.find_method 'greet', false
-    assert_equal ['() -> String'], greet.type_signature_lines
+    assert_equal ['() -> String'], @rdoc.store.rbs_signature_for(greet)
   end
 end

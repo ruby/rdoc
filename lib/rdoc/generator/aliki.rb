@@ -122,7 +122,7 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
   # Returns nil if no type signature is present.
 
   def type_signature_html(method_attr, from_path)
-    lines = method_attr.type_signature_lines
+    lines = method_attr.type_signature_lines || @store.rbs_signature_for(method_attr)
     return unless lines
 
     RDoc::RbsHelper.signature_to_html(

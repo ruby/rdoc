@@ -93,8 +93,8 @@
             <span class="method-name"><%= h attrib.name %></span>
             <span class="attribute-access-type">[<%= attrib.rw %>]</span>
           </a>
-          <%- if attrib.type_signature_lines %>
-          <span class="method-type-signature"><code><%= type_signature_html(attrib, klass.path) %></code></span>
+          <%- if (sig_html = type_signature_html(attrib, klass.path)) %>
+          <span class="method-type-signature"><code><%= sig_html %></code></span>
           <%- end %>
         </div>
 
@@ -154,8 +154,8 @@
             </div>
           <%- end %>
 
-          <%- if method.type_signature_lines %>
-          <pre class="method-type-signature"><code><%= type_signature_html(method, klass.path) %></code></pre>
+          <%- if (sig_html = type_signature_html(method, klass.path)) %>
+          <pre class="method-type-signature"><code><%= sig_html %></code></pre>
           <%- end %>
         </div>
 
