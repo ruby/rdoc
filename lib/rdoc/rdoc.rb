@@ -430,8 +430,8 @@ The internal error was:
 
   def remove_unparseable(files)
     files.reject do |file, *|
-      file =~ /\.(?:class|eps|erb|rbs|scpt\.txt|svg|ttf|yml)$/i or
-        (file =~ /tags$/i and
+      file =~ /\.(?:class|eps|erb|rbs|scpt\.txt|svg|ttf|yml)\z/i or
+        (file =~ /tags\z/i and
          /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(File.binread(file, 100)))
     end
   end
@@ -582,7 +582,7 @@ The internal error was:
 
   def rbs_signatures_changed?
     current = rbs_signature_mtimes
-    previous = @last_modified.select { |file, _| File.extname(file) == '.rbs' }
+    previous = @last_modified.select { |file, _| rbs_signature_file?(file) }
 
     return true unless (previous.keys - current.keys).empty?
 
@@ -597,7 +597,7 @@ The internal error was:
   # and the live server watcher can see signature-only edits.
 
   def record_rbs_signature_mtimes
-    @last_modified.reject! { |file, _| File.extname(file) == '.rbs' }
+    @last_modified.reject! { |file, _| rbs_signature_file?(file) }
     @last_modified.merge! rbs_signature_mtimes
   end
 
@@ -614,7 +614,7 @@ The internal error was:
 
   def rbs_signature_mtimes # :nodoc:
     rbs_signature_files.each_with_object({}) do |file, mtimes|
-      mtime = File.mtime(file) rescue nil
+      mtime = RDoc.safe_mtime(file)
       mtimes[file] = mtime if mtime
     end
   end

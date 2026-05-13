@@ -310,7 +310,7 @@ class RDoc::Server
 
   def file_mtimes_for(files)
     files.each_with_object({}) do |f, h|
-      h[f] = File.mtime(f) rescue nil
+      h[f] = RDoc.safe_mtime(f)
     end
   end
 
@@ -334,7 +334,7 @@ class RDoc::Server
         next
       end
 
-      current_mtime = File.mtime(file) rescue nil
+      current_mtime = RDoc.safe_mtime(file)
       next unless current_mtime
       next unless old_mtime.nil? || current_mtime > old_mtime
 
@@ -397,7 +397,7 @@ class RDoc::Server
             begin
               @store.clear_file_contributions(relative, keep_position: true)
               @rdoc.parse_file(f)
-              @file_mtimes[f] = File.mtime(f) rescue nil
+              @file_mtimes[f] = RDoc.safe_mtime(f)
             rescue => e
               $stderr.puts "Error parsing #{f}: #{e.message}"
             end
@@ -409,13 +409,14 @@ class RDoc::Server
       end
 
       @store.complete(@options.visibility)
+      @store.invalidate_type_name_lookup unless changed_files.empty? && removed_files.empty?
 
       if rbs_changed || !changed_files.empty?
         duration_ms = measure do
           @rdoc.load_rbs_signatures
           @rdoc.record_rbs_signature_mtimes
           @rdoc.rbs_signature_files.each do |file|
-            @file_mtimes[file] = File.mtime(file) rescue nil
+            @file_mtimes[file] = RDoc.safe_mtime(file)
           end
         end
         $stderr.puts "Reloaded RBS signatures (#{duration_ms}ms)" if rbs_changed

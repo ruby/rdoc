@@ -461,16 +461,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def consecutive_comment(line_no)
     return unless @unprocessed_comments.first&.first == line_no
     _line_no, start_line, text = @unprocessed_comments.shift
-    type_signature_lines = extract_type_signature!(text, start_line)
-    result = parse_comment_text_to_directives(text, start_line)
-    return unless result
-    comment, directives = result
-    [comment, directives, type_signature_lines]
+    parse_comment_text_to_directives(text, start_line)
   end
 
-  # Parses comment text and returns a pair of RDoc::Comment and directives
+  # Parses comment text and returns +[RDoc::Comment, directives, type_signature_lines]+,
+  # or +nil+ if the comment is a section header (which has no associated code
+  # object).
 
   def parse_comment_text_to_directives(comment_text, start_line) # :nodoc:
+    type_signature_lines = extract_type_signature!(comment_text, start_line)
     comment_text, directives = @preprocess.parse_comment(comment_text, start_line, :ruby)
     comment = RDoc::Comment.new(comment_text, @top_level, :ruby)
     comment.normalized = true
@@ -484,7 +483,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return
     end
     @preprocess.run_post_processes(comment, @container)
-    [comment, directives]
+    [comment, directives, type_signature_lines]
   end
 
   # Extracts the comment for this section from the normalized comment block.

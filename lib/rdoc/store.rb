@@ -350,6 +350,14 @@ class RDoc::Store
   # (where multiple classes share the same name) are excluded to avoid
   # wrong links. Cached after first call.
 
+  ##
+  # Invalidates the cached type name lookup.  Server mode calls this after
+  # re-parsing changes the set of classes and modules.
+
+  def invalidate_type_name_lookup # :nodoc:
+    @type_name_lookup = nil
+  end
+
   def type_name_lookup
     @type_name_lookup ||= begin
       lookup = {}
@@ -530,7 +538,6 @@ class RDoc::Store
   # See also RDoc::Context#remove_from_documentation?
 
   def complete(min_visibility)
-    @type_name_lookup = nil
     fix_basic_object_inheritance
 
     # cache included modules before they are removed from the documentation
