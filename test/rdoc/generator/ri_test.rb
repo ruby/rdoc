@@ -18,13 +18,13 @@ class RDocGeneratorRITest < RDoc::TestCase
     @top_level = @store.add_file 'file.rb'
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
 
-    @meth = RDoc::AnyMethod.new nil, 'method'
+    @meth = RDoc::AnyMethod.new 'method'
     @meth.record_location @top_level
 
-    @meth_bang = RDoc::AnyMethod.new nil, 'method!'
+    @meth_bang = RDoc::AnyMethod.new 'method!'
     @meth_bang.record_location @top_level
 
-    @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
+    @attr = RDoc::Attr.new 'attr', 'RW', ''
     @attr.record_location @top_level
 
     @klass.add_method @meth

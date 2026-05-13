@@ -1218,7 +1218,7 @@ or the PAGER environment variable.
     comment = RDoc::Comment.new("missing documentation at #{e.file}")
     comment.parse
 
-    method = RDoc::AnyMethod.new nil, name
+    method = RDoc::AnyMethod.new name
     method.comment = comment
     method
   end

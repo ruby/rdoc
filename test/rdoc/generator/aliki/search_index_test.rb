@@ -84,7 +84,7 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
 
   def test_build_search_index_includes_instance_methods
     @klass = @top_level.add_class RDoc::NormalClass, 'MyClass'
-    @meth = RDoc::AnyMethod.new nil, 'my_method'
+    @meth = RDoc::AnyMethod.new 'my_method'
     @meth.singleton = false
     @klass.add_method @meth
     @store.complete :private
@@ -100,7 +100,7 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
 
   def test_build_search_index_includes_class_methods
     @klass = @top_level.add_class RDoc::NormalClass, 'MyClass'
-    @meth = RDoc::AnyMethod.new nil, 'my_class_method'
+    @meth = RDoc::AnyMethod.new 'my_class_method'
     @meth.singleton = true
     @klass.add_method @meth
     @store.complete :private
@@ -161,13 +161,13 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
   def test_build_search_index_includes_special_method_names
     @klass = @top_level.add_class RDoc::NormalClass, 'MyClass'
 
-    @bracket_method = RDoc::AnyMethod.new nil, '[]'
+    @bracket_method = RDoc::AnyMethod.new '[]'
     @klass.add_method @bracket_method
 
-    @shovel_method = RDoc::AnyMethod.new nil, '<<'
+    @shovel_method = RDoc::AnyMethod.new '<<'
     @klass.add_method @shovel_method
 
-    @equals_method = RDoc::AnyMethod.new nil, '=='
+    @equals_method = RDoc::AnyMethod.new '=='
     @klass.add_method @equals_method
 
     @store.complete :private

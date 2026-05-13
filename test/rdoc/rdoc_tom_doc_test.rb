@@ -26,7 +26,7 @@ class RDocTomDocTest < RDoc::TestCase
 
     pp.handle comment, parent
 
-    method = parent.add_method RDoc::AnyMethod.new(nil, 'm')
+    method = parent.add_method RDoc::AnyMethod.new('m')
 
     assert_equal 'Public', method.section.title
     assert_equal "# Do some stuff\n", comment.text

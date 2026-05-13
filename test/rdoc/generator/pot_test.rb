@@ -19,11 +19,11 @@ class RDocGeneratorPOTTest < RDoc::TestCase
 
     @const = RDoc::Constant.new "CONSTANT", "29", "This is a constant"
 
-    @meth = RDoc::AnyMethod.new nil, 'method'
+    @meth = RDoc::AnyMethod.new 'method'
     @meth.record_location @top_level
     @meth.comment = 'This is a method'
 
-    @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
+    @attr = RDoc::Attr.new 'attr', 'RW', ''
     @attr.record_location @top_level
     @attr.comment = 'This is an attribute'
 

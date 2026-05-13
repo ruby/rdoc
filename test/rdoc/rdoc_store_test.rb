@@ -20,20 +20,20 @@ class RDocStoreTest < XrefTestCase
     @klass.add_comment 'original', @top_level
     @klass.record_location @top_level
 
-    @cmeth = RDoc::AnyMethod.new nil, 'cmethod', singleton: true
+    @cmeth = RDoc::AnyMethod.new 'cmethod', singleton: true
     @cmeth.record_location @top_level
 
     @meth_comment = RDoc::Comment.new 'method comment'
     @meth_comment.location = @top_level
 
-    @meth = RDoc::AnyMethod.new nil, 'method'
+    @meth = RDoc::AnyMethod.new 'method'
     @meth.record_location @top_level
     @meth.comment = @meth_comment
 
-    @meth_bang = RDoc::AnyMethod.new nil, 'method!'
+    @meth_bang = RDoc::AnyMethod.new 'method!'
     @meth_bang.record_location @top_level
 
-    @meth_bang_alias = RDoc::Alias.new nil, 'method!', 'method_bang', ''
+    @meth_bang_alias = RDoc::Alias.new 'method!', 'method_bang', ''
     @meth_bang_alias.record_location @top_level
 
     @meth_bang.add_alias @meth_bang_alias, @klass
@@ -41,7 +41,7 @@ class RDocStoreTest < XrefTestCase
     @attr_comment = RDoc::Comment.new 'attribute comment'
     @attr_comment.location = @top_level
 
-    @attr = RDoc::Attr.new nil, 'attr', 'RW', ''
+    @attr = RDoc::Attr.new 'attr', 'RW', ''
     @attr.record_location @top_level
     @attr.comment = @attr_comment
 
@@ -51,7 +51,7 @@ class RDocStoreTest < XrefTestCase
     @klass.add_attribute @attr
 
     @nest_klass = @klass.add_class RDoc::NormalClass, 'SubClass'
-    @nest_meth = RDoc::AnyMethod.new nil, 'method'
+    @nest_meth = RDoc::AnyMethod.new 'method'
     @nest_meth.record_location @top_level
 
     @nest_incl = RDoc::Include.new 'Incl', ''
@@ -402,7 +402,7 @@ class RDocStoreTest < XrefTestCase
       mod.method_list
     end.sort
 
-    _meth_bang_alias = RDoc::AnyMethod.new nil, 'method_bang'
+    _meth_bang_alias = RDoc::AnyMethod.new 'method_bang'
     _meth_bang_alias.parent = @klass
 
     assert_equal [@meth, @meth_bang, _meth_bang_alias, @nest_meth, @cmeth],
@@ -825,7 +825,7 @@ class RDocStoreTest < XrefTestCase
 
     klass = RDoc::NormalClass.new 'Object'
 
-    meth = klass.add_method RDoc::AnyMethod.new(nil, 'replace')
+    meth = klass.add_method RDoc::AnyMethod.new('replace')
     meth.record_location @top_level
 
     # load original, save newly updated class
@@ -1052,7 +1052,7 @@ class RDocStoreTest < XrefTestCase
     klass.record_location file
     file.add_to_classes_or_modules klass
 
-    meth = RDoc::AnyMethod.new nil, 'solo_method'
+    meth = RDoc::AnyMethod.new 'solo_method'
     meth.record_location file
     klass.add_method meth
 
@@ -1070,7 +1070,7 @@ class RDocStoreTest < XrefTestCase
     mod.record_location file
     file.add_to_classes_or_modules mod
 
-    meth = RDoc::AnyMethod.new nil, 'solo_method'
+    meth = RDoc::AnyMethod.new 'solo_method'
     meth.record_location file
     mod.add_method meth
 
@@ -1091,11 +1091,11 @@ class RDocStoreTest < XrefTestCase
     file_a.add_to_classes_or_modules klass
     file_b.add_to_classes_or_modules klass
 
-    meth_a = RDoc::AnyMethod.new nil, 'from_a'
+    meth_a = RDoc::AnyMethod.new 'from_a'
     meth_a.record_location file_a
     klass.add_method meth_a
 
-    meth_b = RDoc::AnyMethod.new nil, 'from_b'
+    meth_b = RDoc::AnyMethod.new 'from_b'
     meth_b.record_location file_b
     klass.add_method meth_b
 
@@ -1128,20 +1128,20 @@ class RDocStoreTest < XrefTestCase
     file_b.add_to_classes_or_modules klass
 
     # Methods from different files
-    meth_a = RDoc::AnyMethod.new nil, 'meth_a'
+    meth_a = RDoc::AnyMethod.new 'meth_a'
     meth_a.record_location file_a
     klass.add_method meth_a
 
-    meth_b = RDoc::AnyMethod.new nil, 'meth_b'
+    meth_b = RDoc::AnyMethod.new 'meth_b'
     meth_b.record_location file_b
     klass.add_method meth_b
 
     # Attributes from different files
-    attr_a = RDoc::Attr.new nil, 'attr_a', 'R', ''
+    attr_a = RDoc::Attr.new 'attr_a', 'R', ''
     attr_a.record_location file_a
     klass.add_attribute attr_a
 
-    attr_b = RDoc::Attr.new nil, 'attr_b', 'R', ''
+    attr_b = RDoc::Attr.new 'attr_b', 'R', ''
     attr_b.record_location file_b
     klass.add_attribute attr_b
 
@@ -1290,11 +1290,11 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_merge_rbs_signatures
-    m = RDoc::AnyMethod.new(nil, 'greet')
+    m = RDoc::AnyMethod.new('greet')
     m.params = '(name)'
     @klass.add_method m
 
-    a = RDoc::Attr.new(nil, 'language', 'R', '')
+    a = RDoc::Attr.new('language', 'R', '')
     @klass.add_attribute a
 
     @s.merge_rbs_signatures(
@@ -1318,7 +1318,7 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_merge_rbs_signatures_constructor
-    ctor = RDoc::AnyMethod.new nil, 'new', singleton: true
+    ctor = RDoc::AnyMethod.new 'new', singleton: true
     ctor.record_location @top_level
     @klass.add_method ctor
 
@@ -1342,11 +1342,11 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_rbs_signature_for_propagates_to_method_alias
-    original = RDoc::AnyMethod.new nil, 'original'
+    original = RDoc::AnyMethod.new 'original'
     original.record_location @top_level
     @klass.add_method original
 
-    alias_def = RDoc::Alias.new nil, 'original', 'aliased', ''
+    alias_def = RDoc::Alias.new 'original', 'aliased', ''
     alias_def.record_location @top_level
     aliased = original.add_alias alias_def, @klass
 
@@ -1359,11 +1359,11 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_rbs_signature_for_propagates_to_attribute_alias
-    original = RDoc::Attr.new nil, 'language', 'R', ''
+    original = RDoc::Attr.new 'language', 'R', ''
     original.record_location @top_level
     @klass.add_attribute original
 
-    alias_def = RDoc::Alias.new nil, 'language', 'locale', ''
+    alias_def = RDoc::Alias.new 'language', 'locale', ''
     alias_def.record_location @top_level
     aliased = original.add_alias alias_def, @klass
 
@@ -1376,11 +1376,11 @@ class RDocStoreTest < XrefTestCase
   end
 
   def test_merge_rbs_signatures_keeps_instance_and_singleton_attributes_separate
-    instance_attr = RDoc::Attr.new nil, 'language', 'R', ''
+    instance_attr = RDoc::Attr.new 'language', 'R', ''
     instance_attr.record_location @top_level
     @klass.add_attribute instance_attr
 
-    singleton_attr = RDoc::Attr.new nil, 'language', 'R', '', singleton: true
+    singleton_attr = RDoc::Attr.new 'language', 'R', '', singleton: true
     singleton_attr.record_location @top_level
     @klass.add_attribute singleton_attr
 

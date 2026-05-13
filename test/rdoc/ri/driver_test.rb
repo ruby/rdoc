@@ -358,7 +358,7 @@ class RDocRIDriverTest < RDoc::TestCase
 
     out = doc()
 
-    missing = RDoc::AnyMethod.new nil, 'missing'
+    missing = RDoc::AnyMethod.new 'missing'
     @cFoo.add_method missing
 
     @driver.add_method_documentation out, @cFoo
@@ -1222,12 +1222,12 @@ Foo::Bar#bother
   def test_list_methods_matching_regexp
     util_store
 
-    index = RDoc::AnyMethod.new nil, '[]'
+    index = RDoc::AnyMethod.new '[]'
     index.record_location @top_level
     @cFoo.add_method index
     @store1.save_method @cFoo, index
 
-    c_index = RDoc::AnyMethod.new nil, '[]', singleton: true
+    c_index = RDoc::AnyMethod.new '[]', singleton: true
     c_index.record_location @top_level
     @cFoo.add_method c_index
     @store1.save_method @cFoo, c_index
@@ -1539,10 +1539,10 @@ Foo::Bar#bother
     @cBar = @top_level.add_class RDoc::NormalClass, 'Bar', 'Foo'
     @cFoo_Baz = @cFoo.add_class RDoc::NormalClass, 'Baz'
 
-    @baz = @cBar.add_method RDoc::AnyMethod.new(nil, 'baz')
+    @baz = @cBar.add_method RDoc::AnyMethod.new('baz')
     @baz.record_location @top_level
 
-    @override = @cBar.add_method RDoc::AnyMethod.new(nil, 'override')
+    @override = @cBar.add_method RDoc::AnyMethod.new('override')
     @override.comment = 'must be displayed'
     @override.record_location @top_level
 
@@ -1576,43 +1576,43 @@ Foo::Bar#bother
     @cFoo_Bar.add_comment "See also {Doc}[rdoc-ref:README.md]", @top_level
     @cFoo_Bar.record_location @top_level
 
-    @blah = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'blah')
+    @blah = @cFoo_Bar.add_method RDoc::AnyMethod.new('blah')
     @blah.call_seq = "blah(5) => 5\nblah(6) => 6\n"
     @blah.record_location @top_level
 
-    @blah_with_rdoc_ref = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'blah_with_rdoc_ref')
+    @blah_with_rdoc_ref = @cFoo_Bar.add_method RDoc::AnyMethod.new('blah_with_rdoc_ref')
     @blah_with_rdoc_ref.call_seq = "blah(5) => 5\nSee also {Doc}[rdoc-ref:README.md]"
     @blah_with_rdoc_ref.record_location @top_level
 
-    @bother = @cFoo_Bar.add_method RDoc::AnyMethod.new(nil, 'bother')
+    @bother = @cFoo_Bar.add_method RDoc::AnyMethod.new('bother')
     @bother.block_params = "stuff"
     @bother.params = "(things)"
     @bother.record_location @top_level
 
-    @new = @cFoo_Bar.add_method RDoc::AnyMethod.new nil, 'new', singleton: true
+    @new = @cFoo_Bar.add_method RDoc::AnyMethod.new 'new', singleton: true
     @new.record_location @top_level
 
-    @attr = @cFoo_Bar.add_attribute RDoc::Attr.new nil, 'attr', 'RW', ''
+    @attr = @cFoo_Bar.add_attribute RDoc::Attr.new 'attr', 'RW', ''
     @attr.record_location @top_level
 
     @cFoo_Baz = @cFoo.add_class RDoc::NormalClass, 'Baz'
     @cFoo_Baz.record_location @top_level
 
-    @inherit = @cFoo.add_method RDoc::AnyMethod.new(nil, 'inherit')
+    @inherit = @cFoo.add_method RDoc::AnyMethod.new('inherit')
     @inherit.record_location @top_level
 
     # overridden by Bar in multi_store
-    @overridden = @cFoo.add_method RDoc::AnyMethod.new(nil, 'override')
+    @overridden = @cFoo.add_method RDoc::AnyMethod.new('override')
     @overridden.comment = 'must not be displayed in Bar#override'
     @overridden.record_location @top_level
 
     @cQux = @top_level.add_class RDoc::NormalClass, 'Qux'
 
-    @original = @cQux.add_method RDoc::AnyMethod.new(nil, 'original')
+    @original = @cQux.add_method RDoc::AnyMethod.new('original')
     @original.comment = 'original comment'
     @original.record_location @top_level
 
-    @aliased = @original.add_alias RDoc::Alias.new(nil, 'original', 'aliased', 'alias comment'), @cQux
+    @aliased = @original.add_alias RDoc::Alias.new('original', 'aliased', 'alias comment'), @cQux
     @aliased.record_location @top_level
 
     @store1.save

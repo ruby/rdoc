@@ -25,7 +25,7 @@ class RDocTopLevelTest < XrefTestCase
   end
 
   def test_add_alias
-    a = RDoc::Alias.new nil, 'old', 'new', nil
+    a = RDoc::Alias.new 'old', 'new', nil
     @top_level.add_alias a
 
     object = @store.find_class_named 'Object'
@@ -37,7 +37,7 @@ class RDocTopLevelTest < XrefTestCase
   def test_add_alias_nodoc
     @top_level.document_self = false
 
-    a = RDoc::Alias.new nil, 'old', 'new', nil
+    a = RDoc::Alias.new 'old', 'new', nil
     @top_level.add_alias a
 
     object = @store.find_class_named('Object')
@@ -86,7 +86,7 @@ class RDocTopLevelTest < XrefTestCase
   end
 
   def test_add_method
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
     @top_level.add_method method
 
     object = @store.find_class_named 'Object'
@@ -97,7 +97,7 @@ class RDocTopLevelTest < XrefTestCase
   def test_add_method_stopdoc
     @top_level.document_self = false
 
-    method = RDoc::AnyMethod.new nil, 'm'
+    method = RDoc::AnyMethod.new 'm'
     @top_level.add_method method
 
     object = @store.find_class_named('Object')

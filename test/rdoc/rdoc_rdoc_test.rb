@@ -128,7 +128,7 @@ class RDocRDocTest < RDoc::TestCase
 
       top_level = @rdoc.store.add_file 'example.rb'
       example = top_level.add_class RDoc::NormalClass, 'Example'
-      method = RDoc::AnyMethod.new nil, 'greet'
+      method = RDoc::AnyMethod.new 'greet'
       example.add_method method
 
       @rdoc.load_rbs_signatures

@@ -21,11 +21,11 @@ class RDoc::Attr < RDoc::MethodAttr
   attr_accessor :rw
 
   ##
-  # Creates a new Attr with body +text+, +name+, read/write status +rw+ and
+  # Creates a new Attr with +name+, read/write status +rw+ and
   # +comment+.  +singleton+ marks this as a class attribute.
 
-  def initialize(text, name, rw, comment, singleton: false)
-    super(text, name, singleton: singleton)
+  def initialize(name, rw, comment, singleton: false)
+    super(name, singleton: singleton)
 
     @rw = rw
     self.comment = comment
@@ -46,7 +46,7 @@ class RDoc::Attr < RDoc::MethodAttr
 
   def add_alias(an_alias, context)
     access_type = an_alias.new_name.end_with?('=') ? 'W' : 'R'
-    new_attr = self.class.new(text, an_alias.new_name, access_type, comment, singleton: singleton)
+    new_attr = self.class.new(an_alias.new_name, access_type, comment, singleton: singleton)
     new_attr.record_location an_alias.file
     new_attr.visibility = self.visibility
     new_attr.is_alias_for = self

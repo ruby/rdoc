@@ -338,7 +338,7 @@ VALUE cFoo = rb_struct_define(
     attributes = klass.attributes
     assert_equal 3, attributes.size, -> {attributes}
     ["some", "various", "fields"].zip(attributes) do |name, attr|
-      assert_equal RDoc::Attr.new("", name, "RW", ""), attr
+      assert_equal RDoc::Attr.new(name, "RW", ""), attr
     end
   end
 
@@ -359,7 +359,7 @@ VALUE cFoo = rb_struct_define_under(
     attributes = klass.attributes
     assert_equal 3, attributes.size, -> {attributes}
     ["some", "various", "fields"].zip(attributes) do |name, attr|
-      assert_equal RDoc::Attr.new("", name, "RW", ""), attr
+      assert_equal RDoc::Attr.new(name, "RW", ""), attr
     end
   end
 
@@ -1495,7 +1495,7 @@ If no arguments are given:
     COMMENT
 
     parser = util_parser
-    method_obj = RDoc::AnyMethod.new nil, 'blah'
+    method_obj = RDoc::AnyMethod.new 'blah'
 
     parser.find_modifiers comment, method_obj
 
@@ -1512,7 +1512,7 @@ If no arguments are given:
     COMMENT
 
     parser = util_parser
-    method_obj = RDoc::AnyMethod.new nil, 'blah'
+    method_obj = RDoc::AnyMethod.new 'blah'
 
     parser.find_modifiers comment, method_obj
 
@@ -1529,7 +1529,7 @@ If no arguments are given:
     COMMENT
 
     parser = util_parser
-    method_obj = RDoc::AnyMethod.new nil, 'blah'
+    method_obj = RDoc::AnyMethod.new 'blah'
 
     parser.find_modifiers comment, method_obj
 

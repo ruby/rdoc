@@ -169,12 +169,12 @@ class RDocClassModuleTest < XrefTestCase
     cm.document_self = true
     cm.record_location tl
 
-    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1 = RDoc::Attr.new 'a1', 'RW', ''
     a1.record_location tl
-    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', singleton: true
+    a2 = RDoc::Attr.new 'a2', 'RW', '', singleton: true
     a2.record_location tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.record_location tl
 
     c1 = RDoc::Constant.new 'C1', nil, ''
@@ -247,11 +247,11 @@ class RDocClassModuleTest < XrefTestCase
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
     cm.record_location tl
 
-    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1 = RDoc::Attr.new 'a1', 'RW', ''
     a1.record_location tl
     a1.document_self = false
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.record_location tl
     m1.document_self = false
 
@@ -296,8 +296,8 @@ class RDocClassModuleTest < XrefTestCase
     ns = tl.add_module RDoc::NormalModule, 'Namespace'
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
 
-    a = RDoc::Attr.new(nil, 'a1', 'RW', '')
-    m = RDoc::AnyMethod.new(nil, 'm1')
+    a = RDoc::Attr.new('a1', 'RW', '')
+    m = RDoc::AnyMethod.new('m1')
     c = RDoc::Constant.new('C1', nil, '')
     i = RDoc::Include.new('I1', '')
 
@@ -356,12 +356,12 @@ class RDocClassModuleTest < XrefTestCase
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
     cm.record_location tl
 
-    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1 = RDoc::Attr.new 'a1', 'RW', ''
     a1.record_location tl
-    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', singleton: true
+    a2 = RDoc::Attr.new 'a2', 'RW', '', singleton: true
     a2.record_location tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.record_location tl
 
     c1 = RDoc::Constant.new 'C1', nil, ''
@@ -435,12 +435,12 @@ class RDocClassModuleTest < XrefTestCase
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
     cm.record_location tl
 
-    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1 = RDoc::Attr.new 'a1', 'RW', ''
     a1.record_location tl
-    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', singleton: true
+    a2 = RDoc::Attr.new 'a2', 'RW', '', singleton: true
     a2.record_location tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.record_location tl
 
     c1 = RDoc::Constant.new 'C1', nil, ''
@@ -520,12 +520,12 @@ class RDocClassModuleTest < XrefTestCase
     cm = ns.add_class RDoc::NormalClass, 'Klass', 'Super'
     cm.record_location tl
 
-    a1 = RDoc::Attr.new nil, 'a1', 'RW', ''
+    a1 = RDoc::Attr.new 'a1', 'RW', ''
     a1.record_location tl
-    a2 = RDoc::Attr.new nil, 'a2', 'RW', '', singleton: true
+    a2 = RDoc::Attr.new 'a2', 'RW', '', singleton: true
     a2.record_location tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.record_location tl
 
     c1 = RDoc::Constant.new 'C1', nil, ''
@@ -681,30 +681,30 @@ class RDocClassModuleTest < XrefTestCase
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
-    attr = cm1.add_attribute RDoc::Attr.new(nil, 'a1', 'RW', '')
+    attr = cm1.add_attribute RDoc::Attr.new('a1', 'RW', '')
     attr.record_location tl1
-    attr = cm1.add_attribute RDoc::Attr.new(nil, 'a3', 'R', '')
+    attr = cm1.add_attribute RDoc::Attr.new('a3', 'R', '')
     attr.record_location tl1
-    attr = cm1.add_attribute RDoc::Attr.new(nil, 'a4', 'R', '')
+    attr = cm1.add_attribute RDoc::Attr.new('a4', 'R', '')
     attr.record_location tl1
 
     cm2 = RDoc::ClassModule.new 'Klass'
     # TODO allow merging when comment == ''
     cm2.instance_variable_set :@comment, @RM::Document.new
 
-    attr = cm2.add_attribute RDoc::Attr.new(nil, 'a2', 'RW', '')
+    attr = cm2.add_attribute RDoc::Attr.new('a2', 'RW', '')
     attr.record_location tl2
-    attr = cm2.add_attribute RDoc::Attr.new(nil, 'a3', 'W', '')
+    attr = cm2.add_attribute RDoc::Attr.new('a3', 'W', '')
     attr.record_location tl1
-    attr = cm2.add_attribute RDoc::Attr.new(nil, 'a4', 'W', '')
+    attr = cm2.add_attribute RDoc::Attr.new('a4', 'W', '')
     attr.record_location tl1
 
     cm1.merge cm2
 
     expected = [
-      RDoc::Attr.new(nil, 'a2', 'RW', ''),
-      RDoc::Attr.new(nil, 'a3', 'W',  ''),
-      RDoc::Attr.new(nil, 'a4', 'W',  ''),
+      RDoc::Attr.new('a2', 'RW', ''),
+      RDoc::Attr.new('a3', 'W',  ''),
+      RDoc::Attr.new('a4', 'W',  ''),
     ]
 
     expected.each do |a| a.parent = cm1 end
@@ -716,28 +716,28 @@ class RDocClassModuleTest < XrefTestCase
 
     cm1 = RDoc::ClassModule.new 'Klass'
 
-    attr = cm1.add_attribute RDoc::Attr.new(nil, 'a1', 'RW', '')
+    attr = cm1.add_attribute RDoc::Attr.new('a1', 'RW', '')
     attr.record_location tl1
-    attr = cm1.add_attribute RDoc::Attr.new(nil, 'a3', 'R', '')
+    attr = cm1.add_attribute RDoc::Attr.new('a3', 'R', '')
     attr.record_location tl1
-    attr = cm1.add_attribute RDoc::Attr.new(nil, 'a4', 'R', '')
+    attr = cm1.add_attribute RDoc::Attr.new('a4', 'R', '')
     attr.record_location tl1
 
     cm2 = RDoc::ClassModule.new 'Klass'
     # TODO allow merging when comment == ''
     cm2.instance_variable_set :@comment, @RM::Document.new
 
-    attr = cm2.add_attribute RDoc::Attr.new(nil, 'a2', 'RW', '')
-    attr = cm2.add_attribute RDoc::Attr.new(nil, 'a3', 'W', '')
-    attr = cm2.add_attribute RDoc::Attr.new(nil, 'a4', 'W', '')
+    attr = cm2.add_attribute RDoc::Attr.new('a2', 'RW', '')
+    attr = cm2.add_attribute RDoc::Attr.new('a3', 'W', '')
+    attr = cm2.add_attribute RDoc::Attr.new('a4', 'W', '')
 
     cm1.merge cm2
 
     expected = [
-      RDoc::Attr.new(nil, 'a1', 'RW', ''),
-      RDoc::Attr.new(nil, 'a2', 'RW', ''),
-      RDoc::Attr.new(nil, 'a3', 'RW', ''),
-      RDoc::Attr.new(nil, 'a4', 'RW', ''),
+      RDoc::Attr.new('a1', 'RW', ''),
+      RDoc::Attr.new('a2', 'RW', ''),
+      RDoc::Attr.new('a3', 'RW', ''),
+      RDoc::Attr.new('a4', 'RW', ''),
     ]
 
     expected.each do |a| a.parent = cm1 end
@@ -1005,28 +1005,28 @@ class RDocClassModuleTest < XrefTestCase
 
     cm1 = tl1.add_class RDoc::NormalClass, 'Klass'
 
-    meth = cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
+    meth = cm1.add_method RDoc::AnyMethod.new('m1')
     meth.record_location tl1
-    meth = cm1.add_method RDoc::AnyMethod.new(nil, 'm3')
+    meth = cm1.add_method RDoc::AnyMethod.new('m3')
     meth.record_location tl1
 
     cm2 = RDoc::ClassModule.new 'Klass'
     cm2.store = @store
     cm2.instance_variable_set :@comment, @RM::Document.new
 
-    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm2')
+    meth = cm2.add_method RDoc::AnyMethod.new('m2')
     meth.record_location tl2
-    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm3')
+    meth = cm2.add_method RDoc::AnyMethod.new('m3')
     meth.record_location tl1
-    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm4')
+    meth = cm2.add_method RDoc::AnyMethod.new('m4')
     meth.record_location tl1
 
     cm1.merge cm2
 
     expected = [
-      RDoc::AnyMethod.new(nil, 'm2'),
-      RDoc::AnyMethod.new(nil, 'm3'),
-      RDoc::AnyMethod.new(nil, 'm4'),
+      RDoc::AnyMethod.new('m2'),
+      RDoc::AnyMethod.new('m3'),
+      RDoc::AnyMethod.new('m4'),
     ]
 
     expected.each do |a| a.parent = cm1 end
@@ -1039,26 +1039,26 @@ class RDocClassModuleTest < XrefTestCase
 
     cm1 = tl1.add_class RDoc::NormalClass, 'Klass'
 
-    meth = cm1.add_method RDoc::AnyMethod.new(nil, 'm1')
+    meth = cm1.add_method RDoc::AnyMethod.new('m1')
     meth.record_location tl1
-    meth = cm1.add_method RDoc::AnyMethod.new(nil, 'm3')
+    meth = cm1.add_method RDoc::AnyMethod.new('m3')
     meth.record_location tl1
 
     cm2 = RDoc::ClassModule.new 'Klass'
     cm2.store = @store
     cm2.instance_variable_set :@comment, @RM::Document.new
 
-    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm2')
-    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm3')
-    meth = cm2.add_method RDoc::AnyMethod.new(nil, 'm4')
+    meth = cm2.add_method RDoc::AnyMethod.new('m2')
+    meth = cm2.add_method RDoc::AnyMethod.new('m3')
+    meth = cm2.add_method RDoc::AnyMethod.new('m4')
 
     cm1.merge cm2
 
     expected = [
-      RDoc::AnyMethod.new(nil, 'm1'),
-      RDoc::AnyMethod.new(nil, 'm2'),
-      RDoc::AnyMethod.new(nil, 'm3'),
-      RDoc::AnyMethod.new(nil, 'm4'),
+      RDoc::AnyMethod.new('m1'),
+      RDoc::AnyMethod.new('m2'),
+      RDoc::AnyMethod.new('m3'),
+      RDoc::AnyMethod.new('m4'),
     ]
 
     expected.each do |a| a.parent = cm1 end
@@ -1465,10 +1465,10 @@ class RDocClassModuleTest < XrefTestCase
 
     object = top_level.add_class RDoc::NormalClass, 'Object'
     real_foo = top_level.add_class RDoc::NormalClass, 'Foo'
-    real_foo.add_method RDoc::AnyMethod.new(nil, 'real_method')
+    real_foo.add_method RDoc::AnyMethod.new('real_method')
 
     other = top_level.add_class RDoc::NormalClass, 'Other'
-    other.add_method RDoc::AnyMethod.new(nil, 'other_method')
+    other.add_method RDoc::AnyMethod.new('other_method')
 
     const = RDoc::Constant.new 'Foo', 'Other', ''
     const.is_alias_for_path = 'Other'
@@ -1492,7 +1492,7 @@ class RDocClassModuleTest < XrefTestCase
 
     object = top_level.add_class RDoc::NormalClass, 'Object'
     target = top_level.add_class RDoc::NormalClass, 'Target'
-    target.add_method RDoc::AnyMethod.new(nil, 'target_method')
+    target.add_method RDoc::AnyMethod.new('target_method')
 
     const = RDoc::Constant.new 'NodocAlias', 'Target', ''
     const.is_alias_for_path = 'Target'
@@ -1672,35 +1672,35 @@ class RDocClassModuleTest < XrefTestCase
       incmod_const = @incmod.add_constant(RDoc::Constant.new("INCMOD_CONST", nil, ""))
       incmod_const.section = @incmod.add_section("Incmod const section")
 
-      incmod_method = @incmod.add_method(RDoc::AnyMethod.new(nil, "incmod_method_without_a_section"))
-      incmod_method = @incmod.add_method(RDoc::AnyMethod.new(nil, "incmod_method"))
+      incmod_method = @incmod.add_method(RDoc::AnyMethod.new("incmod_method_without_a_section"))
+      incmod_method = @incmod.add_method(RDoc::AnyMethod.new("incmod_method"))
       incmod_method.section = @incmod.add_section("Incmod method section")
 
-      incmod_attr = @incmod.add_attribute(RDoc::Attr.new(nil, "incmod_attr_without_a_section", "RW", ""))
-      incmod_attr = @incmod.add_attribute(RDoc::Attr.new(nil, "incmod_attr", "RW", ""))
+      incmod_attr = @incmod.add_attribute(RDoc::Attr.new("incmod_attr_without_a_section", "RW", ""))
+      incmod_attr = @incmod.add_attribute(RDoc::Attr.new("incmod_attr", "RW", ""))
       incmod_attr.section = @incmod.add_section("Incmod attr section")
 
-      incmod_private_method = @incmod.add_method(RDoc::AnyMethod.new(nil, "incmod_private_method"))
+      incmod_private_method = @incmod.add_method(RDoc::AnyMethod.new("incmod_private_method"))
       incmod_private_method.visibility = :private
 
-      incmod_private_attr = @incmod.add_attribute(RDoc::Attr.new(nil, "incmod_private_attr", "RW", ""))
+      incmod_private_attr = @incmod.add_attribute(RDoc::Attr.new("incmod_private_attr", "RW", ""))
       incmod_private_attr.visibility = :private
 
       extmod_tl = @store.add_file("extmod.rb")
       @extmod = extmod_tl.add_module(RDoc::NormalModule, "Extmod")
 
-      extmod_method = @extmod.add_method(RDoc::AnyMethod.new(nil, "extmod_method_without_a_section"))
-      extmod_method = @extmod.add_method(RDoc::AnyMethod.new(nil, "extmod_method"))
+      extmod_method = @extmod.add_method(RDoc::AnyMethod.new("extmod_method_without_a_section"))
+      extmod_method = @extmod.add_method(RDoc::AnyMethod.new("extmod_method"))
       extmod_method.section = @extmod.add_section("Extmod method section")
 
-      extmod_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_attr_without_a_section", "RW", "", singleton: true))
-      extmod_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_attr", "RW", "", singleton: true))
+      extmod_attr = @extmod.add_attribute(RDoc::Attr.new("extmod_attr_without_a_section", "RW", "", singleton: true))
+      extmod_attr = @extmod.add_attribute(RDoc::Attr.new("extmod_attr", "RW", "", singleton: true))
       extmod_attr.section = @extmod.add_section("Extmod attr section")
 
-      extmod_private_method = @extmod.add_method(RDoc::AnyMethod.new(nil, "extmod_private_method"))
+      extmod_private_method = @extmod.add_method(RDoc::AnyMethod.new("extmod_private_method"))
       extmod_private_method.visibility = :private
 
-      extmod_private_attr = @extmod.add_attribute(RDoc::Attr.new(nil, "extmod_private_attr", "RW", "", singleton: true))
+      extmod_private_attr = @extmod.add_attribute(RDoc::Attr.new("extmod_private_attr", "RW", "", singleton: true))
       extmod_private_attr.visibility = :private
 
       @klass.add_include(RDoc::Include.new("Incmod", nil))

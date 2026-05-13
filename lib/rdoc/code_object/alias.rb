@@ -26,18 +26,12 @@ class RDoc::Alias < RDoc::CodeObject
   attr_reader :singleton
 
   ##
-  # Source file token stream
-
-  attr_reader :text
-
-  ##
-  # Creates a new Alias with a token stream of +text+ that aliases +old_name+
+  # Creates a new Alias that aliases +old_name+
   # to +new_name+, has +comment+ and is a +singleton+ context.
 
-  def initialize(text, old_name, new_name, comment, singleton: false)
+  def initialize(old_name, new_name, comment, singleton: false)
     super()
 
-    @text = text
     @singleton = singleton
     @old_name = old_name
     @new_name = new_name

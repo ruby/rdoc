@@ -341,7 +341,7 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
   end
 
   def test_accept_heading_aref_method
-    @to.code_object = RDoc::AnyMethod.new nil, 'foo'
+    @to.code_object = RDoc::AnyMethod.new 'foo'
     @to.start_accepting
 
     @to.accept_heading @RM::Heading.new(1, 'Hello')

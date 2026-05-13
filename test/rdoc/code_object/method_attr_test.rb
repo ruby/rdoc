@@ -8,7 +8,7 @@ class RDocMethodAttrTest < XrefTestCase
   end
 
   def test_block_params_equal
-    m = RDoc::MethodAttr.new(nil, 'foo')
+    m = RDoc::MethodAttr.new('foo')
 
     m.block_params = ''
     assert_equal '', m.block_params
@@ -146,17 +146,17 @@ class RDocMethodAttrTest < XrefTestCase
 
   def test_spaceship_orders_symbols_first
     # in the desired sort order
-    m_plus       = RDoc::AnyMethod.new nil, '+'
-    m_eqeq       = RDoc::AnyMethod.new nil, '=='
-    m_bracket    = RDoc::AnyMethod.new nil, '[]'
-    m_caret      = RDoc::AnyMethod.new nil, '^'
-    m_bar        = RDoc::AnyMethod.new nil, '|'
-    m_tilde      = RDoc::AnyMethod.new nil, '~'
-    m_Alpha      = RDoc::AnyMethod.new nil, 'Alpha'
-    m_Zero       = RDoc::AnyMethod.new nil, 'Zero'
-    m_alpha      = RDoc::AnyMethod.new nil, 'alpha'
-    m_zero       = RDoc::AnyMethod.new nil, 'zero'
-    m_konnichiwa = RDoc::AnyMethod.new nil, 'こんにちは'
+    m_plus       = RDoc::AnyMethod.new '+'
+    m_eqeq       = RDoc::AnyMethod.new '=='
+    m_bracket    = RDoc::AnyMethod.new '[]'
+    m_caret      = RDoc::AnyMethod.new '^'
+    m_bar        = RDoc::AnyMethod.new '|'
+    m_tilde      = RDoc::AnyMethod.new '~'
+    m_Alpha      = RDoc::AnyMethod.new 'Alpha'
+    m_Zero       = RDoc::AnyMethod.new 'Zero'
+    m_alpha      = RDoc::AnyMethod.new 'alpha'
+    m_zero       = RDoc::AnyMethod.new 'zero'
+    m_konnichiwa = RDoc::AnyMethod.new 'こんにちは'
 
     assert_equal(-1, m_plus <=> m_eqeq)
     assert_equal(-1, m_eqeq <=> m_bracket)
@@ -180,10 +180,10 @@ class RDocMethodAttrTest < XrefTestCase
       s = RDoc::RI::Store.new(RDoc::Options.new, path: tmpdir)
 
       top_level = s.add_file 'file.rb'
-      meth_bang = RDoc::AnyMethod.new nil, 'method!'
+      meth_bang = RDoc::AnyMethod.new 'method!'
       meth_bang.record_location top_level
 
-      meth_bang_alias = RDoc::Alias.new nil, 'method!', 'method_bang', ''
+      meth_bang_alias = RDoc::Alias.new 'method!', 'method_bang', ''
       meth_bang_alias.record_location top_level
 
       klass = top_level.add_class RDoc::NormalClass, 'Object'

@@ -37,7 +37,7 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    a = RDoc::Attr.new nil, 'a', 'RW', nil
+    a = RDoc::Attr.new 'a', 'RW', nil
     a.record_location @tl
     a.line = 3
     c.add_attribute a
@@ -55,7 +55,7 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    a = RDoc::Attr.new nil, 'a', 'RW', 'a'
+    a = RDoc::Attr.new 'a', 'RW', 'a'
     a.record_location @tl
     c.add_attribute a
 
@@ -117,7 +117,7 @@ class RDocStatsTest < RDoc::TestCase
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.record_location @tl
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     c.add_method m
     m.comment = 'm'
@@ -134,7 +134,7 @@ class RDocStatsTest < RDoc::TestCase
     c = @tl.add_class RDoc::NormalClass, 'Object'
     c.record_location @tl
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     c.add_method m
     m.comment = 'm'
@@ -149,7 +149,7 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     c.add_method m
     m.comment = 'm'
@@ -164,7 +164,7 @@ class RDocStatsTest < RDoc::TestCase
     c1.record_location @tl
     c1.add_comment 'C1', @tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.record_location @tl
     c1.add_method m1
     m1.comment = 'm1'
@@ -172,7 +172,7 @@ class RDocStatsTest < RDoc::TestCase
     c2 = @tl.add_class RDoc::NormalClass, 'C2'
     c2.record_location @tl
 
-    m2 = RDoc::AnyMethod.new nil, 'm2'
+    m2 = RDoc::AnyMethod.new 'm2'
     m2.record_location @tl
     c2.add_method m2
     m2.comment = 'm2'
@@ -237,12 +237,12 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.record_location @tl
     m1.line = 5
     c.add_method m1
 
-    m2 = RDoc::AnyMethod.new nil, 'm2'
+    m2 = RDoc::AnyMethod.new 'm2'
     m2.record_location @tl
     c.add_method m2
     m2.comment = 'm2'
@@ -260,12 +260,12 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1', singleton: true
+    m1 = RDoc::AnyMethod.new 'm1', singleton: true
     m1.record_location @tl
     m1.line = 8
     c.add_method m1
 
-    m2 = RDoc::AnyMethod.new nil, 'm2', singleton: true
+    m2 = RDoc::AnyMethod.new 'm2', singleton: true
     m2.record_location @tl
     c.add_method m2
     m2.comment = 'm2'
@@ -283,7 +283,7 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     c.add_method m
     m.comment = 'm'
@@ -298,14 +298,14 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m1 = RDoc::AnyMethod.new nil, 'm1'
+    m1 = RDoc::AnyMethod.new 'm1'
     m1.record_location @tl
     m1.line = 10
     m1.params = '(p1, p2)'
     m1.comment = 'Stuff with +p1+'
     c.add_method m1
 
-    m2 = RDoc::AnyMethod.new nil, 'm2'
+    m2 = RDoc::AnyMethod.new 'm2'
     m2.record_location @tl
     c.add_method m2
     m2.comment = 'm2'
@@ -325,7 +325,7 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     m.params = '(p1)'
     m.comment = 'Stuff with +p1+'
@@ -343,7 +343,7 @@ class RDocStatsTest < RDoc::TestCase
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     m.call_seq = <<-SEQ
 m(a) { |c| ... }
@@ -447,12 +447,12 @@ m(a, b) { |c, d| ... }
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m1 = RDoc::AnyMethod.new nil, 'with_line'
+    m1 = RDoc::AnyMethod.new 'with_line'
     m1.record_location @tl
     m1.line = 3
     c.add_method m1
 
-    m2 = RDoc::AnyMethod.new nil, 'no_line'
+    m2 = RDoc::AnyMethod.new 'no_line'
     m2.record_location @tl
     c.add_method m2
 
@@ -472,12 +472,12 @@ m(a, b) { |c, d| ... }
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m1 = RDoc::AnyMethod.new nil, 'z_method'
+    m1 = RDoc::AnyMethod.new 'z_method'
     m1.record_location @tl
     m1.line = 5
     c.add_method m1
 
-    m2 = RDoc::AnyMethod.new nil, 'a_method'
+    m2 = RDoc::AnyMethod.new 'a_method'
     m2.record_location @tl
     m2.line = 10
     c.add_method m2
@@ -497,7 +497,7 @@ m(a, b) { |c, d| ... }
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    a = RDoc::Attr.new nil, 'a', 'RW', nil
+    a = RDoc::Attr.new 'a', 'RW', nil
     a.record_location @tl
     a.line = 3
     c.add_attribute a
@@ -507,7 +507,7 @@ m(a, b) { |c, d| ... }
     k.line = 5
     c.add_constant k
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     m.line = 7
     c.add_method m
@@ -530,12 +530,12 @@ m(a, b) { |c, d| ... }
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m1 = RDoc::AnyMethod.new nil, 'ruby_method'
+    m1 = RDoc::AnyMethod.new 'ruby_method'
     m1.record_location @tl
     m1.line = 10
     c.add_method m1
 
-    m2 = RDoc::AnyMethod.new nil, 'c_method'
+    m2 = RDoc::AnyMethod.new 'c_method'
     m2.record_location tl2
     c.add_method m2
 
@@ -554,7 +554,7 @@ m(a, b) { |c, d| ... }
     m = @tl.add_module RDoc::NormalModule, 'M'
     m.record_location @tl
 
-    a = RDoc::Attr.new nil, 'a', 'RW', nil
+    a = RDoc::Attr.new 'a', 'RW', nil
     a.record_location @tl
     c.add_attribute a
 
@@ -562,7 +562,7 @@ m(a, b) { |c, d| ... }
     c_c.record_location @tl
     c.add_constant c_c
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     c.add_method m
 
@@ -621,7 +621,7 @@ m(a, b) { |c, d| ... }
     c.record_location @tl
     c.add_comment 'C', @tl
 
-    m = RDoc::AnyMethod.new nil, 'm'
+    m = RDoc::AnyMethod.new 'm'
     m.record_location @tl
     m.params = '(p1, p2)'
     m.comment = 'Stuff with +p1+'
@@ -654,7 +654,7 @@ m(a, b) { |c, d| ... }
   end
 
   def test_undoc_params
-    method = RDoc::AnyMethod.new [], 'm'
+    method = RDoc::AnyMethod.new 'm'
     method.params = '(a)'
     method.comment = comment 'comment'
 
@@ -665,7 +665,7 @@ m(a, b) { |c, d| ... }
   end
 
   def test_undoc_params_block
-    method = RDoc::AnyMethod.new [], 'm'
+    method = RDoc::AnyMethod.new 'm'
     method.params = '(&a)'
     method.comment = comment '+a+'
 
@@ -676,7 +676,7 @@ m(a, b) { |c, d| ... }
   end
 
   def test_undoc_params_documented
-    method = RDoc::AnyMethod.new [], 'm'
+    method = RDoc::AnyMethod.new 'm'
     method.params = '(a)'
     method.comment = comment '+a+'
 
@@ -687,7 +687,7 @@ m(a, b) { |c, d| ... }
   end
 
   def test_undoc_params_keywords
-    method = RDoc::AnyMethod.new [], 'm'
+    method = RDoc::AnyMethod.new 'm'
     method.params = '(**a)'
     method.comment = comment '+a+'
 
@@ -698,7 +698,7 @@ m(a, b) { |c, d| ... }
   end
 
   def test_undoc_params_splat
-    method = RDoc::AnyMethod.new [], 'm'
+    method = RDoc::AnyMethod.new 'm'
     method.params = '(*a)'
     method.comment = comment '+a+'
 
