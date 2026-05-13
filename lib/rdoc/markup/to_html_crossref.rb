@@ -57,26 +57,23 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   ##
   # Creates a link to the reference +name+ if the name exists.  If +text+ is
   # given it is used as the link text, otherwise +name+ is used.
+  # Returns +nil+ if the link target could not be resolved.
 
   def cross_reference(name, text = nil, code = true, rdoc_ref: false)
-    # What to show when the reference doesn't resolve to a link:
-    # caller-provided text if any, otherwise the original name (preserving '#').
-    fallback = text || name
-
     # Strip '#' for link display text (e.g. #method shows as "method" in links)
     display = !@show_hash && name.start_with?('#') ? name[1..] : name
 
     if !display.end_with?('+@', '-@') && match = display.match(/(.*[^#:])?@(.*)/)
       context_name = match[1]
-      label = RDoc::Text.decode_legacy_label(match[2])
-      text ||= "#{label} at <code>#{context_name}</code>" if context_name
+      label = convert_string(RDoc::Text.decode_legacy_label(match[2]))
+      text ||= "#{label} at <code>#{convert_string(context_name)}</code>" if context_name
       text ||= label
       code = false
     else
-      text ||= display
+      text ||= convert_string(display)
     end
 
-    link(name, text, code, rdoc_ref: rdoc_ref) || fallback
+    link(name, text, code, rdoc_ref: rdoc_ref)
   end
 
   ##
@@ -98,8 +95,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       # cross-references to "new" in text, for instance)
       return name if name =~ /\A[a-z]*\z/
     end
-
-    cross_reference name, rdoc_ref: false
+    cross_reference(name, rdoc_ref: false) || convert_string(name)
   end
 
   ##
@@ -111,7 +107,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     case url
     when /\Ardoc-ref:/
-      cross_reference $', rdoc_ref: true
+      ref = $'
+      cross_reference(ref, rdoc_ref: true) || convert_string(ref)
     else
       super
     end
@@ -131,7 +128,8 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       if in_tidylink_label?
         convert_string(url)
       else
-        cross_reference $', rdoc_ref: true
+        ref = $'
+        cross_reference(ref, rdoc_ref: true) || convert_string(ref)
       end
     else
       super
@@ -145,7 +143,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   def gen_url(url, text)
     if url =~ /\Ardoc-ref:/
       name = $'
-      cross_reference name, text, name == text, rdoc_ref: true
+      cross_reference(name, text, name == text, rdoc_ref: true) || text
     else
       super
     end
@@ -153,6 +151,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
   ##
   # Creates an HTML link to +name+ with the given +text+.
+  # +text+ is an HTML string, already escaped and may contain HTML tags.
   # Returns the link HTML string, or +nil+ if the reference could not be resolved.
 
   def link(name, text, code = true, rdoc_ref: false)
@@ -161,7 +160,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       label = $'
     end
 
-    ref = @cross_reference.resolve name, text if name
+    ref = @cross_reference.resolve name if name
 
     # Non-text source files (C, Ruby, etc.) don't get HTML pages generated,
     # so don't auto-link to them. Explicit rdoc-ref: links are still allowed.
@@ -169,22 +168,21 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       return
     end
 
-    case ref
-    when String
+    if ref
+      path = ref.as_href(@from_path)
+
+      if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
+        text = "<code>#{text}</code>"
+      end
+    elsif name
       if rdoc_ref && @warn_missing_rdoc_ref
         puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{text}`"
       end
       return
-    when nil
+    else
       # A bare label reference like @foo still produces a valid anchor link
       return unless label
       path = +""
-    else
-      path = ref.as_href(@from_path)
-
-      if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
-        text = "<code>#{CGI.escapeHTML text}</code>"
-      end
     end
 
     if label
@@ -223,29 +221,41 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
   def handle_TT(code)
-    emit_inline(tt_cross_reference(code) || "<code>#{CGI.escapeHTML code}</code>")
+    emit_inline(tt_cross_reference(code) || "<code>#{convert_string(code)}</code>")
   end
 
   # Applies additional special handling on top of the one defined in ToHtml.
   # When a tidy link is <tt>{Foo}[rdoc-ref:Foo]</tt>, the label part is surrounded by <tt><code></code></tt>.
   # TODO: reconsider this workaround.
   def apply_tidylink_label_special_handling(label, url)
-    if url == "rdoc-ref:#{label}" && cross_reference(label).include?('<code>')
+    if url == "rdoc-ref:#{label}" && cross_reference(label)&.include?('<code>')
       "<code>#{convert_string(label)}</code>"
     else
       super
     end
   end
 
+  # Handles cross-reference and suppressed-crossref inside tt tag.
+  # Returns nil if code is not an existing cross-reference nor a suppressed-crossref.
   def tt_cross_reference(code)
     return if in_tidylink_label?
 
     crossref_regexp = @hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
-    match = crossref_regexp.match(code)
+    # REGEXP sometimes matches a string that starts with a backslash but is not a
+    # suppressed cross-reference (for example, `\+`), so the backslash-removed
+    # part needs to be checked against crossref_regexp.
+    match = crossref_regexp.match(code.delete_prefix('\\'))
     return unless match && match.begin(1).zero?
     return unless match.post_match.match?(/\A[[:punct:]\s]*\z/)
 
-    ref = cross_reference(code)
-    ref if ref != code
+    # cross_reference(file_page) may return a link without code tag.
+    # We need to check it because this method shouldn't return an html text without code tag.
+    if code.start_with?('\\')
+      # Remove leading backslash if crossref exists
+      "<code>#{convert_string(code[1..])}</code>" if cross_reference(code[1..])&.include?('<code>')
+    else
+      html = cross_reference(code)
+      html if html&.include?('<code>')
+    end
   end
 end
