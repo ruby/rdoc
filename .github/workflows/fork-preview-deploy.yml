@@ -5,6 +5,10 @@ on:
     workflows: ["PR Preview Check"]
     types: [completed]
 
+permissions:
+  actions: read
+  contents: write
+
 jobs:
   deploy-fork:
     name: Trigger Preview Build and Deploy (Fork)
