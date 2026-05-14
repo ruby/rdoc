@@ -41,8 +41,18 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   ##
   # Creates a new AnyMethod with name +name+
 
-  def initialize(name, singleton: false)
-    super(name, singleton: singleton)
+  def initialize(*args, singleton: false)
+    if args.size == 2
+      warn(<<~MSG, uplevel: 1, category: :deprecated)
+        Support for passing 2 arguments to RDoc::AnyMethod.new is deprecated and will be removed. \
+        Simply drop the first argument.
+      MSG
+      args.shift
+    elsif args.size != 1
+      raise ArgumentError, "wrong number of arguments (given #{args.size}, expected 1)"
+    end
+
+    super(name = args[0], singleton: singleton)
 
     @c_function = nil
     @dont_rename_initialize = false

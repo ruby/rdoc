@@ -29,13 +29,23 @@ class RDoc::Alias < RDoc::CodeObject
   # Creates a new Alias that aliases +old_name+
   # to +new_name+, has +comment+ and is a +singleton+ context.
 
-  def initialize(old_name, new_name, comment, singleton: false)
+  def initialize(*args, singleton: false)
     super()
 
+    if args.size == 4
+      warn(<<~MSG, uplevel: 1, category: :deprecated)
+        Support for passing 4 arguments to RDoc::Alias.new is deprecated and will be removed. \
+        Simply drop the first argument.
+      MSG
+      args.shift
+    elsif args.size != 3
+      raise ArgumentError, "wrong number of arguments (given #{args.size}, expected 3)"
+    end
+
     @singleton = singleton
-    @old_name = old_name
-    @new_name = new_name
-    self.comment = comment
+    @old_name = args[0]
+    @new_name = args[1]
+    self.comment = args[2]
   end
 
   ##

@@ -24,11 +24,21 @@ class RDoc::Attr < RDoc::MethodAttr
   # Creates a new Attr with +name+, read/write status +rw+ and
   # +comment+.  +singleton+ marks this as a class attribute.
 
-  def initialize(name, rw, comment, singleton: false)
-    super(name, singleton: singleton)
+  def initialize(*args, singleton: false)
+    if args.size == 4
+      warn(<<~MSG, uplevel: 1, category: :deprecated)
+        Support for passing 4 arguments to RDoc::Attr.new is deprecated and will be removed. \
+        Simply drop the first argument.
+      MSG
+      args.shift
+    elsif args.size != 3
+      raise ArgumentError, "wrong number of arguments (given #{args.size}, expected 3)"
+    end
 
-    @rw = rw
-    self.comment = comment
+    super(args[0], singleton: singleton)
+
+    @rw = args[1]
+    self.comment = args[2]
   end
 
   ##
