@@ -439,8 +439,6 @@
   def parse markdown
     @references          = {}
     @unlinked_references = {}
-    @footnotes           = nil
-    @note_order          = nil
 
     markdown += "\n\n"
 
@@ -1238,12 +1236,12 @@ InlineNote = &{ notes? }
              @StartList:a
              ( !"]" Inline:l { a << l } )+
              "]"
-             { raise ParseError, 'invalid inline note' unless @note_order
+             { if @note_order
+                 ref = [:inline, @note_order.length]
+                 @footnotes[ref] = paragraph a
 
-               ref = [:inline, @note_order.length]
-               @footnotes[ref] = paragraph a
-
-               note_for ref
+                 note_for ref
+               end
              }
 
 Notes = ( Note | SkipBlock )*
