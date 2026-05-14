@@ -1005,11 +1005,24 @@ Some text. ^[With a footnote]
   def test_parse_note_invalid_reference
     @parser.notes = true
 
-    error = assert_raise RDoc::Markdown::ParseError do
-      parse "[[^0]\n"
-    end
+    assert_kind_of RDoc::Markup::Document, parse("[[^0]\n")
+  end
 
-    assert_equal "invalid note reference: 0", error.message
+  def test_parse_note_reference_in_reference_label
+    @parser.notes = true
+
+    doc = parse <<~MD
+      [foo[^1]bar]
+
+      [^1]: footnote
+    MD
+
+    expected = doc(
+      para("[foo{*1}[rdoc-label:foottext-1:footmark-1]bar]"),
+      rule(1),
+      para("{^1}[rdoc-label:footmark-1:foottext-1] footnote"))
+
+    assert_equal expected, doc
   end
 
   def test_parse_note_no_notes

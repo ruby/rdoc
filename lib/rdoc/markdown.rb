@@ -788,7 +788,7 @@ class RDoc::Markdown
   # the note order list for proper display at the end of the document.
 
   def note_for ref
-    raise ParseError, "invalid note reference: #{ref}" unless @note_order
+    return unless @note_order
 
     @note_order << ref
 
