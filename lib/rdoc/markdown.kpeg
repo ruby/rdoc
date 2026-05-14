@@ -439,6 +439,8 @@
   def parse markdown
     @references          = {}
     @unlinked_references = {}
+    @footnotes           = nil
+    @note_order          = nil
 
     markdown += "\n\n"
 
@@ -1236,7 +1238,9 @@ InlineNote = &{ notes? }
              @StartList:a
              ( !"]" Inline:l { a << l } )+
              "]"
-             { ref = [:inline, @note_order.length]
+             { raise ParseError, 'invalid inline note' unless @note_order
+
+               ref = [:inline, @note_order.length]
                @footnotes[ref] = paragraph a
 
                note_for ref

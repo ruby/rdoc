@@ -1025,6 +1025,18 @@ Some text. ^[With a footnote]
     assert_equal expected, doc
   end
 
+  def test_parse_note_inline_in_reference_label_after_reuse
+    @parser.notes = true
+
+    parse "Some text. ^[With a footnote]"
+
+    error = assert_raise RDoc::Markdown::ParseError do
+      parse "[foo ^[note]]: /url\n"
+    end
+
+    assert_equal 'invalid inline note', error.message
+  end
+
   def test_parse_note_no_notes
     @parser.notes = false
 
