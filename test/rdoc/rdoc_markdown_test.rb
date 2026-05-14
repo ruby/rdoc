@@ -1002,6 +1002,16 @@ Some text. ^[With a footnote]
     assert_equal expected, doc
   end
 
+  def test_parse_note_invalid_reference
+    @parser.notes = true
+
+    error = assert_raise RDoc::Markdown::ParseError do
+      parse "[[^0]\n"
+    end
+
+    assert_equal "invalid note reference: 0", error.message
+  end
+
   def test_parse_note_no_notes
     @parser.notes = false
 
