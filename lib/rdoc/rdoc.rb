@@ -357,13 +357,25 @@ it or perhaps the original author's permissions are to restrictive.  If the
 this is not your library please report a bug to the author.
     EOF
   rescue => e
-    $stderr.puts <<-EOF
+    syntax_check_command = syntax_check_command_for filename, parser&.class
+    syntax_check_message = if syntax_check_command
+      <<~MESSAGE
 Before reporting this, could you check that the file you're documenting
 has proper syntax:
 
-  #{Gem.ruby} -c #{filename}
+  #{syntax_check_command}
+      MESSAGE
+    else
+      <<~MESSAGE
+Before reporting this, could you check that the file you're documenting
+has proper syntax for its language?
+      MESSAGE
+    end
 
-RDoc is not a full Ruby parser and will fail when fed invalid ruby programs.
+    $stderr.puts <<-EOF
+#{syntax_check_message}
+RDoc's parsers are not full language parsers and may fail when fed invalid
+source files.
 
 The internal error was:
 
@@ -374,6 +386,16 @@ The internal error was:
     $stderr.puts e.backtrace.join("\n\t") if $DEBUG_RDOC
 
     raise e
+  end
+
+  def syntax_check_command_for(filename, parser_class = RDoc::Parser.can_parse_by_name(filename))
+    if parser_class == RDoc::Parser::Ruby
+      "#{Gem.ruby} -c #{filename}"
+    elsif parser_class == RDoc::Parser::C
+      cc = ENV['CC']
+      cc = 'cc' if cc.nil? || cc.empty?
+      "#{cc} -fsyntax-only #{filename}"
+    end
   end
 
   ##

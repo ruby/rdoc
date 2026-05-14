@@ -493,6 +493,23 @@ class RDocRDocTest < RDoc::TestCase
     tf.close!
   end
 
+  def test_syntax_check_command_for_c_file
+    command = @rdoc.syntax_check_command_for 'extension.c'
+
+    assert_includes command, ' -fsyntax-only extension.c'
+    refute_includes command, "#{Gem.ruby} -c"
+  end
+
+  def test_syntax_check_command_for_ruby_file
+    command = @rdoc.syntax_check_command_for 'library.rb'
+
+    assert_equal "#{Gem.ruby} -c library.rb", command
+  end
+
+  def test_syntax_check_command_for_unknown_file_type
+    assert_nil @rdoc.syntax_check_command_for('README')
+  end
+
   def test_remove_unparseable
     file_list = %w[
       blah.class
