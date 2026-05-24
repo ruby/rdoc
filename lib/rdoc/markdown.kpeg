@@ -1236,10 +1236,12 @@ InlineNote = &{ notes? }
              @StartList:a
              ( !"]" Inline:l { a << l } )+
              "]"
-             { ref = [:inline, @note_order.length]
-               @footnotes[ref] = paragraph a
+             { if @note_order
+                 ref = [:inline, @note_order.length]
+                 @footnotes[ref] = paragraph a
 
-               note_for ref
+                 note_for ref
+               end
              }
 
 Notes = ( Note | SkipBlock )*

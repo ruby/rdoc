@@ -15478,7 +15478,7 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # InlineNote = &{ notes? } "^[" @StartList:a (!"]" Inline:l { a << l })+ "]" { ref = [:inline, @note_order.length]                @footnotes[ref] = paragraph a                 note_for ref              }
+  # InlineNote = &{ notes? } "^[" @StartList:a (!"]" Inline:l { a << l })+ "]" { if @note_order                  ref = [:inline, @note_order.length]                  @footnotes[ref] = paragraph a                   note_for ref                end              }
   def _InlineNote
 
     _save = self.pos
@@ -15569,10 +15569,12 @@ class RDoc::Markdown
         self.pos = _save
         break
       end
-      @result = begin;  ref = [:inline, @note_order.length]
-               @footnotes[ref] = paragraph a
+      @result = begin;  if @note_order
+                 ref = [:inline, @note_order.length]
+                 @footnotes[ref] = paragraph a
 
-               note_for ref
+                 note_for ref
+               end
              ; end
       _tmp = true
       unless _tmp
@@ -16843,7 +16845,7 @@ class RDoc::Markdown
   Rules[:_NoteReference] = rule_info("NoteReference", "&{ notes? } RawNoteReference:ref { note_for ref }")
   Rules[:_RawNoteReference] = rule_info("RawNoteReference", "\"[^\" < (!@Newline !\"]\" .)+ > \"]\" { text }")
   Rules[:_Note] = rule_info("Note", "&{ notes? } @NonindentSpace RawNoteReference:ref \":\" @Sp @StartList:a RawNoteBlock:i { a.concat i } (&Indent RawNoteBlock:i { a.concat i })* { @footnotes[ref] = paragraph a                    nil                 }")
-  Rules[:_InlineNote] = rule_info("InlineNote", "&{ notes? } \"^[\" @StartList:a (!\"]\" Inline:l { a << l })+ \"]\" { ref = [:inline, @note_order.length]                @footnotes[ref] = paragraph a                 note_for ref              }")
+  Rules[:_InlineNote] = rule_info("InlineNote", "&{ notes? } \"^[\" @StartList:a (!\"]\" Inline:l { a << l })+ \"]\" { if @note_order                  ref = [:inline, @note_order.length]                  @footnotes[ref] = paragraph a                   note_for ref                end              }")
   Rules[:_Notes] = rule_info("Notes", "(Note | SkipBlock)*")
   Rules[:_RawNoteBlock] = rule_info("RawNoteBlock", "@StartList:a (!@BlankLine !RawNoteReference OptionallyIndentedLine:l { a << l })+ < @BlankLine* > { a << text } { a }")
   Rules[:_CodeFence] = rule_info("CodeFence", "&{ github? } Ticks3 (@Sp StrChunk:format)? @Sp @Newline? < ((!\"`\" Nonspacechar)+ | !Ticks3 /`+/ | Spacechar | @Newline)+ > Ticks3 @Sp @Newline* { verbatim = RDoc::Markup::Verbatim.new text               verbatim.format = format.intern if format.instance_of?(String)               verbatim             }")

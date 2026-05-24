@@ -1025,6 +1025,12 @@ Some text. ^[With a footnote]
     assert_equal expected, doc
   end
 
+  def test_parse_note_inline_in_reference_label
+    @parser.notes = true
+
+    assert_kind_of RDoc::Markup::Document, parse("[foo ^[note]]: /url\n")
+  end
+
   def test_parse_note_no_notes
     @parser.notes = false
 
