@@ -788,6 +788,8 @@ class RDoc::Markdown
   # the note order list for proper display at the end of the document.
 
   def note_for ref
+    return unless @note_order
+
     @note_order << ref
 
     label = @note_order.length
