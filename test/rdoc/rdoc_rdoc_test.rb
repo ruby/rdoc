@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative 'helper'
+require 'rbconfig'
 
 class RDocRDocTest < RDoc::TestCase
   class RegenerationTrackingGenerator
@@ -110,7 +111,160 @@ class RDocRDocTest < RDoc::TestCase
     end
   end
 
-  def test_load_rbs_signatures_clears_stale_signatures_on_failure
+  def test_document_generates_from_explicit_rbs_file
+    temp_dir do |dir|
+      source = File.join dir, 'sample.rbs'
+      output_dir = File.join dir, 'doc'
+
+      File.write source, <<~RBS
+        class Sample
+          def greet: () -> String
+        end
+      RBS
+
+      options = RDoc::Options.new
+      options.files = [source]
+      options.root = Pathname dir
+      options.op_dir = output_dir
+      options.force_update = true
+      options.quiet = true
+      options.generator = RegenerationTrackingGenerator
+      RegenerationTrackingGenerator.generated_store = nil
+
+      capture_output do
+        RDoc::RDoc.new.document options
+      end
+
+      store = RegenerationTrackingGenerator.generated_store
+      refute_nil store
+
+      sample = store.find_class_or_module 'Sample'
+
+      greet = sample.find_method 'greet', false
+      assert_equal ['() -> String'], greet.type_signature_lines
+    end
+  end
+
+  def test_auto_discovered_rbs_signature_file
+    temp_dir do |dir|
+      @options.root = Pathname dir
+
+      assert @rdoc.auto_discovered_rbs_signature_file?(File.join(dir, 'sig', 'sample.rbs'))
+      refute @rdoc.auto_discovered_rbs_signature_file?(File.join(dir, 'types', 'sample.rbs'))
+      refute @rdoc.auto_discovered_rbs_signature_file?(File.join(dir, 'sig', 'sample.rb'))
+    end
+  end
+
+  def test_parse_files_generates_docs_from_rbs_signatures
+    temp_dir do |dir|
+      sig_dir = File.join dir, 'sig'
+      FileUtils.mkdir_p sig_dir
+
+      File.write 'sample.rb', <<~RUBY
+        class Sample
+        end
+      RUBY
+
+      File.write File.join(sig_dir, 'sample.rbs'), <<~RBS
+        # Signature-only class docs.
+        class SignatureOnly
+        end
+      RBS
+
+      @options.root = Pathname(dir)
+      @options.quiet = true
+      @rdoc.store = RDoc::Store.new(@options)
+
+      @rdoc.parse_files []
+
+      assert @rdoc.store.find_class_named('Sample')
+
+      signature_only = @rdoc.store.find_class_named('SignatureOnly')
+      refute_nil signature_only
+      assert_equal 'Signature-only class docs.', signature_only.comment.text.strip
+    end
+  end
+
+  def test_builtin_rbs_parser_skips_released_rbs_discovery
+    temp_dir do |dir|
+      discover = File.join dir, 'lib', 'rdoc', 'discover.rb'
+      result = File.join dir, 'discover-result'
+      FileUtils.mkdir_p File.dirname(discover)
+
+      File.write discover, <<~'RUBY'
+        File.write ENV.fetch('RDOC_DISCOVER_RESULT'), 'loaded released RBS discovery'
+        class RDoc::Parser::RBS < RDoc::Parser
+          parse_files_matching(/\.rbs$/)
+
+          def scan
+            raise 'released RBS discovery was not skipped'
+          end
+        end
+      RUBY
+
+      script = <<~'RUBY'
+        FakeSpec = Data.define(:full_gem_path)
+
+        module Gem
+          class << self
+            def find_latest_files(path)
+              path == 'rdoc/discover' ? [ENV.fetch('RDOC_FAKE_DISCOVER')] : []
+            end
+          end
+        end
+
+        class Gem::Specification
+          class << self
+            alias rdoc_original_find_all_by_name find_all_by_name
+
+            def find_all_by_name(name, *_requirements)
+              return rdoc_original_find_all_by_name(name, *_requirements) unless name == 'rbs'
+
+              [FakeSpec.new(File.dirname(File.dirname(File.dirname(ENV.fetch('RDOC_FAKE_DISCOVER')))))]
+            end
+          end
+        end
+
+        require 'rdoc/rdoc'
+
+        result = ENV.fetch('RDOC_DISCOVER_RESULT')
+        abort File.read(result) if File.exist?(result) && !File.empty?(result)
+
+        source = File.join File.dirname(result), 'sample.rbs'
+        File.write source, "class Sample\n  def greet: () -> String\nend\n"
+
+        options = RDoc::Options.new
+        store = RDoc::Store.new options
+        top_level = store.add_file source
+        parser = RDoc::Parser.for(
+          top_level,
+          File.read(source),
+          options,
+          RDoc::Stats.new(store, 0)
+        )
+        parser.scan
+
+        sample = store.find_class_named 'Sample'
+        greet = sample.find_method 'greet', false
+
+        File.write result, greet.type_signature_lines.join("\n")
+      RUBY
+
+      lib = File.expand_path('../../lib', __dir__)
+      env = {
+        'RDOC_FAKE_DISCOVER' => discover,
+        'RDOC_DISCOVER_RESULT' => result,
+      }
+      command = [RbConfig.ruby, "-I#{lib}", '-e', script]
+
+      output = IO.popen(env, command, err: [:child, :out], &:read)
+      assert $?.success?, output
+
+      assert_equal '() -> String', File.read(result)
+    end
+  end
+
+  def test_load_auto_discovered_rbs_signatures_clears_stale_signatures_on_failure
     temp_dir do |dir|
       sig_dir = File.join dir, 'sig'
       sig = File.join sig_dir, 'example.rbs'
@@ -131,13 +285,13 @@ class RDocRDocTest < RDoc::TestCase
       method = RDoc::AnyMethod.new 'greet'
       example.add_method method
 
-      @rdoc.load_rbs_signatures
+      @rdoc.load_auto_discovered_rbs_signatures
       assert_equal ['() -> String'], @rdoc.store.rbs_signature_for(method)
 
       File.write sig, "class Example\n  def greet: ( -> "
       @options.verbosity = 2
       _out, err = capture_output do
-        @rdoc.load_rbs_signatures
+        @rdoc.load_auto_discovered_rbs_signatures
       end
 
       assert_includes err, 'Failed to load RBS type signatures'

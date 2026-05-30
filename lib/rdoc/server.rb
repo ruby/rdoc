@@ -321,16 +321,12 @@ class RDoc::Server
   def check_for_changes
     changed = []
     removed = []
-    changed_rbs = []
-    removed_rbs = []
+    rbs_changed = false
 
     @file_mtimes.each do |file, old_mtime|
       unless File.exist?(file)
-        if @rdoc.rbs_signature_file?(file)
-          removed_rbs << file
-        else
-          removed << file
-        end
+        rbs_changed = true if @rdoc.auto_discovered_rbs_signature_file?(file)
+        removed << file
         next
       end
 
@@ -338,11 +334,8 @@ class RDoc::Server
       next unless current_mtime
       next unless old_mtime.nil? || current_mtime > old_mtime
 
-      if @rdoc.rbs_signature_file?(file)
-        changed_rbs << file
-      else
-        changed << file
-      end
+      rbs_changed = true if @rdoc.auto_discovered_rbs_signature_file?(file)
+      changed << file
     end
 
     file_list = @rdoc.normalized_file_list(
@@ -353,22 +346,22 @@ class RDoc::Server
     file_list.each_key do |file|
       unless @file_mtimes.key?(file)
         @file_mtimes[file] = nil # will be updated after parse
+        rbs_changed = true if @rdoc.auto_discovered_rbs_signature_file?(file)
         changed << file
       end
     end
 
-    @rdoc.rbs_signature_files.each do |file|
+    @rdoc.auto_discovered_rbs_signature_files.each do |file|
       unless @file_mtimes.key?(file)
         @file_mtimes[file] = nil
-        changed_rbs << file
+        rbs_changed = true
+        changed << file
       end
     end
 
-    return false if changed.empty? && removed.empty? && changed_rbs.empty? && removed_rbs.empty?
+    return false if changed.empty? && removed.empty? && !rbs_changed
 
-    removed_rbs.each { |file| @file_mtimes.delete(file) }
-
-    reparse_and_refresh(changed, removed, rbs_changed: !changed_rbs.empty? || !removed_rbs.empty?)
+    reparse_and_refresh(changed, removed, rbs_changed: rbs_changed)
     true
   end
 
@@ -410,9 +403,9 @@ class RDoc::Server
 
       if rbs_changed
         duration_ms = measure do
-          @rdoc.load_rbs_signatures
-          @rdoc.record_rbs_signature_mtimes
-          @rdoc.rbs_signature_files.each do |file|
+          @rdoc.load_auto_discovered_rbs_signatures
+          @rdoc.record_auto_discovered_rbs_signature_mtimes
+          @rdoc.auto_discovered_rbs_signature_files.each do |file|
             @file_mtimes[file] = RDoc.safe_mtime(file)
           end
         end
