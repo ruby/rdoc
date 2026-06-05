@@ -9,6 +9,8 @@ require 'uri'
 #
 
 class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
+  DESCRIPTION = 'HTML generator, written by Stan Lo'
+
   RDoc::RDoc.add_generator self
 
   def initialize(store, options)

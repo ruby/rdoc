@@ -137,10 +137,12 @@ class RDocOptionsTest < RDoc::TestCase
   def test_generator_descriptions
     # HACK autotest/isolate should take care of this
     RDoc::RDoc::GENERATORS.clear
+    RDoc::RDoc::GENERATORS['aliki']    = RDoc::Generator::Aliki
     RDoc::RDoc::GENERATORS['darkfish'] = RDoc::Generator::Darkfish
     RDoc::RDoc::GENERATORS['ri']       = RDoc::Generator::RI
 
     expected = <<-EXPECTED.chomp
+  aliki    - HTML generator, written by Stan Lo
   darkfish - HTML generator, written by Michael Granger
   ri       - creates ri data files
     EXPECTED
