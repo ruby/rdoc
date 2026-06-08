@@ -66,7 +66,6 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
   s.required_ruby_version = Gem::Requirement.new(">= 3.2.0")
   s.required_rubygems_version = Gem::Requirement.new(">= 2.2")
 
-  s.add_dependency 'psych', '>= 4.0.0'
   s.add_dependency 'erb'
   s.add_dependency 'tsort'
   s.add_dependency 'prism', '>= 1.6.0'
