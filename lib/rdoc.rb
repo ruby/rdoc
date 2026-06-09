@@ -100,7 +100,14 @@ module RDoc
     %w[arg args yield yields notnew not-new not_new doc]
 
   ##
-  # Loads the best available YAML library.
+  # Loads the YAML backend used for <tt>.rdoc_options</tt>.
+  #
+  # Psych is preferred and used whenever it can be required. Requiring +yaml+
+  # is not attempted as a fallback because +yaml+ is merely a thin wrapper that
+  # loads Psych anyway. When Psych is genuinely unavailable, a minimal
+  # serializer shipped with RubyGems or Bundler is loaded instead, so that RDoc
+  # does not need a runtime dependency on Psych. Callers branch on whether
+  # Psych is defined and use ::yaml_serializer otherwise.
 
   def self.load_yaml
     begin
@@ -113,9 +120,23 @@ module RDoc
     begin
       require 'psych'
     rescue ::LoadError
-    ensure
-      require 'yaml'
+      # Psych is unavailable; load the stub serializer shipped with RubyGems,
+      # or Bundler's copy on RubyGems older than 3.5 (Ruby 3.2) where
+      # rubygems/yaml_serializer does not exist yet.
+      begin
+        require 'rubygems/yaml_serializer'
+      rescue ::LoadError
+        require 'bundler/yaml_serializer'
+      end
     end
+  end
+
+  ##
+  # The minimal YAML serializer module loaded by ::load_yaml as a fallback.
+  # Only meaningful when Psych is not defined.
+
+  def self.yaml_serializer
+    defined?(Gem::YAMLSerializer) ? Gem::YAMLSerializer : Bundler::YAMLSerializer
   end
 
   ##
