@@ -599,7 +599,12 @@ class RDoc::Options
     ivars.sort.each do |ivar|
       yaml[ivar] = instance_variable_get("@#{ivar}")
     end
-    yaml.to_yaml
+
+    if yaml.respond_to?(:to_yaml)
+      yaml.to_yaml
+    else
+      RDoc.yaml_serializer.dump(yaml)
+    end
   end
 
   ##
@@ -1379,10 +1384,16 @@ Usage: #{opt.program_name} [options] [names...]
 
     RDoc.load_yaml
 
-    begin
-      options = YAML.safe_load File.read('.rdoc_options'), permitted_classes: [RDoc::Options, Symbol]
-    rescue Psych::SyntaxError
-      raise RDoc::Error, "#{options_file} is not a valid rdoc options file"
+    content = File.read('.rdoc_options')
+
+    if defined?(Psych)
+      begin
+        options = Psych.safe_load content, permitted_classes: [RDoc::Options, Symbol]
+      rescue Psych::SyntaxError
+        raise RDoc::Error, "#{options_file} is not a valid rdoc options file"
+      end
+    else
+      options = RDoc.yaml_serializer.load(content)
     end
 
     return RDoc::Options.new unless options # Allow empty file.
