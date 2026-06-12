@@ -1360,6 +1360,7 @@ class RDocParserCTest < RDoc::TestCase
       static VALUE
       rb_gzfile_set_mtime(VALUE obj, VALUE mtime)
       {
+      }
 
       void
       Init_zlib() {
@@ -2064,8 +2065,8 @@ class RDocParserCTest < RDoc::TestCase
           rb_define_method(rb_cPathname, "[]",      path_aref_m, -1);
           rb_define_method(rb_cPathname, "slice",   path_aref_m, -1);
           rb_define_method(rb_cPathname, "<=>",     path_cmp_m, 1);
-          rb_define_method(rb_cPathname, "==",      rb_str_equal), 2);
-          rb_define_method(rb_cPathname, "===",     rb_str_equal), 2);
+          rb_define_method(rb_cPathname, "==",      rb_str_equal, 2);
+          rb_define_method(rb_cPathname, "===",     rb_str_equal, 2);
       }
     C
 
