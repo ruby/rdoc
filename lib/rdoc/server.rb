@@ -54,6 +54,46 @@ class RDoc::Server
     500 => 'Internal Server Error',
   }.freeze
 
+  class FileChanges # :nodoc:
+    attr_reader :changed_files, :removed_files
+
+    def initialize(rdoc)
+      @rdoc = rdoc
+      @changed_files = []
+      @removed_files = []
+      @reload_rbs_signatures = false
+    end
+
+    def empty?
+      changed_files.empty? && removed_files.empty? && !reload_rbs_signatures?
+    end
+
+    def record_changed(file)
+      reload_rbs_signatures_if_needed file
+      changed_files << file
+    end
+
+    def record_auto_discovered_rbs_signature(file)
+      @reload_rbs_signatures = true
+      changed_files << file
+    end
+
+    def record_removed(file)
+      reload_rbs_signatures_if_needed file
+      removed_files << file
+    end
+
+    def reload_rbs_signatures?
+      @reload_rbs_signatures
+    end
+
+    private
+
+    def reload_rbs_signatures_if_needed(file)
+      @reload_rbs_signatures = true if @rdoc.auto_discovered_rbs_signature_file?(file)
+    end
+  end
+
   ##
   # Creates a new server.
   #
@@ -319,14 +359,11 @@ class RDoc::Server
   # changes were found and processed.
 
   def check_for_changes
-    changed = []
-    removed = []
-    reload_rbs_signatures = false
+    changes = FileChanges.new @rdoc
 
     @file_mtimes.each do |file, old_mtime|
       unless File.exist?(file)
-        reload_rbs_signatures = true if @rdoc.auto_discovered_rbs_signature_file?(file)
-        removed << file
+        changes.record_removed file
         next
       end
 
@@ -334,8 +371,7 @@ class RDoc::Server
       next unless current_mtime
       next unless old_mtime.nil? || current_mtime > old_mtime
 
-      reload_rbs_signatures = true if @rdoc.auto_discovered_rbs_signature_file?(file)
-      changed << file
+      changes.record_changed file
     end
 
     file_list = @rdoc.normalized_file_list(
@@ -346,22 +382,20 @@ class RDoc::Server
     file_list.each_key do |file|
       unless @file_mtimes.key?(file)
         @file_mtimes[file] = nil # will be updated after parse
-        reload_rbs_signatures = true if @rdoc.auto_discovered_rbs_signature_file?(file)
-        changed << file
+        changes.record_changed file
       end
     end
 
     @rdoc.auto_discovered_rbs_signature_files.each do |file|
       unless @file_mtimes.key?(file)
         @file_mtimes[file] = nil
-        reload_rbs_signatures = true
-        changed << file
+        changes.record_auto_discovered_rbs_signature file
       end
     end
 
-    return false if changed.empty? && removed.empty? && !reload_rbs_signatures
+    return false if changes.empty?
 
-    reparse_and_refresh(changed, removed, reload_rbs_signatures: reload_rbs_signatures)
+    reparse_and_refresh changes
     true
   end
 
@@ -369,11 +403,11 @@ class RDoc::Server
   # Re-parses changed files, removes deleted files from the store,
   # refreshes the generator, and invalidates caches.
 
-  def reparse_and_refresh(changed_files, removed_files, reload_rbs_signatures: false)
+  def reparse_and_refresh(changes)
     @mutex.synchronize do
-      unless removed_files.empty?
-        $stderr.puts "Removed: #{removed_files.join(', ')}"
-        removed_files.each do |f|
+      unless changes.removed_files.empty?
+        $stderr.puts "Removed: #{changes.removed_files.join(', ')}"
+        changes.removed_files.each do |f|
           @file_mtimes.delete(f)
           relative = @rdoc.relative_path_for(f)
           @store.clear_file_contributions(relative)
@@ -381,10 +415,10 @@ class RDoc::Server
         end
       end
 
-      unless changed_files.empty?
+      unless changes.changed_files.empty?
         changed_file_names = []
         duration_ms = measure do
-          changed_files.each do |f|
+          changes.changed_files.each do |f|
             relative = @rdoc.relative_path_for(f)
             changed_file_names << relative
             begin
@@ -401,7 +435,7 @@ class RDoc::Server
         $stderr.puts "Re-parsed #{changed_file_names.join(', ')} (#{duration_ms}ms)"
       end
 
-      if reload_rbs_signatures
+      if changes.reload_rbs_signatures?
         duration_ms = measure do
           @rdoc.load_auto_discovered_rbs_signatures
           @rdoc.record_auto_discovered_rbs_signature_mtimes
@@ -413,7 +447,7 @@ class RDoc::Server
       end
 
       @store.complete(@options.visibility)
-      @store.invalidate_type_name_lookup unless changed_files.empty? && removed_files.empty?
+      @store.invalidate_type_name_lookup unless changes.changed_files.empty? && changes.removed_files.empty?
 
       @generator.refresh_store_data
       @page_cache.clear
