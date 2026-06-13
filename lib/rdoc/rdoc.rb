@@ -613,7 +613,7 @@ The internal error was:
 
   ##
   # Returns true for project RBS files that are auto-discovered for signature
-  # loading.  RDoc parses any selected .rbs file as documentation input, but
+  # loading. RDoc parses any selected .rbs file as documentation input, but
   # only +sig/**/*.rbs+ files are loaded through RBS::EnvironmentLoader for
   # type signature merging and live-reload bookkeeping.
 
@@ -626,6 +626,9 @@ The internal error was:
   rescue ArgumentError
     false
   end
+
+  ##
+  # Returns mtimes for auto-discovered RBS signature files.
 
   def auto_discovered_rbs_signature_mtimes # :nodoc:
     auto_discovered_rbs_signature_files.each_with_object({}) do |file, mtimes|
