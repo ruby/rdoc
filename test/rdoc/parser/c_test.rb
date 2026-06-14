@@ -158,26 +158,26 @@ class RDocParserCTest < RDoc::TestCase
   end
 
   def assert_do_attr(flags)
-    content = <<-EOF
-void Init_Blah(void) {
-  cBlah = rb_define_class("Blah", rb_cObject);
+    content = <<~C
+      void Init_Blah(void) {
+        cBlah = rb_define_class("Blah", rb_cObject);
 
-  /*
-   * This is an accessor
-   */
-  #{yield "cBlah", "accessor", flags[1], flags[1]};
+        /*
+         * This is an accessor
+         */
+        #{yield "cBlah", "accessor", flags[1], flags[1]};
 
-  /*
-   * This is a reader
-   */
-  #{yield "cBlah", "reader", flags[1], flags[0]};
+        /*
+         * This is a reader
+         */
+        #{yield "cBlah", "reader", flags[1], flags[0]};
 
-  /*
-   * This is a writer
-   */
-  #{yield "cBlah", "writer", flags[0], flags[1]};
-}
-    EOF
+        /*
+         * This is a writer
+         */
+        #{yield "cBlah", "writer", flags[0], flags[1]};
+      }
+    C
 
     klass = util_get_class content, 'cBlah'
 
@@ -219,21 +219,21 @@ void Init_Blah(void) {
   end
 
   def test_do_aliases
-    content = <<-EOF
-/*
- * This should show up as an alias with documentation
- */
-VALUE blah(VALUE klass, VALUE year) {
-}
+    content = <<~C
+      /*
+       * This should show up as an alias with documentation
+       */
+      VALUE blah(VALUE klass, VALUE year) {
+      }
 
-void Init_Blah(void) {
-  cDate = rb_define_class("Date", rb_cObject);
+      void Init_Blah(void) {
+        cDate = rb_define_class("Date", rb_cObject);
 
-  rb_define_method(cDate, "blah", blah, 1);
+        rb_define_method(cDate, "blah", blah, 1);
 
-  rb_define_alias(cDate, "bleh", "blah");
-}
-    EOF
+        rb_define_alias(cDate, "bleh", "blah");
+      }
+    C
 
     klass = util_get_class content, 'cDate'
 
@@ -247,25 +247,25 @@ void Init_Blah(void) {
   end
 
   def test_do_aliases_singleton
-    content = <<-EOF
-/*
- * This should show up as a method with documentation
- */
-VALUE blah(VALUE klass, VALUE year) {
-}
+    content = <<~C
+      /*
+       * This should show up as a method with documentation
+       */
+      VALUE blah(VALUE klass, VALUE year) {
+      }
 
-void Init_Blah(void) {
-  cDate = rb_define_class("Date", rb_cObject);
-  sDate = rb_singleton_class(cDate);
+      void Init_Blah(void) {
+        cDate = rb_define_class("Date", rb_cObject);
+        sDate = rb_singleton_class(cDate);
 
-  rb_define_method(sDate, "blah", blah, 1);
+        rb_define_method(sDate, "blah", blah, 1);
 
-  /*
-   * This should show up as an alias
-   */
-  rb_define_alias(sDate, "bleh", "blah");
-}
-    EOF
+        /*
+         * This should show up as an alias
+         */
+        rb_define_alias(sDate, "bleh", "blah");
+      }
+    C
 
     klass = util_get_class content, 'cDate'
 
@@ -279,11 +279,11 @@ void Init_Blah(void) {
   end
 
   def test_do_aliases_missing_class
-    content = <<-EOF
-void Init_Blah(void) {
-  rb_define_alias(cDate, "b", "a");
-}
-    EOF
+    content = <<~C
+      void Init_Blah(void) {
+        rb_define_alias(cDate, "b", "a");
+      }
+    C
 
     _, err = verbose_capture_output do
       refute util_get_class(content, 'cDate')
@@ -293,28 +293,28 @@ void Init_Blah(void) {
   end
 
   def test_do_classes_class
-    content = <<-EOF
-/* Document-class: Foo
- * this is the Foo class
- */
-VALUE cFoo = rb_define_class("Foo", rb_cObject);
-    EOF
+    content = <<~C
+      /* Document-class: Foo
+       * this is the Foo class
+       */
+      VALUE cFoo = rb_define_class("Foo", rb_cObject);
+    C
 
     klass = util_get_class content, 'cFoo'
     assert_equal "this is the Foo class", klass.comment.text
   end
 
   def test_do_classes_duplicate_class
-    content = <<-EOF
-/* Document-class: Foo
- * first
- */
-VALUE cFoo = rb_define_class("Foo", rb_cObject);
-/* Document-class: Foo
- * second
- */
-VALUE cFoo = rb_define_class("Foo", rb_cObject);
-    EOF
+    content = <<~C
+      /* Document-class: Foo
+       * first
+       */
+      VALUE cFoo = rb_define_class("Foo", rb_cObject);
+      /* Document-class: Foo
+       * second
+       */
+      VALUE cFoo = rb_define_class("Foo", rb_cObject);
+    C
 
     klass = util_get_class content, 'cFoo'
     assert_equal 1, klass.comment_location.size
@@ -323,14 +323,14 @@ VALUE cFoo = rb_define_class("Foo", rb_cObject);
   end
 
   def test_do_classes_struct
-    content = <<-EOF
-/* Document-class: Foo
- * this is the Foo class
- */
-VALUE cFoo = rb_struct_define(
-        "Foo",
-        "some", "various", "fields", NULL);
-    EOF
+    content = <<~C
+      /* Document-class: Foo
+       * this is the Foo class
+       */
+      VALUE cFoo = rb_struct_define(
+              "Foo",
+              "some", "various", "fields", NULL);
+    C
 
     klass = util_get_class content, 'cFoo'
     assert_equal "this is the Foo class", klass.comment.text
@@ -343,14 +343,14 @@ VALUE cFoo = rb_struct_define(
   end
 
   def test_do_classes_struct_under
-    content = <<-EOF
-/* Document-class: Kernel::Foo
- * this is the Foo class under Kernel
- */
-VALUE cFoo = rb_struct_define_under(
-        rb_mKernel, "Foo",
-        "some", "various", "fields", NULL);
-    EOF
+    content = <<~C
+      /* Document-class: Kernel::Foo
+       * this is the Foo class under Kernel
+       */
+      VALUE cFoo = rb_struct_define_under(
+              rb_mKernel, "Foo",
+              "some", "various", "fields", NULL);
+    C
 
     klass = util_get_class content, 'cFoo'
     assert_equal 'Kernel::Foo', klass.full_name
@@ -364,14 +364,14 @@ VALUE cFoo = rb_struct_define_under(
   end
 
   def test_do_classes_struct_without_accessor
-    content = <<-EOF
-/* Document-class: Foo
- * this is the Foo class
- */
-VALUE cFoo = rb_struct_define_without_accessor(
-        "Foo", rb_cObject, foo_alloc,
-        "some", "various", "fields", NULL);
-    EOF
+    content = <<~C
+      /* Document-class: Foo
+       * this is the Foo class
+       */
+      VALUE cFoo = rb_struct_define_without_accessor(
+              "Foo", rb_cObject, foo_alloc,
+              "some", "various", "fields", NULL);
+    C
 
     klass = util_get_class content, 'cFoo'
     assert_equal "this is the Foo class", klass.comment.text
@@ -379,14 +379,14 @@ VALUE cFoo = rb_struct_define_without_accessor(
   end
 
   def test_do_classes_struct_without_accessor_under
-    content = <<-EOF
-/* Document-class: Kernel::Foo
- * this is the Foo class under Kernel
- */
-VALUE cFoo = rb_struct_define_without_accessor_under(
-        rb_mKernel, "Foo", rb_cObject, foo_alloc,
-        "some", "various", "fields", NULL);
-    EOF
+    content = <<~C
+      /* Document-class: Kernel::Foo
+       * this is the Foo class under Kernel
+       */
+      VALUE cFoo = rb_struct_define_without_accessor_under(
+              rb_mKernel, "Foo", rb_cObject, foo_alloc,
+              "some", "various", "fields", NULL);
+    C
 
     klass = util_get_class content, 'cFoo'
     assert_equal 'Kernel::Foo', klass.full_name
@@ -395,12 +395,12 @@ VALUE cFoo = rb_struct_define_without_accessor_under(
   end
 
   def test_do_classes_class_under
-    content = <<-EOF
-/* Document-class: Kernel::Foo
- * this is the Foo class under Kernel
- */
-VALUE cFoo = rb_define_class_under(rb_mKernel, "Foo", rb_cObject);
-    EOF
+    content = <<~C
+      /* Document-class: Kernel::Foo
+       * this is the Foo class under Kernel
+       */
+      VALUE cFoo = rb_define_class_under(rb_mKernel, "Foo", rb_cObject);
+    C
 
     klass = util_get_class content, 'cFoo'
     assert_equal 'Kernel::Foo', klass.full_name
@@ -408,12 +408,12 @@ VALUE cFoo = rb_define_class_under(rb_mKernel, "Foo", rb_cObject);
   end
 
   def test_do_classes_class_under_rb_path2class
-    content = <<-EOF
-/* Document-class: Kernel::Foo
- * this is Kernel::Foo < A::B
- */
-VALUE cFoo = rb_define_class_under(rb_mKernel, "Foo", rb_path2class("A::B"));
-    EOF
+    content = <<~C
+      /* Document-class: Kernel::Foo
+       * this is Kernel::Foo < A::B
+       */
+      VALUE cFoo = rb_define_class_under(rb_mKernel, "Foo", rb_path2class("A::B"));
+    C
 
     klass = util_get_class content, 'cFoo'
 
@@ -423,10 +423,10 @@ VALUE cFoo = rb_define_class_under(rb_mKernel, "Foo", rb_path2class("A::B"));
   end
 
   def test_do_classes_singleton
-    content = <<-EOF
-VALUE cFoo = rb_define_class("Foo", rb_cObject);
-VALUE cFooS = rb_singleton_class(cFoo);
-    EOF
+    content = <<~C
+      VALUE cFoo = rb_define_class("Foo", rb_cObject);
+      VALUE cFooS = rb_singleton_class(cFoo);
+    C
 
     util_get_class content, 'cFooS'
 
@@ -434,87 +434,87 @@ VALUE cFooS = rb_singleton_class(cFoo);
   end
 
   def test_do_classes_module
-    content = <<-EOF
-/* Document-module: Foo
- * this is the Foo module
- */
-VALUE mFoo = rb_define_module("Foo");
-    EOF
+    content = <<~C
+      /* Document-module: Foo
+       * this is the Foo module
+       */
+      VALUE mFoo = rb_define_module("Foo");
+    C
 
     klass = util_get_class content, 'mFoo'
     assert_equal "this is the Foo module", klass.comment.text
   end
 
   def test_do_classes_module_under
-    content = <<-EOF
-/* Document-module: Kernel::Foo
- * this is the Foo module under Kernel
- */
-VALUE mFoo = rb_define_module_under(rb_mKernel, "Foo");
-    EOF
+    content = <<~C
+      /* Document-module: Kernel::Foo
+       * this is the Foo module under Kernel
+       */
+      VALUE mFoo = rb_define_module_under(rb_mKernel, "Foo");
+    C
 
     klass = util_get_class content, 'mFoo'
     assert_equal "this is the Foo module under Kernel", klass.comment.text
   end
 
   def test_do_constants
-    content = <<-'EOF'
-#include <ruby.h>
+    content = <<~'C'
+      #include <ruby.h>
 
-void Init_foo(){
-   VALUE cFoo = rb_define_class("Foo", rb_cObject);
+      void Init_foo(){
+         VALUE cFoo = rb_define_class("Foo", rb_cObject);
 
-   /* 300: The highest possible score in bowling */
-   rb_define_const(cFoo, "PERFECT", INT2FIX(300));
+         /* 300: The highest possible score in bowling */
+         rb_define_const(cFoo, "PERFECT", INT2FIX(300));
 
-   /* Huzzah!: What you cheer when you roll a perfect game */
-   rb_define_const(cFoo, "CHEER", rb_str_new2("Huzzah!"));
+         /* Huzzah!: What you cheer when you roll a perfect game */
+         rb_define_const(cFoo, "CHEER", rb_str_new2("Huzzah!"));
 
-   /* TEST\:TEST: Checking to see if escaped colon works */
-   rb_define_const(cFoo, "TEST", rb_str_new2("TEST:TEST"));
+         /* TEST\:TEST: Checking to see if escaped colon works */
+         rb_define_const(cFoo, "TEST", rb_str_new2("TEST:TEST"));
 
-   /* TEST: TEST:Checking to see if only word-ending colon works */
-   rb_define_const(cFoo, "TEST2", rb_str_new2("TEST:TEST"));
+         /* TEST: TEST:Checking to see if only word-ending colon works */
+         rb_define_const(cFoo, "TEST2", rb_str_new2("TEST:TEST"));
 
-   /* \\: The file separator on MS Windows */
-   rb_define_const(cFoo, "MSEPARATOR", rb_str_new2("\\"));
+         /* \\: The file separator on MS Windows */
+         rb_define_const(cFoo, "MSEPARATOR", rb_str_new2("\\"));
 
-   /* /: The file separator on Unix */
-   rb_define_const(cFoo, "SEPARATOR", rb_str_new2("/"));
+         /* /: The file separator on Unix */
+         rb_define_const(cFoo, "SEPARATOR", rb_str_new2("/"));
 
-   /* C:\\Program Files\\Stuff: A directory on MS Windows */
-   rb_define_const(cFoo, "STUFF", rb_str_new2("C:\\Program Files\\Stuff"));
+         /* C:\\Program Files\\Stuff: A directory on MS Windows */
+         rb_define_const(cFoo, "STUFF", rb_str_new2("C:\\Program Files\\Stuff"));
 
-   /* Default definition */
-   rb_define_const(cFoo, "NOSEMI", INT2FIX(99));
+         /* Default definition */
+         rb_define_const(cFoo, "NOSEMI", INT2FIX(99));
 
-   rb_define_const(cFoo, "NOCOMMENT", rb_str_new2("No comment"));
+         rb_define_const(cFoo, "NOCOMMENT", rb_str_new2("No comment"));
 
-   /*
-    * Multiline comment goes here because this comment spans multiple lines.
-    * Multiline comment goes here because this comment spans multiple lines.
-    */
-   rb_define_const(cFoo, "MULTILINE", INT2FIX(1));
+         /*
+          * Multiline comment goes here because this comment spans multiple lines.
+          * Multiline comment goes here because this comment spans multiple lines.
+          */
+         rb_define_const(cFoo, "MULTILINE", INT2FIX(1));
 
-   /*
-    * 1: Multiline comment goes here because this comment spans multiple lines.
-    * Multiline comment goes here because this comment spans multiple lines.
-    */
-   rb_define_const(cFoo, "MULTILINE_VALUE", INT2FIX(1));
+         /*
+          * 1: Multiline comment goes here because this comment spans multiple lines.
+          * Multiline comment goes here because this comment spans multiple lines.
+          */
+         rb_define_const(cFoo, "MULTILINE_VALUE", INT2FIX(1));
 
-   /* Multiline comment goes here because this comment spans multiple lines.
-    * Multiline comment goes here because this comment spans multiple lines.
-    */
-   rb_define_const(cFoo, "MULTILINE_NOT_EMPTY", INT2FIX(1));
+         /* Multiline comment goes here because this comment spans multiple lines.
+          * Multiline comment goes here because this comment spans multiple lines.
+          */
+         rb_define_const(cFoo, "MULTILINE_NOT_EMPTY", INT2FIX(1));
 
-   /*
-    * Multiline comment goes here because this comment spans multiple lines.
-    * 1: However, the value extraction should only happen for the first line
-    */
-   rb_define_const(cFoo, "MULTILINE_COLON_ON_SECOND_LINE", INT2FIX(1));
+         /*
+          * Multiline comment goes here because this comment spans multiple lines.
+          * 1: However, the value extraction should only happen for the first line
+          */
+         rb_define_const(cFoo, "MULTILINE_COLON_ON_SECOND_LINE", INT2FIX(1));
 
-}
-    EOF
+      }
+    C
 
     @parser = util_parser content
 
@@ -557,17 +557,17 @@ void Init_foo(){
     assert_equal ['NOCOMMENT', 'rb_str_new2("No comment")', ''],
                  constants.shift
 
-    comment = <<-EOF.chomp
-Multiline comment goes here because this comment spans multiple lines.
-Multiline comment goes here because this comment spans multiple lines.
+    comment = <<~EOF.chomp
+      Multiline comment goes here because this comment spans multiple lines.
+      Multiline comment goes here because this comment spans multiple lines.
     EOF
     assert_equal ['MULTILINE',           'INT2FIX(1)', comment], constants.shift
     assert_equal ['MULTILINE_VALUE',     '1',          comment], constants.shift
     assert_equal ['MULTILINE_NOT_EMPTY', 'INT2FIX(1)', comment], constants.shift
 
-    comment = <<-EOF.chomp
-Multiline comment goes here because this comment spans multiple lines.
-1: However, the value extraction should only happen for the first line
+    comment = <<~EOF.chomp
+      Multiline comment goes here because this comment spans multiple lines.
+      1: However, the value extraction should only happen for the first line
     EOF
     assert_equal ['MULTILINE_COLON_ON_SECOND_LINE', 'INT2FIX(1)', comment],
                  constants.shift
@@ -576,16 +576,16 @@ Multiline comment goes here because this comment spans multiple lines.
   end
 
   def test_do_constants_global
-    content = <<-'EOF'
-#include <ruby.h>
+    content = <<~'C'
+      #include <ruby.h>
 
-void Init_foo(){
+      void Init_foo(){
 
-   /* Toplevel const */
-   rb_define_global_const("ANSWER", INT2FIX(42));
+         /* Toplevel const */
+         rb_define_global_const("ANSWER", INT2FIX(42));
 
-}
-    EOF
+      }
+    C
 
     @parser = util_parser content
 
@@ -608,16 +608,16 @@ void Init_foo(){
   end
 
   def test_do_constants_curses
-    content = <<-EOF
-void Init_curses(){
-  mCurses = rb_define_module("Curses");
+    content = <<~C
+      void Init_curses(){
+        mCurses = rb_define_module("Curses");
 
-  /*
-   * Value of the color black
-   */
-  rb_curses_define_const(COLOR_BLACK);
-}
-    EOF
+        /*
+         * Value of the color black
+         */
+        rb_curses_define_const(COLOR_BLACK);
+      }
+    C
 
     @parser = util_parser content
 
@@ -635,14 +635,14 @@ void Init_curses(){
   end
 
   def test_do_constants_file
-    content = <<-EOF
-void Init_File(void) {
-  /*
-   *  Shared lock
-   */
-  rb_file_const("LOCK_SH", INT2FIX(LOCK_SH));
-}
-    EOF
+    content = <<~C
+      void Init_File(void) {
+        /*
+         *  Shared lock
+         */
+        rb_file_const("LOCK_SH", INT2FIX(LOCK_SH));
+      }
+    C
 
     @parser = util_parser content
 
@@ -660,12 +660,12 @@ void Init_File(void) {
     assert_equal 'INT2FIX(LOCK_SH)', constant.value
     assert_equal 'Shared lock',      constant.comment.text
 
-    @parser = util_parser <<-EOF
-void Init_File(void) {
-  rb_cFile = rb_define_class("File", rb_cIO);
-  rb_mFConst = rb_define_module_under(rb_cFile, "Constants");
-}
-    EOF
+    @parser = util_parser <<~C
+      void Init_File(void) {
+        rb_cFile = rb_define_class("File", rb_cIO);
+        rb_mFConst = rb_define_module_under(rb_cFile, "Constants");
+      }
+    C
     @parser.do_classes_and_modules
     @parser.do_constants
 
@@ -673,14 +673,14 @@ void Init_File(void) {
   end
 
   def test_do_includes
-    content = <<-EOF
-Init_foo() {
-   VALUE cFoo = rb_define_class("Foo", rb_cObject);
-   VALUE mInc = rb_define_module("Inc");
+    content = <<~C
+      Init_foo() {
+        VALUE cFoo = rb_define_class("Foo", rb_cObject);
+        VALUE mInc = rb_define_module("Inc");
 
-   rb_include_module(cFoo, mInc);
-}
-    EOF
+        rb_include_module(cFoo, mInc);
+      }
+    C
 
     klass = util_get_class content, 'cFoo'
 
@@ -692,16 +692,16 @@ Init_foo() {
 
   # HACK parsing warning instead of setting up in file
   def test_do_methods_in_c
-    content = <<-EOF
-VALUE blah(VALUE klass, VALUE year) {
-}
+    content = <<~C
+      VALUE blah(VALUE klass, VALUE year) {
+      }
 
-void Init_Blah(void) {
-  cDate = rb_define_class("Date", rb_cObject);
+      void Init_Blah(void) {
+        cDate = rb_define_class("Date", rb_cObject);
 
-  rb_define_method(cDate, "blah", blah, 1); /* in blah.c */
-}
-    EOF
+        rb_define_method(cDate, "blah", blah, 1); /* in blah.c */
+      }
+    C
 
     klass = nil
 
@@ -715,16 +715,16 @@ void Init_Blah(void) {
 
   # HACK parsing warning instead of setting up in file
   def test_do_methods_in_cpp
-    content = <<-EOF
-VALUE blah(VALUE klass, VALUE year) {
-}
+    content = <<~C
+      VALUE blah(VALUE klass, VALUE year) {
+      }
 
-void Init_Blah(void) {
-  cDate = rb_define_class("Date", rb_cObject);
+      void Init_Blah(void) {
+        cDate = rb_define_class("Date", rb_cObject);
 
-  rb_define_method(cDate, "blah", blah, 1); /* in blah.cpp */
-}
-    EOF
+        rb_define_method(cDate, "blah", blah, 1); /* in blah.cpp */
+      }
+    C
 
     klass = nil
 
@@ -738,16 +738,16 @@ void Init_Blah(void) {
 
   # HACK parsing warning instead of setting up in file
   def test_do_methods_in_y
-    content = <<-EOF
-VALUE blah(VALUE klass, VALUE year) {
-}
+    content = <<~C
+      VALUE blah(VALUE klass, VALUE year) {
+      }
 
-void Init_Blah(void) {
-  cDate = rb_define_class("Date", rb_cObject);
+      void Init_Blah(void) {
+        cDate = rb_define_class("Date", rb_cObject);
 
-  rb_define_method(cDate, "blah", blah, 1); /* in blah.y */
-}
-    EOF
+        rb_define_method(cDate, "blah", blah, 1); /* in blah.y */
+      }
+    C
 
     klass = nil
 
@@ -760,17 +760,17 @@ void Init_Blah(void) {
   end
 
   def test_do_methods_singleton_class
-    content = <<-EOF
-VALUE blah(VALUE klass, VALUE year) {
-}
+    content = <<~C
+      VALUE blah(VALUE klass, VALUE year) {
+      }
 
-void Init_Blah(void) {
-  cDate = rb_define_class("Date", rb_cObject);
-  sDate = rb_singleton_class(cDate);
+      void Init_Blah(void) {
+        cDate = rb_define_class("Date", rb_cObject);
+        sDate = rb_singleton_class(cDate);
 
-  rb_define_method(sDate, "blah", blah, 1);
-}
-    EOF
+        rb_define_method(sDate, "blah", blah, 1);
+      }
+    C
 
     klass = util_get_class content, 'cDate'
 
@@ -781,7 +781,7 @@ void Init_Blah(void) {
   end
 
   def test_do_methods_nested_module_singleton_class
-    parser = util_parser <<~EOF
+    parser = util_parser <<~C
       VALUE baz(VALUE klass, VALUE year) {
       }
       void Init_Foo(void) {
@@ -790,7 +790,7 @@ void Init_Blah(void) {
         VALUE mBarS = rb_singleton_class(mBar);
         rb_define_method(mBarS, "baz", baz, 0);
       }
-    EOF
+    C
     parser.scan
 
     klass = parser.classes['mBarS']
@@ -803,12 +803,12 @@ void Init_Blah(void) {
   end
 
   def test_do_singleton_class_undocumentable
-    parser = util_parser <<~EOF
+    parser = util_parser <<~C
       void Func(VALUE v) {
         VALUE k = rb_singleton_class(v);
         rb_define_method(k, "baz", baz, 0);
       }
-    EOF
+    C
     parser.scan
     assert_empty parser.classes
     assert_empty parser.singleton_classes
@@ -872,12 +872,12 @@ void Init_Blah(void) {
 
     assert_equal '', comment.text
 
-    parser = util_parser <<-C
-/*
- * comment
- */
+    parser = util_parser <<~C
+      /*
+       * comment
+       */
 
-rb_define_alias(C, "[]", "index");
+      rb_define_alias(C, "[]", "index");
     C
 
     comment = parser.find_alias_comment 'C', '[]', 'index'
@@ -886,11 +886,11 @@ rb_define_alias(C, "[]", "index");
   end
 
   def test_find_attr_comment_document_attr
-    parser= util_parser <<-C
-/*
- * Document-attr: y
- * comment
- */
+    parser= util_parser <<~C
+      /*
+       * Document-attr: y
+       * comment
+       */
     C
 
     comment = parser.find_attr_comment nil, 'y'
@@ -899,10 +899,10 @@ rb_define_alias(C, "[]", "index");
   end
 
   def test_find_attr_comment_document_attr_oneline
-    parser= util_parser <<-C
-/* Document-attr: y
- * comment
- */
+    parser= util_parser <<~C
+      /* Document-attr: y
+       * comment
+       */
     C
 
     comment = parser.find_attr_comment nil, 'y'
@@ -911,14 +911,14 @@ rb_define_alias(C, "[]", "index");
   end
 
   def test_find_attr_comment_document_attr_overlap
-    parser= util_parser <<-C
-/* Document-attr: x
- * comment
- */
+    parser= util_parser <<~C
+      /* Document-attr: x
+       * comment
+       */
 
-/* Document-attr: y
- * comment
- */
+      /* Document-attr: y
+       * comment
+       */
     C
 
     comment = parser.find_attr_comment nil, 'y'
@@ -929,17 +929,17 @@ rb_define_alias(C, "[]", "index");
   def test_find_class_comment
     @options.rdoc_include << File.dirname(__FILE__)
 
-    content = <<-EOF
-/*
- * Comment 1
- */
-foo = rb_define_class("MyClassName1", rb_cObject);
+    content = <<~C
+      /*
+       * Comment 1
+       */
+      foo = rb_define_class("MyClassName1", rb_cObject);
 
-/*
- * Comment 2
- */
-bar = rb_define_class("MyClassName2", rb_cObject);
-    EOF
+      /*
+       * Comment 2
+       */
+      bar = rb_define_class("MyClassName2", rb_cObject);
+    C
 
     util_get_class content
 
@@ -948,15 +948,15 @@ bar = rb_define_class("MyClassName2", rb_cObject);
   end
 
   def test_find_class_comment_init
-    content = <<-EOF
-/*
- * a comment for class Foo
- */
-void
-Init_Foo(void) {
-  VALUE foo = rb_define_class("Foo", rb_cObject);
-}
-    EOF
+    content = <<~C
+      /*
+       * a comment for class Foo
+       */
+      void
+      Init_Foo(void) {
+        VALUE foo = rb_define_class("Foo", rb_cObject);
+      }
+    C
 
     klass = util_get_class content, 'foo'
 
@@ -965,15 +965,15 @@ Init_Foo(void) {
 
 
   def test_find_class_comment_initvm
-    content = <<-EOF
-/*
- * a comment for class Foo
- */
-void
-InitVM_Foo(void) {
-  VALUE foo = rb_define_class("Foo", rb_cObject);
-}
-    EOF
+    content = <<~C
+      /*
+       * a comment for class Foo
+       */
+      void
+      InitVM_Foo(void) {
+        VALUE foo = rb_define_class("Foo", rb_cObject);
+      }
+    C
 
     klass = util_get_class content, 'foo'
 
@@ -981,12 +981,12 @@ InitVM_Foo(void) {
   end
 
   def test_find_class_comment_define_class
-    content = <<-EOF
-/*
- * a comment for class Foo
- */
-VALUE foo = rb_define_class("Foo", rb_cObject);
-    EOF
+    content = <<~C
+      /*
+       * a comment for class Foo
+       */
+      VALUE foo = rb_define_class("Foo", rb_cObject);
+    C
 
     klass = util_get_class content, 'foo'
 
@@ -994,18 +994,18 @@ VALUE foo = rb_define_class("Foo", rb_cObject);
   end
 
   def test_find_class_comment_define_class_Init_Foo
-    content = <<-EOF
-/*
- * a comment for class Foo on Init
- */
-void
-Init_Foo(void) {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE foo = rb_define_class("Foo", rb_cObject);
-}
-    EOF
+    content = <<~C
+      /*
+       * a comment for class Foo on Init
+       */
+      void
+      Init_Foo(void) {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE foo = rb_define_class("Foo", rb_cObject);
+      }
+    C
 
     klass = util_get_class content, 'foo'
 
@@ -1013,18 +1013,18 @@ Init_Foo(void) {
   end
 
   def test_find_class_comment_define_class_Init_Foo_no_void
-    content = <<-EOF
-/*
- * a comment for class Foo on Init
- */
-void
-Init_Foo() {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE foo = rb_define_class("Foo", rb_cObject);
-}
-    EOF
+    content = <<~C
+      /*
+       * a comment for class Foo on Init
+       */
+      void
+      Init_Foo() {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE foo = rb_define_class("Foo", rb_cObject);
+      }
+    C
 
     klass = util_get_class content, 'foo'
 
@@ -1032,19 +1032,19 @@ Init_Foo() {
   end
 
   def test_find_class_comment_define_class_bogus_comment
-    content = <<-EOF
-/*
- * a comment for other_function
- */
-void
-other_function() {
-}
+    content = <<~C
+      /*
+       * a comment for other_function
+       */
+      void
+      other_function() {
+      }
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
-}
-    EOF
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
+      }
+    C
 
     klass = util_get_class content, 'foo'
 
@@ -1052,12 +1052,12 @@ Init_Foo(void) {
   end
 
   def test_find_class_comment_define_class_under
-    content = <<-EOF
-/*
- * a comment for class Foo
- */
-VALUE foo = rb_define_class_under(rb_cObject, "Foo", rb_cObject);
-    EOF
+    content = <<~C
+      /*
+       * a comment for class Foo
+       */
+      VALUE foo = rb_define_class_under(rb_cObject, "Foo", rb_cObject);
+    C
 
     klass = util_get_class content, 'foo'
 
@@ -1065,18 +1065,18 @@ VALUE foo = rb_define_class_under(rb_cObject, "Foo", rb_cObject);
   end
 
   def test_find_class_comment_define_class_under_Init
-    content = <<-EOF
-/*
- * a comment for class Foo on Init
- */
-void
-Init_Foo(void) {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE foo = rb_define_class_under(rb_cObject, "Foo", rb_cObject);
-}
-    EOF
+    content = <<~C
+      /*
+       * a comment for class Foo on Init
+       */
+      void
+      Init_Foo(void) {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE foo = rb_define_class_under(rb_cObject, "Foo", rb_cObject);
+      }
+    C
 
     klass = util_get_class content, 'foo'
 
@@ -1087,12 +1087,12 @@ Init_Foo(void) {
   end
 
   def test_find_const_comment_rb_define
-    content = <<-EOF
-/*
- * A comment
- */
-rb_define_const(cFoo, "CONST", value);
-    EOF
+    content = <<~C
+      /*
+       * A comment
+       */
+      rb_define_const(cFoo, "CONST", value);
+    C
 
     parser = util_parser content
 
@@ -1102,12 +1102,12 @@ rb_define_const(cFoo, "CONST", value);
   end
 
   def test_find_const_comment_rb_define_global
-    content = <<-EOF
-/*
- * A comment
- */
-rb_define_global_const("CONST", value);
-    EOF
+    content = <<~C
+      /*
+       * A comment
+       */
+      rb_define_global_const("CONST", value);
+    C
 
     parser = util_parser content
 
@@ -1117,13 +1117,13 @@ rb_define_global_const("CONST", value);
   end
 
   def test_find_const_comment_document_const
-    content = <<-EOF
-/*
- * Document-const: CONST
- *
- * A comment
- */
-    EOF
+    content = <<~C
+      /*
+       * Document-const: CONST
+       *
+       * A comment
+       */
+    C
 
     parser = util_parser content
 
@@ -1133,13 +1133,13 @@ rb_define_global_const("CONST", value);
   end
 
   def test_find_const_comment_document_const_full_name
-    content = <<-EOF
-/*
- * Document-const: Foo::CONST
- *
- * A comment
- */
-    EOF
+    content = <<~C
+      /*
+       * Document-const: Foo::CONST
+       *
+       * A comment
+       */
+    C
 
     parser = util_parser content
 
@@ -1149,21 +1149,21 @@ rb_define_global_const("CONST", value);
   end
 
   def test_find_body
-    content = <<-EOF
-/*
- * a comment for other_function
- */
-VALUE
-other_function() {
-}
+    content = <<~C
+      /*
+       * a comment for other_function
+       */
+      VALUE
+      other_function() {
+      }
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
 
-    rb_define_method(foo, "my_method", other_function, 0);
-}
-    EOF
+          rb_define_method(foo, "my_method", other_function, 0);
+      }
+    C
 
     klass = util_get_class content, 'foo'
     other_function = klass.method_list.first
@@ -1179,61 +1179,61 @@ Init_Foo(void) {
   end
 
   def test_find_body_2
-    content = <<-CONTENT
-/* Copyright (C) 2010  Sven Herzberg
- *
- * This file is free software; the author(s) gives unlimited
- * permission to copy and/or distribute it, with or without
- * modifications, as long as this notice is preserved.
- */
+    content = <<~C
+      /* Copyright (C) 2010  Sven Herzberg
+       *
+       * This file is free software; the author(s) gives unlimited
+       * permission to copy and/or distribute it, with or without
+       * modifications, as long as this notice is preserved.
+       */
 
-#include <ruby.h>
+      #include <ruby.h>
 
-static VALUE
-wrap_initialize (VALUE  self)
-{
-  return self;
-}
+      static VALUE
+      wrap_initialize (VALUE  self)
+      {
+        return self;
+      }
 
-/* */
-static VALUE
-wrap_shift (VALUE self,
-            VALUE arg)
-{
-  return self;
-}
+      /* */
+      static VALUE
+      wrap_shift (VALUE self,
+                  VALUE arg)
+      {
+        return self;
+      }
 
-void
-init_gi_repository (void)
-{
-  VALUE mTest = rb_define_module ("Test");
-  VALUE cTest = rb_define_class_under (mTest, "Test", rb_cObject);
+      void
+      init_gi_repository (void)
+      {
+        VALUE mTest = rb_define_module ("Test");
+        VALUE cTest = rb_define_class_under (mTest, "Test", rb_cObject);
 
-  rb_define_method (cTest, "initialize", wrap_initialize, 0);
-  rb_define_method (cTest, "shift", wrap_shift, 0);
-}
-    CONTENT
+        rb_define_method (cTest, "initialize", wrap_initialize, 0);
+        rb_define_method (cTest, "shift", wrap_shift, 0);
+      }
+    C
 
     klass = util_get_class content, 'cTest'
     assert_equal 2, klass.method_list.length
   end
 
   def test_find_body_cast
-    content = <<-EOF
-/*
- * a comment for other_function
- */
-VALUE
-other_function() {
-}
+    content = <<~C
+      /*
+       * a comment for other_function
+       */
+      VALUE
+      other_function() {
+      }
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
 
-    rb_define_method(foo, "my_method", (METHOD)other_function, 0);
-}
-    EOF
+          rb_define_method(foo, "my_method", (METHOD)other_function, 0);
+      }
+    C
 
     klass = util_get_class content, 'foo'
     other_function = klass.method_list.first
@@ -1249,25 +1249,25 @@ Init_Foo(void) {
   end
 
   def test_find_body_define
-    content = <<-EOF
-#define something something_else
+    content = <<~C
+      #define something something_else
 
-#define other_function rb_other_function
+      #define other_function rb_other_function
 
-/*
- * a comment for rb_other_function
- */
-VALUE
-rb_other_function() {
-}
+      /*
+       * a comment for rb_other_function
+       */
+      VALUE
+      rb_other_function() {
+      }
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
 
-    rb_define_method(foo, "my_method", other_function, 0);
-}
-    EOF
+          rb_define_method(foo, "my_method", other_function, 0);
+      }
+    C
 
     klass = util_get_class content, 'foo'
     other_function = klass.method_list.first
@@ -1283,24 +1283,24 @@ Init_Foo(void) {
   end
 
   def test_find_body_define_comment
-    content = <<-EOF
-/*
- * a comment for other_function
- */
-#define other_function rb_other_function
+    content = <<~C
+      /*
+       * a comment for other_function
+       */
+      #define other_function rb_other_function
 
-/* */
-VALUE
-rb_other_function() {
-}
+      /* */
+      VALUE
+      rb_other_function() {
+      }
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
 
-    rb_define_method(foo, "my_method", other_function, 0);
-}
-    EOF
+          rb_define_method(foo, "my_method", other_function, 0);
+      }
+    C
 
     klass = util_get_class content, 'foo'
     other_function = klass.method_list.first
@@ -1316,25 +1316,25 @@ Init_Foo(void) {
   end
 
   def test_find_body_document_method
-    content = <<-EOF
-/*
- * Document-method: bar
- * Document-method: baz
- *
- * a comment for bar
- */
-VALUE
-bar() {
-}
+    content = <<~C
+      /*
+       * Document-method: bar
+       * Document-method: baz
+       *
+       * a comment for bar
+       */
+      VALUE
+      bar() {
+      }
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
 
-    rb_define_method(foo, "bar", bar, 0);
-    rb_define_method(foo, "baz", bar, 0);
-}
-    EOF
+          rb_define_method(foo, "bar", bar, 0);
+          rb_define_method(foo, "baz", bar, 0);
+      }
+    C
 
     klass = util_get_class content, 'foo'
     assert_equal 2, klass.method_list.length
@@ -1351,24 +1351,25 @@ Init_Foo(void) {
   end
 
   def test_find_body_document_method_equals
-    content = <<-EOF
-/*
- * Document-method: Zlib::GzipFile#mtime=
- *
- * A comment
- */
-static VALUE
-rb_gzfile_set_mtime(VALUE obj, VALUE mtime)
-{
+    content = <<~C
+      /*
+       * Document-method: Zlib::GzipFile#mtime=
+       *
+       * A comment
+       */
+      static VALUE
+      rb_gzfile_set_mtime(VALUE obj, VALUE mtime)
+      {
+      }
 
-void
-Init_zlib() {
-    mZlib = rb_define_module("Zlib");
-    cGzipFile = rb_define_class_under(mZlib, "GzipFile", rb_cObject);
-    cGzipWriter = rb_define_class_under(mZlib, "GzipWriter", cGzipFile);
-    rb_define_method(cGzipWriter, "mtime=", rb_gzfile_set_mtime, 1);
-}
-    EOF
+      void
+      Init_zlib() {
+          mZlib = rb_define_module("Zlib");
+          cGzipFile = rb_define_class_under(mZlib, "GzipFile", rb_cObject);
+          cGzipWriter = rb_define_class_under(mZlib, "GzipWriter", cGzipFile);
+          rb_define_method(cGzipWriter, "mtime=", rb_gzfile_set_mtime, 1);
+      }
+    C
 
     klass = util_get_class content, 'cGzipWriter'
     assert_equal 1, klass.method_list.length
@@ -1381,35 +1382,35 @@ Init_zlib() {
   end
 
   def test_find_body_document_method_same
-    content = <<-EOF
-VALUE
-s_bar() {
-}
+    content = <<~C
+      VALUE
+      s_bar() {
+      }
 
-VALUE
-bar() {
-}
+      VALUE
+      bar() {
+      }
 
-/*
- * Document-method: Foo::bar
- *
- * a comment for Foo::bar
- */
+      /*
+       * Document-method: Foo::bar
+       *
+       * a comment for Foo::bar
+       */
 
-/*
- * Document-method: Foo#bar
- *
- * a comment for Foo#bar
- */
+      /*
+       * Document-method: Foo#bar
+       *
+       * a comment for Foo#bar
+       */
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
 
-    rb_define_singleton_method(foo, "bar", s_bar, 0);
-    rb_define_method(foo, "bar", bar, 0);
-}
-    EOF
+          rb_define_singleton_method(foo, "bar", s_bar, 0);
+          rb_define_method(foo, "bar", bar, 0);
+      }
+    C
 
     klass = util_get_class content, 'foo'
     assert_equal 2, klass.method_list.length
@@ -1426,21 +1427,21 @@ Init_Foo(void) {
   end
 
   def test_find_body_macro
-    content = <<-EOF
-/*
- * a comment for other_function
- */
-DLL_LOCAL VALUE
-other_function() {
-}
+    content = <<~C
+      /*
+       * a comment for other_function
+       */
+      DLL_LOCAL VALUE
+      other_function() {
+      }
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
 
-    rb_define_method(foo, "my_method", other_function, 0);
-}
-    EOF
+          rb_define_method(foo, "my_method", other_function, 0);
+      }
+    C
 
     klass = util_get_class content, 'foo'
     other_function = klass.method_list.first
@@ -1456,21 +1457,21 @@ Init_Foo(void) {
   end
 
   def test_find_body_static_inline
-    content = <<-EOF
-/*
- * a comment for other_function
- */
-static inline VALUE
-other_function() {
-}
+    content = <<~C
+      /*
+       * a comment for other_function
+       */
+      static inline VALUE
+      other_function() {
+      }
 
-void
-Init_Foo(void) {
-    VALUE foo = rb_define_class("Foo", rb_cObject);
+      void
+      Init_Foo(void) {
+          VALUE foo = rb_define_class("Foo", rb_cObject);
 
-    rb_define_method(foo, "my_method", other_function, 0);
-}
-    EOF
+          rb_define_method(foo, "my_method", other_function, 0);
+      }
+    C
 
     klass = util_get_class content, 'foo'
     other_function = klass.method_list.first
@@ -1486,11 +1487,11 @@ Init_Foo(void) {
   end
 
   def test_find_modifiers_call_seq
-    comment = RDoc::Comment.new <<-COMMENT
-call-seq:
-  commercial() -> Date <br />
+    comment = RDoc::Comment.new <<~COMMENT
+      call-seq:
+        commercial() -> Date <br />
 
-If no arguments are given:
+      If no arguments are given:
 
     COMMENT
 
@@ -1503,13 +1504,13 @@ If no arguments are given:
   end
 
   def test_find_modifiers_nodoc
-    comment = RDoc::Comment.new <<-COMMENT
-/* :nodoc:
- *
- * Blah
- */
+    comment = RDoc::Comment.new <<~C
+      /* :nodoc:
+       *
+       * Blah
+       */
 
-    COMMENT
+    C
 
     parser = util_parser
     method_obj = RDoc::AnyMethod.new 'blah'
@@ -1520,13 +1521,13 @@ If no arguments are given:
   end
 
   def test_find_modifiers_yields
-    comment = RDoc::Comment.new <<-COMMENT, @top_level, :c
-/* :yields: a, b
- *
- * Blah
- */
+    comment = RDoc::Comment.new <<~C, @top_level, :c
+      /* :yields: a, b
+       *
+       * Blah
+       */
 
-    COMMENT
+    C
 
     parser = util_parser
     method_obj = RDoc::AnyMethod.new 'blah'
@@ -1541,19 +1542,19 @@ If no arguments are given:
   def test_handle_method_args_minus_1
     parser = util_parser "Document-method: Object#m\n blah */"
 
-    parser.content = <<-BODY
-VALUE
-rb_other(VALUE obj) {
-  rb_funcall(obj, rb_intern("other"), 0);
-  return rb_str_new2("blah, blah, blah");
-}
+    parser.content = <<~C
+      VALUE
+      rb_other(VALUE obj) {
+        rb_funcall(obj, rb_intern("other"), 0);
+        return rb_str_new2("blah, blah, blah");
+      }
 
-VALUE
-rb_m(int argc, VALUE *argv, VALUE obj) {
-  VALUE o1, o2;
-  rb_scan_args(argc, argv, "1", &o1, &o2);
-}
-    BODY
+      VALUE
+      rb_m(int argc, VALUE *argv, VALUE obj) {
+        VALUE o1, o2;
+        rb_scan_args(argc, argv, "1", &o1, &o2);
+      }
+    C
 
     parser.handle_method 'method', 'rb_cObject', 'm', 'rb_m', -1
 
@@ -1641,12 +1642,12 @@ rb_m(int argc, VALUE *argv, VALUE obj) {
   end
 
   def test_handle_singleton
-    parser = util_parser <<-SINGLE
-void Init_Blah(void) {
-  cDate = rb_define_class("Date", rb_cObject);
-  sDate = rb_singleton_class(cDate);
-}
-    SINGLE
+    parser = util_parser <<~C
+      void Init_Blah(void) {
+        cDate = rb_define_class("Date", rb_cObject);
+        sDate = rb_singleton_class(cDate);
+      }
+    C
 
     parser.scan
 
@@ -1741,25 +1742,25 @@ void Init_Blah(void) {
   end
 
   def test_define_method
-    content = <<-EOF
-/*Method Comment! */
-static VALUE
-rb_io_s_read(argc, argv, io)
-    int argc;
-    VALUE *argv;
-    VALUE io;
-{
-}
+    content = <<~C
+      /*Method Comment! */
+      static VALUE
+      rb_io_s_read(argc, argv, io)
+          int argc;
+          VALUE *argv;
+          VALUE io;
+      {
+      }
 
-void
-Init_IO(void) {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE rb_cIO = rb_define_class("IO", rb_cObject);
-    rb_define_singleton_method(rb_cIO, "read", rb_io_s_read, -1);
-}
-    EOF
+      void
+      Init_IO(void) {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE rb_cIO = rb_define_class("IO", rb_cObject);
+          rb_define_singleton_method(rb_cIO, "read", rb_io_s_read, -1);
+      }
+    C
 
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
@@ -1771,27 +1772,27 @@ Init_IO(void) {
   end
 
   def test_define_method_with_category
-    content = <<-EOF
-/* :category: Awesome Methods
-   Method Comment!
- */
-static VALUE
-rb_io_s_read(argc, argv, io)
-    int argc;
-    VALUE *argv;
-    VALUE io;
-{
-}
+    content = <<~C
+      /* :category: Awesome Methods
+         Method Comment!
+       */
+      static VALUE
+      rb_io_s_read(argc, argv, io)
+          int argc;
+          VALUE *argv;
+          VALUE io;
+      {
+      }
 
-void
-Init_IO(void) {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE rb_cIO = rb_define_class("IO", rb_cObject);
-    rb_define_singleton_method(rb_cIO, "read", rb_io_s_read, -1);
-}
-    EOF
+      void
+      Init_IO(void) {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE rb_cIO = rb_define_class("IO", rb_cObject);
+          rb_define_singleton_method(rb_cIO, "read", rb_io_s_read, -1);
+      }
+    C
 
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
@@ -1803,40 +1804,40 @@ Init_IO(void) {
   end
 
   def test_define_method_dynamically
-    content = <<-EOF
-void
-Init_foo(void)
-{
-    rb_define_singleton_method(obj, "foo", foo, -1);
-}
-    EOF
+    content = <<~C
+      void
+      Init_foo(void)
+      {
+          rb_define_singleton_method(obj, "foo", foo, -1);
+      }
+    C
 
     klass = util_get_class content, 'obj'
     assert_nil klass
   end
 
   def test_define_method_with_prototype
-    content = <<-EOF
-static VALUE rb_io_s_read(int, VALUE*, VALUE);
+    content = <<~C
+      static VALUE rb_io_s_read(int, VALUE*, VALUE);
 
-/* Method Comment! */
-static VALUE
-rb_io_s_read(argc, argv, io)
-    int argc;
-    VALUE *argv;
-    VALUE io;
-{
-}
+      /* Method Comment! */
+      static VALUE
+      rb_io_s_read(argc, argv, io)
+          int argc;
+          VALUE *argv;
+          VALUE io;
+      {
+      }
 
-void
-Init_IO(void) {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE rb_cIO = rb_define_class("IO", rb_cObject);
-    rb_define_singleton_method(rb_cIO, "read", rb_io_s_read, -1);
-}
-    EOF
+      void
+      Init_IO(void) {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE rb_cIO = rb_define_class("IO", rb_cObject);
+          rb_define_singleton_method(rb_cIO, "read", rb_io_s_read, -1);
+      }
+    C
 
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
@@ -1847,25 +1848,25 @@ Init_IO(void) {
   end
 
   def test_define_method_private
-    content = <<-EOF
-/*Method Comment! */
-static VALUE
-rb_io_s_read(argc, argv, io)
-    int argc;
-    VALUE *argv;
-    VALUE io;
-{
-}
+    content = <<~C
+      /*Method Comment! */
+      static VALUE
+      rb_io_s_read(argc, argv, io)
+          int argc;
+          VALUE *argv;
+          VALUE io;
+      {
+      }
 
-void
-Init_IO(void) {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE rb_cIO = rb_define_class("IO", rb_cObject);
-    rb_define_private_method(rb_cIO, "read", rb_io_s_read, -1);
-}
-    EOF
+      void
+      Init_IO(void) {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE rb_cIO = rb_define_class("IO", rb_cObject);
+          rb_define_private_method(rb_cIO, "read", rb_io_s_read, -1);
+      }
+    C
 
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
@@ -1875,26 +1876,26 @@ Init_IO(void) {
   end
 
   def test_define_method_private_singleton
-    content = <<-EOF
-/*Method Comment! */
-static VALUE
-rb_io_s_read(argc, argv, io)
-    int argc;
-    VALUE *argv;
-    VALUE io;
-{
-}
+    content = <<~C
+      /*Method Comment! */
+      static VALUE
+      rb_io_s_read(argc, argv, io)
+          int argc;
+          VALUE *argv;
+          VALUE io;
+      {
+      }
 
-void
-Init_IO(void) {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE rb_cIO = rb_define_class("IO", rb_cObject);
-    VALUE rb_cIO_s = rb_singleton_class(rb_cIO);
-    rb_define_private_method(rb_cIO_s, "read", rb_io_s_read, -1);
-}
-    EOF
+      void
+      Init_IO(void) {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE rb_cIO = rb_define_class("IO", rb_cObject);
+          VALUE rb_cIO_s = rb_singleton_class(rb_cIO);
+          rb_define_private_method(rb_cIO_s, "read", rb_io_s_read, -1);
+      }
+    C
 
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
@@ -1905,26 +1906,26 @@ Init_IO(void) {
   end
 
   def test_define_method_singleton
-    content = <<-EOF
-/*Method Comment! */
-static VALUE
-rb_io_s_read(argc, argv, io)
-    int argc;
-    VALUE *argv;
-    VALUE io;
-{
-}
+    content = <<~C
+      /*Method Comment! */
+      static VALUE
+      rb_io_s_read(argc, argv, io)
+          int argc;
+          VALUE *argv;
+          VALUE io;
+      {
+      }
 
-void
-Init_IO(void) {
-    /*
-     * a comment for class Foo on rb_define_class
-     */
-    VALUE rb_cIO = rb_define_class("IO", rb_cObject);
-    VALUE rb_cIO_s = rb_singleton_class(rb_cIO);
-    rb_define_method(rb_cIO_s, "read", rb_io_s_read, -1);
-}
-    EOF
+      void
+      Init_IO(void) {
+          /*
+           * a comment for class Foo on rb_define_class
+           */
+          VALUE rb_cIO = rb_define_class("IO", rb_cObject);
+          VALUE rb_cIO_s = rb_singleton_class(rb_cIO);
+          rb_define_method(rb_cIO_s, "read", rb_io_s_read, -1);
+      }
+    C
 
     klass = util_get_class content, 'rb_cIO'
     read_method = klass.method_list.first
@@ -1993,12 +1994,12 @@ Init_IO(void) {
   end
 
   def test_scan
-    parser = util_parser <<-C
-void Init(void) {
-    mM = rb_define_module("M");
-    cC = rb_define_class("C", rb_cObject);
-    sC = rb_singleton_class(cC);
-}
+    parser = util_parser <<~C
+      void Init(void) {
+          mM = rb_define_module("M");
+          cC = rb_define_class("C", rb_cObject);
+          sC = rb_singleton_class(cC);
+      }
     C
 
     parser.scan
@@ -2017,56 +2018,56 @@ void Init(void) {
   end
 
   def test_scan_method_copy
-    parser = util_parser <<-C
-/*
- *  call-seq:
- *    pathname.to_s    -> string
- *    pathname.to_path -> string
- *
- *  Return the path as a String.
- *
- *  to_path is implemented so Pathname objects are usable with File.open, etc.
- */
-static VALUE
-path_to_s(VALUE self) { }
+    parser = util_parser <<~C
+      /*
+       *  call-seq:
+       *    pathname.to_s    -> string
+       *    pathname.to_path -> string
+       *
+       *  Return the path as a String.
+       *
+       *  to_path is implemented so Pathname objects are usable with File.open, etc.
+       */
+      static VALUE
+      path_to_s(VALUE self) { }
 
-/*
- *  call-seq:
- *     str[index]               -> new_str or nil
- *     str[start, length]       -> new_str or nil
- *     str.slice(index)         -> new_str or nil
- *     str.slice(start, length) -> new_str or nil
- */
-static VALUE
-path_aref_m(int argc, VALUE *argv, VALUE str) { }
+      /*
+       *  call-seq:
+       *     str[index]               -> new_str or nil
+       *     str[start, length]       -> new_str or nil
+       *     str.slice(index)         -> new_str or nil
+       *     str.slice(start, length) -> new_str or nil
+       */
+      static VALUE
+      path_aref_m(int argc, VALUE *argv, VALUE str) { }
 
-/*
- *  call-seq:
- *     string <=> other_string   -> -1, 0, +1 or nil
- */
-static VALUE
-path_cmp_m(VALUE str1, VALUE str2) { }
+      /*
+       *  call-seq:
+       *     string <=> other_string   -> -1, 0, +1 or nil
+       */
+      static VALUE
+      path_cmp_m(VALUE str1, VALUE str2) { }
 
-/*
- *  call-seq:
- *     str == obj    -> true or false
- *     str === obj   -> true or false
- */
-VALUE
-rb_str_equal(VALUE str1, VALUE str2) { }
+      /*
+       *  call-seq:
+       *     str == obj    -> true or false
+       *     str === obj   -> true or false
+       */
+      VALUE
+      rb_str_equal(VALUE str1, VALUE str2) { }
 
-Init_pathname()
-{
-    rb_cPathname = rb_define_class("Pathname", rb_cObject);
+      Init_pathname()
+      {
+          rb_cPathname = rb_define_class("Pathname", rb_cObject);
 
-    rb_define_method(rb_cPathname, "to_s",    path_to_s, 0);
-    rb_define_method(rb_cPathname, "to_path", path_to_s, 0);
-    rb_define_method(rb_cPathname, "[]",      path_aref_m, -1);
-    rb_define_method(rb_cPathname, "slice",   path_aref_m, -1);
-    rb_define_method(rb_cPathname, "<=>",     path_cmp_m, 1);
-    rb_define_method(rb_cPathname, "==",      rb_str_equal), 2);
-    rb_define_method(rb_cPathname, "===",     rb_str_equal), 2);
-}
+          rb_define_method(rb_cPathname, "to_s",    path_to_s, 0);
+          rb_define_method(rb_cPathname, "to_path", path_to_s, 0);
+          rb_define_method(rb_cPathname, "[]",      path_aref_m, -1);
+          rb_define_method(rb_cPathname, "slice",   path_aref_m, -1);
+          rb_define_method(rb_cPathname, "<=>",     path_cmp_m, 1);
+          rb_define_method(rb_cPathname, "==",      rb_str_equal, 2);
+          rb_define_method(rb_cPathname, "===",     rb_str_equal, 2);
+      }
     C
 
     parser.scan
@@ -2079,17 +2080,17 @@ Init_pathname()
     to_s = pathname.method_list.find { |m| m.name == 'to_s' }
     assert_equal "pathname.to_s    -> string", to_s.call_seq
 
-    index_expected = <<-EXPECTED.chomp
-str[index]               -> new_str or nil
-str[start, length]       -> new_str or nil
+    index_expected = <<~EXPECTED.chomp
+      str[index]               -> new_str or nil
+      str[start, length]       -> new_str or nil
     EXPECTED
 
     index = pathname.method_list.find { |m| m.name == '[]' }
     assert_equal index_expected, index.call_seq, '[]'
 
-    slice_expected = <<-EXPECTED.chomp
-str.slice(index)         -> new_str or nil
-str.slice(start, length) -> new_str or nil
+    slice_expected = <<~EXPECTED.chomp
+      str.slice(index)         -> new_str or nil
+      str.slice(start, length) -> new_str or nil
     EXPECTED
 
     slice = pathname.method_list.find { |m| m.name == 'slice' }
@@ -2158,22 +2159,22 @@ str.slice(start, length) -> new_str or nil
   end
 
   def test_scan_order_dependent
-    parser = util_parser <<-C
-void a(void) {
-    mA = rb_define_module("A");
-}
+    parser = util_parser <<~C
+      void a(void) {
+          mA = rb_define_module("A");
+      }
 
-void b(void) {
-    cB = rb_define_class_under(mA, "B", rb_cObject);
-}
+      void b(void) {
+          cB = rb_define_class_under(mA, "B", rb_cObject);
+      }
 
-void c(void) {
-    mC = rb_define_module_under(cB, "C");
-}
+      void c(void) {
+          mC = rb_define_module_under(cB, "C");
+      }
 
-void d(void) {
-    mD = rb_define_class_under(mC, "D");
-}
+      void d(void) {
+          mD = rb_define_class_under(mC, "D");
+      }
     C
 
     parser.scan
@@ -2183,32 +2184,32 @@ void d(void) {
   end
 
   def test_markup_format_default
-    content = <<-EOF
-void Init_Blah(void) {
-  cBlah = rb_define_class("Blah", rb_cObject);
+    content = <<~C
+      void Init_Blah(void) {
+        cBlah = rb_define_class("Blah", rb_cObject);
 
-  /*
-   * This should be interpreted in the default format.
-   */
-  rb_attr(cBlah, rb_intern("default_format"), 1, 1, Qfalse);
-}
-    EOF
+        /*
+         * This should be interpreted in the default format.
+         */
+        rb_attr(cBlah, rb_intern("default_format"), 1, 1, Qfalse);
+      }
+    C
 
     klass = util_get_class content, 'cBlah'
     assert_equal("rdoc", klass.attributes.find {|a| a.name == "default_format"}.comment.format)
   end
 
   def test_markup_format_override
-    content = <<-EOF
-void Init_Blah(void) {
-  cBlah = rb_define_class("Blah", rb_cObject);
+    content = <<~C
+      void Init_Blah(void) {
+        cBlah = rb_define_class("Blah", rb_cObject);
 
-  /*
-   * This should be interpreted in the default format.
-   */
-  rb_attr(cBlah, rb_intern("default_format"), 1, 1, Qfalse);
-}
-    EOF
+        /*
+         * This should be interpreted in the default format.
+         */
+        rb_attr(cBlah, rb_intern("default_format"), 1, 1, Qfalse);
+      }
+    C
 
     @options.markup = "markdown"
     klass = util_get_class content, 'cBlah'
