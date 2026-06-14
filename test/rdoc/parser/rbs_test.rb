@@ -228,6 +228,37 @@ class RDocParserRBSTest < RDoc::TestCase
     assert_nil greeter.find_method('shout', false)
   end
 
+  def test_scan_maps_initialize_to_singleton_new
+    util_parser(<<~RBS).scan
+      class Sample
+        # Build a sample.
+        def initialize: (String name) -> void
+      end
+    RBS
+
+    sample = @store.find_class_named 'Sample'
+    constructor = sample.find_method 'new', true
+
+    assert_not_nil constructor
+    assert_equal ['(String name) -> void'], constructor.type_signature_lines
+    assert_equal 'Build a sample.', constructor.comment.text.strip
+    assert_equal :public, constructor.visibility
+    assert_nil sample.find_method('initialize', false)
+  end
+
+  def test_scan_maps_private_initialize_to_public_singleton_new
+    util_parser(<<~RBS).scan
+      class Sample
+        private def initialize: () -> void
+      end
+    RBS
+
+    sample = @store.find_class_named 'Sample'
+    constructor = sample.find_method 'new', true
+
+    assert_equal :public, constructor.visibility
+  end
+
   def util_parser(content)
     RDoc::Parser::RBS.new @top_level, content, @options, @stats
   end

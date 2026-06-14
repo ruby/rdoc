@@ -78,6 +78,22 @@ class RDoc::Parser::RBS < RDoc::Parser
     object.type_signature_lines ||= type_signature_lines
   end
 
+  def rdoc_method_name(decl)
+    rbs_constructor_decl?(decl) ? 'new' : decl.name.to_s
+  end
+
+  def rdoc_method_singleton?(decl)
+    rbs_constructor_decl?(decl) || decl.singleton?
+  end
+
+  def rdoc_method_visibility(decl)
+    rbs_constructor_decl?(decl) ? :public : decl.visibility
+  end
+
+  def rbs_constructor_decl?(decl)
+    decl.kind == :instance && decl.name == :initialize
+  end
+
   def parse_attr_decl(decl, context)
     rw = case decl
          when ::RBS::AST::Members::AttrReader
@@ -188,13 +204,16 @@ class RDoc::Parser::RBS < RDoc::Parser
   def parse_method_decl(decl, context)
     comment = rdoc_comment_for(decl, context)
     type_signature_lines = decl.overloads.map { |overload| overload.method_type.to_s }
+    method_name = rdoc_method_name(decl)
+    singleton = rdoc_method_singleton?(decl)
+    visibility = rdoc_method_visibility(decl)
 
-    if method = context.find_method(decl.name.to_s, decl.singleton?)
+    if method = context.find_method(method_name, singleton)
       merge_documentation method, comment, type_signature_lines
       return
     end
 
-    method = RDoc::AnyMethod.new decl.name.to_s, singleton: decl.singleton?
+    method = RDoc::AnyMethod.new method_name, singleton: singleton
     record_object_location method, decl.location
     method.type_signature_lines = type_signature_lines
 
@@ -205,7 +224,7 @@ class RDoc::Parser::RBS < RDoc::Parser
 
     method.comment = comment if decl.comment
     context.add_method method
-    method.visibility = decl.visibility if decl.visibility
+    method.visibility = visibility if visibility
   end
 
   def parse_module_decl(decl, context, namespace)
