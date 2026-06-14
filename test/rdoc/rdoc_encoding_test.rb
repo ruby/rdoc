@@ -155,6 +155,15 @@ class RDocEncodingTest < RDoc::TestCase
     assert_equal Encoding::UTF_8, encoding
   end
 
+  def test_class_detect_encoding_ignores_documentation_comments
+    document = "# This document describes a method named #encoding: Returns an object.\n" \
+               "#     Encoding::US_ASCII.name # => \"US-ASCII\"\n" \
+               "# This is a documentation paragraph.\n" \
+               "# coding: UTF-8 is example text, not a magic comment.\n"
+
+    assert_nil RDoc::Encoding.detect_encoding document
+  end
+
   def test_class_set_encoding_bad
     s = ""
     encoding = RDoc::Encoding.detect_encoding s

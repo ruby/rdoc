@@ -7,13 +7,13 @@
 
 module RDoc::Encoding
 
-  HEADER_REGEXP = /^
+  HEADER_REGEXP = /\A
     (?:
-      \A\#!.*\n
+      \#!.*\n
       |
       ^\#\s+frozen[-_]string[-_]literal[=:].+\n
       |
-      ^\#[^\n]+\b(?:en)?coding[=:]\s*(?<name>[^\s;]+).*\n
+      ^\#\s*(?:-\*-\s*(?:[^;\n]*;\s*)*)?(?:en)?coding[=:]\s*(?<name>[^:\s;]+).*\n
       |
       <\?xml[^?]*encoding=(?<quote>["'])(?<name>.*?)\k<quote>.*\n
     )+
