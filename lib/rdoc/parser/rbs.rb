@@ -73,13 +73,24 @@ class RDoc::Parser::RBS < RDoc::Parser
       object.comment = if object.comment.empty?
                          comment
                        else
-                         "#{object.comment}\n---\n#{comment}"
+                         merge_comments object, comment
                        end
     end
 
     # TODO: Track RBS-owned documentation overlays so incremental reparsing can
     # replace stale comments and signatures from the previous RBS parse.
     object.type_signature_lines ||= type_signature_lines
+  end
+
+  def merge_comments(object, comment)
+    document = RDoc::Markup::Document.new
+    document.concat object.parse(object.comment).parts
+    document << RDoc::Markup::Rule.new(1)
+    document.concat comment.parse.parts
+
+    merged_comment = RDoc::Comment.new "#{object.comment}\n---\n#{comment}", comment.location
+    merged_comment.document = document
+    merged_comment
   end
 
   def merge_attribute_methods(context, name, rw, singleton, comment, type_signature_lines)

@@ -3,6 +3,7 @@
 require_relative '../helper'
 require 'rdoc/parser'
 require 'rdoc/generator/markup'
+require 'rdoc/markup/to_html'
 
 class RDocParserRBSTest < RDoc::TestCase
   def setup
@@ -180,6 +181,27 @@ class RDocParserRBSTest < RDoc::TestCase
     assert_equal "Ruby class docs.\n---\nRBS class docs.", sample.comment.to_s.strip
     assert_equal "Ruby method docs.\n---\nRBS method docs.", greet.comment.to_s.strip
     assert_equal ['() -> String'], greet.type_signature_lines
+  end
+
+  def test_scan_preserves_rbs_markdown_when_extending_method_documentation
+    ruby_top_level = @store.add_file 'sample.rb'
+    sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
+
+    greet = RDoc::AnyMethod.new 'greet'
+    greet.comment = 'Ruby method docs.'
+    sample.add_method greet
+
+    util_parser(<<~RBS).scan
+      class Sample
+        # [RBS method docs](https://example.com/rbs-docs).
+        def greet: () -> String
+      end
+    RBS
+
+    html = RDoc::Markup::ToHtml.new.convert greet.parse(greet.comment)
+
+    assert_include html, '<p>Ruby method docs.</p>'
+    assert_include html, '<a href="https://example.com/rbs-docs">RBS method docs</a>'
   end
 
   def test_scan_extends_existing_attribute_documentation

@@ -3,6 +3,7 @@
 require 'socket'
 require 'json'
 require 'erb'
+require 'set'
 require 'uri'
 
 ##
@@ -360,9 +361,10 @@ class RDoc::Server
   def check_for_changes
     changes = FileChanges.new @rdoc
     current_files = current_watch_files
+    current_file_set = current_files.to_set
 
     @file_mtimes.each_key do |file|
-      changes.record_removed file unless current_files.include? file
+      changes.record_removed file unless current_file_set.include? file
     end
 
     current_files.each do |file|
