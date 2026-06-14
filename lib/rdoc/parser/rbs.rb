@@ -82,6 +82,19 @@ class RDoc::Parser::RBS < RDoc::Parser
     object.type_signature_lines ||= type_signature_lines
   end
 
+  def merge_attribute_methods(context, name, rw, singleton, comment, type_signature_lines)
+    method_names = []
+    method_names << name if rw.include?('R')
+    method_names << "#{name}=" if rw.include?('W')
+
+    methods = method_names.map { |method_name| context.find_method(method_name, singleton) }
+    methods.compact.each do |method|
+      merge_documentation method, comment, type_signature_lines
+    end
+
+    methods.all?
+  end
+
   def rdoc_method_name(decl)
     rbs_constructor_decl?(decl) ? 'new' : decl.name.to_s
   end
@@ -112,17 +125,23 @@ class RDoc::Parser::RBS < RDoc::Parser
 
     comment = rdoc_comment_for(decl, context)
     type_signature_lines = [decl.type.to_s]
-    if attribute = context.find_attribute(decl.name.to_s, decl.kind == :singleton)
+    name = decl.name.to_s
+    singleton = decl.kind == :singleton
+    if attribute = context.find_attribute(name, singleton)
       merge_documentation attribute, comment, type_signature_lines
       attribute.rw = merge_attr_rw attribute.rw, rw
       return
     end
 
+    if merge_attribute_methods(context, name, rw, singleton, comment, type_signature_lines)
+      return
+    end
+
     attribute = RDoc::Attr.new(
-      decl.name.to_s,
+      name,
       rw,
       comment,
-      singleton: decl.kind == :singleton
+      singleton: singleton
     )
     record_object_location attribute, decl.location
     attribute.type_signature_lines = type_signature_lines
@@ -130,15 +149,14 @@ class RDoc::Parser::RBS < RDoc::Parser
     attribute.visibility = decl.visibility if decl.visibility
   end
 
-  def parse_class_decl(decl, context, namespace)
-    name = context == @top_level && namespace ? namespace + decl.name : decl.name
+  def parse_class_decl(decl, context, _namespace)
+    owner, name = context.find_or_create_constant_owner_name decl.name
     superclass = decl.super_class&.name&.to_s || '::Object'
-    klass = context.add_class RDoc::NormalClass, name.to_s, superclass
+    klass = owner.add_class RDoc::NormalClass, name, superclass
     record_object_location klass, decl.location
     klass.add_comment rdoc_comment_for(decl, @top_level), @top_level if decl.comment
 
-    nested_namespace = namespace ? namespace + decl.name : decl.name
-    decl.members.each { |member| parse_decl member, klass, nested_namespace }
+    decl.members.each { |member| parse_decl member, klass, klass.full_name }
   end
 
   def parse_constant_decl(decl, context)
@@ -237,13 +255,11 @@ class RDoc::Parser::RBS < RDoc::Parser
     method.visibility = visibility if visibility
   end
 
-  def parse_module_decl(decl, context, namespace)
-    name = context == @top_level && namespace ? namespace + decl.name : decl.name
-    mod = context.add_module RDoc::NormalModule, name.to_s
+  def parse_module_decl(decl, context, _namespace)
+    mod = context.add_module RDoc::NormalModule, decl.name.to_s
     record_object_location mod, decl.location
     mod.add_comment rdoc_comment_for(decl, @top_level), @top_level if decl.comment
 
-    nested_namespace = namespace ? namespace + decl.name : decl.name
-    decl.members.each { |member| parse_decl member, mod, nested_namespace }
+    decl.members.each { |member| parse_decl member, mod, mod.full_name }
   end
 end

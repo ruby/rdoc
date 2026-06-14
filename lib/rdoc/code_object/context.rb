@@ -313,13 +313,7 @@ class RDoc::Context < RDoc::CodeObject
                       @store.modules_hash[given_name]
           return enclosing if enclosing
           # not found: create the parent(s)
-          names = ename.split('::')
-          enclosing = self
-          names.each do |n|
-            enclosing = enclosing.classes_hash[n] ||
-                        enclosing.modules_hash[n] ||
-                        enclosing.add_module(RDoc::NormalModule, n)
-          end
+          enclosing = find_or_create_module_path ename
         end
       else
         name = full_name
@@ -501,10 +495,41 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
+  # Returns the owner context and local name for +constant_path+, creating
+  # missing namespace modules. A leading +::+ resolves from the top-level.
+
+  def find_or_create_constant_owner_name(constant_path) # :nodoc:
+    constant_path = constant_path.to_s
+    owner = constant_path.start_with?('::') ? top_level : self
+    constant_path = constant_path.delete_prefix('::')
+
+    owner_path, separator, name = constant_path.rpartition('::')
+    owner = owner.find_or_create_module_path owner_path unless separator.empty?
+
+    [owner, name]
+  end
+
+  ##
+  # Finds or creates the module path under this context.
+
+  def find_or_create_module_path(path) # :nodoc:
+    path.to_s.split('::').inject(self) do |owner, name|
+      owner.classes_hash[name] ||
+        owner.modules_hash[name] ||
+        owner.add_module(RDoc::NormalModule, name)
+    end
+  end
+
+  ##
   # Adds a module named +name+.  If RDoc already knows +name+ is a class then
   # that class is returned instead.  See also #add_class.
 
   def add_module(class_type, name)
+    if name.to_s.include?('::')
+      owner, name = find_or_create_constant_owner_name name
+      return owner.add_module class_type, name unless owner == self
+    end
+
     mod = @classes[name] || @modules[name]
     return mod if mod
 

@@ -81,6 +81,24 @@ class RDocParserRBSTest < RDoc::TestCase
     assert_nil @store.find_module_named('NewModule')
   end
 
+  def test_scan_splits_qualified_class_and_module_names
+    util_parser(<<~RBS).scan
+      module Foo::Bar
+      end
+
+      class Foo::Baz
+      end
+    RBS
+
+    foo = @store.find_module_named 'Foo'
+    bar = @store.find_module_named 'Foo::Bar'
+    baz = @store.find_class_named 'Foo::Baz'
+
+    assert_not_nil foo
+    assert_same bar, foo.modules_hash['Bar']
+    assert_same baz, foo.classes_hash['Baz']
+  end
+
   def test_scan_qualifies_nested_mixins
     util_parser(<<~RBS).scan
       module Sample
@@ -179,6 +197,25 @@ class RDocParserRBSTest < RDoc::TestCase
     RBS
 
     assert_equal "Ruby attribute docs.\n---\nRBS attribute docs.", name.comment.to_s.strip
+    assert_equal ['String'], name.type_signature_lines
+  end
+
+  def test_scan_merges_attribute_signature_into_existing_method
+    ruby_top_level = @store.add_file 'sample.rb'
+    sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
+
+    name = RDoc::AnyMethod.new 'name'
+    name.comment = 'Ruby method docs.'
+    sample.add_method name
+
+    util_parser(<<~RBS).scan
+      class Sample
+        # RBS attribute docs.
+        attr_reader name: String
+      end
+    RBS
+
+    assert_equal "Ruby method docs.\n---\nRBS attribute docs.", name.comment.to_s.strip
     assert_equal ['String'], name.type_signature_lines
   end
 
