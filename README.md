@@ -37,7 +37,9 @@ rdoc --main README.md
 
 You'll find information on the various formatting tricks you can use in comment blocks in the documentation this generates.
 
-RDoc uses file extensions to determine how to process each file.  File names ending `.rb` and `.rbw` are assumed to be Ruby source.  Files ending `.c` are parsed as C files.  All other files are assumed to contain just Markup-style markup (with or without leading `#` comment markers).  If directory names are passed to RDoc, they are scanned recursively for C and Ruby source files only.
+RDoc uses file extensions to determine how to process each file.  File names ending `.rb` and `.rbw` are assumed to be Ruby source.  Files ending `.c` are parsed as C files.  Files ending `.rbs` are parsed as RBS signature files.  All other files are assumed to contain just Markup-style markup (with or without leading `#` comment markers).  If directory names are passed to RDoc, they are scanned recursively for C, Ruby, and RBS source files.
+
+RBS files can document classes, modules, methods, attributes, and constants.  When RBS declarations match objects already documented from Ruby source, their comments and type signatures extend the existing documentation.
 
 To generate documentation using `rake` see [RDoc::Task](https://ruby.github.io/rdoc/RDoc/Task.html).
 

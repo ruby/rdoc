@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**RDoc** is Ruby's default documentation generation tool that produces HTML and command-line documentation for Ruby projects. It parses Ruby source code, C extensions, and markup files to generate documentation.
+**RDoc** is Ruby's default documentation generation tool that produces HTML and command-line documentation for Ruby projects. It parses Ruby source code, C extensions, RBS signature files, and markup files to generate documentation.
 
 - **Repository:** https://github.com/ruby/rdoc
 - **Homepage:** https://ruby.github.io/rdoc
@@ -177,9 +177,10 @@ lib/rdoc/
 ├── rdoc.rb                    # Main entry point (RDoc::RDoc class)
 ├── version.rb                 # Version constant
 ├── task.rb                    # Rake task integration
-├── parser/                    # Source code parsers (Ruby, C, Markdown, RD)
+├── parser/                    # Source code parsers (Ruby, C, RBS, Markdown, RD)
 │   ├── ruby.rb                # Prism-based Ruby parser
 │   ├── c.rb                   # C extension parser
+│   ├── rbs.rb                 # RBS signature parser
 │   └── ...
 ├── server.rb                  # Live-reloading preview server (rdoc --server)
 ├── generator/                 # Documentation generators
@@ -235,10 +236,16 @@ exe/
 
 ### Parsers and Generators
 
-- **Parsers:** Prism-based Ruby (`RDoc::Parser::Ruby`), C, Markdown, RD
+- **Parsers:** Prism-based Ruby (`RDoc::Parser::Ruby`), C, RBS (`RDoc::Parser::RBS`), Markdown, RD
 - **Generators:** HTML/Aliki (default), HTML/Darkfish (deprecated), RI, POT (gettext), JSON, Markup
 
-Parser tests live in the `RDocParserRubyTest` class (`test/rdoc/parser/ruby_test.rb`).
+Parser tests live under `test/rdoc/parser/`, including `RDocParserRubyTest` (`test/rdoc/parser/ruby_test.rb`) and `RDocParserRBSTest` (`test/rdoc/parser/rbs_test.rb`).
+
+### RBS Documentation Input and Signature Merging
+
+Selected `.rbs` files are first-class documentation input through `RDoc::Parser::RBS`. RBS declarations can create documentation for classes, modules, methods, attributes, and constants, or extend objects already documented from Ruby source.
+
+RBS files under the project's `sig/` directory are also auto-discovered by `RDoc::RDoc` for type signature merging and live preview bookkeeping. Keep this distinction clear: `.rbs` parsing builds documentation objects, while `sig/**/*.rbs` auto-discovery feeds the existing RBS type-signature merge path.
 
 ### Code Object Model and Constant Aliases
 
