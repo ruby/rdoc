@@ -38,6 +38,8 @@ class RDoc::Parser::RBS < RDoc::Parser
     rbs_comment = decl.comment if decl.respond_to?(:comment)
     return unless rbs_comment
 
+    # TODO: Run RBS comments through RDoc's directive preprocessor so
+    # directives like :nodoc: affect the documented object.
     comment = RDoc::Comment.new rbs_comment.string, context
     comment.format = 'markdown'
     comment
@@ -75,6 +77,8 @@ class RDoc::Parser::RBS < RDoc::Parser
                        end
     end
 
+    # TODO: Track RBS-owned documentation overlays so incremental reparsing can
+    # replace stale comments and signatures from the previous RBS parse.
     object.type_signature_lines ||= type_signature_lines
   end
 
@@ -83,6 +87,8 @@ class RDoc::Parser::RBS < RDoc::Parser
   end
 
   def rdoc_method_singleton?(decl)
+    # TODO: RBS `self?` methods are :singleton_instance and should add both a
+    # singleton method and a private instance method.
     rbs_constructor_decl?(decl) || decl.singleton?
   end
 
@@ -148,6 +154,10 @@ class RDoc::Parser::RBS < RDoc::Parser
       parse_class_decl decl, context, namespace
     when ::RBS::AST::Declarations::Module, ::RBS::AST::Declarations::Interface
       parse_module_decl decl, context, namespace
+    when ::RBS::AST::Declarations::ClassAlias,
+         ::RBS::AST::Declarations::ModuleAlias
+      # TODO: Add RBS class and module aliases to the RDoc store.
+      nil
     else
       parse_member_decl decl, context, namespace
     end
