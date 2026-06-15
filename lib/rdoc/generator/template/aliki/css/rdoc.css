@@ -684,7 +684,7 @@ nav ul li a:hover {
 
 nav ul ul {
   padding-left: var(--space-5);
-  margin-top: var(--space-2);
+  margin: var(--space-2) 0 0;
 }
 
 nav ul ul ul {
@@ -857,6 +857,10 @@ nav .nav-section-collapsible .nav-list .link-list {
   border-left: none;
   margin-left: 0;
   padding-left: var(--space-5);
+}
+
+nav .nav-section-collapsible .nav-list .link-list > li:last-child {
+  margin-bottom: 0;
 }
 
 /*
