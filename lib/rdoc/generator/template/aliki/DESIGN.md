@@ -81,7 +81,7 @@ Components reference semantic tokens, never raw hex.
 | Borders            | `border-subtle` / `-default` / `-emphasis` | Hairlines from quiet → strong      |
 | Link               | `link-default` / `link-hover` | Body links (default = text color; hover = accent) |
 | Code surface       | `code-bg` / `code-border`  | `<pre>` / inline `code`                          |
-| Signature card     | `sig-bg` / `sig-border`    | Method/attribute header card                     |
+| Signature card     | `sig-bg`                   | Method/attribute header card                     |
 | Nav                | `nav-bg` / `nav-text`      | Left sidebar surface + text                      |
 | Table              | `th-background` / `td-background` | Header row + zebra rows                     |
 
@@ -124,7 +124,6 @@ approval** (see §7).
 | `code-bg`             | `#f6f8fa`                 | `#292524` (neutral-800)   |
 | `code-border`         | `#d6d3d1`                 | `#44403c` (neutral-700)   |
 | `sig-bg`              | `#f5f5f4` (neutral-100)   | `#211f1e` (hand-picked)   |
-| `sig-border`          | `#f8bfbd` (primary-200)   | `#eb544f` (= accent)      |
 | `nav-bg` / `nav-text` | `#ffffff` / `#44403c`     | `#1c1917` / `#fafaf9`     |
 
 ### Syntax-highlight palette (`--code-*`)
@@ -257,14 +256,14 @@ The defining content component — a method or attribute presented as a card.
 
 | Property        | Value                                                        |
 |-----------------|--------------------------------------------------------------|
-| Card            | `sig-bg` background · `border-left: 3px sig-border` · `radius-md` |
+| Card            | `sig-bg` background · 1px `border-subtle` full border · `radius-md` |
 | Padding         | `space-3`, `padding-right: 6em` (room for the source toggle) |
 | Heading         | flex column, **mono**, `lg`, semibold; name `overflow-wrap: anywhere` |
 | Type signature (method) | `pre.method-type-signature` — transparent, dotted top rule via `::before`, `sm` mono, `text-tertiary`, tight, `pre-wrap` |
 | Type signature (attribute) | inline after `[RW]` badge, `sm` mono, `text-secondary` |
 | Source toggle (`.method-controls summary`) | accent text on `accent-subtle`, `radius-sm`, `sm` medium; hover `primary-100` bg + `primary-300` border + `translateY(-1px)`; active `scale(0.96)` |
-| Source reveal   | `.method-source-code` animates `max-height`+`opacity`+`translateY`, `--duration-medium`/`-fast` + `--ease-out-smooth`; revealed `<pre>` has `border-left: 3px accent` |
-| `:target`       | method-detail gets a left accent-border indent treatment      |
+| Source reveal   | `.method-source-code` animates `max-height`+`opacity`+`translateY`, `--duration-medium`/`-fast` + `--ease-out-smooth`; revealed `<pre>` uses the standard code border |
+| `:target`       | method-detail gets a neutral left-rail indent treatment       |
 
 ### Code (`pre`, `code`) + copy button
 
