@@ -237,11 +237,11 @@ Spacing/radius tokens referenced below resolve in §5/§6.
 | Focus    | accent border + `0 0 0 3px accent-subtle` ring                   |
 | Icon     | rotates `15deg` + `scale(1.1)` on hover, `--ease-out-smooth`     |
 
-### Left navigation (`nav` + `.nav-section`)
+### Left navigation (`#sidebar-navigation` + `.nav-section`)
 
 | Property        | Value                                                        |
 |-----------------|--------------------------------------------------------------|
-| Surface         | `nav-bg`, `border-right` hairline, sticky under header, full-height scroll |
+| Surface         | `nav-bg`, `border-right` hairline, sticky under header, full-height scroll; rules are scoped to `#sidebar-navigation` so the right TOC can use its own `<nav>` semantics |
 | Scrollbar       | 6 px, `border-default` thumb (custom, thin)                  |
 | Section heading | `lg` semibold in **accent**, `border-bottom`                 |
 | Section padding | `margin-top: space-6`, `padding: 0 space-6`                  |
@@ -295,14 +295,14 @@ horizontally.
 | Type badge (`.search-type-*`)    | inline-block, `space-0 space-2` pad, `xs`, weight 500, `radius-sm`, colors per §2 |
 | Matched term (`li em`)           | `search-highlight-bg`, `font-style: normal`                 |
 
-### Right TOC (`aside.table-of-contents`)
+### Right TOC (`#table-of-contents`)
 
 | Property      | Value                                                          |
 |---------------|----------------------------------------------------------------|
-| Layout        | sticky under header, `padding: space-8 space-6`, `border-left` hairline |
+| Layout        | sticky under header, `padding: space-8 space-6`, `border-left` hairline; its internal `.toc-nav` owns its scroll area and does not inherit left-navigation chrome |
 | Heading       | `lg` semibold, `text-primary`                                  |
 | Indent        | `.toc-h2` `margin-left: space-4`, `.toc-h3` `space-8`; nested `ul` border-left + `space-4` pad |
-| Link          | block, `text-secondary`; hover `link-hover`                    |
+| Link          | block, `text-secondary`; hover `link-hover` + underline; focus-visible accent outline |
 | **Active (scroll-spy)** | `accent-primary` + `font-weight: medium`             |
 | Visibility    | hidden `≤1279px`                                               |
 
@@ -432,7 +432,7 @@ The generated docs are fluid; the layout adapts at five breakpoints.
 | Breakpoint            | Behavior                                                                                   |
 |-----------------------|--------------------------------------------------------------------------------------------|
 | `≤1279px`             | Right **TOC hidden**; `.has-toc` grid drops to 2 columns                                    |
-| `≤1023px`             | Body → flex column; **left nav becomes an off-canvas drawer** (`300px`, `shadow-lg`) with an `overlay` backdrop + hamburger (`#navigation-toggle`); desktop search swaps to a mobile **search modal**; header padding/gap tighten to `space-4` |
+| `≤1023px`             | Body → flex column; **left nav becomes an off-canvas drawer** (`300px`, `shadow-lg`) with an `overlay` backdrop + hamburger (`#sidebar-navigation-toggle`); desktop search swaps to a mobile **search modal**; header padding/gap tighten to `space-4` |
 | `768–1023px` (tablet) | Header `0 space-6`; main `space-8 space-6`, full-width                                       |
 | `≤480px`              | Nav `width: 85%` (max `320px`); main padding `space-4`; tables scroll; method heading → `base`; signature card padding tightens |
 | `≤420px`              | Search modal padding tightens                                                               |
@@ -521,7 +521,7 @@ Layout:  sidebar 300 · content 800 · header 64 · search 400 · toc minmax(240
 | Layout grid          | §2 "Global Styles & Layout"                                     |
 | Code / copy button   | §5 "Code and Pre"                                               |
 | Header / theme toggle| §6 "Header (Top Navbar)"                                        |
-| Left nav             | §7 "Navigation (Left Sidebar)"                                  |
+| Left nav (`#sidebar-navigation`) | §7 "Navigation (Left Sidebar)"                             |
 | Signature cards, syntax classes | §8 "Main Content" (syntax classes ~`.ruby/.c/.sh-*`) |
 | Search (modal + dropdown + badges) | §9 "Search Modal" + the `.search-results` block   |
 | TOC scroll-spy       | §10 "Right Sidebar - Table of Contents"                         |

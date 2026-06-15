@@ -563,7 +563,7 @@ header.top-navbar .navbar-search form {
 }
 
 /* 7. Navigation (Left Sidebar) */
-nav {
+#sidebar-navigation {
   grid-area: nav;
   font-family: var(--font-heading);
   font-size: var(--font-size-base);
@@ -582,27 +582,27 @@ nav {
 }
 
 /* Custom scrollbar for WebKit browsers */
-nav::-webkit-scrollbar {
+#sidebar-navigation::-webkit-scrollbar {
   width: 6px;
 }
 
-nav::-webkit-scrollbar-track {
+#sidebar-navigation::-webkit-scrollbar-track {
   background: transparent;
 }
 
-nav::-webkit-scrollbar-thumb {
+#sidebar-navigation::-webkit-scrollbar-thumb {
   background: var(--color-border-default);
   border-radius: var(--radius-sm);
   transition: background var(--transition-fast);
 }
 
-nav::-webkit-scrollbar-thumb:hover {
+#sidebar-navigation::-webkit-scrollbar-thumb:hover {
   background: var(--color-border-emphasis);
 }
 
 /* Mobile navigation */
 @media (width <= 1023px) {
-  nav {
+  #sidebar-navigation {
     position: fixed;
     top: var(--layout-header-height);
     bottom: 0;
@@ -614,7 +614,7 @@ nav::-webkit-scrollbar-thumb:hover {
     /* Don't set height - let top/bottom define it */
   }
 
-  nav[hidden] {
+  #sidebar-navigation[hidden] {
     display: none;
   }
 
@@ -631,7 +631,7 @@ nav::-webkit-scrollbar-thumb:hover {
   }
 
   /* Show backdrop when nav is open */
-  body.nav-open::before {
+  body.sidebar-navigation-open::before {
     opacity: 1;
     pointer-events: auto;
   }
@@ -639,17 +639,18 @@ nav::-webkit-scrollbar-thumb:hover {
 
 /* Desktop: hide nav when [hidden] attribute is set */
 @media (width >= 1024px) {
-  nav[hidden] {
+  #sidebar-navigation[hidden] {
     display: none;
   }
 }
 
-nav .nav-section {
+#sidebar-navigation .nav-section {
   margin-top: var(--space-6);
   padding: 0 var(--space-6);
 }
 
-nav h2, nav h3 {
+#sidebar-navigation h2,
+#sidebar-navigation h3 {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--space-4);
@@ -658,51 +659,51 @@ nav h2, nav h3 {
   border-bottom: 1px solid var(--color-border-default);
 }
 
-nav ul,
-nav dl,
-nav p {
+#sidebar-navigation ul,
+#sidebar-navigation dl,
+#sidebar-navigation p {
   padding: 0;
   list-style: none;
   margin: var(--space-3) 0;
 }
 
-nav ul li {
+#sidebar-navigation ul li {
   margin-bottom: var(--space-2);
   line-height: var(--line-height-relaxed);
 }
 
-nav ul li a {
+#sidebar-navigation ul li a {
   transition:
     color var(--transition-fast),
     transform var(--transition-fast),
     padding var(--transition-fast);
 }
 
-nav ul li a:hover {
+#sidebar-navigation ul li a:hover {
   padding-left: var(--space-1);
 }
 
-nav ul ul {
+#sidebar-navigation ul ul {
   padding-left: var(--space-5);
   margin: var(--space-2) 0 0;
 }
 
-nav ul ul ul {
+#sidebar-navigation ul ul ul {
   padding-left: var(--space-5);
 }
 
-nav ul ul ul ul {
+#sidebar-navigation ul ul ul ul {
   padding-left: var(--space-5);
 }
 
-nav a {
+#sidebar-navigation a {
   text-decoration: none;
 }
 
 /* Truncation for direct nav links (not links inside code tags) */
-nav .nav-list > li > a,
-nav .nav-section > ul > li > a,
-nav .nav-section > dl > dd > a {
+#sidebar-navigation .nav-list > li > a,
+#sidebar-navigation .nav-section > ul > li > a,
+#sidebar-navigation .nav-section > dl > dd > a {
   display: block;
   max-width: 100%;
   overflow: hidden;
@@ -710,22 +711,22 @@ nav .nav-section > dl > dd > a {
   white-space: nowrap;
 }
 
-nav footer {
+#sidebar-navigation footer {
   padding: var(--space-4);
   border-top: 1px solid var(--color-border-default);
 }
 
-nav footer a {
+#sidebar-navigation footer a {
   color: var(--color-accent-hover);
 }
 
-#navigation-toggle {
+#sidebar-navigation-toggle {
   display: none; /* Hidden by default, shown on mobile */
 }
 
 /* Mobile toggle button */
 @media (width <= 1023px) {
-  #navigation-toggle {
+  #sidebar-navigation-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -745,7 +746,7 @@ nav footer a {
     -webkit-user-select: none;
   }
 
-  #navigation-toggle:hover {
+  #sidebar-navigation-toggle:hover {
     color: var(--color-accent-primary);
   }
 }
@@ -756,23 +757,23 @@ nav footer a {
  * Uses block-size animation with interpolate-size for smooth height transitions.
  * Both nav-section-collapsible and nested link-list details share this pattern.
  */
-nav details {
+#sidebar-navigation details {
   interpolate-size: allow-keywords;
 }
 
-nav details::details-content {
+#sidebar-navigation details::details-content {
   overflow: hidden;
   block-size: 0;
   transition: block-size 200ms ease, content-visibility 200ms ease allow-discrete;
 }
 
-nav details[open]::details-content {
+#sidebar-navigation details[open]::details-content {
   block-size: auto;
 }
 
 /* Collapsible Navigation Section Headers */
 
-nav .nav-section-header {
+#sidebar-navigation .nav-section-header {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -786,15 +787,15 @@ nav .nav-section-header {
   transition: color var(--transition-fast);
 }
 
-nav .nav-section-header::-webkit-details-marker {
+#sidebar-navigation .nav-section-header::-webkit-details-marker {
   display: none;
 }
 
-nav .nav-section-header:hover {
+#sidebar-navigation .nav-section-header:hover {
   color: var(--color-accent-primary);
 }
 
-nav .nav-section-icon {
+#sidebar-navigation .nav-section-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -804,12 +805,12 @@ nav .nav-section-icon {
   color: var(--color-accent-primary);
 }
 
-nav .nav-section-icon svg {
+#sidebar-navigation .nav-section-icon svg {
   width: 100%;
   height: 100%;
 }
 
-nav .nav-section-title {
+#sidebar-navigation .nav-section-title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: inherit;
@@ -820,7 +821,7 @@ nav .nav-section-title {
   white-space: nowrap;
 }
 
-nav .nav-section-chevron {
+#sidebar-navigation .nav-section-chevron {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -831,35 +832,35 @@ nav .nav-section-chevron {
   transition: transform var(--transition-base);
 }
 
-nav .nav-section-chevron svg {
+#sidebar-navigation .nav-section-chevron svg {
   width: 100%;
   height: 100%;
 }
 
 /* Rotate chevron when open */
-nav .nav-section-collapsible[open] > .nav-section-header .nav-section-chevron {
+#sidebar-navigation .nav-section-collapsible[open] > .nav-section-header .nav-section-chevron {
   transform: rotate(90deg);
 }
 
-nav .nav-section-collapsible > ul,
-nav .nav-section-collapsible > dl,
-nav .nav-section-collapsible > p {
+#sidebar-navigation .nav-section-collapsible > ul,
+#sidebar-navigation .nav-section-collapsible > dl,
+#sidebar-navigation .nav-section-collapsible > p {
   margin-top: 0;
 }
 
-nav .nav-section-collapsible > .nav-list {
+#sidebar-navigation .nav-section-collapsible > .nav-list {
   padding-left: var(--space-5);
   border-left: 1px solid var(--color-border-subtle);
   margin-left: 9px; /* Align with the section icon center */
 }
 
-nav .nav-section-collapsible .nav-list .link-list {
+#sidebar-navigation .nav-section-collapsible .nav-list .link-list {
   border-left: none;
   margin-left: 0;
   padding-left: var(--space-5);
 }
 
-nav .nav-section-collapsible .nav-list .link-list > li:last-child {
+#sidebar-navigation .nav-section-collapsible .nav-list .link-list > li:last-child {
   margin-bottom: 0;
 }
 
@@ -867,14 +868,14 @@ nav .nav-section-collapsible .nav-list .link-list > li:last-child {
   Improve chevron styling for details under link-list, using SVG chevron that matches nav-section-chevron
   We need to avoid adding the element in class content generation so it doesn't break darkfish styles
 */
-nav li details:has(.link-list) > summary {
+#sidebar-navigation li details:has(.link-list) > summary {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   cursor: pointer;
 }
 
-nav li details:has(.link-list) > summary::after {
+#sidebar-navigation li details:has(.link-list) > summary::after {
   content: '';
   position: static;
   display: inline-block;
@@ -894,11 +895,11 @@ nav li details:has(.link-list) > summary::after {
   transition: transform var(--transition-base), background-color var(--transition-fast);
 }
 
-nav li details:has(.link-list) > summary:hover::after {
+#sidebar-navigation li details:has(.link-list) > summary:hover::after {
   background-color: var(--color-accent-primary);
 }
 
-nav li details:has(.link-list)[open] > summary::after {
+#sidebar-navigation li details:has(.link-list)[open] > summary::after {
   transform: rotate(90deg);
   background-color: var(--color-accent-primary);
 }
@@ -918,7 +919,7 @@ main {
 
 /* Desktop: hide hamburger */
 @media (width >= 1024px) {
-  #navigation-toggle {
+  #sidebar-navigation-toggle {
     display: none;
   }
 }
@@ -1480,7 +1481,7 @@ main .attribute-access-type {
 
 /* Small screen adjustments */
 @media (width <= 480px) {
-  nav {
+  #sidebar-navigation {
     width: 85%;
     max-width: 320px;
   }
@@ -1694,7 +1695,7 @@ main .attribute-access-type {
 }
 
 /* 10. Right Sidebar - Table of Contents */
-aside.table-of-contents {
+#table-of-contents {
   grid-area: toc;
   align-self: start;
   position: sticky;
@@ -1705,34 +1706,33 @@ aside.table-of-contents {
   font-size: var(--font-size-base);
 }
 
-aside.table-of-contents * {
-  border-right: none !important;
-  outline: none !important;
-}
-
-aside.table-of-contents .toc-sticky {
+#table-of-contents .toc-sticky {
   display: flex;
   flex-direction: column;
 
-  /* Exclude header height and top/bottom padding of aside.table-of-contents */
+  /* Exclude header height and top/bottom padding of #table-of-contents */
   height: calc(100vh - var(--layout-header-height) - var(--space-8) * 2);
 }
 
-aside.table-of-contents .toc-sticky nav {
-  height: auto;
+#table-of-contents .toc-nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
 }
 
-aside.table-of-contents .toc-list > .toc-h2 {
+#table-of-contents .toc-list > .toc-h2 {
   margin-left: var(--space-4);
 }
 
-aside.table-of-contents .toc-list > .toc-h3 {
+#table-of-contents .toc-list > .toc-h3 {
   margin-left: var(--space-8);
 }
 
 /* Hide TOC on mobile/tablet */
 @media (width <= 1279px) {
-  aside.table-of-contents {
+  #table-of-contents {
     display: none;
   }
 
@@ -1757,31 +1757,31 @@ aside.table-of-contents .toc-list > .toc-h3 {
   }
 }
 
-.table-of-contents h3 {
+#table-of-contents h3 {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   margin: 0 0 var(--space-5) 0;
   color: var(--color-text-primary);
 }
 
-.table-of-contents ul {
+#table-of-contents ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.table-of-contents ul ul {
+#table-of-contents ul ul {
   margin-top: var(--space-3);
   margin-left: var(--space-5);
   border-left: 1px solid var(--color-border-default);
   padding-left: var(--space-4);
 }
 
-.table-of-contents li {
+#table-of-contents li {
   margin-bottom: var(--space-3);
 }
 
-.table-of-contents a {
+#table-of-contents a {
   display: block;
   color: var(--color-text-secondary);
   text-decoration: none;
@@ -1792,16 +1792,23 @@ aside.table-of-contents .toc-list > .toc-h3 {
 }
 
 /* Nav hover styles sit here to keep specificity ordering with TOC links */
-nav a:hover {
+#sidebar-navigation a:hover {
   color: var(--color-link-hover);
   text-decoration: underline;
 }
 
-.table-of-contents a:hover {
+#table-of-contents a:hover {
   color: var(--color-link-hover);
+  text-decoration: underline;
 }
 
-.table-of-contents a.active {
+#table-of-contents a:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+#table-of-contents a.active {
   color: var(--color-accent-primary);
   font-weight: var(--font-weight-medium);
 }
