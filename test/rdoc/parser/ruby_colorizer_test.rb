@@ -199,4 +199,25 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     assert_include(tokens, token(:string, '}'))
     assert_include(tokens, token(:string, "    heredoc\n"))
   end
+
+  def test_rational_imaginary
+    code = <<~RUBY
+      2i
+      2r
+      2ri
+
+      2.0i
+      2.0r
+      2.0ri
+    RUBY
+    tokens = RDoc::Parser::RubyColorizer.colorize(code)
+    assert_equal(code, tokens.map(&:text).join)
+
+    assert_include(tokens, token(:value, "2i"))
+    assert_include(tokens, token(:value, "2r"))
+    assert_include(tokens, token(:value, "2ri"))
+    assert_include(tokens, token(:value, "2.0i"))
+    assert_include(tokens, token(:value, "2.0r"))
+    assert_include(tokens, token(:value, "2.0ri"))
+  end
 end
