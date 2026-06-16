@@ -1107,6 +1107,22 @@ main p {
   margin-bottom: var(--space-4);
 }
 
+main .rdoc-logo {
+  margin: var(--space-6) 0 var(--space-8);
+  text-align: center;
+}
+
+main .rdoc-logo img {
+  display: inline-block;
+  width: clamp(120px, 14vw, 168px);
+  height: auto;
+  filter: drop-shadow(0 8px 18px rgb(230 41 35 / 8%));
+}
+
+[data-theme="dark"] main .rdoc-logo img {
+  filter: saturate(0.58) brightness(1.4) drop-shadow(0 8px 22px rgb(235 84 79 / 16%));
+}
+
 /* Preformatted Text */
 main pre {
   margin: 1.2em 0.5em;

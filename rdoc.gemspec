@@ -51,6 +51,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "exe/rdoc",
     "exe/ri",
     "man/ri.1",
+    "rdoc-logo.svg",
     "rdoc.gemspec",
   ]
   base = __dir__
@@ -60,7 +61,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
 
   s.files = (non_lib_files + template_files + lib_files).uniq
 
-  s.rdoc_options = ["--main", "README.md"]
+  s.rdoc_options = ["--main", "README.md", "--copy-files", "rdoc-logo.svg"]
   s.extra_rdoc_files += s.files.grep(%r[\A[^\/]+\.(?:rdoc|md)\z])
 
   s.required_ruby_version = Gem::Requirement.new(">= 3.2.0")
