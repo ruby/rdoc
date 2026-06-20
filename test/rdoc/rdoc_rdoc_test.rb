@@ -155,7 +155,7 @@ class RDocRDocTest < RDoc::TestCase
     end
   end
 
-  def test_parse_files_generates_docs_from_rbs_signatures
+  def test_parse_files_generates_docs_from_auto_discovered_rbs_files
     temp_dir do |dir|
       sig_dir = File.join dir, 'sig'
       FileUtils.mkdir_p sig_dir
@@ -185,7 +185,7 @@ class RDocRDocTest < RDoc::TestCase
     end
   end
 
-  def test_builtin_rbs_parser_skips_released_rbs_discovery
+  def test_builtin_rbs_parser_skips_rbs_gem_discovery_hook
     temp_dir do |dir|
       discover = File.join dir, 'lib', 'rdoc', 'discover.rb'
       result = File.join dir, 'discover-result'
