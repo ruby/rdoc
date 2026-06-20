@@ -313,7 +313,7 @@ class RDoc::Context < RDoc::CodeObject
                       @store.modules_hash[given_name]
           return enclosing if enclosing
           # not found: create the parent(s)
-          enclosing = find_or_create_module_path ename
+          enclosing = find_or_create_namespace_path ename
         end
       else
         name = full_name
@@ -497,22 +497,24 @@ class RDoc::Context < RDoc::CodeObject
   ##
   # Returns the owner context and local name for +constant_path+, creating
   # missing namespace modules. A leading +::+ resolves from the top-level.
+  # This only resolves explicit context-tree paths; RDoc::Parser::Ruby has
+  # parser-local lexical helpers for Ruby's nesting-dependent lookup.
 
-  def find_or_create_constant_owner_name(constant_path) # :nodoc:
+  def find_or_create_constant_owner_for_path(constant_path) # :nodoc:
     constant_path = constant_path.to_s
     owner = constant_path.start_with?('::') ? top_level : self
     constant_path = constant_path.delete_prefix('::')
 
     owner_path, separator, name = constant_path.rpartition('::')
-    owner = owner.find_or_create_module_path owner_path unless separator.empty?
+    owner = owner.find_or_create_namespace_path owner_path unless separator.empty?
 
     [owner, name]
   end
 
   ##
-  # Finds or creates the module path under this context.
+  # Finds or creates the module namespace path under this context.
 
-  def find_or_create_module_path(path) # :nodoc:
+  def find_or_create_namespace_path(path) # :nodoc:
     path.to_s.split('::').inject(self) do |owner, name|
       owner.classes_hash[name] ||
         owner.modules_hash[name] ||
@@ -526,7 +528,7 @@ class RDoc::Context < RDoc::CodeObject
 
   def add_module(class_type, name)
     if name.to_s.include?('::')
-      owner, name = find_or_create_constant_owner_name name
+      owner, name = find_or_create_constant_owner_for_path name
       return owner.add_module class_type, name unless owner == self
     end
 

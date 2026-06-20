@@ -624,6 +624,7 @@ The internal error was:
     relative_path = Pathname(file).expand_path.relative_path_from root
     relative_path.each_filename.first == 'sig'
   rescue ArgumentError
+    # file and root may be on different drives on Windows
     false
   end
 
@@ -672,8 +673,8 @@ The internal error was:
 
 end
 
-# Load built-in parser registrations before RubyGems discovery so the RBS gem's
-# plugin hook cannot replace RDoc::Parser::RBS.
+# Load built-in parser registrations before RubyGems discovery, then skip the
+# RBS gem's plugin hook so it cannot replace RDoc::Parser::RBS.
 require_relative 'parser'
 
 begin

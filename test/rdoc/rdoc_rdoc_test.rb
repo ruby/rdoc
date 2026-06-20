@@ -160,7 +160,7 @@ class RDocRDocTest < RDoc::TestCase
       sig_dir = File.join dir, 'sig'
       FileUtils.mkdir_p sig_dir
 
-      File.write 'sample.rb', <<~RUBY
+      File.write File.join(dir, 'sample.rb'), <<~RUBY
         class Sample
         end
       RUBY

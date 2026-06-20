@@ -437,16 +437,16 @@ class RDocContextTest < XrefTestCase
     assert_equal 'C1::C1', @c1.child_name('C1')
   end
 
-  def test_find_or_create_constant_owner_name
-    owner, name = @c1.find_or_create_constant_owner_name 'Relative::Nested'
+  def test_find_or_create_constant_owner_for_path
+    owner, name = @c1.find_or_create_constant_owner_for_path 'Relative::Nested'
 
     assert_equal 'Nested', name
     assert_equal 'C1::Relative', owner.full_name
     assert_same owner, @c1.modules_hash['Relative']
   end
 
-  def test_find_or_create_constant_owner_name_absolute
-    owner, name = @c1.find_or_create_constant_owner_name '::Absolute::Nested'
+  def test_find_or_create_constant_owner_for_path_absolute
+    owner, name = @c1.find_or_create_constant_owner_for_path '::Absolute::Nested'
 
     assert_equal 'Nested', name
     assert_equal 'Absolute', owner.full_name

@@ -622,7 +622,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Adds a method defined by `def` syntax
 
   def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
-    receiver = receiver_name ? find_or_create_module_path(receiver_name, receiver_fallback_type) : @container
+    receiver = receiver_name ? find_or_create_lexical_module_path(receiver_name, receiver_fallback_type) : @container
     comment, directives, type_signature_lines = consecutive_comment(start_line)
     handle_code_object_directives(@container, directives) if directives
 
@@ -684,10 +684,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
-  # Find or create module or class from a given module name.
-  # If module or class does not exist, creates a module or a class according to `create_mode` argument.
+  # Find or create module or class from a given module name using Ruby lexical
+  # nesting. If module or class does not exist, creates a module or a class
+  # according to `create_mode` argument.
 
-  def find_or_create_module_path(module_name, create_mode)
+  def find_or_create_lexical_module_path(module_name, create_mode)
     root_name, *path, name = module_name.split('::')
     add_module = ->(mod, name, mode) {
       case mode
@@ -733,10 +734,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     [mod.full_name, path].compact.join('::') if mod
   end
 
-  # Returns a pair of owner module and constant name from a given constant path.
-  # Creates owner module if it does not exist.
+  # Returns a pair of owner module and constant name from a given constant path
+  # using Ruby lexical nesting. Creates owner module if it does not exist.
 
-  def find_or_create_constant_owner_name(constant_path)
+  def find_or_create_lexical_constant_owner_name(constant_path)
     const_path, colon, name = constant_path.rpartition('::')
     if colon.empty? # class Foo
       # Within `class C` or `module C`, owner is C(== current container)
@@ -746,7 +747,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     elsif const_path.empty? # class ::Foo
       [@top_level, name]
     else # `class Foo::Bar` or `class ::Foo::Bar`
-      [find_or_create_module_path(const_path, :module), name]
+      [find_or_create_lexical_module_path(const_path, :module), name]
     end
   end
 
@@ -755,7 +756,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def add_constant(constant_name, rhs_name, start_line, end_line, alias_path: nil)
     comment, directives = consecutive_comment(start_line)
     handle_code_object_directives(@container, directives) if directives
-    owner, name = find_or_create_constant_owner_name(constant_name)
+    owner, name = find_or_create_lexical_constant_owner_name(constant_name)
     return unless owner
 
     constant = RDoc::Constant.new(name, rhs_name, comment)
@@ -789,7 +790,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     handle_code_object_directives(@container, directives) if directives
     return unless @container.document_children
 
-    owner, name = find_or_create_constant_owner_name(module_name)
+    owner, name = find_or_create_lexical_constant_owner_name(module_name)
     return unless owner
 
     if is_class
@@ -992,7 +993,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when Prism::ConstantPathNode, Prism::ConstantReadNode
         expression_name = constant_path_string(expression)
         # If a constant_path does not exist, RDoc creates a module
-        mod = @scanner.find_or_create_module_path(expression_name, :module) if expression_name
+        mod = @scanner.find_or_create_lexical_module_path(expression_name, :module) if expression_name
       when Prism::SelfNode
         mod = @scanner.container if @scanner.container != @top_level
       end

@@ -222,6 +222,25 @@ class RDocParserRBSTest < RDoc::TestCase
     assert_equal ['String'], name.type_signature_lines
   end
 
+  def test_scan_does_not_widen_existing_attribute_reader_with_rbs_writer
+    ruby_top_level = @store.add_file 'sample.rb'
+    sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
+
+    name = RDoc::Attr.new 'name', 'R', 'Ruby attribute docs.'
+    sample.add_attribute name
+
+    util_parser(<<~RBS).scan
+      class Sample
+        # RBS attribute docs.
+        attr_writer name: String
+      end
+    RBS
+
+    assert_equal 'R', name.rw
+    assert_equal 'Ruby attribute docs.', name.comment.to_s.strip
+    assert_nil name.type_signature_lines
+  end
+
   def test_scan_merges_attribute_signature_into_existing_method
     ruby_top_level = @store.add_file 'sample.rb'
     sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
@@ -239,6 +258,26 @@ class RDocParserRBSTest < RDoc::TestCase
 
     assert_equal "Ruby method docs.\n---\nRBS attribute docs.", name.comment.to_s.strip
     assert_equal ['String'], name.type_signature_lines
+  end
+
+  def test_scan_merges_accessor_writer_method_without_creating_reader_attribute
+    ruby_top_level = @store.add_file 'sample.rb'
+    sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
+
+    name_writer = RDoc::AnyMethod.new 'name='
+    name_writer.comment = 'Ruby writer docs.'
+    sample.add_method name_writer
+
+    util_parser(<<~RBS).scan
+      class Sample
+        # RBS attribute docs.
+        attr_accessor name: String
+      end
+    RBS
+
+    assert_equal "Ruby writer docs.\n---\nRBS attribute docs.", name_writer.comment.to_s.strip
+    assert_equal ['String'], name_writer.type_signature_lines
+    assert_nil sample.find_attribute('name', false)
   end
 
   def test_scan_reparsing_keeps_existing_rbs_method_overlay

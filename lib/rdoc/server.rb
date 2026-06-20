@@ -65,10 +65,6 @@ class RDoc::Server
       @reload_rbs_signatures = false
     end
 
-    def empty?
-      !source_files_changed? && !reload_rbs_signatures?
-    end
-
     def record_changed(file)
       reload_rbs_signatures_if_needed file
       changed_files << file
@@ -374,7 +370,7 @@ class RDoc::Server
       changes.record_changed file
     end
 
-    return false if changes.empty?
+    return false unless changes.source_files_changed?
 
     reparse_and_refresh changes
     true

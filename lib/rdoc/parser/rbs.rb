@@ -26,11 +26,9 @@ class RDoc::Parser::RBS < RDoc::Parser
     if RDoc::ClassModule === object
       @top_level.add_to_classes_or_modules object unless
         @top_level.classes_or_modules.include? object
-      object.record_location @top_level
-    else
-      object.record_location @top_level
     end
 
+    object.record_location @top_level
     object
   end
 
@@ -61,13 +59,6 @@ class RDoc::Parser::RBS < RDoc::Parser
     name
   end
 
-  def merge_attr_rw(existing_rw, new_rw)
-    rw = +''
-    rw << 'R' if existing_rw.include?('R') || new_rw.include?('R')
-    rw << 'W' if existing_rw.include?('W') || new_rw.include?('W')
-    rw
-  end
-
   def merge_documentation(object, comment, type_signature_lines)
     if comment
       object.comment = if object.comment.empty?
@@ -88,9 +79,15 @@ class RDoc::Parser::RBS < RDoc::Parser
     document << RDoc::Markup::Rule.new(1)
     document.concat comment.parse.parts
 
+    # Keep this text separator in sync with the Rule node above.
     merged_comment = RDoc::Comment.new "#{object.comment}\n---\n#{comment}", comment.location
+    merged_comment.format = 'markdown'
     merged_comment.document = document
     merged_comment
+  end
+
+  def attr_rw_matches?(existing_rw, new_rw)
+    existing_rw.each_char.any? { |rw| new_rw.include? rw }
   end
 
   def merge_attribute_methods(context, name, rw, singleton, comment, type_signature_lines)
@@ -103,7 +100,7 @@ class RDoc::Parser::RBS < RDoc::Parser
       merge_documentation method, comment, type_signature_lines
     end
 
-    methods.all?
+    methods.any?
   end
 
   def rdoc_method_name(decl)
@@ -139,8 +136,8 @@ class RDoc::Parser::RBS < RDoc::Parser
     name = decl.name.to_s
     singleton = decl.kind == :singleton
     if attribute = context.find_attribute(name, singleton)
-      merge_documentation attribute, comment, type_signature_lines
-      attribute.rw = merge_attr_rw attribute.rw, rw
+      merge_documentation attribute, comment, type_signature_lines if
+        attr_rw_matches? attribute.rw, rw
       return
     end
 
@@ -161,11 +158,12 @@ class RDoc::Parser::RBS < RDoc::Parser
   end
 
   def parse_class_decl(decl, context, _namespace)
-    owner, name = context.find_or_create_constant_owner_name decl.name
+    owner, name = context.find_or_create_constant_owner_for_path decl.name
     superclass = decl.super_class&.name&.to_s || '::Object'
     klass = owner.add_class RDoc::NormalClass, name, superclass
     record_object_location klass, decl.location
-    klass.add_comment rdoc_comment_for(decl, @top_level), @top_level if decl.comment
+    comment = rdoc_comment_for decl, @top_level
+    klass.add_comment comment, @top_level if comment
 
     decl.members.each { |member| parse_decl member, klass, klass.full_name }
   end
@@ -261,7 +259,7 @@ class RDoc::Parser::RBS < RDoc::Parser
       method.add_token line_no: loc.start_line, char_no: 1, text: loc.source
     end
 
-    method.comment = comment if decl.comment
+    method.comment = comment if comment
     context.add_method method
     method.visibility = visibility if visibility
   end
@@ -269,7 +267,8 @@ class RDoc::Parser::RBS < RDoc::Parser
   def parse_module_decl(decl, context, _namespace)
     mod = context.add_module RDoc::NormalModule, decl.name.to_s
     record_object_location mod, decl.location
-    mod.add_comment rdoc_comment_for(decl, @top_level), @top_level if decl.comment
+    comment = rdoc_comment_for decl, @top_level
+    mod.add_comment comment, @top_level if comment
 
     decl.members.each { |member| parse_decl member, mod, mod.full_name }
   end
