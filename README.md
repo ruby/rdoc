@@ -3,6 +3,10 @@
 - GitHub: [https://github.com/ruby/rdoc](https://github.com/ruby/rdoc)
 - Issues: [https://github.com/ruby/rdoc/issues](https://github.com/ruby/rdoc/issues)
 
+<p align="center" class="rdoc-logo">
+  <img src="rdoc-logo.svg" alt="RDoc" width="168" height="198">
+</p>
+
 ## Description
 
 RDoc produces HTML and command-line documentation for Ruby projects.  RDoc includes the `rdoc` and `ri` tools for generating and displaying documentation from the command-line.

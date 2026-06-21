@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="168" height="198" viewBox="298 140 712 840" role="img" aria-labelledby="title desc">
+  <title id="title">RDoc</title>
+  <desc id="desc">A red document outline with a folded corner and a Ruby gem.</desc>
+  <style>
+    .surface {
+      fill: transparent;
+    }
+
+    .stroke {
+      stroke: url(#rdoc-red);
+    }
+
+    .solid {
+      fill: url(#rdoc-red);
+    }
+  </style>
+  <defs>
+    <linearGradient id="rdoc-red" x1="338" y1="178" x2="973" y2="938" gradientUnits="userSpaceOnUse">
+      <stop id="rdoc-red-start" offset="0" stop-color="#e62923"/>
+      <stop id="rdoc-red-mid" offset="0.56" stop-color="#e62923"/>
+      <stop id="rdoc-red-end" offset="1" stop-color="#e62923"/>
+    </linearGradient>
+    <filter id="soft-red-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#e62923" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#soft-red-shadow)" fill="none" class="stroke" stroke-linecap="round" stroke-linejoin="round">
+    <path class="surface" d="M382 178h326l149 149v499c0 24-20 44-44 44H382c-24 0-44-20-44-44V222c0-24 20-44 44-44Z" stroke="none"/>
+    <path d="M685 870H382c-24 0-44-20-44-44V222c0-24 20-44 44-44h326l149 149v246" stroke-width="26"/>
+    <path class="solid" d="M708 178v126c0 24 19 43 43 43h106" stroke="none"/>
+    <path d="M708 178 857 327" stroke-width="26"/>
+
+    <path d="M440 411h216" stroke-width="26"/>
+    <path d="M440 506h216" stroke-width="26"/>
+    <path d="M440 605h145" stroke-width="26"/>
+
+    <path class="surface" d="M668 609h224l81 97-195 232-191-232 81-97Z" stroke-width="26"/>
+    <path d="M668 609 700 706 778 609 858 706 892 609" stroke-width="20"/>
+    <path d="M587 706h386" stroke-width="20"/>
+    <path d="M700 706 778 938 858 706" stroke-width="20"/>
+  </g>
+</svg>
