@@ -150,11 +150,11 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
   end
 
   ##
-  # Creates an HTML link to +name+ with the given +text+.
-  # +text+ is an HTML string, already escaped and may contain HTML tags.
+  # Creates an HTML link to +name+ with the given +html_string+.
+  # +html_string+ should be already escaped and may contain HTML tags.
   # Returns the link HTML string, or +nil+ if the reference could not be resolved.
 
-  def link(name, text, code = true, rdoc_ref: false)
+  def link(name, html_string, code = true, rdoc_ref: false)
     if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
       name = $1
       label = $'
@@ -172,11 +172,11 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       path = ref.as_href(@from_path)
 
       if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
-        text = "<code>#{text}</code>"
+        html_string = "<code>#{html_string}</code>"
       end
     elsif name
       if rdoc_ref && @warn_missing_rdoc_ref
-        puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{text}`"
+        puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{html_string}`"
       end
       return
     else
@@ -217,7 +217,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
       end
     end
 
-    "<a href=\"#{path}\">#{text}</a>"
+    "<a href=\"#{path}\">#{html_string}</a>"
   end
 
   def handle_TT(code)
