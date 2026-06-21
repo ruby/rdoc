@@ -48,6 +48,35 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para('<code>.bar.hello(\\)</code>'), result
   end
 
+  def test_convert_suppressed_CROSSREF_in_tt
+    result = @to.convert '<tt>C1</tt> <tt>\\C1</tt>'
+    assert_equal para('<a href="C1.html"><code>C1</code></a> <code>C1</code>'), result
+
+    result = @to.convert '<tt>C1#m()</tt> <tt>\\C1#m()</tt>'
+    assert_equal para('<a href="C1.html#method-i-m"><code>C1#m()</code></a> <code>C1#m()</code>'), result
+
+    # Keep backshash if crossref doesn't exist
+    result = @to.convert '<tt>C1#&</tt> <tt>\\n</tt> <tt>\\C1#&</tt>'
+    assert_equal para('<code>C1#&amp;</code> <code>\\n</code> <code>\\C1#&amp;</code>'), result
+  end
+
+  def test_convert_file_CROSSREF_in_tt
+    readme = @store.add_file 'README.txt'
+    readme.parser = RDoc::Parser::Simple
+
+    result = @to.convert 'Link to README.txt'
+    assert_equal para('Link to <a href="README_txt.html">README.txt</a>'), result
+
+    # Don't link to file in code. Only CodeObjects are linked in <tt>.
+    result = @to.convert '<tt>README.txt</tt>'
+    assert_equal para('<code>README.txt</code>'), result
+
+    # Since <tt>README.txt</tt> is not treated as a cross-reference,
+    # there's nothing to suppress. Backslash shouldn't be removed.
+    result = @to.convert '<tt>\README.txt</tt>'
+    assert_equal para('<code>\README.txt</code>'), result
+  end
+
   def test_convert_CROSSREF_ignored_excluded_words
     @to = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1,
       hyperlink_all: true, warn_missing_rdoc_ref: true,
@@ -118,7 +147,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
 
   def test_convert_CROSSREF_legacy_label
     result = @to.convert 'C1@What-27s+Here'
-    assert_equal para("<a href=\"C1.html#class-c1-whats-here\">What's Here at <code>C1</code></a>"), result
+    assert_equal para("<a href=\"C1.html#class-c1-whats-here\">What&#39;s Here at <code>C1</code></a>"), result
   end
 
   def test_convert_CROSSREF_legacy_label_colon
@@ -130,7 +159,7 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     @c1.add_section "What's Here"
 
     result = @to.convert "C1@What-27s+Here"
-    assert_equal para("<a href=\"C1.html#whats-here\">What's Here at <code>C1</code></a>"), result
+    assert_equal para("<a href=\"C1.html#whats-here\">What&#39;s Here at <code>C1</code></a>"), result
   end
 
   def test_convert_CROSSREF_constant
@@ -430,9 +459,9 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal "#no", REGEXP_HANDLING('#no')
   end
 
-  def test_cross_reference_preserves_explicit_text_for_unresolved
-    # When explicit text is provided, it should be preserved on unresolved refs
-    assert_equal "Foo", @to.cross_reference("Missing", "Foo")
+  def test_cross_reference_returns_nil_for_unresolved
+    # Fallback of unresolved refs depends on the context, so cross_reference should return nil for unresolved refs
+    assert_nil @to.cross_reference("Missing", "Foo")
   end
 
   private
