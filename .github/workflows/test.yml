@@ -16,7 +16,7 @@ jobs:
     with:
       min_version: 3.2
       versions: '["mswin"]'
-      engine: cruby-truffleruby
+      engine: all
 
   test:
     needs: ruby-versions
@@ -30,6 +30,10 @@ jobs:
             ruby: truffleruby
           - os: windows-latest
             ruby: truffleruby-head
+          - os: windows-latest
+            ruby: jruby
+          - os: windows-latest
+            ruby: jruby-head
           - os: macos-latest
             ruby: mswin
           - os: ubuntu-latest
