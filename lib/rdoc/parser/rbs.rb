@@ -32,22 +32,22 @@ class RDoc::Parser::RBS < RDoc::Parser
     object
   end
 
-  def rdoc_comment_for(decl, context)
+  def rdoc_comment_for(decl)
     rbs_comment = decl.comment if decl.respond_to?(:comment)
     return unless rbs_comment
 
     # TODO: Run RBS comments through RDoc's directive preprocessor so
     # directives like :nodoc: affect the documented object.
-    comment = RDoc::Comment.new rbs_comment.string, context
+    comment = RDoc::Comment.new rbs_comment.string, @top_level
     comment.format = 'markdown'
     comment
   end
 
-  def local_module_name(type_name, namespace)
+  def local_module_name(type_name, context)
     name = type_name.to_s
     return name if name.start_with?('::')
 
-    namespace_names = namespace ? namespace.to_s.split('::') : []
+    namespace_names = context == @top_level ? [] : context.full_name.split('::')
 
     namespace_names.length.downto(1) do |length|
       qualified_name = namespace_names.take(length).join('::')
@@ -131,7 +131,7 @@ class RDoc::Parser::RBS < RDoc::Parser
            'RW'
          end
 
-    comment = rdoc_comment_for(decl, context)
+    comment = rdoc_comment_for decl
     type_signature_lines = [decl.type.to_s]
     name = decl.name.to_s
     singleton = decl.kind == :singleton
@@ -157,54 +157,54 @@ class RDoc::Parser::RBS < RDoc::Parser
     attribute.visibility = decl.visibility if decl.visibility
   end
 
-  def parse_class_decl(decl, context, _namespace)
+  def parse_class_decl(decl, context)
     owner, name = context.find_or_create_constant_owner_for_path decl.name
     superclass = decl.super_class&.name&.to_s || '::Object'
     klass = owner.add_class RDoc::NormalClass, name, superclass
     record_object_location klass, decl.location
-    comment = rdoc_comment_for decl, @top_level
+    comment = rdoc_comment_for decl
     klass.add_comment comment, @top_level if comment
 
-    decl.members.each { |member| parse_decl member, klass, klass.full_name }
+    decl.members.each { |member| parse_decl member, klass }
   end
 
   def parse_constant_decl(decl, context)
     constant = RDoc::Constant.new decl.name.to_s, decl.type.to_s,
-                                  rdoc_comment_for(decl, context)
+                                  rdoc_comment_for(decl)
     record_object_location constant, decl.location
     context.add_constant constant
   end
 
-  def parse_decl(decl, context, namespace = nil)
+  def parse_decl(decl, context)
     case decl
     when ::RBS::AST::Declarations::Class
-      parse_class_decl decl, context, namespace
+      parse_class_decl decl, context
     when ::RBS::AST::Declarations::Module, ::RBS::AST::Declarations::Interface
-      parse_module_decl decl, context, namespace
+      parse_module_decl decl, context
     when ::RBS::AST::Declarations::ClassAlias,
          ::RBS::AST::Declarations::ModuleAlias
       # TODO: Add RBS class and module aliases to the RDoc store.
       nil
     else
-      parse_member_decl decl, context, namespace
+      parse_member_decl decl, context
     end
   end
 
-  def parse_extend_decl(decl, context, namespace)
-    extend_decl = RDoc::Extend.new local_module_name(decl.name, namespace),
-                                   rdoc_comment_for(decl, context)
+  def parse_extend_decl(decl, context)
+    extend_decl = RDoc::Extend.new local_module_name(decl.name, context),
+                                   rdoc_comment_for(decl)
     record_object_location extend_decl, decl.location
     context.add_extend extend_decl
   end
 
-  def parse_include_decl(decl, context, namespace)
-    include_decl = RDoc::Include.new local_module_name(decl.name, namespace),
-                                    rdoc_comment_for(decl, context)
+  def parse_include_decl(decl, context)
+    include_decl = RDoc::Include.new local_module_name(decl.name, context),
+                                    rdoc_comment_for(decl)
     record_object_location include_decl, decl.location
     context.add_include include_decl
   end
 
-  def parse_member_decl(decl, context, namespace)
+  def parse_member_decl(decl, context)
     case decl
     when ::RBS::AST::Declarations::Constant
       parse_constant_decl decl, context
@@ -217,9 +217,9 @@ class RDoc::Parser::RBS < RDoc::Parser
          ::RBS::AST::Members::AttrAccessor
       parse_attr_decl decl, context
     when ::RBS::AST::Members::Include
-      parse_include_decl decl, context, namespace
+      parse_include_decl decl, context
     when ::RBS::AST::Members::Extend
-      parse_extend_decl decl, context, namespace
+      parse_extend_decl decl, context
     when ::RBS::AST::Members::Private,
          ::RBS::AST::Members::Public
       # TODO: Track standalone RBS visibility members.
@@ -231,7 +231,7 @@ class RDoc::Parser::RBS < RDoc::Parser
     alias_def = RDoc::Alias.new(
       decl.old_name.to_s,
       decl.new_name.to_s,
-      rdoc_comment_for(decl, context),
+      rdoc_comment_for(decl),
       singleton: decl.kind == :singleton
     )
     record_object_location alias_def, decl.location
@@ -239,7 +239,7 @@ class RDoc::Parser::RBS < RDoc::Parser
   end
 
   def parse_method_decl(decl, context)
-    comment = rdoc_comment_for(decl, context)
+    comment = rdoc_comment_for decl
     type_signature_lines = decl.overloads.map { |overload| overload.method_type.to_s }
     method_name = rdoc_method_name(decl)
     singleton = rdoc_method_singleton?(decl)
@@ -264,12 +264,12 @@ class RDoc::Parser::RBS < RDoc::Parser
     method.visibility = visibility if visibility
   end
 
-  def parse_module_decl(decl, context, _namespace)
+  def parse_module_decl(decl, context)
     mod = context.add_module RDoc::NormalModule, decl.name.to_s
     record_object_location mod, decl.location
-    comment = rdoc_comment_for decl, @top_level
+    comment = rdoc_comment_for decl
     mod.add_comment comment, @top_level if comment
 
-    decl.members.each { |member| parse_decl member, mod, mod.full_name }
+    decl.members.each { |member| parse_decl member, mod }
   end
 end

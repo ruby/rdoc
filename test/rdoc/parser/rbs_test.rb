@@ -44,6 +44,8 @@ class RDocParserRBSTest < RDoc::TestCase
     greet = sample.find_method 'greet', false
     assert_equal ['(String) -> Integer', '(Symbol) -> String'], greet.type_signature_lines
     assert_equal 'Greets by name.', greet.comment.text.strip
+    assert_same @top_level, greet.comment.location
+    assert_equal 'sample.rbs', greet.comment.parse.file
 
     markup_code = greet.markup_code
     assert_equal 1, markup_code.scan('# File sample.rbs, line 6').size
@@ -51,6 +53,8 @@ class RDocParserRBSTest < RDoc::TestCase
 
     name = sample.find_attribute 'name', false
     assert_equal ['String'], name.type_signature_lines
+    assert_same @top_level, name.comment.location
+    assert_equal 'sample.rbs', name.comment.parse.file
 
     salutation = sample.find_method 'salutation', false
     assert_equal greet, salutation.is_alias_for
