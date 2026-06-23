@@ -3,6 +3,7 @@
 require 'socket'
 require 'json'
 require 'erb'
+require 'set'
 require 'uri'
 
 ##
@@ -53,6 +54,41 @@ class RDoc::Server
     405 => 'Method Not Allowed',
     500 => 'Internal Server Error',
   }.freeze
+
+  class FileChanges # :nodoc:
+    attr_reader :changed_files, :removed_files
+
+    def initialize(rdoc)
+      @rdoc = rdoc
+      @changed_files = []
+      @removed_files = []
+      @reload_rbs_signatures = false
+    end
+
+    def record_changed(file)
+      reload_rbs_signatures_if_needed file
+      changed_files << file
+    end
+
+    def record_removed(file)
+      reload_rbs_signatures_if_needed file
+      removed_files << file
+    end
+
+    def reload_rbs_signatures?
+      @reload_rbs_signatures
+    end
+
+    def source_files_changed?
+      !changed_files.empty? || !removed_files.empty?
+    end
+
+    private
+
+    def reload_rbs_signatures_if_needed(file)
+      @reload_rbs_signatures = true if @rdoc.auto_discovered_rbs_signature_file?(file)
+    end
+  end
 
   ##
   # Creates a new server.
@@ -319,56 +355,24 @@ class RDoc::Server
   # changes were found and processed.
 
   def check_for_changes
-    changed = []
-    removed = []
-    changed_rbs = []
-    removed_rbs = []
+    changes = FileChanges.new @rdoc
+    current_files = current_watch_files
+    current_file_set = current_files.to_set
 
-    @file_mtimes.each do |file, old_mtime|
-      unless File.exist?(file)
-        if @rdoc.rbs_signature_file?(file)
-          removed_rbs << file
-        else
-          removed << file
-        end
-        next
-      end
-
-      current_mtime = RDoc.safe_mtime(file)
-      next unless current_mtime
-      next unless old_mtime.nil? || current_mtime > old_mtime
-
-      if @rdoc.rbs_signature_file?(file)
-        changed_rbs << file
-      else
-        changed << file
-      end
+    @file_mtimes.each_key do |file|
+      changes.record_removed file unless current_file_set.include? file
     end
 
-    file_list = @rdoc.normalized_file_list(
-      @options.files.empty? ? [@options.root.to_s] : @options.files,
-      true, @options.exclude
-    )
-    file_list = @rdoc.remove_unparseable(file_list)
-    file_list.each_key do |file|
-      unless @file_mtimes.key?(file)
-        @file_mtimes[file] = nil # will be updated after parse
-        changed << file
-      end
+    current_files.each do |file|
+      next unless file_changed? file
+
+      @file_mtimes[file] = nil unless @file_mtimes.key? file
+      changes.record_changed file
     end
 
-    @rdoc.rbs_signature_files.each do |file|
-      unless @file_mtimes.key?(file)
-        @file_mtimes[file] = nil
-        changed_rbs << file
-      end
-    end
+    return false unless changes.source_files_changed?
 
-    return false if changed.empty? && removed.empty? && changed_rbs.empty? && removed_rbs.empty?
-
-    removed_rbs.each { |file| @file_mtimes.delete(file) }
-
-    reparse_and_refresh(changed, removed, rbs_changed: !changed_rbs.empty? || !removed_rbs.empty?)
+    reparse_and_refresh changes
     true
   end
 
@@ -376,56 +380,81 @@ class RDoc::Server
   # Re-parses changed files, removes deleted files from the store,
   # refreshes the generator, and invalidates caches.
 
-  def reparse_and_refresh(changed_files, removed_files, rbs_changed: false)
+  def reparse_and_refresh(changes)
     @mutex.synchronize do
-      unless removed_files.empty?
-        $stderr.puts "Removed: #{removed_files.join(', ')}"
-        removed_files.each do |f|
-          @file_mtimes.delete(f)
-          relative = @rdoc.relative_path_for(f)
-          @store.clear_file_contributions(relative)
-          @store.remove_file(relative)
-        end
-      end
-
-      unless changed_files.empty?
-        changed_file_names = []
-        duration_ms = measure do
-          changed_files.each do |f|
-            relative = @rdoc.relative_path_for(f)
-            changed_file_names << relative
-            begin
-              @store.clear_file_contributions(relative, keep_position: true)
-              @rdoc.parse_file(f)
-              @file_mtimes[f] = RDoc.safe_mtime(f)
-            rescue => e
-              $stderr.puts "Error parsing #{f}: #{e.message}"
-            end
-          end
-
-          @store.cleanup_stale_contributions
-        end
-        $stderr.puts "Re-parsed #{changed_file_names.join(', ')} (#{duration_ms}ms)"
-      end
-
-      if rbs_changed
-        duration_ms = measure do
-          @rdoc.load_rbs_signatures
-          @rdoc.record_rbs_signature_mtimes
-          @rdoc.rbs_signature_files.each do |file|
-            @file_mtimes[file] = RDoc.safe_mtime(file)
-          end
-        end
-        $stderr.puts "Reloaded RBS signatures (#{duration_ms}ms)"
-      end
-
+      remove_files changes.removed_files
+      reparse_files changes.changed_files
+      reload_rbs_signatures if changes.reload_rbs_signatures?
       @store.complete(@options.visibility)
-      @store.invalidate_type_name_lookup unless changed_files.empty? && removed_files.empty?
+      @store.invalidate_type_name_lookup if changes.source_files_changed?
 
       @generator.refresh_store_data
       @page_cache.clear
       @last_change_time = Time.now.to_f
     end
+  end
+
+  def current_watch_files
+    file_list = @rdoc.normalized_file_list(
+      @options.files.empty? ? [@options.root.to_s] : @options.files,
+      true, @options.exclude
+    )
+    @rdoc.remove_unparseable(file_list).keys | @rdoc.auto_discovered_rbs_signature_files
+  end
+
+  def file_changed?(file)
+    return true unless @file_mtimes.key? file
+
+    old_mtime = @file_mtimes[file]
+    return true unless old_mtime
+
+    current_mtime = RDoc.safe_mtime(file)
+    current_mtime && current_mtime > old_mtime
+  end
+
+  def remove_files(files)
+    return if files.empty?
+
+    $stderr.puts "Removed: #{files.join(', ')}"
+    files.each do |f|
+      @file_mtimes.delete(f)
+      relative = @rdoc.relative_path_for(f)
+      @store.clear_file_contributions(relative)
+      @store.remove_file(relative)
+    end
+  end
+
+  def reload_rbs_signatures
+    duration_ms = measure do
+      @rdoc.load_auto_discovered_rbs_signatures
+      @rdoc.record_auto_discovered_rbs_signature_mtimes
+      @rdoc.auto_discovered_rbs_signature_files.each do |file|
+        @file_mtimes[file] = RDoc.safe_mtime(file)
+      end
+    end
+    $stderr.puts "Reloaded RBS signatures (#{duration_ms}ms)"
+  end
+
+  def reparse_files(files)
+    return if files.empty?
+
+    changed_file_names = []
+    duration_ms = measure do
+      files.each do |f|
+        relative = @rdoc.relative_path_for(f)
+        changed_file_names << relative
+        begin
+          @store.clear_file_contributions(relative, keep_position: true)
+          @rdoc.parse_file(f)
+          @file_mtimes[f] = RDoc.safe_mtime(f)
+        rescue => e
+          $stderr.puts "Error parsing #{f}: #{e.message}"
+        end
+      end
+
+      @store.cleanup_stale_contributions
+    end
+    $stderr.puts "Re-parsed #{changed_file_names.join(', ')} (#{duration_ms}ms)"
   end
 
 end

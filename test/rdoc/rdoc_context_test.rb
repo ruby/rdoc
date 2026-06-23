@@ -275,6 +275,22 @@ class RDocContextTest < XrefTestCase
     assert_includes @c1.modules.map { |m| m.full_name }, 'C1::Mod'
   end
 
+  def test_add_module_qualified_name
+    mod = @c1.add_module RDoc::NormalModule, 'Relative::Nested'
+
+    assert_equal 'Nested', mod.name
+    assert_equal 'C1::Relative::Nested', mod.full_name
+    assert_same mod, @c1.modules_hash['Relative'].modules_hash['Nested']
+  end
+
+  def test_add_module_qualified_name_absolute
+    mod = @c1.add_module RDoc::NormalModule, '::Absolute::Nested'
+
+    assert_equal 'Nested', mod.name
+    assert_equal 'Absolute::Nested', mod.full_name
+    assert_same mod, @top_level.modules_hash['Absolute'].modules_hash['Nested']
+  end
+
   def test_add_module_alias
     tl = @store.add_file 'file.rb'
 
@@ -419,6 +435,22 @@ class RDocContextTest < XrefTestCase
 
   def test_child_name
     assert_equal 'C1::C1', @c1.child_name('C1')
+  end
+
+  def test_find_or_create_constant_owner_for_path
+    owner, name = @c1.find_or_create_constant_owner_for_path 'Relative::Nested'
+
+    assert_equal 'Nested', name
+    assert_equal 'C1::Relative', owner.full_name
+    assert_same owner, @c1.modules_hash['Relative']
+  end
+
+  def test_find_or_create_constant_owner_for_path_absolute
+    owner, name = @c1.find_or_create_constant_owner_for_path '::Absolute::Nested'
+
+    assert_equal 'Nested', name
+    assert_equal 'Absolute', owner.full_name
+    assert_same owner, @top_level.modules_hash['Absolute']
   end
 
   def test_classes

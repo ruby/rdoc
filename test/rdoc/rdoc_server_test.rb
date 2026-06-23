@@ -78,7 +78,7 @@ class RDocServerTest < RDoc::TestCase
     assert_equal 'text/html', content_type
   end
 
-  def test_check_for_changes_reloads_rbs_signatures
+  def test_check_for_changes_parses_and_reloads_rbs_signatures
     @server.instance_variable_set(:@file_mtimes, @rdoc.last_modified.keys.to_h { |file|
       [file, File.mtime(file)]
     })
@@ -87,6 +87,7 @@ class RDocServerTest < RDoc::TestCase
     FileUtils.mkdir_p sig_dir
     File.write File.join(sig_dir, 'example.rbs'), <<~RBS
       class Example
+        # RBS method docs.
         def greet: () -> String
       end
     RBS
@@ -99,6 +100,30 @@ class RDocServerTest < RDoc::TestCase
 
     example = @rdoc.store.find_class_or_module 'Example'
     greet = example.find_method 'greet', false
+    assert_equal "RBS method docs.", greet.comment.to_s.strip
+    assert_equal ['() -> String'], greet.type_signature_lines
     assert_equal ['() -> String'], @rdoc.store.rbs_signature_for(greet)
+  end
+
+  def test_check_for_changes_parses_rbs_sources
+    @server.instance_variable_set(:@file_mtimes, @rdoc.last_modified.keys.to_h { |file|
+      [file, File.mtime(file)]
+    })
+
+    File.write File.join(@dir, 'sample.rbs'), <<~RBS
+      class Sample
+        def greet: () -> String
+      end
+    RBS
+
+    _out, err = capture_output do
+      assert @server.send(:check_for_changes)
+    end
+
+    assert_not_include err, 'Error parsing'
+
+    sample = @rdoc.store.find_class_or_module 'Sample'
+    greet = sample.find_method 'greet', false
+    assert_equal ['() -> String'], greet.type_signature_lines
   end
 end

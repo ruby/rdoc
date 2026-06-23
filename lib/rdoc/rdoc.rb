@@ -452,7 +452,7 @@ The internal error was:
 
   def remove_unparseable(files)
     files.reject do |file, *|
-      file =~ /\.(?:class|eps|erb|rbs|scpt\.txt|svg|ttf|yml)\z/i or
+      file =~ /\.(?:class|eps|erb|scpt\.txt|svg|ttf|yml)\z/i or
         (file =~ /tags\z/i and
          /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(File.binread(file, 100)))
     end
@@ -492,11 +492,11 @@ The internal error was:
       @store.load_cache
 
       parse_files @options.files
-      record_rbs_signature_mtimes
+      record_auto_discovered_rbs_signature_mtimes
 
       @options.default_title = "RDoc Documentation"
 
-      load_rbs_signatures
+      load_auto_discovered_rbs_signatures
       @store.complete @options.visibility
 
       start_server
@@ -511,20 +511,20 @@ The internal error was:
 
     @store.load_cache
 
-    rbs_signatures_changed = rbs_signatures_changed?
-    # When only sig/*.rbs changed, no Ruby file would be reparsed under
-    # normal mtime checks.  The store cache holds class metadata but not
-    # live RDoc::Context objects, so the generator would have nothing to
-    # iterate.  Force a full reparse so updated signatures show up in
-    # the rendered output.
-    @last_modified.clear if rbs_signatures_changed
+    auto_discovered_rbs_signatures_changed = auto_discovered_rbs_signatures_changed?
+    # When only auto-discovered RBS signatures changed, no Ruby file would be
+    # reparsed under normal mtime checks.  The store cache holds class metadata
+    # but not live RDoc::Context objects, so the generator would have nothing
+    # to iterate.  Force a full reparse so updated signatures show up in the
+    # rendered output.
+    @last_modified.clear if auto_discovered_rbs_signatures_changed
 
     file_info = parse_files @options.files
-    record_rbs_signature_mtimes
+    record_auto_discovered_rbs_signature_mtimes
 
     @options.default_title = "RDoc Documentation"
 
-    load_rbs_signatures
+    load_auto_discovered_rbs_signatures
 
     @store.complete @options.visibility
 
@@ -534,7 +534,7 @@ The internal error was:
       puts
 
       puts @stats.report
-    elsif file_info.empty? && !rbs_signatures_changed then
+    elsif file_info.empty? && !auto_discovered_rbs_signatures_changed then
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
       gen_klass = @options.generator
@@ -577,10 +577,10 @@ The internal error was:
   end
 
   ##
-  # Loads RBS type signatures from the project's sig/ directory and
-  # RBS stdlib, then merges them into the store's code objects.
+  # Loads RBS type signatures from the project's +sig+ directory and RBS
+  # stdlib, then merges them into the store's code objects.
 
-  def load_rbs_signatures
+  def load_auto_discovered_rbs_signatures
     sig_dirs = []
     sig_dir = File.join(@options.root.to_s, 'sig')
     sig_dirs << sig_dir if File.directory?(sig_dir)
@@ -595,18 +595,19 @@ The internal error was:
   end
 
   ##
-  # Returns all RBS signature files for the project.
+  # Returns RBS files that RDoc auto-discovers for signature loading.
 
-  def rbs_signature_files
+  def auto_discovered_rbs_signature_files
     Dir[File.join(@options.root.to_s, 'sig', '**', '*.rbs')].sort
   end
 
   ##
-  # Returns true if any RBS signature file has changed since the last run.
+  # Returns true if any auto-discovered RBS signature file has changed since
+  # the last run.
 
-  def rbs_signatures_changed?
-    current = rbs_signature_mtimes
-    previous = @last_modified.select { |file, _| rbs_signature_file?(file) }
+  def auto_discovered_rbs_signatures_changed?
+    current = auto_discovered_rbs_signature_mtimes
+    previous = @last_modified.select { |file, _| auto_discovered_rbs_signature_file?(file) }
 
     return true unless (previous.keys - current.keys).empty?
 
@@ -617,27 +618,43 @@ The internal error was:
   end
 
   ##
-  # Records RBS signature file mtimes so normal generation freshness checks
-  # and the live server watcher can see signature-only edits.
+  # Records auto-discovered RBS signature file mtimes so normal generation
+  # freshness checks and the live server watcher can see signature-only edits.
 
-  def record_rbs_signature_mtimes
-    @last_modified.reject! { |file, _| rbs_signature_file?(file) }
-    @last_modified.merge! rbs_signature_mtimes
+  def record_auto_discovered_rbs_signature_mtimes
+    @last_modified.reject! { |file, _| auto_discovered_rbs_signature_file?(file) }
+    @last_modified.merge! auto_discovered_rbs_signature_mtimes
   end
 
   ##
   # Files watched by the live preview server.
 
   def watch_files
-    (@last_modified.keys + rbs_signature_files).uniq
+    (@last_modified.keys + auto_discovered_rbs_signature_files).uniq
   end
 
-  def rbs_signature_file?(file) # :nodoc:
-    File.extname(file) == '.rbs'
+  ##
+  # Returns true for project RBS files that are auto-discovered for signature
+  # loading. RDoc parses any selected .rbs file as documentation input, but
+  # only +sig/**/*.rbs+ files are loaded through RBS::EnvironmentLoader for
+  # type signature merging and live-reload bookkeeping.
+
+  def auto_discovered_rbs_signature_file?(file) # :nodoc:
+    return false unless File.extname(file) == '.rbs'
+
+    root = Pathname(@options.root.to_s).expand_path
+    relative_path = Pathname(file).expand_path.relative_path_from root
+    relative_path.each_filename.first == 'sig'
+  rescue ArgumentError
+    # file and root may be on different drives on Windows
+    false
   end
 
-  def rbs_signature_mtimes # :nodoc:
-    rbs_signature_files.each_with_object({}) do |file, mtimes|
+  ##
+  # Returns mtimes for auto-discovered RBS signature files.
+
+  def auto_discovered_rbs_signature_mtimes # :nodoc:
+    auto_discovered_rbs_signature_files.each_with_object({}) do |file, mtimes|
       mtime = RDoc.safe_mtime(file)
       mtimes[file] = mtime if mtime
     end
@@ -663,7 +680,24 @@ The internal error was:
     trap 'INFO', handler
   end
 
+  ##
+  # Returns true when +extension+ is the RBS gem's RDoc discovery hook.
+  # Released RBS gems install their plugin through this hook, so skip it to
+  # avoid replacing the built-in parser during discovery.
+
+  def self.rbs_discovery_extension?(extension) # :nodoc:
+    extension = File.expand_path(extension)
+
+    Gem::Specification.find_all_by_name('rbs').any? do |spec|
+      File.expand_path('lib/rdoc/discover.rb', spec.full_gem_path) == extension
+    end
+  end
+
 end
+
+# Load built-in parser registrations before RubyGems discovery, then skip the
+# RBS gem's plugin hook so it cannot replace RDoc::Parser::RBS.
+require_relative 'parser'
 
 begin
   require 'rubygems'
@@ -671,6 +705,8 @@ begin
   rdoc_extensions = Gem.find_latest_files 'rdoc/discover'
 
   rdoc_extensions.each do |extension|
+    next if RDoc::RDoc.rbs_discovery_extension?(extension)
+
     begin
       load extension
     rescue => e

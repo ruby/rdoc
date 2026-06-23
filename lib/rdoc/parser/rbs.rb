@@ -1,0 +1,275 @@
+# frozen_string_literal: true
+
+require 'rbs'
+
+##
+# Parse RBS signature files as first-class RDoc input.
+
+class RDoc::Parser::RBS < RDoc::Parser
+  RBS_FILE_EXTENSION = /\.rbs$/
+
+  parse_files_matching RBS_FILE_EXTENSION
+
+  def scan
+    _, _, decls = ::RBS::Parser.parse_signature(@content)
+    decls.each do |decl|
+      parse_decl decl, @top_level
+    end
+    @top_level
+  end
+
+  private
+
+  def record_object_location(object, location)
+    object.line = location.start_line if location
+
+    if RDoc::ClassModule === object
+      @top_level.add_to_classes_or_modules object unless
+        @top_level.classes_or_modules.include? object
+    end
+
+    object.record_location @top_level
+    object
+  end
+
+  def rdoc_comment_for(decl)
+    rbs_comment = decl.comment if decl.respond_to?(:comment)
+    return unless rbs_comment
+
+    # TODO: Run RBS comments through RDoc's directive preprocessor so
+    # directives like :nodoc: affect the documented object.
+    comment = RDoc::Comment.new rbs_comment.string, @top_level
+    comment.format = 'markdown'
+    comment
+  end
+
+  def local_module_name(type_name, context)
+    name = type_name.to_s
+    return name if name.start_with?('::')
+
+    namespace_names = context == @top_level ? [] : context.full_name.split('::')
+
+    namespace_names.length.downto(1) do |length|
+      qualified_name = namespace_names.take(length).join('::')
+      if module_name = @top_level.find_module_named("#{qualified_name}::#{name}")
+        return module_name.full_name
+      end
+    end
+
+    name
+  end
+
+  def merge_documentation(object, comment, type_signature_lines)
+    if comment
+      object.comment = if object.comment.empty?
+                         comment
+                       else
+                         merge_comments object, comment
+                       end
+    end
+
+    # TODO: Track RBS-owned documentation overlays so incremental reparsing can
+    # replace stale comments and signatures from the previous RBS parse.
+    object.type_signature_lines ||= type_signature_lines
+  end
+
+  def merge_comments(object, comment)
+    document = RDoc::Markup::Document.new
+    document.concat object.parse(object.comment).parts
+    document << RDoc::Markup::Rule.new(1)
+    document.concat comment.parse.parts
+
+    # Keep this text separator in sync with the Rule node above.
+    merged_comment = RDoc::Comment.new "#{object.comment}\n---\n#{comment}", comment.location
+    merged_comment.format = 'markdown'
+    merged_comment.document = document
+    merged_comment
+  end
+
+  def attr_rw_matches?(existing_rw, new_rw)
+    existing_rw.each_char.any? { |rw| new_rw.include? rw }
+  end
+
+  def merge_attribute_methods(context, name, rw, singleton, comment, type_signature_lines)
+    method_names = []
+    method_names << name if rw.include?('R')
+    method_names << "#{name}=" if rw.include?('W')
+
+    methods = method_names.map { |method_name| context.find_method(method_name, singleton) }
+    methods.compact.each do |method|
+      merge_documentation method, comment, type_signature_lines
+    end
+
+    methods.any?
+  end
+
+  def rdoc_method_name(decl)
+    rbs_constructor_decl?(decl) ? 'new' : decl.name.to_s
+  end
+
+  def rdoc_method_singleton?(decl)
+    # TODO: RBS `self?` methods are :singleton_instance and should add both a
+    # singleton method and a private instance method.
+    rbs_constructor_decl?(decl) || decl.singleton?
+  end
+
+  def rdoc_method_visibility(decl)
+    rbs_constructor_decl?(decl) ? :public : decl.visibility
+  end
+
+  def rbs_constructor_decl?(decl)
+    decl.kind == :instance && decl.name == :initialize
+  end
+
+  def parse_attr_decl(decl, context)
+    rw = case decl
+         when ::RBS::AST::Members::AttrReader
+           'R'
+         when ::RBS::AST::Members::AttrWriter
+           'W'
+         when ::RBS::AST::Members::AttrAccessor
+           'RW'
+         end
+
+    comment = rdoc_comment_for decl
+    type_signature_lines = [decl.type.to_s]
+    name = decl.name.to_s
+    singleton = decl.kind == :singleton
+    if attribute = context.find_attribute(name, singleton)
+      merge_documentation attribute, comment, type_signature_lines if
+        attr_rw_matches? attribute.rw, rw
+      return
+    end
+
+    if merge_attribute_methods(context, name, rw, singleton, comment, type_signature_lines)
+      return
+    end
+
+    attribute = RDoc::Attr.new(
+      name,
+      rw,
+      comment,
+      singleton: singleton
+    )
+    record_object_location attribute, decl.location
+    attribute.type_signature_lines = type_signature_lines
+    context.add_attribute attribute
+    attribute.visibility = decl.visibility if decl.visibility
+  end
+
+  def parse_class_decl(decl, context)
+    owner, name = context.find_or_create_constant_owner_for_path decl.name
+    superclass = decl.super_class&.name&.to_s || '::Object'
+    klass = owner.add_class RDoc::NormalClass, name, superclass
+    record_object_location klass, decl.location
+    comment = rdoc_comment_for decl
+    klass.add_comment comment, @top_level if comment
+
+    decl.members.each { |member| parse_decl member, klass }
+  end
+
+  def parse_constant_decl(decl, context)
+    constant = RDoc::Constant.new decl.name.to_s, decl.type.to_s,
+                                  rdoc_comment_for(decl)
+    record_object_location constant, decl.location
+    context.add_constant constant
+  end
+
+  def parse_decl(decl, context)
+    case decl
+    when ::RBS::AST::Declarations::Class
+      parse_class_decl decl, context
+    when ::RBS::AST::Declarations::Module, ::RBS::AST::Declarations::Interface
+      parse_module_decl decl, context
+    when ::RBS::AST::Declarations::ClassAlias,
+         ::RBS::AST::Declarations::ModuleAlias
+      # TODO: Add RBS class and module aliases to the RDoc store.
+      nil
+    else
+      parse_member_decl decl, context
+    end
+  end
+
+  def parse_extend_decl(decl, context)
+    extend_decl = RDoc::Extend.new local_module_name(decl.name, context),
+                                   rdoc_comment_for(decl)
+    record_object_location extend_decl, decl.location
+    context.add_extend extend_decl
+  end
+
+  def parse_include_decl(decl, context)
+    include_decl = RDoc::Include.new local_module_name(decl.name, context),
+                                    rdoc_comment_for(decl)
+    record_object_location include_decl, decl.location
+    context.add_include include_decl
+  end
+
+  def parse_member_decl(decl, context)
+    case decl
+    when ::RBS::AST::Declarations::Constant
+      parse_constant_decl decl, context
+    when ::RBS::AST::Members::MethodDefinition
+      parse_method_decl decl, context
+    when ::RBS::AST::Members::Alias
+      parse_method_alias_decl decl, context
+    when ::RBS::AST::Members::AttrReader,
+         ::RBS::AST::Members::AttrWriter,
+         ::RBS::AST::Members::AttrAccessor
+      parse_attr_decl decl, context
+    when ::RBS::AST::Members::Include
+      parse_include_decl decl, context
+    when ::RBS::AST::Members::Extend
+      parse_extend_decl decl, context
+    when ::RBS::AST::Members::Private,
+         ::RBS::AST::Members::Public
+      # TODO: Track standalone RBS visibility members.
+      nil
+    end
+  end
+
+  def parse_method_alias_decl(decl, context)
+    alias_def = RDoc::Alias.new(
+      decl.old_name.to_s,
+      decl.new_name.to_s,
+      rdoc_comment_for(decl),
+      singleton: decl.kind == :singleton
+    )
+    record_object_location alias_def, decl.location
+    context.add_alias alias_def
+  end
+
+  def parse_method_decl(decl, context)
+    comment = rdoc_comment_for decl
+    type_signature_lines = decl.overloads.map { |overload| overload.method_type.to_s }
+    method_name = rdoc_method_name(decl)
+    singleton = rdoc_method_singleton?(decl)
+    visibility = rdoc_method_visibility(decl)
+
+    if method = context.find_method(method_name, singleton)
+      merge_documentation method, comment, type_signature_lines
+      return
+    end
+
+    method = RDoc::AnyMethod.new method_name, singleton: singleton
+    record_object_location method, decl.location
+    method.type_signature_lines = type_signature_lines
+
+    if loc = decl.location
+      method.start_collecting_tokens :ruby
+      method.add_token line_no: loc.start_line, char_no: 1, text: loc.source
+    end
+
+    method.comment = comment if comment
+    context.add_method method
+    method.visibility = visibility if visibility
+  end
+
+  def parse_module_decl(decl, context)
+    mod = context.add_module RDoc::NormalModule, decl.name.to_s
+    record_object_location mod, decl.location
+    comment = rdoc_comment_for decl
+    mod.add_comment comment, @top_level if comment
+
+    decl.members.each { |member| parse_decl member, mod }
+  end
+end
