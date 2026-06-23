@@ -48,10 +48,45 @@ class RDocGeneratorMarkupTest < RDoc::TestCase
     assert_same self, formatter.context
   end
 
+  def test_superclass_method_link
+    method = method_calling_super 'foo'
+
+    expected = '<a href="Outer.html#method-i-foo"><code>Outer#foo</code></a>'
+    assert_equal expected, method.superclass_method_link
+
+    assert_nil RDoc::AnyMethod.new('bar').superclass_method_link
+  end
+
+  def test_superclass_method_link_escapes_name
+    method = method_calling_super '<<'
+
+    link = method.superclass_method_link
+
+    expected = '<a href="Outer.html#method-i-3C-3C"><code>Outer#&lt;&lt;</code></a>'
+    assert_equal expected, link
+    refute_match %r{<code>Outer#<<</code>}, link
+  end
+
   attr_reader :path
 
   def find_symbol(name)
     @symbols[name]
+  end
+
+  def method_calling_super(name)
+    top_level = @store.add_file 'superclass_method_link.rb'
+    parent_method = RDoc::AnyMethod.new name
+
+    method = RDoc::AnyMethod.new name
+    method.calls_super = true
+
+    parent = top_level.add_class RDoc::NormalClass, 'Outer'
+    parent.add_method parent_method
+
+    child = top_level.add_class RDoc::NormalClass, 'Inner', parent.full_name
+    child.add_method method
+
+    method
   end
 
 end
