@@ -83,6 +83,23 @@ class RDoc::CodeObject
 
 end
 
+class RDoc::AnyMethod
+
+  ##
+  # Creates an HTML link to the superclass method called by this method.
+
+  def superclass_method_link
+    target = superclass_method
+    return unless target
+
+    html_formatter = formatter
+    name = target.full_name
+
+    html_formatter.link name, html_formatter.convert_string(name)
+  end
+
+end
+
 class RDoc::MethodAttr
 
   ##

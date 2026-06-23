@@ -185,10 +185,7 @@
           <%- if method.calls_super %>
             <div class="method-calls-super">
               Calls superclass method
-              <%=
-                  method.superclass_method ?
-                  method.formatter.link(method.superclass_method.full_name, method.superclass_method.full_name) : nil
-              %>
+              <%= method.superclass_method_link %>
             </div>
           <%- end %>
         </div>
