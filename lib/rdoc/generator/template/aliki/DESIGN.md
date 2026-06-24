@@ -224,11 +224,11 @@ Spacing/radius tokens referenced below resolve in §5/§6.
 
 | Property   | Value                                                       |
 |------------|-------------------------------------------------------------|
-| Layout     | Sticky top, `z-fixed` (300), `height: 64px`                 |
+| Layout     | Sticky top, `z-fixed` (300), `height: 64px`; desktop grid mirrors the page shell so search aligns to the main content rail |
 | Background | `background-primary` + `border-bottom` hairline + `shadow-sm` |
-| Padding    | `0 space-6` (24 px) · gap `space-8` (mobile: `space-4`)      |
+| Padding    | Desktop columns are unpadded; brand/toggle use `space-6` side offsets, search rail uses main content `space-8` inset (mobile header: `space-4`) |
 | Brand      | `xl` (20) semibold; hover → accent                          |
-| Search     | `width: 400px` desktop field (see Search below)             |
+| Search     | content-rail aligned desktop field, `width: 400px` within the main rail (see Search below) |
 
 ### Theme toggle (`.theme-toggle`)
 
@@ -291,8 +291,8 @@ horizontally.
 
 | Element                          | Value                                                       |
 |----------------------------------|-------------------------------------------------------------|
-| Desktop field (`#search-field`)  | full-width, `space-2 space-4` pad, 1px border, `radius-md`, `base`; focus → accent border + `0 0 0 3px accent-subtle` |
-| Desktop dropdown (`#search-results-desktop`) | absolute, `width: 400px`, `max-height: 60vh`, `radius-lg`, `shadow-lg`, `z-popover` (500) |
+| Desktop field (`#search-field`)  | full-width border-box, `space-2 space-4` pad, 1px border, `radius-md`, `base`; focus → accent border + `0 0 0 3px accent-subtle` |
+| Desktop dropdown (`#search-results-desktop`) | absolute inside the search form, full-width border-box to match the field, `max-height: 60vh`, `radius-lg`, `shadow-lg`, `z-popover` (500) |
 | Mobile modal (`.search-modal-content`) | centered card, `max-width: 600px`, `max-height: 80vh`, `radius-lg`, `shadow-xl` |
 | Modal result item                | `space-3 space-4` pad, `radius-md`, hover `background-secondary` |
 | Servlet field                    | pill `border-radius: 1.25rem`, leading 🔍 (`\1F50D`) glyph   |
