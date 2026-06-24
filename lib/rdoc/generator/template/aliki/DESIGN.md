@@ -196,8 +196,8 @@ Line heights: `tight 1.25 · normal 1.5 · relaxed 1.625` (body is relaxed).
 |---------|------------|-----------|-----------------------------------------|
 | `h1[class]` (page title) | `2.5em` | bold | Accent color; the class/module name     |
 | `h1`    | `3xl` (30) | bold      | tight line-height                       |
-| `h2`    | `2xl` (24) | semibold  | `margin-top: space-8`                   |
-| `h3`    | `xl` (20)  | semibold  | `margin-top: space-6`                   |
+| `h2`    | `2xl` (24) | semibold  | `margin-top: space-8`; section headers add a 1 px top rule + `space-3` padding |
+| `h3`    | `xl` (20)  | semibold  | `margin-top: space-8`; section headers add a 1 px top rule + `space-3` padding |
 | `h4`    | `lg` (18)  | medium    |                                         |
 | `h5`/`h6` | `base` (16) | medium  |                                         |
 

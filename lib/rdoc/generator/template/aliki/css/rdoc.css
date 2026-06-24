@@ -1175,17 +1175,19 @@ main dd p:first-child {
 
 /* Headers within Main */
 main header h2 {
-  margin-top: 2em;
+  margin: var(--space-8) 0 var(--space-4);
+  padding-top: var(--space-3);
   border-width: 0;
-  border-top: 4px solid var(--color-border-default);
-  font-size: 130%;
+  border-top: 1px solid var(--color-border-default);
+  font-size: var(--font-size-2xl);
 }
 
 main header h3 {
-  margin: 2em 0 1.5em;
+  margin: var(--space-8) 0 var(--space-6);
+  padding-top: var(--space-3);
   border-width: 0;
-  border-top: 3px solid var(--color-border-default);
-  font-size: 120%;
+  border-top: 1px solid var(--color-border-default);
+  font-size: var(--font-size-xl);
 }
 
 h1:target,
