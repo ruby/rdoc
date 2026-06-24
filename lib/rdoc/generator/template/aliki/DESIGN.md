@@ -436,8 +436,8 @@ The generated docs are fluid; the layout adapts at five breakpoints.
 
 | Breakpoint            | Behavior                                                                                   |
 |-----------------------|--------------------------------------------------------------------------------------------|
-| `≤1279px`             | Right **TOC hidden**; `.has-toc` grid drops to 2 columns                                    |
-| `≤1023px`             | Body → flex column; **left nav becomes an off-canvas drawer** (`300px`, `shadow-lg`) with an `overlay` backdrop + hamburger (`#sidebar-navigation-toggle`); desktop search swaps to a mobile **search modal**; header padding/gap tighten to `space-4` |
+| `1024–1279px`         | Right **TOC hidden**; `.has-toc` grid drops to 2 columns while the footer stays in the content column |
+| `≤1023px`             | Right **TOC hidden**; body → flex column; **left nav becomes an off-canvas drawer** (`300px`, `shadow-lg`) with an `overlay` backdrop + hamburger (`#sidebar-navigation-toggle`); desktop search swaps to a mobile **search modal**; header padding/gap tighten to `space-4` |
 | `768–1023px` (tablet) | Header `0 space-6`; main `space-8 space-6`, full-width                                       |
 | `≤480px`              | Nav `width: 85%` (max `320px`); main padding `space-4`; tables scroll; method heading → `base`; signature card padding tightens |
 | `≤420px`              | Search modal padding tightens                                                               |

@@ -1785,13 +1785,16 @@ main .attribute-access-type {
   #table-of-contents {
     display: none;
   }
+}
 
+/* Preserve the desktop sidebar/content grid when the TOC is hidden */
+@media (width >= 1024px) and (width <= 1279px) {
   body.has-toc {
     grid-template-columns: var(--layout-sidebar-width) 1fr;
     grid-template-areas:
       "header header"
       "nav main"
-      "footer footer";
+      "nav footer";
   }
 }
 
