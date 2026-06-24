@@ -1311,11 +1311,18 @@ main .method-detail:target {
 }
 
 main .method-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  align-items: center;
   background: var(--color-sig-bg);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md);
-  padding: var(--space-3);
-  padding-right: 6em;
+  padding: var(--space-4);
+}
+
+main .method-heading-group {
+  min-width: 0;
 }
 
 main .method-heading {
@@ -1394,13 +1401,16 @@ main .method-heading > .method-type-signature {
 }
 
 main .method-controls {
-  position: absolute;
-  top: var(--space-3);
-  right: var(--space-3);
+  position: static;
+  align-self: center;
 }
 
 main .method-controls summary {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 30px;
   line-height: 20px;
   color: var(--color-accent-primary);
   cursor: pointer;
@@ -1417,6 +1427,7 @@ main .method-controls summary {
     transform var(--transition-fast);
   user-select: none;
   -webkit-user-select: none;
+  white-space: nowrap;
   list-style: none;
 }
 
@@ -1432,6 +1443,13 @@ main .method-controls summary:hover {
 
 main .method-controls summary:active {
   transform: scale(0.96);
+}
+
+main .method-source-icon {
+  font-family: var(--font-code);
+  font-size: var(--font-size-xs);
+  line-height: 1;
+  opacity: 0.8;
 }
 
 [data-theme="dark"] main .method-controls summary:hover {
@@ -1507,13 +1525,13 @@ main .attribute-access-type {
   }
 
   main .method-header {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
     padding: var(--space-2);
-    padding-right: var(--space-2);
   }
 
   main .method-controls {
-    position: static;
-    margin-top: var(--space-2);
+    justify-self: start;
   }
 }
 

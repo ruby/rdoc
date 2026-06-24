@@ -257,11 +257,13 @@ The defining content component — a method or attribute presented as a card.
 | Property        | Value                                                        |
 |-----------------|--------------------------------------------------------------|
 | Card            | `sig-bg` background · 1px `border-subtle` full border · `radius-md` |
-| Padding         | `space-3`, `padding-right: 6em` (room for the source toggle) |
+| Layout          | two-column grid, `minmax(0, 1fr) auto`, `gap: space-4`; narrows to one column on `≤480px` |
+| Padding         | `space-4` desktop, `space-2` on `≤480px`                     |
+| Heading group   | `.method-heading-group`, `min-width: 0`; contains method heading(s) and optional method type signature |
 | Heading         | flex column, **mono**, `lg`, semibold; name `overflow-wrap: anywhere` |
 | Type signature (method) | `pre.method-type-signature` — transparent, dotted top rule via `::before`, `sm` mono, `text-tertiary`, tight, `pre-wrap` |
 | Type signature (attribute) | inline after `[RW]` badge, `sm` mono, `text-secondary` |
-| Source toggle (`.method-controls summary`) | accent text on `accent-subtle`, `radius-sm`, `sm` medium; hover `primary-100` bg + `primary-300` border + `translateY(-1px)`; active `scale(0.96)` |
+| Source toggle (`.method-controls summary`) | static grid action inside the card header; inline-flex with `{}` `.method-source-icon`, accent text on `accent-subtle`, `radius-sm`, `sm` medium; hover `primary-100` bg + `primary-300` border + `translateY(-1px)`; active `scale(0.96)` |
 | Source reveal   | `.method-source-code` animates `max-height`+`opacity`+`translateY`, `--duration-medium`/`-fast` + `--ease-out-smooth`; revealed `<pre>` uses the standard code border |
 | `:target`       | method-detail gets a neutral left-rail indent treatment       |
 
@@ -346,7 +348,7 @@ so the reading column never jumps.
 ### Alignment
 
 - Content + nav + TOC: leading-aligned.
-- Method source toggle: pinned top-right of the signature card.
+- Method source toggle: static trailing action inside the signature card grid.
 - Centered text is reserved for empty states and the footer credit.
 
 ## 6. Depth & Elevation
