@@ -81,7 +81,7 @@ Components reference semantic tokens, never raw hex.
 | Borders            | `border-subtle` / `-default` / `-emphasis` | Hairlines from quiet → strong      |
 | Link               | `link-default` / `link-hover` | Body links (default = text color; hover = accent) |
 | Code surface       | `code-bg` / `code-border`  | `<pre>` / inline `code`                          |
-| Signature card     | `sig-bg`                   | Method/attribute header card                     |
+| Signature card     | `sig-bg` / `sig-border`    | Method/attribute header card                     |
 | Nav                | `nav-bg` / `nav-text`      | Left sidebar surface + text                      |
 | Table              | `th-background` / `td-background` | Header row + zebra rows                     |
 
@@ -124,6 +124,7 @@ approval** (see §7).
 | `code-bg`             | `#f6f8fa`                 | `#292524` (neutral-800)   |
 | `code-border`         | `#d6d3d1`                 | `#44403c` (neutral-700)   |
 | `sig-bg`              | `#f5f5f4` (neutral-100)   | `#211f1e` (hand-picked)   |
+| `sig-border`          | `#d6d3d1` (neutral-300)   | `#44403c` (neutral-700)   |
 | `nav-bg` / `nav-text` | `#ffffff` / `#44403c`     | `#1c1917` / `#fafaf9`     |
 
 ### Syntax-highlight palette (`--code-*`)
@@ -256,7 +257,7 @@ The defining content component — a method or attribute presented as a card.
 
 | Property        | Value                                                        |
 |-----------------|--------------------------------------------------------------|
-| Card            | `sig-bg` background · 1px `border-subtle` full border · `radius-md` |
+| Card            | `sig-bg` background · 1px `sig-border` full border · `radius-md` |
 | Layout          | two-column grid, `minmax(0, 1fr) auto`, `gap: space-4`; narrows to one column on `≤480px` |
 | Padding         | `space-4` desktop, `space-2` on `≤480px`                     |
 | Heading group   | `.method-heading-group`, `min-width: 0`; contains method heading(s) and optional method type signature |

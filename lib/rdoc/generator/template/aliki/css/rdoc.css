@@ -71,6 +71,7 @@
   --color-code-bg: #f6f8fa;
   --color-code-border: var(--color-neutral-300);
   --color-sig-bg: var(--color-neutral-100);
+  --color-sig-border: var(--color-border-default);
   --color-nav-bg: #fff;
   --color-nav-text: var(--color-neutral-700);
   --color-th-background: var(--color-neutral-100);
@@ -205,6 +206,7 @@
   --color-code-bg: var(--color-neutral-800);
   --color-code-border: var(--color-neutral-700);
   --color-sig-bg: #211f1e; /* between neutral-900 and neutral-800 */
+  --color-sig-border: var(--color-border-subtle);
   --color-nav-bg: var(--color-neutral-900);
   --color-nav-text: var(--color-neutral-50);
   --color-th-background: var(--color-background-tertiary);
@@ -1316,7 +1318,7 @@ main .method-header {
   gap: var(--space-4);
   align-items: center;
   background: var(--color-sig-bg);
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--color-sig-border);
   border-radius: var(--radius-md);
   padding: var(--space-4);
 }
