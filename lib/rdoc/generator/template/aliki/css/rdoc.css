@@ -68,6 +68,7 @@
   --color-accent-primary: var(--color-primary-600);
   --color-accent-hover: var(--color-primary-700);
   --color-accent-subtle: var(--color-primary-50);
+  --color-title-kind-border: var(--color-primary-200);
   --color-code-bg: #f6f8fa;
   --color-code-border: var(--color-neutral-300);
   --color-sig-bg: var(--color-neutral-100);
@@ -203,6 +204,7 @@
   --color-accent-hover: var(--color-primary-400);
   --color-accent-subtle: rgb(235 84 79 / 10%);
   --color-accent-subtle-hover: rgb(235 84 79 / 20%);
+  --color-title-kind-border: rgb(235 84 79 / 35%);
   --color-code-bg: var(--color-neutral-800);
   --color-code-border: var(--color-neutral-700);
   --color-sig-bg: #211f1e; /* between neutral-900 and neutral-800 */
@@ -910,6 +912,7 @@ header.top-navbar .navbar-search form {
 main {
   grid-area: main;
   width: 100%;
+  min-width: 0;
   max-width: var(--layout-content-max-width);
   margin: 0 auto;
   padding: var(--space-12) var(--space-8);
@@ -944,11 +947,36 @@ main {
   }
 }
 
-main h1[class] {
+main h1.page-title {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
   margin-top: 0;
-  margin-bottom: 1em;
-  font-size: 2.5em;
+  margin-bottom: var(--space-8);
   color: var(--color-accent-primary);
+}
+
+main h1.page-title .page-title-kind {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.625rem;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-title-kind-border);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-subtle);
+  color: var(--color-accent-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+}
+
+main h1.page-title .page-title-name {
+  max-width: 100%;
+  color: var(--color-accent-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  overflow-wrap: anywhere;
 }
 
 main h1,
@@ -1837,14 +1865,21 @@ main .attribute-access-type {
 
 ol.breadcrumb {
   display: flex;
+  flex-wrap: wrap;
   padding: 0;
   margin: 0 0 1em;
 }
 
 ol.breadcrumb li {
   display: block;
+  min-width: 0;
   list-style: none;
   font-size: 125%;
+}
+
+ol.breadcrumb a,
+ol.breadcrumb li > span:not(.separator) {
+  overflow-wrap: anywhere;
 }
 
 /* 11. Footer */

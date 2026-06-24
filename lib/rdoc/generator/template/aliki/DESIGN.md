@@ -82,6 +82,7 @@ Components reference semantic tokens, never raw hex.
 | Link               | `link-default` / `link-hover` | Body links (default = text color; hover = accent) |
 | Code surface       | `code-bg` / `code-border`  | `<pre>` / inline `code`                          |
 | Signature card     | `sig-bg` / `sig-border`    | Method/attribute header card                     |
+| Page title kind    | `title-kind-border`        | Border for the class/module kind badge           |
 | Nav                | `nav-bg` / `nav-text`      | Left sidebar surface + text                      |
 | Table              | `th-background` / `td-background` | Header row + zebra rows                     |
 
@@ -121,6 +122,7 @@ approval** (see §7).
 | `accent-primary`      | `#e62923` (primary-600)   | `#eb544f` (primary-500)   |
 | `accent-hover`        | `#b8211c` (primary-700)   | `#f07f7b` (primary-400)   |
 | `accent-subtle`       | `#fdeae9` (primary-50)    | `rgb(235 84 79 / 10%)`    |
+| `title-kind-border`   | `#f8bfbd` (primary-200)   | `rgb(235 84 79 / 35%)`    |
 | `code-bg`             | `#f6f8fa`                 | `#292524` (neutral-800)   |
 | `code-border`         | `#d6d3d1`                 | `#44403c` (neutral-700)   |
 | `sig-bg`              | `#f5f5f4` (neutral-100)   | `#211f1e` (hand-picked)   |
@@ -194,7 +196,7 @@ Line heights: `tight 1.25 · normal 1.5 · relaxed 1.625` (body is relaxed).
 
 | Element | Size       | Weight    | Notes                                   |
 |---------|------------|-----------|-----------------------------------------|
-| `h1[class]` (page title) | `2.5em` | bold | Accent color; the class/module name     |
+| `h1.page-title` | kind badge: `sm` / name: `3xl` (30) | semibold / bold | Type kind renders as an accent badge above the class/module name; long names may wrap |
 | `h1`    | `3xl` (30) | bold      | tight line-height                       |
 | `h2`    | `2xl` (24) | semibold  | `margin-top: space-8`; section headers add a 1 px top rule + `space-3` padding |
 | `h3`    | `xl` (20)  | semibold  | `margin-top: space-8`; section headers add a 1 px top rule + `space-3` padding |
@@ -314,8 +316,8 @@ horizontally.
 Footer: `background-secondary`, `border-top`, `padding: space-12 space-6`;
 columns via `repeat(auto-fit, minmax(200px, 1fr))`, gap `space-8`; column `h3`
 is `sm` semibold with `letter-spacing: 0.05em`; `.footer-bottom` is centered
-`xs` `text-tertiary` credit. Breadcrumb (`ol.breadcrumb`) is a flex row at
-`125%` font-size.
+`xs` `text-tertiary` credit. Breadcrumb (`ol.breadcrumb`) is a wrapping flex row
+at `125%` font-size; long namespace parts may wrap on narrow screens.
 
 ## 5. Layout Principles
 
@@ -342,9 +344,9 @@ header-height 64px · search-width 400px · toc-width minmax(240px, 18%)`.
 ### Reading measure & density
 
 `main` is capped at **800 px** and centered, with `space-12 space-8` (48 / 32 px)
-padding and `relaxed` (1.625) line-height — a comfortable column for prose and
-signatures. The left nav and right TOC are sticky and independently scrollable,
-so the reading column never jumps.
+padding, `min-width: 0` inside the page grid, and `relaxed` (1.625) line-height
+— a comfortable column for prose and signatures. The left nav and right TOC are
+sticky and independently scrollable, so the reading column never jumps.
 
 ### Alignment
 
@@ -509,6 +511,8 @@ Layout:  sidebar 300 · content 800 · header 64 · search 400 · toc minmax(240
 
 > "Type: system sans for everything, mono for code + method headings + RBS
 > signatures. Heading ladder h1 30 / h2 24 / h3 20, all in the red accent.
+> Class/module page titles render the kind as a small accent badge above the
+> red `3xl` object name.
 > Comfortable density, 1.625 body line-height. No web fonts, no image sprites."
 
 > "Don't retune the red hue, don't hard-code hex (use `--color-*` tokens), don't

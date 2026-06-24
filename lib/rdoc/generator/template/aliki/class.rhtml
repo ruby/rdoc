@@ -30,8 +30,9 @@
   <% end %>
 
   <span id="<%= h klass.legacy_aref %>" class="legacy-anchor"></span>
-  <h1 id="<%= h klass.aref %>" class="anchor-link <%= klass.type %>">
-    <%= klass.type %> <%= klass.full_name %>
+  <h1 id="<%= h klass.aref %>" class="anchor-link <%= klass.type %> page-title">
+    <span class="page-title-kind"><%= klass.type %></span>
+    <span class="page-title-name"><%= klass.full_name %></span>
   </h1>
 
   <section class="description">
