@@ -255,7 +255,7 @@ Each group below renders as a table with these columns:
 | Option | `.rdoc_options` | `RDoc::Task` | Effective default | Notes |
 |---|---|---|---|---|
 | `--output DIR` / `-o` / `--op` | `op_dir` | `rdoc.rdoc_dir` | CLI: `'doc'`; `RDoc::Task`: `'html'` | Output directory. RDoc also writes a `created.rid` marker here. |
-| `--format FORMAT` / `-f` / `--fmt` | `generator_name` | `rdoc.generator` | `'aliki'` | Generator name. Installed generators: `aliki` (HTML, default), `darkfish` *(deprecated, removal in v8.0)*, `ri`, `pot`. |
+| `--format FORMAT` / `-f` / `--fmt` | `generator_name` | `rdoc.generator` | `'aliki'` | Generator name. Installed generators: `aliki` (HTML, default), `darkfish` *(deprecated, removal in v9.0)*, `ri`, `pot`. |
 | `--ri` / `-r` | *(sets `generator_name: ri`)* | — | — | Shortcut: generate `ri` output into `~/.rdoc`. |
 | `--ri-site` / `-R` | *(sets `generator_name: ri`)* | — | — | Shortcut: generate `ri` output into the site-wide directory. |
 
