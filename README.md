@@ -165,7 +165,7 @@ To determine how well your project is documented run `rdoc -C lib` to get a docu
 RDoc ships with two built-in themes:
 
 - **Aliki** (default) - A modern, clean theme with improved navigation and search
-- **Darkfish** (deprecated) - The classic theme, will be removed in v8.0
+- **Darkfish** (deprecated) - The classic theme, will be removed in v9.0
 
 To use the Darkfish theme instead of the default Aliki theme:
 

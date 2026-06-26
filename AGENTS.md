@@ -185,7 +185,7 @@ lib/rdoc/
 ├── server.rb                  # Live-reloading preview server (rdoc --server)
 ├── generator/                 # Documentation generators
 │   ├── aliki.rb               # HTML generator (default theme)
-│   ├── darkfish.rb            # HTML generator (deprecated, will be removed in v8.0)
+│   ├── darkfish.rb            # HTML generator (deprecated, will be removed in v9.0)
 │   ├── markup.rb              # Markup format generator
 │   ├── ri.rb                  # RI command generator
 │   └── template/              # ERB templates (.rhtml files)
