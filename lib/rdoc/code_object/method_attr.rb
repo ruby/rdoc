@@ -297,7 +297,12 @@ class RDoc::MethodAttr < RDoc::CodeObject
   end
 
   def inspect # :nodoc:
-    alias_for = @is_alias_for ? " (alias for #{@is_alias_for.name})" : nil
+    alias_for =
+      if @is_alias_for.respond_to? :name then
+        " (alias for #{@is_alias_for.name})"
+      elsif Array === @is_alias_for then
+        " (alias for #{@is_alias_for.last})"
+      end
     visibility = self.visibility
     visibility = "forced #{visibility}" if force_documentation
     "#<%s:0x%x %s (%s)%s>" % [

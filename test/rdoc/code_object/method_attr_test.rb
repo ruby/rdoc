@@ -201,6 +201,30 @@ class RDocMethodAttrTest < XrefTestCase
     end
   end
 
+  def test_inspect_alias_from_store
+    temp_dir do |tmpdir|
+      s = RDoc::RI::Store.new(RDoc::Options.new, path: tmpdir)
+
+      top_level = s.add_file 'file.rb'
+      meth_bang = RDoc::AnyMethod.new 'method!'
+      meth_bang.record_location top_level
+
+      meth_bang_alias = RDoc::Alias.new 'method!', 'method_bang', ''
+      meth_bang_alias.record_location top_level
+
+      klass = top_level.add_class RDoc::NormalClass, 'Object'
+      klass.add_method meth_bang
+
+      meth_bang.add_alias meth_bang_alias, klass
+
+      s.save
+
+      meth_alias_from_store = s.load_method 'Object', '#method_bang'
+
+      assert_includes meth_alias_from_store.inspect, 'alias for method!'
+    end
+  end
+
   def test_to_s
     assert_equal 'RDoc::AnyMethod: C1#m',  @c1_m.to_s
     assert_equal 'RDoc::AnyMethod: C2#b',  @c2_b.to_s
