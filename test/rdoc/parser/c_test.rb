@@ -331,6 +331,28 @@ class RDocParserCTest < RDoc::TestCase
     assert_equal @top_level, methods.last.file
   end
 
+  def test_singleton_and_instance_methods_not_aliases
+    content = <<~C
+      VALUE blah(VALUE klass, VALUE year) {
+      }
+
+      void Init_Blah(void) {
+        cDate = rb_define_class("Date", rb_cObject);
+
+        rb_define_method(cDate, "blah", blah, 1);
+
+        rb_define_singleton_method(cDate, "bleh", blah, 1);
+      }
+    C
+
+    klass = util_get_class content, 'cDate'
+
+    methods = klass.method_list
+    assert_equal 2,      methods.length
+    refute               methods[0].is_alias_for
+    refute               methods[1].is_alias_for
+  end
+
   def test_do_aliases_missing_class
     content = <<~C
       void Init_Blah(void) {

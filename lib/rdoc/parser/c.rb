@@ -995,7 +995,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     class_obj = find_class var_name, class_name
 
-    if existing_method = class_obj.method_list.find { |m| m.c_function == function }
+    if existing_method = class_obj.method_list.find { |m| m.c_function == function && m.singleton == singleton }
       add_alias(var_name, class_obj, existing_method.name, meth_name, existing_method.comment, singleton: singleton)
     end
 
