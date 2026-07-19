@@ -239,7 +239,7 @@ class RDoc::Parser::C < RDoc::Parser
       if comment.to_s.empty? and existing_method = class_obj.method_list.find { |m| m.name == old_name}
         comment = existing_method.comment
       end
-      add_alias(var_name, class_obj, old_name, new_name, comment)
+      add_alias(var_name, class_obj, old_name, new_name, comment, singleton: @singleton_classes.key?(var_name))
     end
   end
 
@@ -247,8 +247,8 @@ class RDoc::Parser::C < RDoc::Parser
   # Add alias, either from a direct alias definition, or from two
   # method that reference the same function.
 
-  def add_alias(var_name, class_obj, old_name, new_name, comment)
-    al = RDoc::Alias.new old_name, new_name, comment, singleton: @singleton_classes.key?(var_name)
+  def add_alias(var_name, class_obj, old_name, new_name, comment, singleton:)
+    al = RDoc::Alias.new old_name, new_name, comment, singleton: singleton
     al.record_location @top_level
     class_obj.add_alias al
     @stats.add_alias al
@@ -987,7 +987,7 @@ class RDoc::Parser::C < RDoc::Parser
   def handle_method(type, var_name, meth_name, function, param_count,
                     source_file = nil)
     class_name = @known_classes[var_name]
-    singleton  = @singleton_classes.key? var_name
+    singleton  = @singleton_classes.key?(var_name) || %w[singleton_method module_function].include?(type)
 
     @methods[var_name][function] << meth_name
 
@@ -995,8 +995,8 @@ class RDoc::Parser::C < RDoc::Parser
 
     class_obj = find_class var_name, class_name
 
-    if existing_method = class_obj.method_list.find { |m| m.c_function == function }
-      add_alias(var_name, class_obj, existing_method.name, meth_name, existing_method.comment)
+    if existing_method = class_obj.method_list.find { |m| m.c_function == function && m.singleton == singleton }
+      add_alias(var_name, class_obj, existing_method.name, meth_name, existing_method.comment, singleton: singleton)
     end
 
     if class_obj then
@@ -1006,7 +1006,6 @@ class RDoc::Parser::C < RDoc::Parser
         type = 'method' # force public
       end
 
-      singleton = singleton || %w[singleton_method module_function].include?(type)
       meth_obj = RDoc::AnyMethod.new meth_name, singleton: singleton
       meth_obj.c_function = function
 
