@@ -70,5 +70,5 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
   s.add_dependency 'erb'
   s.add_dependency 'tsort'
   s.add_dependency 'prism', '>= 1.6.0'
-  s.add_dependency 'rbs', '>= 4.0.0'
+  s.add_dependency 'rbs', '4.1.0.pre.2'
 end
