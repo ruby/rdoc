@@ -739,6 +739,9 @@ class RDocParserRubyTest < RDoc::TestCase
           # :method: bar
           # comment bar
           add_my_method :bar
+
+          # Returns the configuration.
+          def self.configurations; end
         end
 
         metaprogramming do
@@ -753,24 +756,8 @@ class RDocParserRubyTest < RDoc::TestCase
     RUBY
     mod = @store.find_module_named 'A'
     methods = mod.method_list
-    assert_equal ['A::foo', 'A#bar', 'A::baz2', 'A#baz3'], methods.map(&:full_name)
-    assert_equal ['comment foo', 'comment bar'], methods.take(2).map { |m| m.comment.text.strip }
-  end
-
-  def test_method_definition_inside_active_support_concern_included_block
-    util_parser <<~RUBY
-      module A
-        extend ActiveSupport::Concern
-        included do
-          # Returns the configuration.
-          def self.configurations; end
-        end
-      end
-    RUBY
-
-    mod = @store.find_module_named 'A'
-    assert_equal ['A::configurations'], mod.method_list.map(&:full_name)
-    assert_equal ['Returns the configuration.'], mod.method_list.map { |method| method.comment.text.strip }
+    assert_equal ['A::foo', 'A#bar', 'A::configurations', 'A::baz2', 'A#baz3'], methods.map(&:full_name)
+    assert_equal ['comment foo', 'comment bar', 'Returns the configuration.'], methods.take(3).map { |m| m.comment.text.strip }
   end
 
   def test_method_yields_directive
