@@ -757,6 +757,22 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal ['comment foo', 'comment bar'], methods.take(2).map { |m| m.comment.text.strip }
   end
 
+  def test_method_definition_inside_active_support_concern_included_block
+    util_parser <<~RUBY
+      module A
+        extend ActiveSupport::Concern
+        included do
+          # Returns the configuration.
+          def self.configurations; end
+        end
+      end
+    RUBY
+
+    mod = @store.find_module_named 'A'
+    assert_equal ['A::configurations'], mod.method_list.map(&:full_name)
+    assert_equal ['Returns the configuration.'], mod.method_list.map { |method| method.comment.text.strip }
+  end
+
   def test_method_yields_directive
     util_parser <<~RUBY
       class Foo
