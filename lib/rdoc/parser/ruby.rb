@@ -893,11 +893,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         when :extend
           _visit_call_extend(node)
         when :included
-          if node.block
-            node.block.body&.accept(self)
-          else
-            super
-          end
+          node.block ? node.block.body&.accept(self) : super
         when :public
           super
           _visit_call_public_private_protected(node, :public)
