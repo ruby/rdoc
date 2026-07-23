@@ -452,8 +452,12 @@
     if notes? then
       @footnotes       = {}
 
-      setup_parser markdown, @debug
-      peg_parse 'Notes'
+      # A note definition must contain "[^", so documents without one
+      # have nothing for the collecting pass to find
+      if markdown.include? '[^' then
+        setup_parser markdown, @debug
+        peg_parse 'Notes'
+      end
 
       # using note_order on the first pass would be a bug
       @note_order      = []
