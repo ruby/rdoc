@@ -437,6 +437,19 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal ['DidYouMean::NameErrorCheckers::new'], mod.method_list.map(&:full_name)
   end
 
+  def test_parenthesized_cdecl_anonymous_class
+    util_parser <<~RUBY
+      class << (B = Struct.new(:y))
+        def sm; end
+      end
+    RUBY
+
+    klass = @store.find_class_named('B')
+    assert_equal 'Struct', klass.superclass
+    assert_equal ['y'], klass.attributes.map(&:name)
+    assert_equal ['sm'], klass.class_method_list.map(&:name)
+  end
+
   def test_ghost_method
     util_parser <<~RUBY
       class Foo
@@ -2231,16 +2244,17 @@ class RDocParserRubyTest < RDoc::TestCase
   end
 
   def test_ignore_constant_assign_rhs
-    # Struct is not supported yet. Right hand side of constant assignment should be ignored.
+    # Right hand side of constant assignment should be ignored
+    # unless it is Struct.new, Data.define, Class.new or Module.new.
     util_parser <<~RUBY
       module Foo
         def a; end
-        Bar = Struct.new do
+        Bar = some_dsl do
           def b; end
           ##
           # :method: c
         end
-        Bar::Baz = Struct.new do
+        Baz = Other::Thing.new do
           def d; end
           ##
           # :method: e
@@ -2251,6 +2265,123 @@ class RDocParserRubyTest < RDoc::TestCase
     RUBY
     mod = @top_level.modules.first
     assert_equal ['a', 'f'], mod.method_list.map(&:name)
+  end
+
+  def test_constant_assignment_with_struct_new
+    util_parser <<~RUBY
+      module Foo
+        # Point comment
+        Point = Struct.new(:x, :y) do
+          include Comparable
+
+          # area comment
+          def area; end
+
+          def self.origin; end
+
+          private
+
+          def secret; end
+
+          ##
+          # :method: ghost
+        end
+        KeywordInit = Struct.new(:a, keyword_init: true)
+        Named = Struct.new('Name', :b)
+      end
+    RUBY
+    mod = @top_level.modules.first
+    assert_empty mod.method_list
+
+    klass = @store.find_class_named('Foo::Point')
+    assert_equal 'Struct', klass.superclass
+    assert_equal 'Point comment', klass.comment.text.strip
+    assert_equal [['x', 'RW'], ['y', 'RW']], klass.attributes.map { |a| [a.name, a.rw] }
+    assert_equal ['Comparable'], klass.includes.map(&:name)
+    assert_equal 'area comment', klass.find_method_named('area').comment.text.strip
+    assert_equal :private, klass.find_method_named('secret').visibility
+    assert klass.find_class_method_named('origin')
+    assert klass.find_method_named('ghost')
+
+    assert_equal ['a'], @store.find_class_named('Foo::KeywordInit').attributes.map(&:name)
+    assert_equal ['b'], @store.find_class_named('Foo::Named').attributes.map(&:name)
+  end
+
+  def test_constant_assignment_with_data_define
+    util_parser <<~RUBY
+      # Coord comment
+      Coord = Data.define(:lat, :lng)
+      Name = Data.define(:first, :last) do
+        def full_name; end
+      end
+    RUBY
+    coord = @store.find_class_named('Coord')
+    assert_equal 'Data', coord.superclass
+    assert_equal 'Coord comment', coord.comment.text.strip
+    assert_equal [['lat', 'R'], ['lng', 'R']], coord.attributes.map { |a| [a.name, a.rw] }
+    name = @store.find_class_named('Name')
+    assert name.find_method_named('full_name')
+  end
+
+  def test_constant_assignment_with_class_new
+    util_parser <<~RUBY
+      MyError = Class.new(StandardError)
+      Base = Class.new do
+        def foo; end
+      end
+      Deep::Error = Class.new(Base)
+      Expr = Class.new(Struct.new(:a))
+    RUBY
+    assert_equal 'StandardError', @store.find_class_named('MyError').superclass
+    base = @store.find_class_named('Base')
+    assert_equal 'Object', base.superclass
+    assert base.find_method_named('foo')
+    assert_equal 'Base', @store.find_class_named('Deep::Error').superclass.full_name
+    assert_equal 'Struct.new(:a)', @store.find_class_named('Expr').superclass
+  end
+
+  def test_constant_assignment_with_module_new
+    util_parser <<~RUBY
+      Helpers = Module.new do
+        # help comment
+        def help; end
+      end
+      Empty = Module.new
+    RUBY
+    helpers = @store.find_module_named('Helpers')
+    assert_equal 'help comment', helpers.find_method_named('help').comment.text.strip
+    assert @store.find_module_named('Empty')
+  end
+
+  def test_constant_assignment_anonymous_class_block_constant_scope
+    # Blocks don't change the cref: constant assignments and class/module
+    # keywords inside the block belong to the outer lexical scope
+    util_parser <<~RUBY
+      class A
+        B = Struct.new(:x) do
+          C = 1
+          class D; end
+          E = Struct.new(:y) do
+            def m; end
+          end
+        end
+      end
+    RUBY
+    a = @store.find_class_named('A')
+    assert_equal ['A::B', 'A::D', 'A::E'], a.classes.map(&:full_name).sort
+    assert_equal ['C'], a.constants.map(&:name)
+    assert @store.find_class_named('A::E').find_method_named('m')
+    assert_nil @store.find_class_named('A::B::D')
+  end
+
+  def test_constant_assignment_anonymous_class_nodoc
+    util_parser <<~RUBY
+      Point = Struct.new(:x) do # :nodoc:
+        def m; end
+      end
+      Visible = Struct.new(:y)
+    RUBY
+    assert_equal ['Visible'], @store.all_classes_and_modules.select(&:document_self).map(&:full_name)
   end
 
   def test_include_extend_suppressed_within_block
