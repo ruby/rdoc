@@ -132,7 +132,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   RBS_SIG_LINE = /\A#:\s/ # :nodoc:
 
   attr_accessor :visibility
-  attr_reader :container, :singleton, :in_proc_block
+  attr_reader :container, :singleton, :in_unknown_definee_block
 
   def initialize(top_level, content, options, stats)
     super
@@ -151,39 +151,47 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @container = top_level
     @visibility = :public
     @singleton = false
-    @in_proc_block = false
+    @in_unknown_definee_block = false
   end
 
-  # Suppress `extend` and `include` within block
-  # because they might be a metaprogramming block
-  # example: `Module.new { include M }` `M.module_eval { include N }`
+  # A method can evaluate its block with any receiver (`instance_eval`,
+  # `module_eval` etc.), so self and the default definee inside a block are
+  # unknown. Definitions targeting them (`def`, `include`, `extend`, `attr_*`,
+  # visibility changes and aliases) are suppressed while visiting the block.
+  # Constant assignments stay documentable because the cref is lexical.
+  # example: `M.module_eval { include N }` `configure { def f; end }`
 
-  def with_in_proc_block
-    in_proc_block = @in_proc_block
-    @in_proc_block = true
+  def with_unknown_definee_block
+    in_unknown_definee_block = @in_unknown_definee_block
+    @in_unknown_definee_block = true
     yield
-    @in_proc_block = in_proc_block
+    @in_unknown_definee_block = in_unknown_definee_block
   end
 
-  # Dive into another container
+  # Dive into another container.
+  #
+  # `push_nesting: false` switches the default definee without changing the
+  # cref (`@module_nesting`). Class-body-like blocks (`X = Struct.new do ... end`)
+  # need this: `def` belongs to the new class while constant assignments and
+  # `class`/`module` keywords belong to the outer lexical scope.
 
-  def with_container(container, singleton: false)
+  def with_container(container, singleton: false, push_nesting: true)
     old_container = @container
     old_visibility = @visibility
     old_singleton = @singleton
-    old_in_proc_block = @in_proc_block
+    old_in_unknown_definee_block = @in_unknown_definee_block
     @visibility = :public
     @container = container
     @singleton = singleton
-    @in_proc_block = false
-    @module_nesting.push([container, singleton])
+    @in_unknown_definee_block = false
+    @module_nesting.push([container, singleton]) if push_nesting
     yield container
   ensure
     @container = old_container
     @visibility = old_visibility
     @singleton = old_singleton
-    @in_proc_block = old_in_proc_block
-    @module_nesting.pop
+    @in_unknown_definee_block = old_in_unknown_definee_block
+    @module_nesting.pop if push_nesting
   end
 
   # Records the location of this +container+ in the file for this parser and
@@ -740,10 +748,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def find_or_create_lexical_constant_owner_name(constant_path)
     const_path, colon, name = constant_path.rpartition('::')
     if colon.empty? # class Foo
-      # Within `class C` or `module C`, owner is C(== current container)
+      # Owner is the cref (innermost module nesting), not `@container`.
+      # They differ inside a class-body-like block: `A = Struct.new { C = 1 }`
+      # defines ::C, not A::C.
       # Within `class <<C`, owner is C.singleton_class
       # but RDoc don't track constants of a singleton class of module
-      [(@singleton ? nil : @container), name]
+      container, singleton = @module_nesting.last
+      [(singleton ? nil : container), name]
     elsif const_path.empty? # class ::Foo
       [@top_level, name]
     else # `class Foo::Bar` or `class ::Foo::Bar`
@@ -927,15 +938,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     def visit_block_node(node)
-      @scanner.with_in_proc_block do
-        # include, extend and method definition inside block are not documentable.
-        # visibility methods and attribute definition methods should be ignored inside block.
+      @scanner.with_unknown_definee_block do
         super
       end
     end
 
     def visit_alias_method_node(node)
-      return if @scanner.in_proc_block
+      return if @scanner.in_unknown_definee_block
       @scanner.process_comments_until(node.location.start_line - 1)
       return unless node.old_name.is_a?(Prism::SymbolNode) && node.new_name.is_a?(Prism::SymbolNode)
       @scanner.add_alias_method(node.old_name.value.to_s, node.new_name.value.to_s, node.location.start_line)
@@ -966,6 +975,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
       klass = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr) if class_name
       if klass
         @scanner.with_container(klass) do
+          # `class A < Struct.new(:foo)` inherits member accessors
+          superclass_info = anonymous_module_or_class_info(node.superclass)
+          if (members = superclass_info&.dig(:members)) && !members.empty?
+            @scanner.add_attributes(members, superclass_info[:rw], node.superclass.location.start_line)
+          end
           node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
@@ -986,10 +1000,17 @@ class RDoc::Parser::Ruby < RDoc::Parser
       expression = node.expression
       expression = expression.body.body.first if expression.is_a?(Prism::ParenthesesNode) && expression.body&.body&.size == 1
 
+      expression.accept(self)
       case expression
       when Prism::ConstantWriteNode
-        # Accept `class << (NameErrorCheckers = Object.new)` as a module which is not actually a module
-        mod = @scanner.container.add_module(RDoc::NormalModule, expression.name.to_s)
+        # Accept `class << (NameErrorCheckers = Object.new)` as a module which is not actually a module.
+        # When visiting the expression defined a class or module (`class << (X = Struct.new)`), reuse it.
+        # The constant belongs to the cref, which differs from the current container
+        # inside a class-body-like block.
+        name = expression.name.to_s
+        owner, = @scanner.find_or_create_lexical_constant_owner_name(name)
+        owner ||= @scanner.container
+        mod = owner.classes_hash[name] || owner.modules_hash[name] || owner.add_module(RDoc::NormalModule, name)
       when Prism::ConstantPathNode, Prism::ConstantReadNode
         expression_name = constant_path_string(expression)
         # If a constant_path does not exist, RDoc creates a module
@@ -997,7 +1018,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when Prism::SelfNode
         mod = @scanner.container if @scanner.container != @top_level
       end
-      expression.accept(self)
       if mod
         @scanner.with_container(mod, singleton: true) do
           node.body&.accept(self)
@@ -1014,7 +1034,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end_line = node.location.end_line
       @scanner.process_comments_until(start_line - 1)
 
-      return if @scanner.in_proc_block
+      return if @scanner.in_unknown_definee_block
 
       case node.receiver
       when Prism::NilNode, Prism::TrueNode, Prism::FalseNode
@@ -1075,30 +1095,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
       path = constant_path_string(node.target)
       return unless path
 
-      alias_path = constant_path_string(node.value)
-      @scanner.add_constant(
-        path,
-        alias_path || node.value.slice,
-        node.location.start_line,
-        node.location.end_line,
-        alias_path: alias_path
-      )
+      _visit_constant_write(path, node.value, node.location)
       @scanner.skip_comments_until(node.location.end_line)
-      # Do not traverse rhs not to document `A::B = Struct.new{def undocumentable_method; end}`
     end
 
     def visit_constant_write_node(node)
       @scanner.process_comments_until(node.location.start_line - 1)
-      alias_path = constant_path_string(node.value)
-      @scanner.add_constant(
-        node.name.to_s,
-        alias_path || node.value.slice,
-        node.location.start_line,
-        node.location.end_line,
-        alias_path: alias_path
-      )
+      _visit_constant_write(node.name.to_s, node.value, node.location)
       @scanner.skip_comments_until(node.location.end_line)
-      # Do not traverse rhs not to document `A = Struct.new{def undocumentable_method; end}`
     end
 
     private
@@ -1149,6 +1153,72 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     end
 
+    def _visit_constant_write(path, value_node, location)
+      if (info = anonymous_module_or_class_info(value_node))
+        mod = @scanner.add_module_or_class(
+          path,
+          location.start_line,
+          location.end_line,
+          is_class: info[:is_class],
+          superclass_name: info[:superclass_name],
+          superclass_expr: info[:superclass_expr]
+        )
+        return unless mod
+
+        @scanner.with_container(mod, push_nesting: false) do
+          members = info[:members]
+          @scanner.add_attributes(members, info[:rw], location.start_line) if members && !members.empty?
+          info[:block]&.body&.accept(self)
+          @scanner.process_comments_until(location.end_line)
+        end
+      else
+        alias_path = constant_path_string(value_node)
+        @scanner.add_constant(
+          path,
+          alias_path || value_node.slice,
+          location.start_line,
+          location.end_line,
+          alias_path: alias_path
+        )
+        # Do not traverse rhs not to document `A = some_dsl { def undocumentable_method; end }`
+      end
+    end
+
+    # Returns add_module_or_class arguments if the expression creates an
+    # anonymous class or module (`Struct.new`, `Data.define`, `Class.new`,
+    # `Module.new`) which the constant assignment will name, otherwise nil.
+
+    def anonymous_module_or_class_info(expression)
+      return unless expression.is_a?(Prism::CallNode)
+
+      receiver_name =
+        case (receiver = expression.receiver)
+        when Prism::ConstantReadNode
+          receiver.name
+        when Prism::ConstantPathNode
+          receiver.name if receiver.parent.nil? # `::Struct.new`
+        end
+
+      block = expression.block
+      block = nil unless block.is_a?(Prism::BlockNode)
+      arguments = expression.arguments&.arguments || []
+
+      case [receiver_name, expression.name]
+      when [:Struct, :new], [:Data, :define]
+        # In `Struct.new('Name', :member)`, the string argument is a class name under Struct, not a member
+        members = arguments.grep(Prism::SymbolNode).map(&:value)
+        rw = receiver_name == :Struct ? 'RW' : 'R'
+        { is_class: true, superclass_name: receiver_name.to_s, members: members, rw: rw, block: block }
+      when [:Class, :new]
+        superclass = arguments.first
+        superclass_name = constant_path_string(superclass) if superclass
+        superclass_expr = superclass.slice if superclass && !superclass_name
+        { is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr, block: block }
+      when [:Module, :new]
+        { is_class: false, block: block }
+      end
+    end
+
     def _visit_call_require(call_node)
       return unless call_node.arguments&.arguments&.size == 1
       arg = call_node.arguments.arguments.first
@@ -1157,19 +1227,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     def _visit_call_module_function(call_node)
-      return if @scanner.in_proc_block || @scanner.singleton
+      return if @scanner.in_unknown_definee_block || @scanner.singleton
       names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
       @scanner.change_method_to_module_function(names) if names
     end
 
     def _visit_call_public_private_class_method(call_node, visibility)
-      return if @scanner.in_proc_block || @scanner.singleton
+      return if @scanner.in_unknown_definee_block || @scanner.singleton
       names = visibility_method_arguments(call_node, singleton: true)
       @scanner.change_method_visibility(names, visibility, singleton: true) if names
     end
 
     def _visit_call_public_private_protected(call_node, visibility)
-      return if @scanner.in_proc_block
+      return if @scanner.in_unknown_definee_block
       arguments_node = call_node.arguments
       if arguments_node.nil? # `public` `private`
         @scanner.visibility = visibility
@@ -1180,7 +1250,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     def _visit_call_alias_method(call_node)
-      return if @scanner.in_proc_block
+      return if @scanner.in_unknown_definee_block
 
       new_name, old_name, *rest = symbol_arguments(call_node)
       return unless old_name && new_name && rest.empty?
@@ -1188,7 +1258,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     def _visit_call_include(call_node)
-      return if @scanner.in_proc_block
+      return if @scanner.in_unknown_definee_block
 
       names = constant_arguments_names(call_node)
       line_no = call_node.location.start_line
@@ -1202,26 +1272,26 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     def _visit_call_extend(call_node)
-      return if @scanner.in_proc_block
+      return if @scanner.in_unknown_definee_block
 
       names = constant_arguments_names(call_node)
       @scanner.add_extends(names, call_node.location.start_line) if names && !@scanner.singleton
     end
 
     def _visit_call_public_constant(call_node)
-      return if @scanner.in_proc_block || @scanner.singleton
+      return if @scanner.in_unknown_definee_block || @scanner.singleton
       names = symbol_arguments(call_node)
       @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
     end
 
     def _visit_call_private_constant(call_node)
-      return if @scanner.in_proc_block || @scanner.singleton
+      return if @scanner.in_unknown_definee_block || @scanner.singleton
       names = symbol_arguments(call_node)
       @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
     end
 
     def _visit_call_attr_reader_writer_accessor(call_node, rw)
-      return if @scanner.in_proc_block
+      return if @scanner.in_unknown_definee_block
       names = symbol_arguments(call_node)
       @scanner.add_attributes(names.map(&:to_s), rw, call_node.location.start_line) if names
     end
