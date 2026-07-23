@@ -577,6 +577,10 @@ class RDoc::Markdown
   require_relative 'markdown/entities'
 
   require_relative 'markdown/literals'
+  require_relative 'markdown/byte_runtime'
+
+  prepend ByteRuntime
+  Literals.prepend ByteRuntime
 
   ##
   # Supported extensions
