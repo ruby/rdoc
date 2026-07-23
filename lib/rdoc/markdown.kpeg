@@ -871,7 +871,7 @@ HtmlBlockInTags = HtmlAnchor
                 | HtmlBlockScript
                 | HtmlBlockHead
 
-HtmlBlock = < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing | HtmlUnclosed) >
+HtmlBlock = &"<" < ( HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing | HtmlUnclosed) >
             @BlankLine+
             { if html? then
                 RDoc::Markup::Raw.new text
