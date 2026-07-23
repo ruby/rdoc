@@ -975,6 +975,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
       klass = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr) if class_name
       if klass
         @scanner.with_container(klass) do
+          # `class A < Struct.new(:foo)` inherits member accessors
+          superclass_info = anonymous_module_or_class_info(node.superclass)
+          if (members = superclass_info&.dig(:members)) && !members.empty?
+            @scanner.add_attributes(members, superclass_info[:rw], node.superclass.location.start_line)
+          end
           node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end

@@ -2340,6 +2340,25 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal 'Struct.new(:a)', @store.find_class_named('Expr').superclass
   end
 
+  def test_class_with_struct_new_superclass
+    util_parser <<~RUBY
+      class A < Struct.new(:foo, :bar)
+        def m; end
+      end
+      class B < Data.define(:baz)
+      end
+      class C < Class.new(StandardError)
+      end
+    RUBY
+    a = @store.find_class_named('A')
+    assert_equal 'Struct.new(:foo, :bar)', a.superclass
+    assert_equal [['foo', 'RW'], ['bar', 'RW']], a.attributes.map { |attr| [attr.name, attr.rw] }
+    assert_equal ['m'], a.method_list.map(&:name)
+    b = @store.find_class_named('B')
+    assert_equal [['baz', 'R']], b.attributes.map { |attr| [attr.name, attr.rw] }
+    assert_empty @store.find_class_named('C').attributes
+  end
+
   def test_constant_assignment_with_module_new
     util_parser <<~RUBY
       Helpers = Module.new do
