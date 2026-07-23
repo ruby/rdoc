@@ -450,6 +450,27 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal ['sm'], klass.class_method_list.map(&:name)
   end
 
+  def test_parenthesized_cdecl_inside_anonymous_class_block
+    # Constants assigned inside the block belong to the cref (A), not to A::B
+    util_parser <<~RUBY
+      class A
+        B = Struct.new(:x) do
+          class << (Y = Struct.new(:z))
+            def sm; end
+          end
+          class << (W = Object.new)
+            def wm; end
+          end
+        end
+      end
+    RUBY
+
+    assert_equal ['sm'], @store.find_class_named('A::Y').class_method_list.map(&:name)
+    assert_equal ['wm'], @store.find_class_or_module('A::W').class_method_list.map(&:name)
+    assert_nil @store.find_class_or_module('A::B::Y')
+    assert_nil @store.find_class_or_module('A::B::W')
+  end
+
   def test_ghost_method
     util_parser <<~RUBY
       class Foo
@@ -2305,6 +2326,21 @@ class RDocParserRubyTest < RDoc::TestCase
 
     assert_equal ['a'], @store.find_class_named('Foo::KeywordInit').attributes.map(&:name)
     assert_equal ['b'], @store.find_class_named('Foo::Named').attributes.map(&:name)
+  end
+
+  def test_constant_path_assignment_with_struct_new
+    util_parser <<~RUBY
+      A::B = Struct.new(:x) do
+        def m; end
+      end
+    RUBY
+    klass = @store.find_class_named('A::B')
+    assert_equal 'Struct', klass.superclass
+    assert_equal ['x'], klass.attributes.map(&:name)
+    assert_equal ['m'], klass.method_list.map(&:name)
+    mod = @store.find_module_named('A')
+    assert_empty mod.method_list
+    assert_empty mod.attributes
   end
 
   def test_constant_assignment_with_data_define

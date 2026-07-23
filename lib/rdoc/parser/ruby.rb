@@ -1005,9 +1005,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
       when Prism::ConstantWriteNode
         # Accept `class << (NameErrorCheckers = Object.new)` as a module which is not actually a module.
         # When visiting the expression defined a class or module (`class << (X = Struct.new)`), reuse it.
+        # The constant belongs to the cref, which differs from the current container
+        # inside a class-body-like block.
         name = expression.name.to_s
-        mod = @scanner.container.classes_hash[name] || @scanner.container.modules_hash[name] ||
-              @scanner.container.add_module(RDoc::NormalModule, name)
+        owner, = @scanner.find_or_create_lexical_constant_owner_name(name)
+        owner ||= @scanner.container
+        mod = owner.classes_hash[name] || owner.modules_hash[name] || owner.add_module(RDoc::NormalModule, name)
       when Prism::ConstantPathNode, Prism::ConstantReadNode
         expression_name = constant_path_string(expression)
         # If a constant_path does not exist, RDoc creates a module
