@@ -105,8 +105,8 @@ require_relative '../rbs_helper'
 #
 # == Hidden methods and attributes
 #
-# You can provide documentation for methods that don't appear using
-# the :method:, :singleton-method: and :attr: directives:
+# You can provide documentation for methods that don't appear in the code
+# using the :method:, :singleton-method: and :attr: directives:
 #
 #   ##
 #   # :attr_writer: ghost_writer
@@ -122,8 +122,13 @@ require_relative '../rbs_helper'
 #   def regular_method() end
 #
 # Note that by default, the :method: directive will be ignored if there is a
-# standard rdocable item following it.
-
+# standard rdocable item following it:
+#
+#   ##
+#   # :method: ghost_method
+#   # ghost_method will be ignored.
+#
+#   def standard_rdocable_method() end
 class RDoc::Parser::Ruby < RDoc::Parser
 
   parse_files_matching(/\.rbw?$/)
