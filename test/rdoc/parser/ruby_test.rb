@@ -349,6 +349,218 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal ['Bar::A'], mod.modules.select(&:document_self).map(&:full_name)
   end
 
+  def test_stopdoc_closed_at_end_of_scope
+    util_parser <<~RUBY
+      class A
+        # :stopdoc:
+        HIDDEN = 1
+      end
+
+      class B; end
+
+      class A
+        VISIBLE = 1
+      end
+    RUBY
+    a, b = @top_level.classes
+    assert_equal 'B', b.full_name
+    refute b.ignored?
+    assert_equal ['VISIBLE'], a.constants.map(&:name)
+  end
+
+  def test_stopdoc_does_not_leak_to_another_file
+    util_parser <<~RUBY
+      class A
+        # :stopdoc:
+        def hidden; end
+      end
+    RUBY
+    other_top_level = @store.add_file 'other.rb'
+    parser = RDoc::Parser::Ruby.new other_top_level, <<~RUBY, @options, @stats
+      class A
+        def visible; end
+      end
+    RUBY
+    parser.scan
+    a = @store.find_class_or_module('A')
+    assert a.document_self
+    assert_equal ['visible'], a.method_list.map(&:name)
+  end
+
+  def test_startdoc_in_nested_scope_of_stopdoc
+    util_parser <<~RUBY
+      class A
+        # :stopdoc:
+        class B
+          # :startdoc:
+          def visible; end
+        end
+        HIDDEN = 1
+      end
+    RUBY
+    a = @top_level.classes.first
+    b = @store.find_class_or_module('A::B')
+    refute b.ignored?
+    assert_equal ['visible'], b.method_list.map(&:name)
+    # :stopdoc: state is restored after class B's end
+    assert_empty a.constants
+  end
+
+  def test_class_created_in_stopdoc_region
+    util_parser <<~RUBY
+      # :stopdoc:
+      class Hidden
+        def f; end
+      end
+      # :startdoc:
+      class Visible; end
+    RUBY
+    assert_equal ['Visible'], @top_level.classes.reject(&:ignored?).map(&:full_name)
+    assert_empty @store.find_class_or_module('Hidden').method_list
+  end
+
+  def test_class_created_in_stopdoc_region_reopened
+    util_parser <<~RUBY
+      # :stopdoc:
+      class Foo
+        def hidden; end
+      end
+      # :startdoc:
+      class Foo
+        def visible; end
+      end
+    RUBY
+    foo = @store.find_class_or_module('Foo')
+    refute foo.ignored?
+    assert_equal ['visible'], foo.method_list.map(&:name)
+  end
+
+  def test_class_created_in_stopdoc_region_documented_by_singleton_method_def
+    util_parser <<~RUBY
+      # :stopdoc:
+      class Foo; end
+      # :startdoc:
+      def Foo.f; end
+    RUBY
+    foo = @store.find_class_or_module('Foo')
+    refute foo.ignored?
+    assert_equal ['f'], foo.method_list.map(&:name)
+  end
+
+  def test_class_created_in_stopdoc_region_documented_by_constant
+    util_parser <<~RUBY
+      # :stopdoc:
+      class Foo; end
+      # :startdoc:
+      Foo::X = 1
+    RUBY
+    foo = @store.find_class_or_module('Foo')
+    refute foo.ignored?
+    assert_equal ['X'], foo.constants.map(&:name)
+  end
+
+  def test_require_in_stopdoc_region
+    util_parser <<~RUBY
+      require 'a'
+      # :stopdoc:
+      class Hidden; end
+      require 'b'
+    RUBY
+    assert_equal ['a'], @top_level.requires.map(&:name)
+  end
+
+  # action_dispatch/http/rack_cache.rb pattern: reopening a module documented
+  # in another file inside an :enddoc: file must not hide the module itself
+  def test_reopen_documented_module_in_enddoc_file
+    util_parser <<~RUBY
+      module Foo
+        def visible; end
+      end
+    RUBY
+    other_top_level = @store.add_file 'other.rb'
+    parser = RDoc::Parser::Ruby.new other_top_level, <<~RUBY, @options, @stats
+      # :enddoc:
+
+      module Foo
+        class Hidden; end
+      end
+    RUBY
+    parser.scan
+    foo = @store.find_class_or_module('Foo')
+    refute foo.ignored?
+    assert_equal ['visible'], foo.method_list.map(&:name)
+    assert foo.classes.all?(&:ignored?)
+  end
+
+  # net/http.rb pattern: `module Net #:nodoc:` expects :startdoc: to make
+  # Net documentable again
+  def test_startdoc_in_nodoc_module
+    util_parser <<~RUBY
+      module Net # :nodoc:
+        # :stopdoc:
+        class Hidden; end
+        # :startdoc:
+        class Visible; end
+        CONST = 1
+      end
+    RUBY
+    net = @top_level.modules.first
+    assert net.document_self
+    assert_equal ['Net::Visible'], net.classes.reject(&:ignored?).map(&:full_name)
+    assert_equal ['CONST'], net.constants.map(&:name)
+  end
+
+  def test_document_control_directive_attached_to_singleton_class
+    util_parser <<~RUBY
+      class Foo
+        # :stopdoc:
+        def hidden; end
+
+        # :startdoc:
+        class << self
+          def smethod; end
+        end
+
+        def visible; end
+      end
+    RUBY
+    foo = @top_level.classes.first
+    assert_equal ['smethod', 'visible'], foo.method_list.map(&:name).sort
+  end
+
+  # prism/translation/ripper/shim.rb pattern
+  def test_constant_alias_in_stopdoc_region
+    util_parser <<~RUBY
+      class Real; end
+      # :stopdoc:
+      RealAlias = Real
+      # :startdoc:
+    RUBY
+    assert_empty @top_level.constants
+    assert_equal ['Real'], @store.all_classes_and_modules.map(&:full_name)
+  end
+
+  # net/http/response.rb pattern: :stopdoc: in `class << self` scope should not
+  # suppress the rest of the class body
+  def test_stopdoc_closed_at_end_of_singleton_class_scope
+    util_parser <<~RUBY
+      module Bar; end
+      class Foo
+        class << self
+          # :stopdoc:
+          def hidden; end
+        end
+
+        include Bar
+
+        def visible; end
+      end
+    RUBY
+    foo = @top_level.classes.first
+    assert_equal ['Bar'], foo.includes.map(&:name)
+    assert_equal ['visible'], foo.method_list.map(&:name)
+  end
+
   def test_class_superclass
     util_parser <<~RUBY
       class Foo; end
