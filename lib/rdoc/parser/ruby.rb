@@ -915,8 +915,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     handle_modifier_directive(mod, end_line)
     unless document_suppressed?
       # In a :stopdoc:/:enddoc: region, the container is still created as a
-      # namespace (the body is visited so that an inner :startdoc: works)
-      # but is not recorded to this file nor documented
+      # namespace but is not recorded to this file nor documented.
+      # The body is also visited: an inner :startdoc: re-enables documentation
+      # in a :stopdoc: region (not in an :enddoc: region), and nested
+      # namespaces need to be created for later promotion from other files
       mark_container_documentable(owner) if owner.is_a?(RDoc::ClassModule)
       if mod.ignored?
         mark_container_documentable(mod)

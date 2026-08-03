@@ -492,6 +492,24 @@ class RDocParserRubyTest < RDoc::TestCase
     assert foo.classes.all?(&:ignored?)
   end
 
+  # :enddoc: is final for the whole scope subtree: unlike :stopdoc:,
+  # a :startdoc: in a nested scope cannot re-enable documentation
+  def test_enddoc_cannot_be_cancelled_by_startdoc_in_nested_scope
+    util_parser <<~RUBY
+      class A
+        # :enddoc:
+        class B
+          # :startdoc:
+          def hidden; end
+        end
+      end
+    RUBY
+    a = @top_level.classes.first
+    assert_equal [], a.classes.reject(&:ignored?).map(&:full_name)
+    b = @store.find_class_or_module('A::B')
+    assert_empty b.method_list
+  end
+
   # net/http.rb pattern: `module Net #:nodoc:` expects :startdoc: to make
   # Net documentable again
   def test_startdoc_in_nodoc_module
