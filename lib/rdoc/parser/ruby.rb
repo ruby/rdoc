@@ -132,7 +132,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   RBS_SIG_LINE = /\A#:\s/ # :nodoc:
 
   attr_accessor :visibility
-  attr_reader :container, :singleton, :in_proc_block
+  attr_reader :singleton, :in_proc_block
 
   def initialize(top_level, content, options, stats)
     super
@@ -147,8 +147,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @track_visibility = :nodoc != @options.visibility
     @encoding = @options.encoding
 
-    @module_nesting = [[top_level, false]]
-    @container = top_level
+    # IR records emitted while visiting the AST, replayed by CodeObjectBuilder.
+    # Records must be plain data (no AST node or CodeObject references)
+    # so that the IR can be compared and serialized.
+    @ir = []
+    @scope_id = 0
+    @scope_depth = 0
     @visibility = :public
     @singleton = false
     @in_proc_block = false
@@ -158,8 +162,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Applies document control directives (:startdoc:, :stopdoc: and :enddoc:)
   # to the current lexical scope. The state is restored when the enclosing
   # class/module scope is closed.
+  # Returns true if a :startdoc: directive took effect. Its model-side effect
+  # (reviving an ignored container) is replayed by CodeObjectBuilder from the
+  # startdoc flag of the comment payload.
 
   def apply_document_control_directive(directives)
+    startdoc = false
     directives.each do |directive, (_param, line)|
       case directive
       when 'startdoc', 'stopdoc'
@@ -169,18 +177,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
           next
         end
         @doc_state = directive.to_sym
-        if directive == 'startdoc' && !@container.ignored?
-          # Compatibility: `module Net #:nodoc:` followed by :stopdoc:/:startdoc:
-          # regions is a common pattern that expects :startdoc: to make the
-          # container documentable again. Containers ignored here were created
-          # in a suppressed region and need documentable contents to revive.
-          @container.start_doc
-          @container.force_documentation = true
-        end
+        startdoc = true if directive == 'startdoc'
       when 'enddoc'
         @doc_state = :enddoc
       end
     end
+    startdoc
   end
 
   # Returns true if code objects at the current position should not be
@@ -188,17 +190,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def document_suppressed?
     @track_visibility && @doc_state != :startdoc
-  end
-
-  # Makes a container that was created inside a :stopdoc:/:enddoc: region
-  # (thus ignored) documentable again when it receives documentable contents
-  # outside the region, possibly from another file.
-
-  def mark_container_documentable(container)
-    return if container.received_nodoc || !container.ignored?
-    record_location(container)
-    container.start_doc
-    mark_container_documentable(container.parent) if container.parent.is_a?(RDoc::ClassModule)
   end
 
   # Suppress `extend` and `include` within block
@@ -212,39 +203,26 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @in_proc_block = in_proc_block
   end
 
-  # Dive into another container
+  # Dive into another scope opened by the record of the given scope id
 
-  def with_container(container, singleton: false)
-    old_container = @container
+  def with_scope(scope_id, singleton: false)
     old_visibility = @visibility
     old_singleton = @singleton
     old_in_proc_block = @in_proc_block
     old_doc_state = @doc_state
     @visibility = :public
-    @container = container
     @singleton = singleton
     @in_proc_block = false
-    @module_nesting.push([container, singleton])
-    yield container
+    @scope_depth += 1
+    emit({type: :scope_enter, id: scope_id, singleton: singleton})
+    yield
   ensure
-    @container = old_container
+    emit({type: :scope_exit})
     @visibility = old_visibility
     @singleton = old_singleton
     @in_proc_block = old_in_proc_block
     @doc_state = old_doc_state
-    @module_nesting.pop
-  end
-
-  # Records the location of this +container+ in the file for this parser and
-  # adds it to the list of classes and modules in the file.
-
-  def record_location(container) # :nodoc:
-    case container
-    when RDoc::ClassModule then
-      @top_level.add_to_classes_or_modules container
-    end
-
-    container.record_location @top_level
+    @scope_depth -= 1
   end
 
   # Scans this Ruby file for Ruby constructs
@@ -268,12 +246,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     @program_node.accept(RDocVisitor.new(self, @top_level, @store))
     process_comments_until(@lines.size + 1)
-  end
 
-  def should_document?(code_object) # :nodoc:
-    return true unless @track_visibility
-    return false if code_object.parent&.document_children == false
-    code_object.document_self
+    builder = CodeObjectBuilder.new(@top_level, @store, @options, @stats, @preprocess, track_visibility: @track_visibility)
+    builder.run(@ir)
+    @top_level
   end
 
   # Assign AST node to a line.
@@ -352,39 +328,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
-  # Creates an RDoc::Method on +container+ from +comment+ if there is a
-  # Signature section in the comment
-
-  def parse_comment_tomdoc(container, comment, line_no, start_line)
-    return if document_suppressed?
-    return unless signature = RDoc::TomDoc.signature(comment)
-
-    name, = signature.split %r%[ \(]%, 2
-
-    meth = RDoc::AnyMethod.new name
-    record_location(meth)
-    meth.line = start_line
-    meth.call_seq = signature
-    return unless meth.name
-
-    meth.start_collecting_tokens(:ruby)
-    node = @line_nodes[line_no]
-    tokens = node ? syntax_highlighted_tokens(node) : []
-    tokens.each { |token| meth.token_stream << token }
-
-    container.add_method meth
-    meth.comment = comment
-    @stats.add_method meth
-  end
-
   def has_modifier_nodoc?(line_no) # :nodoc:
     @modifier_comments[line_no]&.match?(/\A#\s*:nodoc:/)
   end
 
-  def handle_modifier_directive(code_object, line_no) # :nodoc:
+  # Parses the modifier comment on the given line into a directives hash
+
+  def modifier_directives(line_no) # :nodoc:
     if (comment_text = @modifier_comments[line_no])
       _text, directives = @preprocess.parse_comment(comment_text, line_no, :ruby)
-      handle_code_object_directives(code_object, directives)
+      directives
     end
   end
 
@@ -400,67 +353,19 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end || []
   end
 
-  # Handles meta method comments
+  # Emits a meta method comment record
 
-  def handle_meta_method_comment(comment, directives, node)
-    apply_document_control_directive(directives)
-    handle_code_object_directives(@container, directives)
-    is_call_node = node.is_a?(Prism::CallNode)
-    singleton_method = false
-    visibility = @visibility
-    attributes = rw = line_no = method_name = nil
-    directives.each do |directive, (param, line)|
-      case directive
-      when 'attr', 'attr_reader', 'attr_writer', 'attr_accessor'
-        attributes = [param] if param
-        attributes ||= call_node_name_arguments(node) if is_call_node
-        rw = directive == 'attr_writer' ? 'W' : directive == 'attr_accessor' ? 'RW' : 'R'
-      when 'method'
-        method_name = param if param
-        line_no = line
-      when 'singleton-method'
-        method_name = param if param
-        line_no = line
-        singleton_method = true
-        visibility = :public
-      end
+  def emit_meta_comment(comment_payload, node)
+    if node
+      node_payload = {
+        is_call_node: node.is_a?(Prism::CallNode),
+        name_arguments: node.is_a?(Prism::CallNode) ? call_node_name_arguments(node) : [],
+        tokens: syntax_highlighted_tokens(node),
+        start_line: node.location.start_line
+      }
     end
-
-    return if document_suppressed?
-
-    if attributes
-      attributes.each do |attr|
-        a = RDoc::Attr.new(attr, rw, comment, singleton: @singleton)
-        a.store = @store
-        a.line = line_no
-        record_location(a)
-        @container.add_attribute(a)
-        mark_container_documentable(@container)
-        a.visibility = visibility
-      end
-    elsif line_no || node
-      method_name ||= call_node_name_arguments(node).first if is_call_node
-      if node
-        tokens = syntax_highlighted_tokens(node)
-        line_no = node.location.start_line
-      else
-        tokens = []
-      end
-      internal_add_method(
-        method_name,
-        @container,
-        comment: comment,
-        directives: directives,
-        dont_rename_initialize: false,
-        line_no: line_no,
-        visibility: visibility,
-        singleton: @singleton || singleton_method,
-        params: nil,
-        calls_super: false,
-        block_params: nil,
-        tokens: tokens,
-      )
-    end
+    emit({type: :meta_comment, comment: comment_payload, node: node_payload,
+          visibility: @visibility, singleton: @singleton, suppressed: document_suppressed?})
   end
 
   INVALID_GHOST_METHOD_ACCEPT_DIRECTIVE_LIST = %w[
@@ -474,15 +379,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     !@line_nodes[line_no] && INVALID_GHOST_METHOD_ACCEPT_DIRECTIVE_LIST.any? { |directive| directives.has_key?(directive) }
   end
 
-  def handle_standalone_consecutive_comment_directive(comment, directives, start_with_sharp_sharp, line_no, start_line) # :nodoc:
+  def handle_standalone_consecutive_comment_directive(comment_payload, start_with_sharp_sharp, line_no, start_line) # :nodoc:
     if start_with_sharp_sharp && start_line != @first_non_meta_comment_start_line
-      node = @line_nodes[line_no]
-      handle_meta_method_comment(comment, directives, node)
-    elsif normal_comment_treat_as_ghost_method_for_now?(directives, line_no) && start_line != @first_non_meta_comment_start_line
-      handle_meta_method_comment(comment, directives, nil)
+      emit_meta_comment(comment_payload, @line_nodes[line_no])
+    elsif normal_comment_treat_as_ghost_method_for_now?(comment_payload[:directives], line_no) && start_line != @first_non_meta_comment_start_line
+      emit_meta_comment(comment_payload, nil)
     else
-      apply_document_control_directive(directives)
-      handle_code_object_directives(@container, directives)
+      emit({type: :container_directives, comment: comment_payload})
     end
   end
 
@@ -492,12 +395,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     while !@unprocessed_comments.empty? && @unprocessed_comments.first[0] <= line_no_until
       line_no, start_line, text = @unprocessed_comments.shift
       if @markup == 'tomdoc'
-        comment = RDoc::Comment.new(text, @top_level, :ruby)
-        comment.format = 'tomdoc'
-        parse_comment_tomdoc(@container, comment, line_no, start_line)
-        @preprocess.run_post_processes(comment, @container)
-      elsif (comment_text, directives = parse_comment_text_to_directives(text, start_line))
-        handle_standalone_consecutive_comment_directive(comment_text, directives, text.start_with?(/#\#$/), line_no, start_line)
+        node = @line_nodes[line_no]
+        emit({type: :tomdoc_comment, text: text, start_line: start_line, suppressed: document_suppressed?,
+              tokens: node ? syntax_highlighted_tokens(node) : []})
+      elsif (comment_payload = parse_comment_payload(text, start_line))
+        handle_standalone_consecutive_comment_directive(comment_payload, text.start_with?(/#\#$/), line_no, start_line)
       end
     end
   end
@@ -511,34 +413,34 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
   end
 
-  # Returns consecutive comment linked to the given line number
+  # Consumes the consecutive comment linked to the given line number and
+  # returns its payload
 
-  def consecutive_comment(line_no)
+  def consecutive_comment_payload(line_no)
     return unless @unprocessed_comments.first&.first == line_no
     _line_no, start_line, text = @unprocessed_comments.shift
-    parse_comment_text_to_directives(text, start_line)
+    parse_comment_payload(text, start_line)
   end
 
-  # Parses comment text and returns +[RDoc::Comment, directives, type_signature_lines]+,
-  # or +nil+ if the comment is a section header (which has no associated code
-  # object).
+  # Parses comment text into a plain-data payload for IR records, or returns
+  # +nil+ if the comment is a section header (which is emitted as its own
+  # record and has no associated code object).
 
-  def parse_comment_text_to_directives(comment_text, start_line) # :nodoc:
-    type_signature_lines = extract_type_signature!(comment_text, start_line)
+  def parse_comment_payload(comment_text, start_line) # :nodoc:
+    type_signature_lines, type_signature_line_no = extract_type_signature!(comment_text, start_line)
     comment_text, directives = @preprocess.parse_comment(comment_text, start_line, :ruby)
-    comment = RDoc::Comment.new(comment_text, @top_level, :ruby)
-    comment.normalized = true
-    comment.line = start_line
     markup, = directives['markup']
-    comment.format = markup&.downcase || @markup
+    format = markup&.downcase || @markup
     if (section, directive_line = directives['section'])
       # If comment has :section:, it is not a documentable comment for a code object
-      comment.text = extract_section_comment(comment_text, directive_line - start_line)
-      @container.set_current_section(section, comment)
+      text = extract_section_comment(comment_text, directive_line - start_line)
+      emit({type: :section, title: section, text: text, start_line: start_line, format: format,
+            type_signature_lines: type_signature_lines, type_signature_line_no: type_signature_line_no})
       return
     end
-    @preprocess.run_post_processes(comment, @container)
-    [comment, directives, type_signature_lines]
+    startdoc = apply_document_control_directive(directives)
+    {text: comment_text, start_line: start_line, format: format, directives: directives, startdoc: startdoc,
+     type_signature_lines: type_signature_lines, type_signature_line_no: type_signature_line_no}
   end
 
   # Extracts the comment for this section from the normalized comment block.
@@ -562,394 +464,137 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
 
   def change_method_visibility(names, visibility, singleton: @singleton)
-    new_methods = []
-    @container.methods_matching(names, singleton) do |m|
-      if m.parent != @container
-        # A copy of an ancestor's method must not be documented
-        # in a :stopdoc:/:enddoc: region
-        next if document_suppressed?
-        m = m.dup
-        record_location(m)
-        new_methods << m
-      else
-        m.visibility = visibility
-      end
-    end
-    new_methods.each do |method|
-      case method
-      when RDoc::AnyMethod then
-        @container.add_method(method)
-      when RDoc::Attr then
-        @container.add_attribute(method)
-      end
-      method.visibility = visibility
-    end
+    emit({type: :change_method_visibility, names: names, visibility: visibility, singleton: singleton,
+          suppressed: document_suppressed?})
   end
 
   # Handles `module_function :foo, :bar`
 
   def change_method_to_module_function(names)
-    @container.set_visibility_for(names, :private, false)
-    # In a :stopdoc:/:enddoc: region, the visibility of instance methods still
-    # changes but the singleton method copies must not be documented
-    return if document_suppressed?
-
-    new_methods = []
-    @container.methods_matching(names) do |m|
-      s_m = m.dup
-      record_location(s_m)
-      s_m.singleton = true
-      new_methods << s_m
-    end
-    new_methods.each do |method|
-      case method
-      when RDoc::AnyMethod then
-        @container.add_method(method)
-      when RDoc::Attr then
-        @container.add_attribute(method)
-      end
-      method.visibility = :public
-    end
-  end
-
-  def handle_code_object_directives(code_object, directives) # :nodoc:
-    directives.each do |directive, (param)|
-      # startdoc/stopdoc/enddoc are handled by apply_document_control_directive.
-      # They control the lexical scope of the parser, not the code object.
-      next if directive == 'startdoc' || directive == 'stopdoc' || directive == 'enddoc'
-      @preprocess.handle_directive('', directive, param, code_object)
-    end
+    emit({type: :module_function, names: names, suppressed: document_suppressed?})
   end
 
   # Handles `alias foo bar` and `alias_method :foo, :bar`
 
   def add_alias_method(old_name, new_name, line_no)
-    comment, directives = consecutive_comment(line_no)
-    apply_document_control_directive(directives) if directives
-    handle_code_object_directives(@container, directives) if directives
-    return if document_suppressed?
-
-    visibility = @container.find_method(old_name, @singleton)&.visibility || :public
-    a = RDoc::Alias.new(old_name, new_name, comment, singleton: @singleton)
-    handle_modifier_directive(a, line_no)
-    a.store = @store
-    a.line = line_no
-    record_location(a)
-    if should_document?(a)
-      mark_container_documentable(@container)
-      @container.add_alias(a)
-      @container.find_method(new_name, @singleton)&.visibility = visibility
-    end
+    comment = consecutive_comment_payload(line_no)
+    emit({type: :alias_method, old_name: old_name, new_name: new_name, line_no: line_no,
+          singleton: @singleton, suppressed: document_suppressed?,
+          comment: comment, modifier_directives: modifier_directives(line_no)})
   end
 
   # Handles `attr :a, :b`, `attr_reader :a, :b`, `attr_writer :a, :b` and `attr_accessor :a, :b`
 
   def add_attributes(names, rw, line_no)
-    comment, directives, type_signature_lines = consecutive_comment(line_no)
-    apply_document_control_directive(directives) if directives
-    handle_code_object_directives(@container, directives) if directives
-    return if document_suppressed?
-    return unless @container.document_children
-
-    names.each do |symbol|
-      a = RDoc::Attr.new(symbol.to_s, rw, comment, singleton: @singleton)
-      a.store = @store
-      a.line = line_no
-      a.type_signature_lines = type_signature_lines
-      record_location(a)
-      handle_modifier_directive(a, line_no)
-      if should_document?(a)
-        @container.add_attribute(a)
-        mark_container_documentable(@container)
-      end
-      a.visibility = visibility # should set after adding to container
-    end
-  end
-
-  # Adds includes/extends. Module name is resolved to full before adding.
-
-  def add_includes_extends(names, rdoc_class, line_no) # :nodoc:
-    comment, directives = consecutive_comment(line_no)
-    apply_document_control_directive(directives) if directives
-    handle_code_object_directives(@container, directives) if directives
-    return if document_suppressed?
-
-    mark_container_documentable(@container)
-    names.each do |name|
-      resolved_name = resolve_constant_path(name)
-      ie = @container.add(rdoc_class, resolved_name || name, '')
-      ie.store = @store
-      ie.line = line_no
-      ie.comment = comment
-      record_location(ie)
-    end
+    comment = consecutive_comment_payload(line_no)
+    emit({type: :attributes, names: names, rw: rw, line_no: line_no, singleton: @singleton,
+          visibility: @visibility, suppressed: document_suppressed?,
+          comment: comment, modifier_directives: modifier_directives(line_no)})
   end
 
   # Handle `include Foo, Bar`
 
   def add_includes(names, line_no) # :nodoc:
-    add_includes_extends(names, RDoc::Include, line_no)
+    comment = consecutive_comment_payload(line_no)
+    emit({type: :include, names: names, line_no: line_no, suppressed: document_suppressed?, comment: comment})
   end
 
   # Handle `extend Foo, Bar`
 
   def add_extends(names, line_no) # :nodoc:
-    add_includes_extends(names, RDoc::Extend, line_no)
+    comment = consecutive_comment_payload(line_no)
+    emit({type: :extend, names: names, line_no: line_no, suppressed: document_suppressed?, comment: comment})
   end
 
   # Adds a method defined by `def` syntax
 
   def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
-    comment, directives, type_signature_lines = consecutive_comment(start_line)
-    apply_document_control_directive(directives) if directives
-    handle_code_object_directives(@container, directives) if directives
-    # Resolve receiver after applying directives so that a namespace created
-    # here is marked as ignored when the comment starts a :stopdoc: region
-    receiver = receiver_name ? find_or_create_lexical_module_path(receiver_name, receiver_fallback_type) : @container
-
-    internal_add_method(
-      method_name,
-      receiver,
-      comment: comment,
-      directives: directives,
-      modifier_comment_lines: [start_line, args_end_line, end_line].uniq,
-      line_no: start_line,
-      visibility: visibility,
-      singleton: singleton,
-      params: params,
-      calls_super: calls_super,
-      block_params: block_params,
-      tokens: tokens,
-      type_signature_lines: type_signature_lines
-    )
-  end
-
-  private def internal_add_method(method_name, container, comment:, dont_rename_initialize: false, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature_lines: nil) # :nodoc:
-    meth = RDoc::AnyMethod.new(method_name, singleton: singleton)
-    meth.comment = comment
-    handle_code_object_directives(meth, directives) if directives
-    modifier_comment_lines&.each do |line|
-      handle_modifier_directive(meth, line)
-    end
-    return if document_suppressed?
-    return unless should_document?(meth)
-
-    mark_container_documentable(container)
-
-    if directives && (call_seq, = directives['call-seq'])
-      meth.call_seq = call_seq.lines.map(&:chomp).reject(&:empty?).join("\n") if call_seq
-    end
-    meth.name ||= meth.call_seq[/\A[^()\s]+/] if meth.call_seq
-    meth.name ||= 'unknown'
-    meth.store = @store
-    meth.line = line_no
-    container.add_method(meth) # should add after setting singleton and before setting visibility
-    meth.visibility = visibility
-    meth.params ||= params || '()'
-    meth.calls_super = calls_super
-    meth.block_params ||= block_params if block_params
-    meth.type_signature_lines = type_signature_lines
-    record_location(meth)
-    meth.start_collecting_tokens(:ruby)
-    tokens.each do |token|
-      meth.token_stream << token
-    end
-
-    # Rename after add_method to register duplicated 'new' and 'initialize'
-    # defined in c and ruby.
-    if !dont_rename_initialize && method_name == 'initialize' && !singleton
-      if meth.dont_rename_initialize
-        meth.visibility = :protected
-      else
-        meth.name = 'new'
-        meth.singleton = true
-        meth.visibility = :public
-      end
-    end
-  end
-
-  # Find or create module or class from a given module name using Ruby lexical
-  # nesting. If module or class does not exist, creates a module or a class
-  # according to `create_mode` argument.
-
-  def find_or_create_lexical_module_path(module_name, create_mode)
-    root_name, *path, name = module_name.split('::')
-    add_module = ->(mod, name, mode) {
-      created =
-        case mode
-        when :class
-          mod.add_class(RDoc::NormalClass, name, 'Object').tap { |m| m.store = @store }
-        when :module
-          mod.add_module(RDoc::NormalModule, name).tap { |m| m.store = @store }
-        end
-      # add_class/add_module may return an existing object created by another
-      # file (in_files is not empty then), which must not be ignored here.
-      # Documentable again when reopened or receiving contents outside the region.
-      created.ignore if document_suppressed? && created.in_files.empty?
-      created
-    }
-    if root_name.empty?
-      mod = @top_level
-    else
-      @module_nesting.reverse_each do |nesting, singleton|
-        next if singleton
-        mod = nesting.get_module_named(root_name)
-        break if mod
-        # If a constant is found and it is not a module or class, RDoc can't document about it.
-        # Return an anonymous module to avoid wrong document creation.
-        return RDoc::NormalModule.new(nil) if nesting.find_constant_named(root_name)
-      end
-      last_nesting, = @module_nesting.reverse_each.find { |_, singleton| !singleton }
-      return mod || add_module.call(last_nesting, root_name, create_mode) unless name
-      mod ||= add_module.call(last_nesting, root_name, :module)
-    end
-    path.each do |name|
-      mod = mod.get_module_named(name) || add_module.call(mod, name, :module)
-    end
-    mod.get_module_named(name) || add_module.call(mod, name, create_mode)
-  end
-
-  # Resolves constant path to a full path by searching module nesting
-
-  def resolve_constant_path(constant_path)
-    owner_name, path = constant_path.split('::', 2)
-    return constant_path if owner_name.empty? # ::Foo, ::Foo::Bar
-    mod = nil
-    @module_nesting.reverse_each do |nesting, singleton|
-      next if singleton
-      mod = nesting.get_module_named(owner_name)
-      break if mod
-    end
-    mod ||= @top_level.get_module_named(owner_name)
-    [mod.full_name, path].compact.join('::') if mod
-  end
-
-  # Returns a pair of owner module and constant name from a given constant path
-  # using Ruby lexical nesting. Creates owner module if it does not exist.
-
-  def find_or_create_lexical_constant_owner_name(constant_path)
-    const_path, colon, name = constant_path.rpartition('::')
-    if colon.empty? # class Foo
-      # Within `class C` or `module C`, owner is C(== current container)
-      # Within `class <<C`, owner is C.singleton_class
-      # but RDoc don't track constants of a singleton class of module
-      [(@singleton ? nil : @container), name]
-    elsif const_path.empty? # class ::Foo
-      [@top_level, name]
-    else # `class Foo::Bar` or `class ::Foo::Bar`
-      [find_or_create_lexical_module_path(const_path, :module), name]
-    end
+    comment = consecutive_comment_payload(start_line)
+    modifier_directives_list = [start_line, args_end_line, end_line].uniq.filter_map { |line| modifier_directives(line) }
+    emit({type: :method, name: method_name, receiver_name: receiver_name, receiver_fallback_type: receiver_fallback_type,
+          visibility: visibility, singleton: singleton, params: params, calls_super: calls_super,
+          block_params: block_params, tokens: tokens, line_no: start_line, suppressed: document_suppressed?,
+          comment: comment, modifier_directives_list: modifier_directives_list})
   end
 
   # Adds a constant
 
   def add_constant(constant_name, rhs_name, start_line, end_line, alias_path: nil)
-    comment, directives = consecutive_comment(start_line)
-    apply_document_control_directive(directives) if directives
-    handle_code_object_directives(@container, directives) if directives
-    return if document_suppressed?
-
-    owner, name = find_or_create_lexical_constant_owner_name(constant_name)
-    return unless owner
-
-    constant = RDoc::Constant.new(name, rhs_name, comment)
-    constant.store = @store
-    constant.line = start_line
-    constant.is_alias_for_path = alias_path
-    handle_modifier_directive(constant, start_line)
-    handle_modifier_directive(constant, end_line)
-    # A constant marked :nodoc: must not make an ignored owner documentable
-    mark_container_documentable(owner) if constant.document_self && owner.is_a?(RDoc::ClassModule)
-    record_location(constant)
-    owner.add_constant(constant)
-    return unless alias_path
-    mod =
-      if alias_path.start_with?('::')
-        @store.find_class_or_module(alias_path)
-      else
-        full_name = resolve_constant_path(alias_path)
-        @store.find_class_or_module(full_name)
-      end
-    if mod && constant.document_self
-      a = owner.add_module_alias(mod, alias_path, constant, @top_level)
-      a.store = @store
-      a.line = start_line
-      record_location(a)
-    end
+    comment = consecutive_comment_payload(start_line)
+    modifier_directives_list = [modifier_directives(start_line), modifier_directives(end_line)].compact
+    emit({type: :constant, constant_name: constant_name, rhs_name: rhs_name, line_no: start_line,
+          alias_path: alias_path, suppressed: document_suppressed?,
+          comment: comment, modifier_directives_list: modifier_directives_list})
   end
 
-  # Adds module or class
+  # Emits a scope-opening record for a module or class and returns its scope
+  # id, or nil if the body should not be visited
 
   def add_module_or_class(module_name, start_line, end_line, is_class: false, superclass_name: nil, superclass_expr: nil)
-    comment, directives = consecutive_comment(start_line)
-    apply_document_control_directive(directives) if directives
-    handle_code_object_directives(@container, directives) if directives
-    return unless @container.document_children
+    comment = consecutive_comment_payload(start_line)
+    modifier_directives_list = [modifier_directives(start_line), modifier_directives(end_line)].compact
+    id = (@scope_id += 1)
+    emit({type: :scope_open, id: id, kind: is_class ? :class : :module, name: module_name,
+          line_no: start_line, superclass_name: superclass_name, superclass_expr: superclass_expr,
+          suppressed: document_suppressed?,
+          comment: comment, modifier_directives_list: modifier_directives_list})
+    # RDoc doesn't track constants of a singleton class, so a bare-named module
+    # or class inside `class << C` has no place to belong to
+    return if @singleton && !module_name.include?('::')
+    id
+  end
 
-    owner, name = find_or_create_lexical_constant_owner_name(module_name)
-    return unless owner
+  # Emits a scope-opening record for `class << (Name = Object.new)` and returns its scope id
 
-    if is_class
-      # RDoc::NormalClass resolves superclass name despite of the lack of module nesting information.
-      # We need to fix it when RDoc::NormalClass resolved to a wrong constant name
-      if superclass_name
-        superclass_full_path = resolve_constant_path(superclass_name)
-        superclass = @store.find_class_or_module(superclass_full_path) if superclass_full_path
-        superclass_full_path ||= superclass_name
-        superclass_full_path = superclass_full_path.sub(/^::/, '')
-      end
-      # add_class should be done after resolving superclass
-      mod = owner.classes_hash[name]
-      unless mod
-        # add_class may return an existing class created by another file
-        # (in_files is not empty then), which must not be ignored here
-        mod = owner.add_class(RDoc::NormalClass, name, superclass_name || superclass_expr || '::Object')
-        mod.ignore if document_suppressed? && mod.in_files.empty?
-      end
-      if superclass_name
-        if superclass
-          mod.superclass = superclass
-        elsif (mod.superclass.is_a?(String) || mod.superclass.name == 'Object') && mod.superclass != superclass_full_path
-          mod.superclass = superclass_full_path
-        end
-      end
-    else
-      mod = owner.modules_hash[name]
-      unless mod
-        mod = owner.add_module(RDoc::NormalModule, name)
-        mod.ignore if document_suppressed? && mod.in_files.empty?
-      end
-    end
+  def singleton_scope_for_constant_write(name)
+    id = (@scope_id += 1)
+    emit({type: :singleton_scope_constant_write, id: id, name: name, suppressed: document_suppressed?})
+    id
+  end
 
-    mod.store = @store
-    mod.line = start_line
-    handle_modifier_directive(mod, start_line)
-    handle_modifier_directive(mod, end_line)
-    unless document_suppressed?
-      # In a :stopdoc:/:enddoc: region, the container is still created as a
-      # namespace but is not recorded to this file nor documented.
-      # The body is also visited: an inner :startdoc: re-enables documentation
-      # in a :stopdoc: region (not in an :enddoc: region), and nested
-      # namespaces need to be created for later promotion from other files
-      if mod.ignored?
-        # Promotes the owner chain too, unless mod received :nodoc:
-        mark_container_documentable(mod)
-      else
-        # A class/module marked :nodoc: must not make an ignored owner documentable
-        mark_container_documentable(owner) if mod.document_self && owner.is_a?(RDoc::ClassModule)
-        record_location(mod)
-      end
-      mod.add_comment(comment, @top_level) if comment
-    end
-    mod
+  # Emits a scope-opening record for `class << ConstantPath` and returns its scope id
+
+  def singleton_scope_for_path(expression_name)
+    id = (@scope_id += 1)
+    emit({type: :singleton_scope_path, id: id, name: expression_name, suppressed: document_suppressed?})
+    id
+  end
+
+  # Emits a scope-opening record for `class << self` and returns its scope id,
+  # or nil at the top level
+
+  def singleton_scope_for_self
+    return if @scope_depth == 0
+    id = (@scope_id += 1)
+    emit({type: :singleton_scope_self, id: id})
+    id
+  end
+
+  # Handles `require 'foo'`
+
+  def add_require(name)
+    emit({type: :require, name: name})
+  end
+
+  # Handles `private_constant :FOO` and `public_constant :FOO`
+
+  def set_constant_visibility(names, visibility)
+    emit({type: :constant_visibility, names: names, visibility: visibility})
   end
 
   private
 
+  def emit(record)
+    @ir << record
+    record
+  end
+
   # Extracts RBS type signature lines (#: ...) from raw comment text.
   # Mutates the input text to remove the extracted lines.
-  # Returns an array of extracted type signature lines, or nil if none are
-  # found. The array may contain multiple lines for overloaded signatures.
+  # Returns +[type_signature_lines, first_sig_line]+, or nil if none are
+  # found. The lines array may contain multiple lines for overloaded
+  # signatures. Validation happens in CodeObjectBuilder so that comments consumed in
+  # an undocumentable scope don't warn.
 
   def extract_type_signature!(text, start_line)
     return nil unless text.include?('#:')
@@ -963,16 +608,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     type_signature_lines = sig_lines.map { |l| l.sub(RBS_SIG_LINE, '').strip }.reject(&:empty?)
     return nil if type_signature_lines.empty?
 
-    warn_invalid_type_signature(type_signature_lines, first_sig_line)
-    type_signature_lines
-  end
-
-  def warn_invalid_type_signature(type_signature_lines, line_no)
-    type_signature_lines.each_with_index do |line, i|
-      next if RDoc::RbsHelper.valid_method_type?(line)
-      next if RDoc::RbsHelper.valid_type?(line)
-      @options.warn "#{@top_level.relative_name}:#{line_no + i}: invalid RBS type signature: #{line.inspect}"
-    end
+    [type_signature_lines, first_sig_line]
   end
 
   class RDocVisitor < Prism::Visitor # :nodoc:
@@ -1065,9 +701,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       node.constant_path.accept(self)
       @scanner.process_comments_until(node.location.start_line - 1)
       module_name = constant_path_string(node.constant_path)
-      mod = @scanner.add_module_or_class(module_name, node.location.start_line, node.location.end_line) if module_name
-      if mod
-        @scanner.with_container(mod) do
+      scope_id = @scanner.add_module_or_class(module_name, node.location.start_line, node.location.end_line) if module_name
+      if scope_id
+        @scanner.with_scope(scope_id) do
           node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
@@ -1083,9 +719,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
       superclass_name = constant_path_string(node.superclass) if node.superclass
       superclass_expr = node.superclass.slice if node.superclass && !superclass_name
       class_name = constant_path_string(node.constant_path)
-      klass = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr) if class_name
-      if klass
-        @scanner.with_container(klass) do
+      scope_id = @scanner.add_module_or_class(class_name, node.location.start_line, node.location.end_line, is_class: true, superclass_name: superclass_name, superclass_expr: superclass_expr) if class_name
+      if scope_id
+        @scanner.with_scope(scope_id) do
           node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
@@ -1110,19 +746,16 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
       case expression
       when Prism::ConstantWriteNode
-        # Accept `class << (NameErrorCheckers = Object.new)` as a module which is not actually a module
-        mod = @scanner.container.add_module(RDoc::NormalModule, expression.name.to_s)
-        mod.ignore if @scanner.document_suppressed? && mod.in_files.empty?
+        scope_id = @scanner.singleton_scope_for_constant_write(expression.name.to_s)
       when Prism::ConstantPathNode, Prism::ConstantReadNode
         expression_name = constant_path_string(expression)
-        # If a constant_path does not exist, RDoc creates a module
-        mod = @scanner.find_or_create_lexical_module_path(expression_name, :module) if expression_name
+        scope_id = @scanner.singleton_scope_for_path(expression_name) if expression_name
       when Prism::SelfNode
-        mod = @scanner.container if @scanner.container != @top_level
+        scope_id = @scanner.singleton_scope_for_self
       end
       expression.accept(self)
-      if mod
-        @scanner.with_container(mod, singleton: true) do
+      if scope_id
+        @scanner.with_scope(scope_id, singleton: true) do
           node.body&.accept(self)
           @scanner.process_comments_until(node.location.end_line)
         end
@@ -1277,7 +910,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       return unless call_node.arguments&.arguments&.size == 1
       arg = call_node.arguments.arguments.first
       return unless arg.is_a?(Prism::StringNode)
-      @scanner.container.add_require(RDoc::Require.new(arg.unescaped, nil))
+      @scanner.add_require(arg.unescaped)
     end
 
     def _visit_call_module_function(call_node)
@@ -1335,13 +968,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
     def _visit_call_public_constant(call_node)
       return if @scanner.in_proc_block || @scanner.singleton
       names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
+      @scanner.set_constant_visibility(names.map(&:to_s), :public) if names
     end
 
     def _visit_call_private_constant(call_node)
       return if @scanner.in_proc_block || @scanner.singleton
       names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
+      @scanner.set_constant_visibility(names.map(&:to_s), :private) if names
     end
 
     def _visit_call_attr_reader_writer_accessor(call_node, rw)
