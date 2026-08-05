@@ -228,6 +228,15 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Scans this Ruby file for Ruby constructs
 
   def scan
+    parse_ir
+    build_ir
+  end
+
+  # Parses the file into IR records. CodeObjects are not created until
+  # #build_ir is called, so that a batch driver can parse all files before
+  # building any of them.
+
+  def parse_ir
     @lines = @content.lines
     result = Prism.parse_lex(@content)
     @program_node, unordered_tokens = result.value
@@ -246,7 +255,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     @program_node.accept(RDocVisitor.new(self, @top_level, @store))
     process_comments_until(@lines.size + 1)
+  end
 
+  # Builds CodeObjects from the IR records of #parse_ir
+
+  def build_ir
     builder = CodeObjectBuilder.new(@top_level, @store, @options, @stats, @preprocess, track_visibility: @track_visibility)
     builder.run(@ir)
     @top_level
