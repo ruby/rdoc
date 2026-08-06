@@ -407,10 +407,6 @@ class RDoc::Context < RDoc::CodeObject
       # this must be done AFTER adding mod to its parent, so that the full
       # name is correct:
       all_hash[mod.full_name] = mod
-      if @store.unmatched_constant_alias[mod.full_name] then
-        to, file = @store.unmatched_constant_alias[mod.full_name]
-        add_module_alias mod, mod.name, to, file
-      end
     end
 
     mod
@@ -549,10 +545,10 @@ class RDoc::Context < RDoc::CodeObject
   end
 
   ##
-  # Adds an alias from +from+ (a class or module) to +name+ which was defined
-  # in +file+.
+  # Adds an alias from +from+ (a class or module) to the constant +to+ which
+  # was defined in +file+.
 
-  def add_module_alias(from, from_name, to, file)
+  def add_module_alias(from, to, file)
     return from if @done_documenting
 
     to_full_name = child_name to.name
@@ -562,11 +558,6 @@ class RDoc::Context < RDoc::CodeObject
     # where we already know BasicObject is a class when we find
     # BasicObject = BlankSlate
     return from if @store.find_class_or_module to_full_name
-
-    unless from
-      @store.unmatched_constant_alias[child_name(from_name)] = [to, file]
-      return to
-    end
 
     new_to = from.dup
     new_to.name = to.name

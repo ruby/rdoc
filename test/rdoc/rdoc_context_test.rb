@@ -295,7 +295,7 @@ class RDocContextTest < XrefTestCase
     tl = @store.add_file 'file.rb'
 
     c4 = RDoc::Constant.new 'C4', '', ''
-    c3_c4 = @c2.add_module_alias @c2_c3, @c2_c3.name, c4, tl
+    c3_c4 = @c2.add_module_alias @c2_c3, c4, tl
 
     alias_constant = @c2.constants.first
 
@@ -314,7 +314,7 @@ class RDocContextTest < XrefTestCase
     object = top_level.add_class RDoc::NormalClass, 'Object'
 
     a = RDoc::Constant.new 'A', '', ''
-    top_level.add_module_alias klass, klass.name, a, top_level
+    top_level.add_module_alias klass, a, top_level
 
     refute_empty object.constants
 
