@@ -492,6 +492,21 @@ class RDocParserRubyTest < RDoc::TestCase
     assert foo.classes.all?(&:ignored?)
   end
 
+  def test_startdoc_after_enddoc_warns
+    @options.verbosity = 2
+    _out, err = capture_output do
+      util_parser <<~RUBY
+        class A
+          # :enddoc:
+          # :startdoc:
+          def hidden; end
+        end
+      RUBY
+    end
+    assert_match(/:startdoc: is ignored after :enddoc:/, err)
+    assert_empty @top_level.classes.first.method_list
+  end
+
   def test_visibility_change_of_inherited_method_in_stopdoc_region
     util_parser <<~RUBY
       class Parent

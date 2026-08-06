@@ -160,11 +160,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # class/module scope is closed.
 
   def apply_document_control_directive(directives)
-    directives.each do |directive, _|
+    directives.each do |directive, (_param, line)|
       case directive
       when 'startdoc', 'stopdoc'
         # :enddoc: cannot be cancelled within the scope, even by :startdoc:
-        next if @doc_state == :enddoc
+        if @doc_state == :enddoc
+          @options.warn "#{@top_level.relative_name}:#{line}: :startdoc: is ignored after :enddoc:" if directive == 'startdoc'
+          next
+        end
         @doc_state = directive.to_sym
         if directive == 'startdoc' && !@container.ignored?
           # Compatibility: `module Net #:nodoc:` followed by :stopdoc:/:startdoc:
