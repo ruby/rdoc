@@ -492,6 +492,52 @@ class RDocParserRubyTest < RDoc::TestCase
     assert foo.classes.all?(&:ignored?)
   end
 
+  def test_visibility_change_of_inherited_method_in_stopdoc_region
+    util_parser <<~RUBY
+      class Parent
+        def foo; end
+      end
+
+      class Child < Parent
+        # :stopdoc:
+        def hidden; end
+        private :foo
+      end
+    RUBY
+    child = @store.find_class_or_module('Child')
+    assert_empty child.method_list
+  end
+
+  def test_module_function_in_stopdoc_region
+    util_parser <<~RUBY
+      module Foo
+        def foo; end
+        # :stopdoc:
+        def hidden; end
+        module_function :foo
+      end
+    RUBY
+    mod = @top_level.modules.first
+    assert_equal [false], mod.method_list.map(&:singleton)
+    assert_equal [:private], mod.method_list.map(&:visibility)
+  end
+
+  # Contents marked :nodoc: should not make a class hidden by :stopdoc:
+  # documentable again
+  def test_nodoc_contents_do_not_document_ignored_owner
+    util_parser <<~RUBY
+      # :stopdoc:
+      class Foo; end
+      # :startdoc:
+      Foo::BAR = 1 # :nodoc:
+      class Foo::Baz # :nodoc:
+      end
+    RUBY
+    foo = @store.find_class_or_module('Foo')
+    assert foo.ignored?
+    assert_empty @top_level.classes.reject(&:ignored?)
+  end
+
   # :enddoc: is final for the whole scope subtree: unlike :stopdoc:,
   # a :startdoc: in a nested scope cannot re-enable documentation
   def test_enddoc_cannot_be_cancelled_by_startdoc_in_nested_scope

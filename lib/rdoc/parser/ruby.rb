@@ -353,6 +353,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Signature section in the comment
 
   def parse_comment_tomdoc(container, comment, line_no, start_line)
+    return if document_suppressed?
     return unless signature = RDoc::TomDoc.signature(comment)
 
     name, = signature.split %r%[ \(]%, 2
@@ -561,6 +562,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     new_methods = []
     @container.methods_matching(names, singleton) do |m|
       if m.parent != @container
+        # A copy of an ancestor's method must not be documented
+        # in a :stopdoc:/:enddoc: region
+        next if document_suppressed?
         m = m.dup
         record_location(m)
         new_methods << m
@@ -583,6 +587,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def change_method_to_module_function(names)
     @container.set_visibility_for(names, :private, false)
+    # In a :stopdoc:/:enddoc: region, the visibility of instance methods still
+    # changes but the singleton method copies must not be documented
+    return if document_suppressed?
+
     new_methods = []
     @container.methods_matching(names) do |m|
       s_m = m.dup
@@ -845,10 +853,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     constant.store = @store
     constant.line = start_line
     constant.is_alias_for_path = alias_path
-    mark_container_documentable(owner) if owner.is_a?(RDoc::ClassModule)
-    record_location(constant)
     handle_modifier_directive(constant, start_line)
     handle_modifier_directive(constant, end_line)
+    # A constant marked :nodoc: must not make an ignored owner documentable
+    mark_container_documentable(owner) if constant.document_self && owner.is_a?(RDoc::ClassModule)
+    record_location(constant)
     owner.add_constant(constant)
     return unless alias_path
     mod =
@@ -919,10 +928,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
       # The body is also visited: an inner :startdoc: re-enables documentation
       # in a :stopdoc: region (not in an :enddoc: region), and nested
       # namespaces need to be created for later promotion from other files
-      mark_container_documentable(owner) if owner.is_a?(RDoc::ClassModule)
       if mod.ignored?
+        # Promotes the owner chain too, unless mod received :nodoc:
         mark_container_documentable(mod)
       else
+        # A class/module marked :nodoc: must not make an ignored owner documentable
+        mark_container_documentable(owner) if mod.document_self && owner.is_a?(RDoc::ClassModule)
         record_location(mod)
       end
       mod.add_comment(comment, @top_level) if comment
