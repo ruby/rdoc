@@ -437,10 +437,11 @@ The internal error was:
   def build_deferred_ruby_files
     parsers = @deferred_ruby_builds
     @deferred_ruby_builds = nil
+    RDoc::Parser::Ruby::NamespaceResolver.new(@store).preload_namespaces(parsers)
     parsers.each do |parser|
       @current = parser.file_name
       begin
-        top_level = parser.build_ir
+        top_level = parser.build_ir(resolve: false)
       rescue => e
         print_parse_error_hint parser.file_name, parser.class, e
 

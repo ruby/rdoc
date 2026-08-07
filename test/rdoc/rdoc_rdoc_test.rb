@@ -503,6 +503,136 @@ class RDocRDocTest < RDoc::TestCase
     assert_equal [@a, @spec_file, @test_file], files.sort
   end
 
+  def test_parse_files_resolves_names_order_independently
+    using_names = <<~RUBY
+      module M
+        class C < X
+          include I
+        end
+      end
+    RUBY
+    declaring_names = <<~RUBY
+      module M
+        class X
+        end
+        module I
+        end
+      end
+    RUBY
+
+    # parse_files processes files in sorted name order, so swapping the
+    # contents swaps which file is parsed first
+    [[using_names, declaring_names], [declaring_names, using_names]].each do |a, b|
+      rdoc = RDoc::RDoc.new
+      rdoc.options = RDoc::Options.new
+      rdoc.store = RDoc::Store.new(rdoc.options)
+
+      temp_dir do
+        rdoc.options.root = Pathname(Dir.pwd)
+        File.write 'a.rb', a
+        File.write 'b.rb', b
+
+        rdoc.parse_files %w[a.rb b.rb]
+
+        klass = rdoc.store.find_class_named 'M::C'
+        assert_equal 'M::X', klass.superclass.full_name
+        assert_equal %w[M::I], klass.includes.map(&:name)
+      end
+    end
+  end
+
+  def test_parse_files_nodoc_reopened_class_keeps_other_files_documentation
+    # Pattern of ruby's mkmf.rb (class String # :nodoc:) and shellwords.rb
+    parse_files_fresh(
+      'a.rb' => "class C # :nodoc:\n  def hidden; end\nend\n",
+      'b.rb' => "class C\n  def visible; end\nend\n"
+    ) do |store|
+      klass = store.find_class_named 'C'
+      assert_equal %w[visible], klass.method_list.map(&:name)
+      assert klass.display?
+    end
+  end
+
+  def test_parse_files_top_level_method_with_reopened_object
+    parse_files_fresh(
+      'a.rb' => "class Object\nend\n",
+      'b.rb' => "def top_method\nend\n"
+    ) do |store|
+      object = store.find_class_named 'Object'
+      assert_includes object.method_list.map(&:name), 'top_method'
+    end
+  end
+
+  def test_parse_files_pseudo_recursive_superclass
+    # Pattern of OpenSSL::Cipher::Cipher: the superclass clause must not
+    # resolve to the class it is defining
+    parse_files_fresh(
+      'a.rb' => "module Cipher\n  class Cipher < Cipher\n  end\nend\n"
+    ) do |store|
+      klass = store.find_class_named 'Cipher::Cipher'
+      # The outer Cipher module is upgraded to a class by being named as a
+      # superclass
+      assert_equal 'Cipher', klass.superclass.full_name
+      klass.ancestors # must terminate
+    end
+  end
+
+  def test_parse_files_superclass_expression_of_reopened_class
+    parse_files_fresh(
+      'a.rb' => "module M\n  class C < Struct.new(:x)\n  end\nend\n",
+      'b.rb' => "module M\n  class C\n    def foo; end\n  end\nend\n"
+    ) do |store|
+      assert_equal 'Struct.new(:x)', store.find_class_named('M::C').superclass
+    end
+  end
+
+  def test_parse_files_prefers_real_declaration_over_implicit_namespace
+    # `class B::C` nested in A must share the top-level B instead of
+    # inventing A::B, regardless of the file order
+    nested = "class A\n  class B::C\n  end\nend\n"
+    top = "module B\n  class C\n  end\nend\n"
+
+    [[nested, top], [top, nested]].each do |a, b|
+      parse_files_fresh('a.rb' => a, 'b.rb' => b) do |store|
+        assert_equal %w[A B B::C], store.all_classes_and_modules.map(&:full_name).sort
+      end
+    end
+  end
+
+  def test_parse_files_prefers_real_declaration_from_pathed_top_level
+    # The top-level `class B::C` implies ::B whether B is declared or not, so
+    # the nested B::C must resolve to it
+    parse_files_fresh(
+      'a.rb' => "class A\n  class B::C\n  end\nend\n",
+      'b.rb' => "class B::C\nend\n"
+    ) do |store|
+      assert_equal %w[A B B::C], store.all_classes_and_modules.map(&:full_name).sort
+    end
+  end
+
+  def test_parse_files_shares_outer_implicit_namespace
+    # No X is declared anywhere: one implicit M::X is invented at the
+    # outermost undeclared scope and shared by the deeper X::Z
+    parse_files_fresh(
+      'a.rb' => "module M\n  class X::Y\n  end\nend\n",
+      'b.rb' => "module M\n  module N\n    class X::Z\n    end\n  end\nend\n"
+    ) do |store|
+      assert_equal %w[M M::N M::X M::X::Y M::X::Z], store.all_classes_and_modules.map(&:full_name).sort
+    end
+  end
+
+  def parse_files_fresh(files)
+    temp_dir do
+      rdoc = RDoc::RDoc.new
+      rdoc.options = RDoc::Options.new
+      rdoc.options.root = Pathname(Dir.pwd)
+      rdoc.store = RDoc::Store.new(rdoc.options)
+      files.each { |name, content| File.write name, content }
+      rdoc.parse_files files.keys
+      yield rdoc.store
+    end
+  end
+
   def test_parse_file
     @rdoc.store = RDoc::Store.new(@options)
 

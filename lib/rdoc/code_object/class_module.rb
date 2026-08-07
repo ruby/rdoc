@@ -53,6 +53,15 @@ class RDoc::ClassModule < RDoc::Context
   attr_accessor :is_alias_for
 
   ##
+  # True for a namespace created ahead of the build by
+  # RDoc::Parser::Ruby::NamespaceResolver that no file has contributed to
+  # yet. Unlike a namespace created inside a :stopdoc: region, the first
+  # explicit declaration treats it like a fresh creation: it is recorded
+  # even when a +:nodoc:+ directive was received.
+
+  attr_accessor :namespace_ghost
+
+  ##
   # Return a RDoc::ClassModule of class +class_type+ that is a copy
   # of module +module+. Used to promote modules to classes.
   #--

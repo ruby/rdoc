@@ -60,7 +60,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
       @scopes[record[:id]] = mod
     when :singleton_scope_path
       # If a constant_path does not exist, RDoc creates a module
-      @scopes[record[:id]] = find_or_create_lexical_module_path(record[:name], :module, suppressed: record[:suppressed])
+      @scopes[record[:id]] = resolved_container(record[:resolved_full_name], :module, record[:suppressed])
     when :singleton_scope_self
       @scopes[record[:id]] = container
     when :method then process_method(record)
@@ -152,6 +152,30 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     mark_container_documentable(container.parent) if container.parent.is_a?(RDoc::ClassModule)
   end
 
+  # Restores the fresh-creation state of a namespace ghost the first time the
+  # build touches it. Ghosts are created ignored (which also stops
+  # documentation of self and children), while a namespace created during the
+  # build starts out documentable; directives of the touching record apply
+  # after this. A suppressed touch claims the ghost but keeps it ignored,
+  # like a namespace created in a :stopdoc: region: a later reference must
+  # not make it documentable.
+
+  def materialize_ghost(mod, suppressed)
+    if mod.is_a?(RDoc::ClassModule) && mod.namespace_ghost
+      mod.namespace_ghost = false
+      mod.start_doc unless suppressed
+    end
+    mod
+  end
+
+  # Methods, attributes and aliases at the top level are documented on
+  # Object, which the model looks up directly in the store, so its ghost
+  # must be materialized like a namespace the build touches
+
+  def materialize_object_ghost_for(container)
+    materialize_ghost(@store.classes_hash['Object'], false) if container.is_a?(RDoc::TopLevel)
+  end
+
   def should_document?(code_object)
     return true unless @track_visibility
     return false if code_object.parent&.document_children == false
@@ -176,22 +200,35 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     return unless container.document_children
 
     suppressed = record[:suppressed]
-    owner, name = find_or_create_lexical_constant_owner_name(record[:name], suppressed: suppressed)
-    return unless owner
+    resolved_full_name = record[:resolved_full_name]
+    return unless resolved_full_name
+
+    owner_name, colon, name = resolved_full_name.rpartition('::')
+    owner = colon.empty? ? @top_level : resolved_container(owner_name, :module, suppressed)
 
     if record[:kind] == :class
       superclass_name = record[:superclass_name]
+      superclass_full_path = record[:resolved_superclass] if superclass_name
+      # Context#add_class upgrades a module named as a superclass into a
+      # class. A declaration whose class already exists (as a ghost) skips
+      # add_class, so the upgrade is replicated here, including for the
+      # implicit Object superclass of `class A`
+      upgrade_path = superclass_name ? superclass_full_path : ('Object' unless record[:superclass_expr])
+      if upgrade_path && (module_to_upgrade = @store.modules_hash.delete(upgrade_path))
+        owner.upgrade_to_class module_to_upgrade, RDoc::NormalClass, module_to_upgrade.parent
+      end
       # RDoc::NormalClass resolves superclass name despite of the lack of module nesting information.
       # We need to fix it when RDoc::NormalClass resolved to a wrong constant name
       if superclass_name
-        superclass_full_path = resolve_constant_path(superclass_name)
         superclass = @store.find_class_or_module(superclass_full_path) if superclass_full_path
         superclass_full_path ||= superclass_name
         superclass_full_path = superclass_full_path.sub(/^::/, '')
       end
       # add_class should be done after resolving superclass
       mod = owner.classes_hash[name]
-      unless mod
+      if mod
+        materializes_ghost = mod.namespace_ghost && !suppressed
+      else
         # add_class may return an existing class created by another file
         # (in_files is not empty then), which must not be ignored here
         mod = owner.add_class(RDoc::NormalClass, name, superclass_name || record[:superclass_expr] || '::Object')
@@ -203,6 +240,10 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
         elsif (mod.superclass.is_a?(String) || mod.superclass.name == 'Object') && mod.superclass != superclass_full_path
           mod.superclass = superclass_full_path
         end
+      elsif materializes_ghost && record[:superclass_expr]
+        # A ghost has the placeholder superclass Object; the first declaration
+        # provides the real superclass expression like a fresh creation
+        mod.superclass = record[:superclass_expr]
       end
     else
       mod = owner.modules_hash[name]
@@ -212,6 +253,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
       end
     end
 
+    materialize_ghost(mod, suppressed)
     mod.store = @store
     mod.line = record[:line_no]
     record[:modifier_directives_list].each do |modifier_directives|
@@ -241,7 +283,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     handle_code_object_directives(container, directives) if directives
     # Resolve receiver after applying directives so that a namespace created
     # here is marked as ignored when the comment starts a :stopdoc: region
-    receiver = record[:receiver_name] ? find_or_create_lexical_module_path(record[:receiver_name], record[:receiver_fallback_type], suppressed: record[:suppressed]) : container
+    receiver = record[:receiver_name] ? resolved_container(record[:resolved_receiver], record[:receiver_fallback_type], record[:suppressed]) : container
 
     internal_add_method(
       record[:name],
@@ -280,6 +322,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     meth.name ||= 'unknown'
     meth.store = @store
     meth.line = line_no
+    materialize_object_ghost_for(container)
     container.add_method(meth) # should add after setting singleton and before setting visibility
     meth.visibility = visibility
     meth.params ||= params || '()'
@@ -310,7 +353,13 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     handle_code_object_directives(container, directives) if directives
     return if record[:suppressed]
 
-    owner, name = find_or_create_lexical_constant_owner_name(record[:constant_name], suppressed: record[:suppressed])
+    _const_path, colon, name = record[:constant_name].rpartition('::')
+    if colon.empty?
+      # RDoc doesn't track constants of a singleton class of a module
+      owner = singleton? ? nil : container
+    else
+      owner = record[:resolved_owner] && resolved_container(record[:resolved_owner], :module, record[:suppressed])
+    end
     return unless owner
 
     constant = RDoc::Constant.new(name, record[:rhs_name], comment)
@@ -326,13 +375,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     record_location(constant)
     owner.add_constant(constant)
     return unless alias_path
-    mod =
-      if alias_path.start_with?('::')
-        @store.find_class_or_module(alias_path)
-      else
-        full_name = resolve_constant_path(alias_path)
-        @store.find_class_or_module(full_name)
-      end
+    mod = record[:resolved_alias_target] && @store.find_class_or_module(record[:resolved_alias_target])
     if mod && constant.document_self
       a = owner.add_module_alias(mod, alias_path, constant, @top_level)
       a.store = @store
@@ -347,6 +390,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     return if record[:suppressed]
     return unless container.document_children
 
+    materialize_object_ghost_for(container)
     record[:names].each do |name|
       a = RDoc::Attr.new(name, record[:rw], comment, singleton: record[:singleton])
       a.store = @store
@@ -368,8 +412,8 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     return if record[:suppressed]
 
     mark_container_documentable(container)
-    record[:names].each do |name|
-      resolved_name = resolve_constant_path(name)
+    record[:names].each_with_index do |name, i|
+      resolved_name = record[:resolved_names][i]
       ie = container.add(rdoc_class, resolved_name || name, '')
       ie.store = @store
       ie.line = record[:line_no]
@@ -383,6 +427,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     handle_code_object_directives(container, directives) if directives
     return if record[:suppressed]
 
+    materialize_object_ghost_for(container)
     singleton = record[:singleton]
     visibility = container.find_method(record[:old_name], singleton)&.visibility || :public
     a = RDoc::Alias.new(record[:old_name], record[:new_name], comment, singleton: singleton)
@@ -400,6 +445,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
 
   def change_method_visibility(names, visibility, singleton, suppressed)
+    materialize_object_ghost_for(container)
     new_methods = []
     container.methods_matching(names, singleton) do |m|
       if m.parent != container
@@ -427,6 +473,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
   # Handles `module_function :foo, :bar`
 
   def change_method_to_module_function(names, suppressed)
+    materialize_object_ghost_for(container)
     container.set_visibility_for(names, :private, false)
     # In a :stopdoc:/:enddoc: region, the visibility of instance methods still
     # changes but the singleton method copies must not be documented
@@ -494,6 +541,7 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
 
     return if record[:suppressed]
 
+    materialize_object_ghost_for(container)
     if attributes
       attributes.each do |attr|
         a = RDoc::Attr.new(attr, rw, comment, singleton: record[:singleton])
@@ -558,76 +606,34 @@ class RDoc::Parser::Ruby::CodeObjectBuilder # :nodoc:
     @stats.add_method meth
   end
 
-  # Find or create module or class from a given module name using Ruby lexical
-  # nesting. If module or class does not exist, creates a module or a class
-  # according to `create_mode` argument.
+  # Returns the container object for a full name resolved by
+  # NamespaceResolver, materializing ghosts and creating not-yet-existing
+  # namespaces along the path. A nil full name maps to an anonymous module so
+  # that contents of an unresolvable declaration are not documented.
+  # The empty name maps to the top level.
 
-  def find_or_create_lexical_module_path(module_name, create_mode, suppressed: false)
-    root_name, *path, name = module_name.split('::')
-    add_module = ->(mod, name, mode) {
-      created =
-        case mode
-        when :class
-          mod.add_class(RDoc::NormalClass, name, 'Object').tap { |m| m.store = @store }
-        when :module
-          mod.add_module(RDoc::NormalModule, name).tap { |m| m.store = @store }
-        end
-      # add_class/add_module may return an existing object created by another
-      # file (in_files is not empty then), which must not be ignored here.
-      # Documentable again when reopened or receiving contents outside the region.
-      created.ignore if suppressed && created.in_files.empty?
-      created
-    }
-    if root_name.empty?
-      mod = @top_level
-    else
-      @scope_stack.reverse_each do |nesting, singleton|
-        next if singleton
-        mod = nesting.get_module_named(root_name)
-        break if mod
-        # If a constant is found and it is not a module or class, RDoc can't document about it.
-        # Return an anonymous module to avoid wrong document creation.
-        return RDoc::NormalModule.new(nil) if nesting.find_constant_named(root_name)
+  def resolved_container(full_name, create_mode, suppressed)
+    return RDoc::NormalModule.new(nil) unless full_name
+    return @top_level if full_name.empty?
+
+    parent_name, colon, name = full_name.rpartition('::')
+    parent = colon.empty? ? @top_level : resolved_container(parent_name, :module, suppressed)
+    mod = materialize_ghost(parent.get_module_named(name), suppressed)
+    return mod if mod
+
+    created =
+      case create_mode
+      when :class
+        parent.add_class(RDoc::NormalClass, name, 'Object')
+      when :module
+        parent.add_module(RDoc::NormalModule, name)
       end
-      last_nesting, = @scope_stack.reverse_each.find { |_, singleton| !singleton }
-      return mod || add_module.call(last_nesting, root_name, create_mode) unless name
-      mod ||= add_module.call(last_nesting, root_name, :module)
-    end
-    path.each do |name|
-      mod = mod.get_module_named(name) || add_module.call(mod, name, :module)
-    end
-    mod.get_module_named(name) || add_module.call(mod, name, create_mode)
-  end
-
-  # Resolves constant path to a full path by searching module nesting
-
-  def resolve_constant_path(constant_path)
-    owner_name, path = constant_path.split('::', 2)
-    return constant_path if owner_name.empty? # ::Foo, ::Foo::Bar
-    mod = nil
-    @scope_stack.reverse_each do |nesting, singleton|
-      next if singleton
-      mod = nesting.get_module_named(owner_name)
-      break if mod
-    end
-    mod ||= @top_level.get_module_named(owner_name)
-    [mod.full_name, path].compact.join('::') if mod
-  end
-
-  # Returns a pair of owner module and constant name from a given constant path
-  # using Ruby lexical nesting. Creates owner module if it does not exist.
-
-  def find_or_create_lexical_constant_owner_name(constant_path, suppressed: false)
-    const_path, colon, name = constant_path.rpartition('::')
-    if colon.empty? # class Foo
-      # Within `class C` or `module C`, owner is C(== current container)
-      # Within `class <<C`, owner is C.singleton_class
-      # but RDoc don't track constants of a singleton class of module
-      [(singleton? ? nil : container), name]
-    elsif const_path.empty? # class ::Foo
-      [@top_level, name]
-    else # `class Foo::Bar` or `class ::Foo::Bar`
-      [find_or_create_lexical_module_path(const_path, :module, suppressed: suppressed), name]
-    end
+    created.store = @store
+    # A namespace created in a suppressed region becomes documentable again
+    # when reopened or receiving contents outside the region. An existing
+    # object created by another file (in_files is not empty) must not be
+    # ignored here.
+    created.ignore if suppressed && created.in_files.empty?
+    created
   end
 end

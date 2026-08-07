@@ -277,7 +277,10 @@ class RDocParserRubyTest < RDoc::TestCase
     mod = @top_level.modules.first
     classes = mod.classes
     assert_equal ['A::B', 'A::C1', 'A::C2', 'A::C3', 'A::C4'], classes.map(&:full_name)
-    assert_equal ['A::B', 'A::B', 'A::A::B', 'A::B'], classes.drop(1).map(&:superclass).map(&:full_name)
+    # A::B written inside module A resolves to A::A::B: names resolve
+    # against the declarations of the whole file, so the position of
+    # `module A::A` does not matter
+    assert_equal ['A::A::B', 'A::B', 'A::A::B', 'A::B'], classes.drop(1).map(&:superclass).map(&:full_name)
   end
 
   def test_pseudo_recursive_superclass
@@ -294,7 +297,10 @@ class RDocParserRubyTest < RDoc::TestCase
     foo_klass = @store.find_class_named 'Foo::Bar::Foo'
     bar_klass = @store.find_class_named 'Foo::Bar::Bar'
     baz_klass = @store.find_class_named 'Foo::Bar::Baz'
-    assert_equal 'Foo::Bar', foo_klass.superclass.full_name
+    # Foo::Bar::Bar is declared below but visible: names resolve against the
+    # declarations of the whole file. Only the self reference of
+    # `class Bar < Bar` resolves to the outer Bar.
+    assert_equal 'Foo::Bar::Bar', foo_klass.superclass.full_name
     assert_equal 'Foo::Bar', bar_klass.superclass.full_name
     assert_equal 'Foo::Bar::Bar', baz_klass.superclass.full_name
   end
@@ -709,8 +715,8 @@ class RDocParserRubyTest < RDoc::TestCase
       class A; end
       class X < C; end
     RUBY
-    assert_equal ['A', 'C', 'X'], @top_level.classes.map(&:full_name)
-    assert_equal ['B', 'D'], @top_level.modules.map(&:full_name)
+    assert_equal ['A', 'C', 'X'], @top_level.classes.map(&:full_name).sort
+    assert_equal ['B', 'D'], @top_level.modules.map(&:full_name).sort
   end
 
   def test_parenthesized_cdecl
@@ -1167,7 +1173,7 @@ class RDocParserRubyTest < RDoc::TestCase
     RUBY
 
     modules = @store.all_modules
-    assert_equal ['A', 'A::Foo', 'Bar'], modules.map(&:full_name)
+    assert_equal ['A', 'A::Foo', 'Bar'], modules.map(&:full_name).sort
   end
 
   def test_singleton_class
@@ -2440,7 +2446,7 @@ class RDocParserRubyTest < RDoc::TestCase
       class E; end
     RUBY
 
-    assert_equal ['A', 'A::B', 'D'], @store.all_classes.reject(&:ignored?).map(&:full_name)
+    assert_equal ['A', 'A::B', 'D'], @store.all_classes.reject(&:ignored?).map(&:full_name).sort
   end
 
   def test_top_level_enddoc

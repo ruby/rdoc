@@ -134,6 +134,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
   attr_accessor :visibility
   attr_reader :singleton, :in_proc_block
 
+  # IR records of #parse_ir, used by NamespaceResolver before #build_ir
+
+  attr_reader :ir, :top_level
+
   def initialize(top_level, content, options, stats)
     super
 
@@ -257,9 +261,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
     process_comments_until(@lines.size + 1)
   end
 
-  # Builds CodeObjects from the IR records of #parse_ir
+  # Builds CodeObjects from the IR records of #parse_ir. A batch driver that
+  # already resolved the IR of all files together passes +resolve: false+.
 
-  def build_ir
+  def build_ir(resolve: true)
+    NamespaceResolver.new(@store).preload_namespaces([self]) if resolve
     builder = CodeObjectBuilder.new(@top_level, @store, @options, @stats, @preprocess, track_visibility: @track_visibility)
     builder.run(@ir)
     @top_level
