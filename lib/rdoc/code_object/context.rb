@@ -1066,8 +1066,10 @@ class RDoc::Context < RDoc::CodeObject
   # * All classes and modules have <tt>#remove_from_documentation? == true</tt>
 
   def remove_from_documentation?
+    # Contexts that are still ignored here were created inside a :stopdoc:
+    # region and never received documentable contents afterwards
     @remove_from_documentation ||=
-      @received_nodoc &&
+      (@received_nodoc || @ignored) &&
       !any_content(false) &&
       @includes.all? { |i| !i.module.is_a?(String) && i.module.remove_from_documentation? } &&
       classes_and_modules.all? { |cm| cm.remove_from_documentation? }

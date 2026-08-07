@@ -355,7 +355,8 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
     assert_equal %w[Ignored Klass Klass::A Object],
                  [@ignored, @klass, @klass_alias, @object].map(&:full_name)
-    assert_equal [@ignored, @klass, @klass_alias, @object],
+    # @ignored is removed from the store on Store#complete
+    assert_equal [@klass, @klass_alias, @object],
                  @g.classes.sort_by { |klass| klass.full_name }
     assert_equal [@top_level],                           @g.files
     assert_equal [@meth, @meth, @meth_bang, @meth_bang, @meth_with_html_tag_yield, @meth_with_html_tag_yield], @g.methods
