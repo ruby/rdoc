@@ -339,11 +339,16 @@ option)
 
     return unless parser
 
-    parser.scan
+    if @deferred_ruby_builds && parser.is_a?(RDoc::Parser::Ruby)
+      parser.parse_ir
+      @deferred_ruby_builds << parser
+    else
+      parser.scan
 
-    # restart documentation for the classes & modules found
-    top_level.classes_or_modules.each do |cm|
-      cm.done_documenting = false
+      # restart documentation for the classes & modules found
+      top_level.classes_or_modules.each do |cm|
+        cm.done_documenting = false
+      end
     end
 
     top_level
@@ -357,7 +362,13 @@ it or perhaps the original author's permissions are to restrictive.  If the
 this is not your library please report a bug to the author.
     EOF
   rescue => e
-    syntax_check_command = syntax_check_command_for filename, parser&.class
+    print_parse_error_hint filename, parser&.class, e
+
+    raise e
+  end
+
+  def print_parse_error_hint(filename, parser_class, error) # :nodoc:
+    syntax_check_command = syntax_check_command_for filename, parser_class
     syntax_check_message = if syntax_check_command
       <<~MESSAGE
 Before reporting this, could you check that the file you're documenting
@@ -379,13 +390,11 @@ source files.
 
 The internal error was:
 
-\t(#{e.class}) #{e.message}
+\t(#{error.class}) #{error.message}
 
     EOF
 
-    $stderr.puts e.backtrace.join("\n\t") if $DEBUG_RDOC
-
-    raise e
+    $stderr.puts error.backtrace.join("\n\t") if $DEBUG_RDOC
   end
 
   def syntax_check_command_for(filename, parser_class = RDoc::Parser.can_parse_by_name(filename))
@@ -421,6 +430,32 @@ The internal error was:
   end
 
   ##
+  # Builds CodeObjects from the IR of Ruby files parsed in this batch.
+  # All files are parsed before any Ruby file is built so that a later
+  # resolution phase can see declarations of all files.
+
+  def build_deferred_ruby_files
+    parsers = @deferred_ruby_builds
+    @deferred_ruby_builds = nil
+    RDoc::Parser::Ruby::NamespaceResolver.new(@store).preload_namespaces(parsers)
+    parsers.each do |parser|
+      @current = parser.file_name
+      begin
+        top_level = parser.build_ir(resolve: false)
+      rescue => e
+        print_parse_error_hint parser.file_name, parser.class, e
+
+        raise e
+      end
+
+      # restart documentation for the classes & modules found
+      top_level.classes_or_modules.each do |cm|
+        cm.done_documenting = false
+      end
+    end
+  end
+
+  ##
   # Parse each file on the command line, recursively entering directories.
 
   def parse_files(files)
@@ -433,10 +468,13 @@ The internal error was:
     original_options = @options.dup
     @stats.begin_adding
 
+    @deferred_ruby_builds = []
     file_info = file_list.map do |filename|
       @current = filename
       parse_file filename
     end.compact
+
+    build_deferred_ruby_files
 
     @store.resolve_c_superclasses
 
