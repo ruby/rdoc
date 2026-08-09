@@ -4,7 +4,7 @@ module RDoc
   class Markup
     # A section of text that is added to the output document as-is
     class Raw < Element
-      # The component parts of the list
+      # The component parts of the raw text
       #: Array[String]
       attr_reader :parts
 
