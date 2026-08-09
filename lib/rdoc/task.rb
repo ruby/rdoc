@@ -244,6 +244,8 @@ class RDoc::Task < Rake::TaskLib
 
         $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
         RDoc::RDoc.new.document args
+      rescue SystemExit => exit
+        raise "RDoc coverage is incomplete" unless exit.success?
       end
 
       desc server_task_description
