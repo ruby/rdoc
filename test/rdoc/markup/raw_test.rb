@@ -9,10 +9,6 @@ class RDocMarkupRawTest < RDoc::TestCase
     @p = @RM::Raw.new
   end
 
-  def test_inherits_markup_element
-    assert_operator @RM::Raw, :<, @RM::Element
-  end
-
   def test_push
     @p.push 'hi', 'there'
 

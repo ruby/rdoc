@@ -9,7 +9,7 @@
 # * an Array of Strings for a list item with multiple terms
 # * nil for an extra description attached to a previously labeled list item
 
-class RDoc::Markup::ListItem
+class RDoc::Markup::ListItem < RDoc::Markup::Element
 
   ##
   # The label for the ListItem

@@ -21,7 +21,7 @@
 # describe multiple terms.  See RDoc::Markup::ListItem for how labels and
 # definition are stored as list items.
 
-class RDoc::Markup::List
+class RDoc::Markup::List < RDoc::Markup::Element
 
   ##
   # The list's type
