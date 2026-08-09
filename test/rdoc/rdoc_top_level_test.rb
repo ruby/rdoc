@@ -207,7 +207,7 @@ class RDocTopLevelTest < XrefTestCase
   def test_marshal_dump
     page = @store.add_file 'README.txt'
     page.parser = RDoc::Parser::Simple
-    page.comment = RDoc::Comment.new 'This is a page', page
+    page.comment = comment 'This is a page', page
 
     loaded = Marshal.load Marshal.dump page
 

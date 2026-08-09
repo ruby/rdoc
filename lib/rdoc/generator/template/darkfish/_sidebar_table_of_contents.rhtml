@@ -1,9 +1,14 @@
 <%- comment = if current.respond_to? :comment_location
-               current.comment_location
-             else
-               current.comment
-             end
-   table = current.parse(comment).table_of_contents.dup
+                current.comment_location
+              else
+                current.comment
+              end
+   document = if Hash === comment
+                current.parse_comment_locations(comment)
+               else
+                 current.parse(comment)
+               end
+   table = document.table_of_contents.dup
 
    if table.length > 1 %>
 <div class="nav-section">

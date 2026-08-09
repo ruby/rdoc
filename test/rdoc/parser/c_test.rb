@@ -1562,7 +1562,7 @@ class RDocParserCTest < RDoc::TestCase
   end
 
   def test_find_modifiers_call_seq
-    comment = RDoc::Comment.new <<~COMMENT
+    comment = self.comment <<~COMMENT
       call-seq:
         commercial() -> Date <br />
 
@@ -1579,7 +1579,7 @@ class RDocParserCTest < RDoc::TestCase
   end
 
   def test_find_modifiers_nodoc
-    comment = RDoc::Comment.new <<~C
+    comment = self.comment <<~C
       /* :nodoc:
        *
        * Blah
@@ -1596,7 +1596,7 @@ class RDocParserCTest < RDoc::TestCase
   end
 
   def test_find_modifiers_yields
-    comment = RDoc::Comment.new <<~C, @top_level, :c
+    comment = self.comment <<~C, @top_level, :c
       /* :yields: a, b
        *
        * Blah
@@ -1733,7 +1733,7 @@ class RDocParserCTest < RDoc::TestCase
   def test_look_for_directives_in
     parser = util_parser
 
-    comment = RDoc::Comment.new "* :other: not_handled\n"
+    comment = self.comment "* :other: not_handled\n"
 
     parser.look_for_directives_in @top_level, comment
 

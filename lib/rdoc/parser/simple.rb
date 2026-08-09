@@ -29,7 +29,7 @@ class RDoc::Parser::Simple < RDoc::Parser
   def scan
     content = remove_coding_comment @content
 
-    comment = RDoc::Comment.new content, @top_level
+    comment = RDoc::Comment.new(content, markup_source: @top_level)
 
     @top_level.comment = comment
     @top_level

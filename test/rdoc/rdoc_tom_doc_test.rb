@@ -19,8 +19,7 @@ class RDocTomDocTest < RDoc::TestCase
 
     text = "# Public: Do some stuff\n"
 
-    comment = RDoc::Comment.new text, nil
-    comment.format = 'tomdoc'
+    comment = self.comment text, @top_level, format: 'tomdoc'
 
     parent = RDoc::Context.new
 

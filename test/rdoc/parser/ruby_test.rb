@@ -17,7 +17,7 @@ class RDocParserRubyTest < RDoc::TestCase
     @options.quiet = true
     @options.option_parser = OptionParser.new
 
-    @comment = RDoc::Comment.new '', @top_level
+    @comment = comment '', @top_level
 
     @stats = RDoc::Stats.new @store, 0
   end
@@ -2419,8 +2419,8 @@ class RDocParserRubyTest < RDoc::TestCase
     mod = @top_level.modules.first
 
     expected = [
-      RDoc::Comment.new('comment a', @top_level),
-      RDoc::Comment.new('comment b', @top_level)
+      comment('comment a', @top_level),
+      comment('comment b', @top_level)
     ]
 
     assert_equal expected, mod.comment_location[@top_level]
@@ -2749,7 +2749,20 @@ class RDocParserRubyTest < RDoc::TestCase
 
     assert_equal 'rdoc', c.comment.format
 
-    assert_equal ['rd', 'rdoc'], c.method_list.map { |m| m.comment.format }
+    comments = c.method_list.map(&:comment)
+    assert_equal ['rd', 'rdoc'], comments.map(&:format)
+    comments.each do |comment|
+      assert_same @top_level, comment.markup_source
+      assert_nil comment.instance_variable_get(:@document)
+    end
+
+    expected = doc para('<em>radical</em>')
+    expected.file = @top_level
+    first_document, second_document = comments.map(&:parse)
+    assert_equal expected, first_document
+    assert_not_same first_document, second_document
+    assert_equal @top_level.relative_name, first_document.file
+    assert_equal @top_level.relative_name, second_document.file
   end
 
   def test_tomdoc_meta
@@ -2806,6 +2819,8 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal 'Internal', m2.section.title
     assert_equal "foo\nbar", m1.comment.text.chomp
     assert_equal "baz\nblah", m2.comment.text.chomp
+
+    assert_equal 'foo bar', m1.comment.parse.parts.first.text
   end
 
   def test_various_callseq

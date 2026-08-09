@@ -564,8 +564,7 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
 
   def test_meta_tags_for_raw_pages
     top_level = @store.add_file("MyPage", parser: RDoc::Parser::Simple)
-    comment = RDoc::Comment.new('this is a comment')
-    comment.document = RDoc::Markup::Document.new(RDoc::Markup::Paragraph.new('this is a comment'))
+    comment = self.comment 'this is a comment', top_level
     top_level.comment = comment
 
     @g.generate

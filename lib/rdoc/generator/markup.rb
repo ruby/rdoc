@@ -166,7 +166,9 @@ class RDoc::ClassModule
   # Handy wrapper for marking up this class or module's comment
 
   def description
-    markup @comment_location
+    return markup(@comment_location) if @store.options&.locale
+
+    parse_comment_locations(@comment_location).accept(formatter)
   end
 
 end
