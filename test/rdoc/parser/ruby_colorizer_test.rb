@@ -21,7 +21,13 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
     def_node = program_node.statements.body[0].body.body[0]
     tokens = RDoc::Parser::RubyColorizer.partial_colorize(code, def_node, prism_tokens)
-    expected = ['  ', 'def', ' ', 'm', "\n", '    ', "# comment\n", '    ', '42', "\n", '  ', 'end']
+    expected = ['  ', 'def', ' ', 'm', "\n", '    ', "# comment", "\n", '    ', '42', "\n", '  ', 'end']
+
+    if tokens[7].text != "\n" # Prism < 2.0.0
+      expected.delete_at(7)
+      expected[6] = "#{expected[6]}\n"
+    end
+
     assert_equal(expected, tokens.map(&:text))
   end
 
@@ -39,11 +45,15 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     RUBY
     tokens = RDoc::Parser::RubyColorizer.colorize(code)
     assert_equal(code, tokens.map(&:text).join)
-    assert_include(tokens, token(:comment, "# comment1\n"))
+
+    newline = ""
+    newline = "\n" if tokens[0].text.end_with?("\n") # Prism < 2.0.0
+
+    assert_include(tokens, token(:comment, "# comment1#{newline}"))
     assert_include(tokens, token(:comment, "=begin\n"))
     assert_include(tokens, token(:comment, "comment2\n"))
     assert_include(tokens, token(:comment, "=end\n"))
-    assert_include(tokens, token(:comment, "# comment3\n"))
+    assert_include(tokens, token(:comment, "# comment3#{newline}"))
   end
 
   def test_interpolated_node
