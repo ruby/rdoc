@@ -227,6 +227,28 @@ class RDocParserTest < RDoc::TestCase
     end
   end
 
+  def test_class_for_markup_markdown_c_file
+    content = <<-CONTENT
+/* file.c */
+/* :markup: markdown */
+
+/* method comment */
+VALUE rb_a_foo(VALUE self) {
+}
+    CONTENT
+
+    file_name = File.join Dir.tmpdir, "file.c"
+    File.write file_name, content
+
+    top_level = @store.add_file file_name
+
+    parser = @RP.for top_level, content, @options, :stats
+
+    assert_kind_of @RP::C, parser
+  ensure
+    File.unlink file_name
+  end
+
   def test_class_use_markup
     content = <<-CONTENT
 # coding: utf-8 markup: rd
@@ -245,6 +267,15 @@ class RDocParserTest < RDoc::TestCase
     parser = @RP.use_markup content
 
     assert_equal @RP::Ruby, parser
+  end
+
+  def test_class_use_markup_markdown_file_name
+    content = <<-CONTENT
+# coding: utf-8 markup: markdown
+    CONTENT
+
+    assert_equal @RP::Ruby, @RP.use_markup(content, 'file.rb')
+    assert_nil @RP.use_markup(content, 'file.c')
   end
 
   def test_class_use_markup_modeline
@@ -290,6 +321,15 @@ class RDocParserTest < RDoc::TestCase
     parser = @RP.use_markup content
 
     assert_equal @RP::Ruby, parser
+  end
+
+  def test_class_use_markup_tomdoc_file_name
+    content = <<-CONTENT
+# coding: utf-8 markup: tomdoc
+    CONTENT
+
+    assert_equal @RP::Ruby, @RP.use_markup(content, 'file.rb')
+    assert_nil @RP.use_markup(content, 'file.c')
   end
 
   def test_class_use_markup_none
