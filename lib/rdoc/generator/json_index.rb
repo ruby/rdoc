@@ -143,7 +143,7 @@ class RDoc::Generator::JsonIndex
       io.set_encoding Encoding::UTF_8
       io.write 'var search_data = '
 
-      JSON.dump data, io, 0
+      JSON.dump data, io
     end
     unless ENV['SOURCE_DATE_EPOCH'].nil?
       index_file.utime index_file.atime, Time.at(ENV['SOURCE_DATE_EPOCH'].to_i).gmtime
