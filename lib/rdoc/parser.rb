@@ -228,14 +228,20 @@ class RDoc::Parser
   # appear on the second or third line.
   #
   # Any comment style may be used to hide the markup comment.
+  #
+  # The +tomdoc+ and +markdown+ markups name comment formats rather than
+  # parsers, so no parser is selected for them and RDoc::Parser.for picks one
+  # from the file name instead.
 
   def self.use_markup(content)
     markup = content.lines.first(3).grep(/markup:\s+(\w+)/) { $1 }.first
 
     return unless markup
 
-    # TODO Ruby should be returned only when the filename is correct
-    return RDoc::Parser::Ruby if %w[tomdoc markdown].include? markup
+    # tomdoc and markdown name a comment format, not a parser.  Skipping them
+    # keeps the search below from matching RDoc::Parser::Markdown for a file
+    # that is not markdown.
+    return if %w[tomdoc markdown].include? markup
 
     markup = Regexp.escape markup
 
