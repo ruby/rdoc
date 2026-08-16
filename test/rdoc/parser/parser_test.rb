@@ -249,6 +249,14 @@ VALUE rb_a_foo(VALUE self) {
     File.unlink file_name
   end
 
+  def test_class_for_markup_markdown_ruby_file
+    with_top_level("file.rb", "# :markup: markdown\n") do |top_level, content|
+      parser = @RP.for top_level, content, @options, nil
+
+      assert_kind_of @RP::Ruby, parser
+    end
+  end
+
   def test_class_use_markup
     content = <<-CONTENT
 # coding: utf-8 markup: rd
@@ -266,16 +274,7 @@ VALUE rb_a_foo(VALUE self) {
 
     parser = @RP.use_markup content
 
-    assert_equal @RP::Ruby, parser
-  end
-
-  def test_class_use_markup_markdown_file_name
-    content = <<-CONTENT
-# coding: utf-8 markup: markdown
-    CONTENT
-
-    assert_equal @RP::Ruby, @RP.use_markup(content, 'file.rb')
-    assert_nil @RP.use_markup(content, 'file.c')
+    assert_nil parser
   end
 
   def test_class_use_markup_modeline
@@ -320,16 +319,7 @@ VALUE rb_a_foo(VALUE self) {
 
     parser = @RP.use_markup content
 
-    assert_equal @RP::Ruby, parser
-  end
-
-  def test_class_use_markup_tomdoc_file_name
-    content = <<-CONTENT
-# coding: utf-8 markup: tomdoc
-    CONTENT
-
-    assert_equal @RP::Ruby, @RP.use_markup(content, 'file.rb')
-    assert_nil @RP.use_markup(content, 'file.c')
+    assert_nil parser
   end
 
   def test_class_use_markup_none
