@@ -131,11 +131,12 @@ class RDocServerTest < RDoc::TestCase
     source_dir = File.join @dir, 'gem'
     symlink_dir = File.join @dir, 'docs', 'gem'
     FileUtils.mkdir_p [File.dirname(symlink_dir), source_dir]
-    FileUtils.touch File.join(source_dir, 'example.rb')
+    source_file = File.join source_dir, 'example.rb'
+    FileUtils.touch source_file
     FileUtils.ln_s '../gem', symlink_dir
+    omit 'directory symlinks are not supported' unless File.directory? symlink_dir
 
-    files = @server.send :current_watch_files
-    assert_equal [File.join(symlink_dir, 'example.rb')], files.grep(/gem\/example\.rb\z/)
+    assert_equal 1, @server.send(:current_watch_files).count { |file| File.identical?(source_file, file) }
   rescue NotImplementedError, Errno::EACCES, Errno::EPERM
     omit 'symlinks are not supported'
   end
