@@ -399,7 +399,7 @@ class RDoc::Server
       @options.files.empty? ? [@options.root.to_s] : @options.files,
       true, @options.exclude
     )
-    @rdoc.remove_unparseable(file_list).keys | @rdoc.auto_discovered_rbs_signature_files
+    @rdoc.remove_duplicate_files(@rdoc.remove_unparseable(file_list)).keys | @rdoc.auto_discovered_rbs_signature_files
   end
 
   def file_changed?(file)
