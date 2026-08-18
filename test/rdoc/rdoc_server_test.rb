@@ -126,4 +126,18 @@ class RDocServerTest < RDoc::TestCase
     greet = sample.find_method 'greet', false
     assert_equal ['() -> String'], greet.type_signature_lines
   end
+
+  def test_current_watch_files_deduplicates_symlinked_source_tree
+    source_dir = File.join @dir, 'gem'
+    symlink_dir = File.join @dir, 'docs', 'gem'
+    FileUtils.mkdir_p [File.dirname(symlink_dir), source_dir]
+    source_file = File.join source_dir, 'example.rb'
+    FileUtils.touch source_file
+    FileUtils.ln_s '../gem', symlink_dir
+    omit 'directory symlinks are not supported' unless File.directory? symlink_dir
+
+    assert_equal 1, @server.send(:current_watch_files).count { |file| File.identical?(source_file, file) }
+  rescue NotImplementedError, Errno::EACCES, Errno::EPERM
+    omit 'symlinks are not supported'
+  end
 end

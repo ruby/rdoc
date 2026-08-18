@@ -124,7 +124,7 @@ class RDoc::RDoc
 
     file_list = normalized_file_list files, true, @options.exclude
 
-    file_list = remove_unparseable(file_list)
+    file_list = remove_duplicate_files(remove_unparseable(file_list))
 
     if file_list.count {|name, mtime|
          file_list[name] = @last_modified[name] unless mtime
@@ -456,6 +456,13 @@ The internal error was:
         (file =~ /tags\z/i and
          /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(File.binread(file, 100)))
     end
+  end
+
+  ##
+  # Removes duplicate canonical paths while preserving the first path found.
+
+  def remove_duplicate_files(files)
+    files.uniq { |file,| File.realpath(file) }.to_h
   end
 
   ##

@@ -338,6 +338,22 @@ class RDocRDocTest < RDoc::TestCase
     assert_equal [a, b], @rdoc.gather_files([b, a, b])
   end
 
+  def test_gather_files_deduplicates_symlinked_source_tree
+    temp_dir do |dir|
+      source_dir = File.join dir, 'gem'
+      symlink_dir = File.join dir, 'docs', 'gem'
+      FileUtils.mkdir_p [File.dirname(symlink_dir), source_dir]
+      source_file = File.join source_dir, 'example.rb'
+      FileUtils.touch source_file
+      FileUtils.ln_s '../gem', symlink_dir
+      omit 'directory symlinks are not supported' unless File.directory? symlink_dir
+
+      assert_equal 1, @rdoc.gather_files([dir]).count { |file| File.identical?(source_file, file) }
+    end
+  rescue NotImplementedError, Errno::EACCES, Errno::EPERM
+    omit 'symlinks are not supported'
+  end
+
   def test_handle_pipe
     $stdin = StringIO.new "hello"
 
