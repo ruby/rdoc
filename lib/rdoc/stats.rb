@@ -468,7 +468,16 @@ class RDoc::Stats
 
     return 0, [] if params.empty?
 
-    document = parse method.comment
+    comment = method.comment
+
+    if comment.empty?
+      # An alias, or a method with a #see target, carries no comment of its
+      # own but inherits the documentation RDoc::MethodAttr#documented? uses.
+      inherited = method.is_alias_for || method.see
+      comment = inherited.comment if inherited
+    end
+
+    document = parse comment
 
     tts = document.accept @formatter
 
