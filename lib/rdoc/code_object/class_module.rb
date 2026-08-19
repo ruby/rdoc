@@ -174,6 +174,10 @@ class RDoc::ClassModule < RDoc::Context
   # in the ancestors. The superclass, if any, comes last.
 
   def ancestors
+    included_ancestors
+  end
+
+  def included_ancestors # :nodoc:
     includes.map { |i| i.module }.reverse
   end
 
@@ -807,10 +811,17 @@ class RDoc::ClassModule < RDoc::Context
 
   def super_classes
     result = []
+    # Degenerate input can produce a cyclic superclass chain
+    visited = [full_name]
     parent = self
     while parent = parent.superclass
+      if parent.is_a?(String)
+        result << parent
+        break
+      end
+      break if visited.include?(parent.full_name)
+      visited << parent.full_name
       result << parent
-      return result if parent.is_a?(String)
     end
     result
   end
