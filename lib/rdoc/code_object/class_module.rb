@@ -538,6 +538,7 @@ class RDoc::ClassModule < RDoc::Context
 
     merge_collections method_list, cm.method_list, other_files do |add, meth|
       if add then
+        @visibility = meth.visibility
         add_method meth
       else
         @method_list.delete meth

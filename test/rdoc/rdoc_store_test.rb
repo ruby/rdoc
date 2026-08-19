@@ -951,6 +951,14 @@ class RDocStoreTest < XrefTestCase
     assert_empty result.constants
   end
 
+  def test_save_class_merge_method_visibility
+    @s.save_class @klass
+    assert_equal :public, @meth.visibility
+
+    @s.save_class @klass # save again to trigger ClassModule#merge
+    assert_equal :public, @meth.visibility
+  end
+
   def test_save_class_methods
     @s.save_class @klass
 
