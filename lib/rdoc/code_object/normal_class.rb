@@ -10,15 +10,12 @@ class RDoc::NormalClass < RDoc::ClassModule
   # RDoc::ClassModules and Strings.
 
   def ancestors
-    if String === superclass then
-      super << superclass
-    elsif superclass then
-      ancestors = super
-      ancestors << superclass
-      ancestors.concat superclass.ancestors
-    else
-      super
+    ancestors = included_ancestors
+    super_classes.each do |sclass|
+      ancestors << sclass
+      ancestors.concat sclass.included_ancestors unless String === sclass
     end
+    ancestors
   end
 
   def aref_prefix # :nodoc:

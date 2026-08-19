@@ -1358,6 +1358,23 @@ class RDocClassModuleTest < XrefTestCase
     assert_equal [rdoc_c3_h1, rdoc_object, "BasicObject"], @c3_h2.super_classes
   end
 
+  def test_super_classes_superclass_cycle
+    c1 = @top_level.add_class RDoc::NormalClass, 'Cycle1'
+    c2 = @top_level.add_class RDoc::NormalClass, 'Cycle2'
+    c1.superclass = c2
+    c2.superclass = c1
+
+    assert_equal [c2], c1.super_classes
+    assert_equal [c1], c2.super_classes
+  end
+
+  def test_super_classes_superclass_referencing_itself
+    klass = @top_level.add_class RDoc::NormalClass, 'Klass'
+    klass.superclass = klass
+
+    assert_empty klass.super_classes
+  end
+
   def test_update_aliases_class
     n1 = @xref_data.add_module RDoc::NormalClass, 'N1'
     n1_k2 = n1.add_module RDoc::NormalClass, 'N2'
