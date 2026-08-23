@@ -151,6 +151,10 @@ class RDoc::Generator::Aliki < RDoc::Generator::Darkfish
 
   private
 
+  def template_encoding
+    Encoding::UTF_8
+  end
+
   def build_class_module_entry(klass)
     type = case klass
            when RDoc::NormalClass then 'class'
