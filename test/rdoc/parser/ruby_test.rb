@@ -3023,6 +3023,29 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_match %r{:\d+: invalid RBS type signature: "\(String ->"}, err
   end
 
+  def test_nil_superclass_case
+    # Context#add_class will create a class with nil superclass when
+    # the class is a BasicObject, or a superclass has the same full_name as the class itself.
+    # Superclass overwrite should follow this rule.
+    util_parser <<~RUBY
+      class BasicObject < Super; end
+      class BasicObject < Super; end
+      class Foo < Foo; end
+      class Bar < Bar; end
+      class Bar < Super; end
+      module M
+        class Baz < Super; end
+        class Baz < Baz; end
+        class Baz < M::Baz; end
+      end
+    RUBY
+
+    assert_nil @store.find_class_named('BasicObject').superclass
+    assert_nil @store.find_class_named('Foo').superclass
+    assert_equal 'Super', @store.find_class_named('Bar').superclass
+    assert_equal 'Super', @store.find_class_named('M::Baz').superclass
+  end
+
   def util_parser(content)
     @parser = RDoc::Parser::Ruby.new @top_level, content, @options, @stats
     @parser.scan

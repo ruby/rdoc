@@ -906,10 +906,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
         mod = owner.add_class(RDoc::NormalClass, name, superclass_name || superclass_expr || '::Object')
         mod.ignore if document_suppressed? && mod.in_files.empty?
       end
-      if superclass_name
+
+      # Superclass with the same full path and superclass for BasicObject are not allowed
+      if superclass_name && mod.full_name != superclass_full_path && mod.full_name != 'BasicObject'
         if superclass
           mod.superclass = superclass
-        elsif (mod.superclass.is_a?(String) || mod.superclass.name == 'Object') && mod.superclass != superclass_full_path
+        elsif mod.superclass.nil? || (mod.superclass.is_a?(String) || mod.superclass.name == 'Object') && mod.superclass != superclass_full_path
           mod.superclass = superclass_full_path
         end
       end
