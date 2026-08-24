@@ -266,4 +266,20 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     content = File.binread('index.html')
     assert_include content, '<html lang="ja">'
   end
+
+  def test_generate_with_non_utf8_default_external_encoding
+    original_encoding = Encoding.default_external
+    begin
+      Encoding.default_external = Encoding::US_ASCII
+      @g.generate
+    ensure
+      Encoding.default_external = original_encoding
+    end
+
+    assert_file 'index.html'
+
+    content = File.read('index.html', encoding: Encoding::UTF_8)
+    assert content.valid_encoding?, 'index.html should be valid UTF-8'
+    refute content.ascii_only?, 'non-ASCII characters in the template should be kept'
+  end
 end

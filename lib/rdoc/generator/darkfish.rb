@@ -599,7 +599,7 @@ class RDoc::Generator::Darkfish
   # used directly.
 
   def assemble_template(body_file)
-    body = body_file.read
+    body = body_file.read(encoding: template_encoding)
     return body if body =~ /<html/
 
     head_file = @template_dir + '_head.rhtml'
@@ -609,7 +609,7 @@ class RDoc::Generator::Darkfish
 
 <html lang="#{@options.locale&.name || 'en'}">
 <head>
-#{head_file.read}
+#{head_file.read(encoding: template_encoding)}
 
 #{body}
     TEMPLATE
@@ -693,7 +693,7 @@ class RDoc::Generator::Darkfish
       template = assemble_template file
       erbout = 'io'
     else
-      template = file.read
+      template = file.read(encoding: template_encoding)
       template = template.encode @options.encoding
 
       file_var = File.basename(file).sub(/\..*/, '')
@@ -804,6 +804,10 @@ class RDoc::Generator::Darkfish
   end
 
   private
+
+  def template_encoding
+    nil
+  end
 
   def nesting_namespaces_to_class_modules(klass)
     tree = {}
