@@ -1325,6 +1325,16 @@ Usage: #{opt.program_name} [options] [names...]
   end
 
   ##
+  # Returns whether syntax-highlighted method source should be stored.
+
+  #: () -> bool
+  def store_method_source?
+    return false if @coverage_report
+
+    !@generator.respond_to?(:store_method_source?) || @generator.store_method_source?
+  end
+
+  ##
   # Finds the template dir for +template+
 
   def template_dir_for(template)

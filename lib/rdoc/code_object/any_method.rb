@@ -114,6 +114,17 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   end
 
   ##
+  # Current token stream.
+
+  def token_stream
+    unless options.store_method_source?
+      raise RDoc::Error, "method source for #{full_name} was not stored; set store_method_source? to true"
+    end
+
+    super
+  end
+
+  ##
   # Whether the method has a call-seq.
 
   def has_call_seq?

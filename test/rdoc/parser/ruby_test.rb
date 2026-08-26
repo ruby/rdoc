@@ -2715,6 +2715,26 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
   end
 
+  def test_code_object_source_not_stored
+    generator = Class.new do
+      def self.store_method_source? = false
+    end
+    @options.generator = generator
+    @store.options.generator = generator
+
+    util_parser <<~RUBY
+      class Foo
+        def foo = 42
+      end
+    RUBY
+
+    method = @top_level.classes.first.method_list.first
+    error = assert_raise(RDoc::Error) { method.token_stream }
+    assert_equal 'method source for Foo#foo was not stored; set store_method_source? to true', error.message
+    error = assert_raise(RDoc::Error) { method.markup_code }
+    assert_equal 'method source for Foo#foo was not stored; set store_method_source? to true', error.message
+  end
+
   def test_markup_first_comment
     util_parser <<~RUBY
       # :markup: rd
