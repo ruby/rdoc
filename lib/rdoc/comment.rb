@@ -19,9 +19,11 @@ class RDoc::Comment
   attr_reader :format
 
   ##
-  # The RDoc::TopLevel this comment was found in
+  # The source this comment was read from.  This is usually an
+  # RDoc::TopLevel.  A comment loaded from a generated document without a file
+  # uses that RDoc::Markup::Document as its source.
 
-  attr_accessor :location
+  attr_reader :markup_source
 
   ##
   # Line where this Comment was written
@@ -29,38 +31,28 @@ class RDoc::Comment
   attr_accessor :line
 
   ##
-  # For duck-typing when merging classes at load time
-
-  alias file location # :nodoc:
-
-  ##
-  # The text for this comment
+  # The text for this comment.
 
   attr_reader :text
 
   ##
-  # Alias for text
+  # Alias for text.
 
   alias to_s text
 
   ##
-  # Overrides the content returned by #parse.  Use when there is no #text
-  # source for this comment
+  # Creates a new comment with +text+ from +markup_source+.
 
-  attr_writer   :document
+  def initialize(text = nil, markup_source:, language: nil, format: 'rdoc', normalized: false)
+    raise ArgumentError, 'markup_source is required' unless markup_source
 
-  ##
-  # Creates a new comment with +text+ that is found in the RDoc::TopLevel
-  # +location+.
-
-  def initialize(text = nil, location = nil, language = nil)
-    @location = location
-    @text     = text.nil? ? nil : text.dup
-    @language = language
+    @markup_source = markup_source
+    @text         = text.nil? ? nil : text.dup
+    @language     = language
 
     @document   = nil
-    @format     = 'rdoc'
-    @normalized = false
+    @format     = format
+    @normalized = normalized
   end
 
   ##
@@ -68,19 +60,19 @@ class RDoc::Comment
   # TODO deep copy @document
 
   def initialize_copy(copy) # :nodoc:
-    @text = copy.text.dup
+    @text = copy.text&.dup
   end
 
   def ==(other) # :nodoc:
     self.class === other and
-      other.text == @text and other.location == @location
+      other.text == @text and other.location == location
   end
 
   ##
   # A comment is empty if its text String is empty.
 
   def empty?
-    @text.empty? && (@document.nil? || @document.empty?)
+    @text.to_s.empty? && (@document.nil? || @document.empty?)
   end
 
   ##
@@ -92,17 +84,42 @@ class RDoc::Comment
   end
 
   ##
-  # Sets the format of this comment and resets any parsed document
+  # Sets the format of this comment and resets its parsed document.
 
   def format=(format)
     @format = format
     @document = nil
   end
 
-  def inspect # :nodoc:
-    location = @location ? @location.relative_name : '(unknown)'
+  ##
+  # Sets the language of this comment and resets its parsed document.
 
-    "#<%s:%x %s %p>" % [self.class, object_id, location, @text]
+  def language=(language)
+    @language = language
+    @document = nil
+  end
+
+  ##
+  # The RDoc::TopLevel this comment was found in.
+
+  def location
+    return @markup_source if RDoc::TopLevel === @markup_source
+    return @location if defined?(@location)
+
+    file = @markup_source.file if @markup_source.respond_to?(:file)
+    @location = RDoc::TopLevel.new(file) if file
+  end
+
+  ##
+  # For duck-typing when merging classes at load time.
+
+  alias file location # :nodoc:
+
+  def inspect # :nodoc:
+    location = self.location
+    relative_name = location ? location.relative_name : '(unknown)'
+
+    "#<%s:%x %s %p>" % [self.class, object_id, relative_name, @text]
   end
 
   ##
@@ -112,7 +129,9 @@ class RDoc::Comment
     return self unless @text
     return self if @normalized # TODO eliminate duplicate normalization
 
-    @text = normalize_comment @text
+    text = normalize_comment @text
+    @document = nil if text != @text
+    @text = text
 
     @normalized = true
 
@@ -134,13 +153,13 @@ class RDoc::Comment
 
   ##
   # Parses the comment into an RDoc::Markup::Document.  The parsed document is
-  # cached until the text is changed.
+  # cached until the text, format, or language changes.
 
   def parse
     return @document if @document
 
     @document = super @text, @format
-    @document.file = @location
+    @document.file = location if location
     @document
   end
 
@@ -154,6 +173,7 @@ class RDoc::Comment
       @text.nil? and @document
 
     @document = nil
+    @normalized = false
     @text = text.nil? ? nil : text.dup
   end
 
@@ -176,12 +196,24 @@ class RDoc::Comment
   class << self
 
     ##
-    # Create a new parsed comment from a document
+    # Creates a comment from an already parsed +document+.
 
-    def from_document(document) # :nodoc:
-      comment = RDoc::Comment.new('')
-      comment.document = document
-      comment.location = RDoc::TopLevel.new(document.file) if document.file
+    def from_document(document, text: '', markup_source: nil, language: nil, format: 'rdoc', normalized: false) # :nodoc:
+      markup_source ||= if document.file
+                          RDoc::TopLevel.new document.file
+                        else
+                          document
+                        end
+
+      comment = new(
+        text,
+        markup_source: markup_source,
+        language: language,
+        format: format,
+        normalized: normalized
+      )
+      comment.normalize
+      comment.instance_variable_set :@document, document
       comment
     end
 

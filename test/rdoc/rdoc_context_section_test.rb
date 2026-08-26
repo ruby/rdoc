@@ -19,9 +19,9 @@ class RDocContextSectionTest < RDoc::TestCase
 
     klass = file1.add_class RDoc::NormalClass, 'Klass'
 
-    c1 = RDoc::Comment.new "",       file1
-    c2 = RDoc::Comment.new "# hello\n", file1
-    c3 = RDoc::Comment.new "# world\n", file1
+    c1 = comment "",       file1
+    c2 = comment "# hello\n", file1
+    c3 = comment "# world\n", file1
 
     s = @S.new klass, 'section', c1
 
@@ -94,7 +94,7 @@ class RDocContextSectionTest < RDoc::TestCase
   def test_marshal_dump
     loaded = Marshal.load Marshal.dump @s
 
-    expected = doc RDoc::Comment.new('comment', @top_level).parse
+    expected = doc comment('comment', @top_level).parse
 
     assert_equal 'section', loaded.title
     assert_equal expected,  loaded.to_document
@@ -120,7 +120,7 @@ class RDocContextSectionTest < RDoc::TestCase
                           "[\x06I\"\fcomment\x06;\x06F:\n@fileI" +
                           "\"\ffile.rb\x06;\x06F;\n0"
 
-    expected = doc RDoc::Comment.new('comment', @top_level).parse
+    expected = doc comment('comment', @top_level).parse
 
     assert_equal 'section', loaded.title
     assert_equal expected,  loaded.to_document

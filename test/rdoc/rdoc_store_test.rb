@@ -14,7 +14,7 @@ class RDocStoreTest < XrefTestCase
     @top_level = @s.add_file 'file.rb'
 
     @page = @s.add_file 'README.txt', parser: RDoc::Parser::Simple
-    @page.comment = RDoc::Comment.new 'This is a page', @page
+    @page.comment = comment 'This is a page', @page
 
     @klass = @top_level.add_class RDoc::NormalClass, 'Object'
     @klass.add_comment 'original', @top_level
@@ -23,8 +23,7 @@ class RDocStoreTest < XrefTestCase
     @cmeth = RDoc::AnyMethod.new 'cmethod', singleton: true
     @cmeth.record_location @top_level
 
-    @meth_comment = RDoc::Comment.new 'method comment'
-    @meth_comment.location = @top_level
+    @meth_comment = comment 'method comment', @top_level
 
     @meth = RDoc::AnyMethod.new 'method'
     @meth.record_location @top_level
@@ -38,8 +37,7 @@ class RDocStoreTest < XrefTestCase
 
     @meth_bang.add_alias @meth_bang_alias, @klass
 
-    @attr_comment = RDoc::Comment.new 'attribute comment'
-    @attr_comment.location = @top_level
+    @attr_comment = comment 'attribute comment', @top_level
 
     @attr = RDoc::Attr.new 'attr', 'RW', ''
     @attr.record_location @top_level

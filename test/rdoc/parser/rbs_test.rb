@@ -44,6 +44,7 @@ class RDocParserRBSTest < RDoc::TestCase
     greet = sample.find_method 'greet', false
     assert_equal ['(String) -> Integer', '(Symbol) -> String'], greet.type_signature_lines
     assert_equal 'Greets by name.', greet.comment.text.strip
+    assert_same @top_level, greet.comment.markup_source
     assert_same @top_level, greet.comment.location
     assert_equal 'sample.rbs', greet.comment.parse.file
 
@@ -140,6 +141,7 @@ class RDocParserRBSTest < RDoc::TestCase
 
     assert_equal "Ruby class docs.\n---\nRBS class docs.", sample.comment.to_s.strip
     assert_equal "Ruby method docs.\n---\nRBS method docs.", greet.comment.to_s.strip
+    assert_same @top_level, greet.comment.markup_source
     assert_equal ['() -> String'], greet.type_signature_lines
   end
 

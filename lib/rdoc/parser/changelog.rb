@@ -210,8 +210,12 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
     grouped_entries = group_entries entries
 
     doc = create_document grouped_entries
-    comment = RDoc::Comment.new(@content)
-    comment.document = doc
+    doc.file = @top_level
+    comment = RDoc::Comment.from_document(
+      doc,
+      text: @content,
+      markup_source: @top_level
+    )
     @top_level.comment = comment
 
     @top_level

@@ -1215,8 +1215,9 @@ or the PAGER environment variable.
 
     store.load_method klass, "#{type}#{method}"
   rescue RDoc::Store::MissingFileError => e
-    comment = RDoc::Comment.new("missing documentation at #{e.file}")
-    comment.parse
+    text = "missing documentation at #{e.file}"
+    markup_source = RDoc::TopLevel.new e.file
+    comment = RDoc::Comment.new(text, markup_source: markup_source)
 
     method = RDoc::AnyMethod.new name
     method.comment = comment

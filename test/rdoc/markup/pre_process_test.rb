@@ -10,6 +10,7 @@ class RDoc::Markup::PreProcessTest < RDoc::TestCase
     @tempfile = Tempfile.new 'test_rdoc_markup_pre_process'
     @file_name = File.basename @tempfile.path
     @dir  = File.dirname @tempfile.path
+    @top_level = @store.add_file @tempfile.path
 
     @pp = RDoc::Markup::PreProcess.new @tempfile.path, [@dir, File.expand_path('..', File.dirname(__FILE__))]
   end

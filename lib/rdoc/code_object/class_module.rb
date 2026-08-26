@@ -39,7 +39,7 @@ class RDoc::ClassModule < RDoc::Context
   #
   # Before marshalling:
   # - +location+ is an RDoc::TopLevel
-  # - +comments+ are Strings
+  # - +comments+ are Strings or RDoc::Comment objects
   #
   # After unmarshalling:
   # - +location+ is a filename String
@@ -368,7 +368,7 @@ class RDoc::ClassModule < RDoc::Context
       @name,
       full_name,
       @superclass,
-      parse(@comment_location),
+      parse_comment_locations(@comment_location),
       attrs,
       constants.select { |constant| constant.display? },
       includes.map do |incl|
@@ -483,10 +483,15 @@ class RDoc::ClassModule < RDoc::Context
     @parent      = class_module.parent
     @parent_name = class_module.parent_name
 
-    other_document = parse class_module.comment_location
+    other_comment_location = class_module.comment_location
+    other_document = if Hash === other_comment_location
+                       class_module.parse_comment_locations(other_comment_location)
+                     else
+                       parse(other_comment_location)
+                     end
 
     if other_document then
-      document = parse @comment_location
+      document = parse_comment_locations(@comment_location)
 
       document = document.merge other_document
 
@@ -634,32 +639,19 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   ##
-  # Parses +comment_location+ into an RDoc::Markup::Document composed of
+  # Parses +comment_locations+ into an RDoc::Markup::Document composed of
   # multiple RDoc::Markup::Documents with their file set.
 
-  def parse(comment_location)
-    case comment_location
-    when String then
-      super
-    when Hash then
-      docs = comment_location.flat_map do |location, comments|
-        comments.map do |comment|
-          doc = super comment
-          doc.file = location
-          doc
-        end
+  def parse_comment_locations(comment_locations)
+    docs = comment_locations.flat_map do |location, comments|
+      comments.map do |comment|
+        document = parse(comment)
+        document.file = location unless RDoc::Comment === comment
+        document
       end
-
-      RDoc::Markup::Document.new(*docs)
-    when RDoc::Comment then
-      doc = super comment_location.text, comment_location.format
-      doc.file = comment_location.location
-      doc
-    when RDoc::Markup::Document then
-      return comment_location
-    else
-      raise ArgumentError, "unknown comment class #{comment_location.class}"
     end
+
+    RDoc::Markup::Document.new(*docs)
   end
 
   ##
@@ -737,7 +729,7 @@ class RDoc::ClassModule < RDoc::Context
       '',
       path,
       '',
-      snippet(@comment_location),
+      snippet(parse_comment_locations(@comment_location)),
     ]
   end
 
@@ -760,7 +752,7 @@ class RDoc::ClassModule < RDoc::Context
       comments.filter_map { |c| c.to_s unless c.empty? }
     }
     merged = texts.join("\n---\n")
-    @comment = merged.empty? ? '' : RDoc::Comment.new(merged)
+    @comment = merged
   end
 
   ##

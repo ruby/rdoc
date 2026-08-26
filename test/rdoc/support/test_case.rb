@@ -111,9 +111,13 @@ class RDoc::TestCase < Test::Unit::TestCase
   # Creates an RDoc::Comment with +text+ which was defined on +top_level+.
   # By default the comment has the 'rdoc' format.
 
-  def comment(text, top_level = @top_level, language = nil)
-    comment = RDoc::Comment.new text, top_level, language
-    comment
+  def comment(text, top_level = @top_level, language = nil, format: 'rdoc')
+    RDoc::Comment.new(
+      text,
+      markup_source: top_level,
+      language: language,
+      format: format
+    )
   end
 
   ##

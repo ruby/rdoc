@@ -38,9 +38,8 @@ class RDoc::Parser::RBS < RDoc::Parser
 
     # TODO: Run RBS comments through RDoc's directive preprocessor so
     # directives like :nodoc: affect the documented object.
-    comment = RDoc::Comment.new rbs_comment.string, @top_level
-    comment.format = 'markdown'
-    comment
+    text = rbs_comment.string
+    RDoc::Comment.new(text, markup_source: @top_level, format: 'markdown')
   end
 
   def local_module_name(type_name, context)
@@ -80,10 +79,14 @@ class RDoc::Parser::RBS < RDoc::Parser
     document.concat comment.parse.parts
 
     # Keep this text separator in sync with the Rule node above.
-    merged_comment = RDoc::Comment.new "#{object.comment}\n---\n#{comment}", comment.location
-    merged_comment.format = 'markdown'
-    merged_comment.document = document
-    merged_comment
+    text = "#{object.comment}\n---\n#{comment}"
+    RDoc::Comment.from_document(
+      document,
+      text: text,
+      markup_source: comment.markup_source,
+      format: 'markdown',
+      normalized: true
+    )
   end
 
   def attr_rw_matches?(existing_rw, new_rw)

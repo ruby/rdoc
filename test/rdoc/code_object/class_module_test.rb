@@ -9,19 +9,19 @@ class RDocClassModuleTest < XrefTestCase
     tl3 = @store.add_file 'three.rb'
 
     cm = RDoc::ClassModule.new 'Klass'
-    comment_tl1 = RDoc::Comment.new('# comment 1', @top_level, :ruby)
+    comment_tl1 = comment('# comment 1', tl1, :ruby)
     cm.add_comment comment_tl1, tl1
 
     assert_equal({ tl1 => [comment_tl1] }, cm.comment_location)
     assert_equal 'comment 1', cm.comment.text
 
-    comment_tl2 = RDoc::Comment.new('# comment 2', @top_level, :ruby)
+    comment_tl2 = comment('# comment 2', tl2, :ruby)
     cm.add_comment comment_tl2, tl2
 
     assert_equal({ tl1 => [comment_tl1], tl2 => [comment_tl2] }, cm.comment_location)
     assert_equal "comment 1\n---\ncomment 2", cm.comment
 
-    comment_tl3 = RDoc::Comment.new('# * comment 3', @top_level, :ruby)
+    comment_tl3 = comment('# * comment 3', tl3, :ruby)
     cm.add_comment comment_tl3, tl3
 
     assert_equal({ tl1 => [comment_tl1],
@@ -41,14 +41,16 @@ class RDocClassModuleTest < XrefTestCase
   def test_add_comment_same_file_reopened_class
     tl1 = @store.add_file 'one.rb'
 
-    cm = RDoc::ClassModule.new 'Klass'
-    comment1 = RDoc::Comment.new('# comment 1', @top_level, :ruby)
-    comment2 = RDoc::Comment.new('# comment 2', @top_level, :ruby)
+    cm = tl1.add_class RDoc::NormalClass, 'Klass'
+    comment1 = comment('# comment 1', tl1, :ruby)
+    comment2 = comment('# comment 2', tl1, :ruby)
     cm.add_comment comment1, tl1
     cm.add_comment comment2, tl1
 
     # Both comments should appear in the rendered description
     assert_equal({ tl1 => [comment1, comment2] }, cm.comment_location)
+    assert_include cm.description, 'comment 1'
+    assert_include cm.description, 'comment 2'
   end
 
   def test_add_comment_stopdoc
@@ -68,15 +70,15 @@ class RDocClassModuleTest < XrefTestCase
 
   def test_comment_equals
     cm = RDoc::ClassModule.new 'Klass'
-    cm.comment = RDoc::Comment.new('# comment 1', @top_level, :ruby)
+    cm.comment = comment('# comment 1', @top_level, :ruby)
 
     assert_equal 'comment 1', cm.comment.to_s
 
-    cm.comment = RDoc::Comment.new('# comment 2', @top_level, :ruby)
+    cm.comment = comment('# comment 2', @top_level, :ruby)
 
     assert_equal "comment 1\n---\ncomment 2", cm.comment.to_s
 
-    cm.comment = RDoc::Comment.new('# * comment 3', @top_level, :ruby)
+    cm.comment = comment('# * comment 3', @top_level, :ruby)
 
     assert_equal "comment 1\n---\ncomment 2\n---\n* comment 3", cm.comment.to_s
   end
@@ -126,6 +128,18 @@ class RDocClassModuleTest < XrefTestCase
     cm.document_self = nil # notify :nodoc:
 
     assert cm.documented?, ':nodoc:'
+  end
+
+  def test_description_with_locale
+    locale = RDoc::I18n::Locale.new 'fr'
+    locale.instance_variable_get(:@messages)['comment'] = 'commentaire'
+    @options.locale = locale
+
+    top_level = @store.add_file 'one.rb'
+    class_module = top_level.add_class RDoc::NormalClass, 'Klass'
+    class_module.add_comment 'comment', top_level
+
+    assert_include class_module.description, 'commentaire'
   end
 
   def test_each_ancestor
@@ -186,8 +200,7 @@ class RDocClassModuleTest < XrefTestCase
     e1 = RDoc::Extend.new 'E1', ''
     e1.record_location tl
 
-    section_comment = RDoc::Comment.new('section comment')
-    section_comment.location = tl
+    section_comment = comment 'section comment', tl
 
     assert_equal 1, cm.sections.length, 'sanity, default section only'
     s0 = cm.sections.first
@@ -266,9 +279,6 @@ class RDocClassModuleTest < XrefTestCase
     e1 = RDoc::Extend.new 'E1', ''
     e1.record_location tl
     e1.document_self = false
-
-    section_comment = RDoc::Comment.new('section comment')
-    section_comment.location = tl
 
     assert_equal 1, cm.sections.length, 'sanity, default section only'
 
@@ -537,8 +547,7 @@ class RDocClassModuleTest < XrefTestCase
     e1 = RDoc::Extend.new 'E1', ''
     e1.record_location tl
 
-    section_comment = RDoc::Comment.new('section comment')
-    section_comment.location = tl
+    section_comment = comment 'section comment', tl
 
     assert_equal 1, cm.sections.length, 'sanity, default section only'
     s0 = cm.sections.first
@@ -1168,7 +1177,7 @@ class RDocClassModuleTest < XrefTestCase
     assert_equal expected, comments.sort_by { |c| c.file.name }
   end
 
-  def test_parse
+  def test_parse_comment_locations
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
 
@@ -1183,7 +1192,7 @@ class RDocClassModuleTest < XrefTestCase
 
     expected = @RM::Document.new doc1, doc2
 
-    assert_equal expected, cm.parse(cm.comment_location)
+    assert_equal expected, cm.parse_comment_locations(cm.comment_location)
   end
 
   def test_parse_comment
@@ -1195,7 +1204,9 @@ class RDocClassModuleTest < XrefTestCase
     doc = @RM::Document.new @RM::Paragraph.new 'comment 1'
     doc.file = tl1
 
-    assert_equal doc, cm.parse(cm.comment)
+    parsed = cm.comment.parse
+    assert_equal doc, parsed
+    assert_same parsed, cm.parse(cm.comment)
   end
 
   def test_parse_comment_format
@@ -1211,7 +1222,7 @@ class RDocClassModuleTest < XrefTestCase
     assert_equal doc, cm.parse(cm.comment)
   end
 
-  def test_parse_comment_location
+  def test_parse_comment_locations_after_marshal
     tl1 = @store.add_file 'one.rb'
     tl2 = @store.add_file 'two.rb'
 
@@ -1229,8 +1240,7 @@ class RDocClassModuleTest < XrefTestCase
     # After marshal, comment_location should still be a hash
     assert_kind_of Hash, cm.comment_location
 
-    # parse() produces a Document with parts for each comment
-    parsed = cm.parse(cm.comment_location)
+    parsed = cm.parse_comment_locations(cm.comment_location)
     assert_kind_of RDoc::Markup::Document, parsed
     assert_equal 2, parsed.parts.length
     assert_equal 'comment 1', parsed.parts[0].parts[0].text

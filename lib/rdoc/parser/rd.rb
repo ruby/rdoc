@@ -13,8 +13,11 @@ class RDoc::Parser::RD < RDoc::Parser
   # Creates an rd-format TopLevel for the given file.
 
   def scan
-    comment = RDoc::Comment.new @content, @top_level
-    comment.format = 'rd'
+    comment = RDoc::Comment.new(
+      @content,
+      markup_source: @top_level,
+      format: 'rd'
+    )
 
     @top_level.comment = comment
   end

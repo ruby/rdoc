@@ -9,9 +9,7 @@ class RDocCommentTest < RDoc::TestCase
     super
 
     @top_level = @store.add_file 'file.rb'
-    @comment = RDoc::Comment.new
-    @comment.location = @top_level
-    @comment.text = 'this is a comment'
+    @comment = comment 'this is a comment'
   end
 
   def test_empty
@@ -35,8 +33,8 @@ class RDocCommentTest < RDoc::TestCase
 
     refute_equal @comment, c2
 
-    c3 = @comment.dup
-    c3.location = nil
+    other_top_level = @store.add_file 'other.rb'
+    c3 = comment @comment.text, other_top_level
 
     refute_equal @comment, c3
   end
@@ -47,6 +45,15 @@ class RDocCommentTest < RDoc::TestCase
     assert_equal Encoding::UTF_8, @comment.text.encoding
   end
 
+  def test_force_encoding_preserves_document
+    document = @RM::Document.new @RM::Paragraph.new('loaded comment')
+    comment = RDoc::Comment.from_document document
+
+    RDoc::Encoding.change_encoding comment, Encoding::UTF_8
+
+    assert_same document, comment.parse
+  end
+
   def test_format
     assert_equal 'rdoc', @comment.format
   end
@@ -54,22 +61,57 @@ class RDocCommentTest < RDoc::TestCase
   def test_format_equals
     c = comment 'content'
     document = c.parse
+    markup_source = c.markup_source
 
     c.format = RDoc::RD
 
     assert_equal RDoc::RD, c.format
     refute_same document, c.parse
+    assert_same markup_source, c.markup_source
   end
 
   def test_initialize_copy
     copy = @comment.dup
 
     refute_same @comment.text, copy.text
+    assert_same @comment.markup_source, copy.markup_source
     assert_same @comment.location, copy.location
   end
 
+  def test_markup_source
+    assert_same @top_level, @comment.markup_source
+  end
+
+  def test_markup_source_from_document
+    document = @RM::Document.new @RM::Paragraph.new('this is a comment')
+
+    comment = RDoc::Comment.from_document document
+
+    assert_same document, comment.markup_source
+    assert_same document, comment.parse
+    assert_nil comment.location
+  end
+
+  def test_markup_source_from_document_with_file
+    document = @RM::Document.new @RM::Paragraph.new('this is a comment')
+    document.file = @top_level
+
+    comment = RDoc::Comment.from_document document
+
+    assert_equal @top_level, comment.markup_source
+    assert_same document, comment.parse
+  end
+
   def test_location
-    assert_equal @top_level, @comment.location
+    assert_same @comment.markup_source, @comment.location
+  end
+
+  def test_parse_is_lazy
+    assert_nil @comment.instance_variable_get(:@document)
+
+    document = @comment.parse
+
+    assert_same document, @comment.instance_variable_get(:@document)
   end
 
   def test_normalize
@@ -98,8 +140,7 @@ class RDocCommentTest < RDoc::TestCase
   end
 
   def test_normalize_document
-    @comment.text = nil
-    @comment.document = @RM::Document.new
+    @comment = RDoc::Comment.from_document(@RM::Document.new, text: nil)
 
     assert_same @comment, @comment.normalize
 
@@ -118,6 +159,12 @@ class RDocCommentTest < RDoc::TestCase
     assert_equal 'this is a comment', @comment.text
   end
 
+  def test_to_s_document_only
+    comment = RDoc::Comment.from_document(@RM::Document.new, text: nil)
+
+    assert_nil comment.to_s
+  end
+
   def test_text_equals
     @comment.text = 'other'
 
@@ -126,8 +173,7 @@ class RDocCommentTest < RDoc::TestCase
   end
 
   def test_text_equals_no_text
-    c = RDoc::Comment.new nil, @top_level
-    c.document = @RM::Document.new
+    c = RDoc::Comment.from_document(@RM::Document.new, text: nil)
 
     e = assert_raise RDoc::Error do
       c.text = 'other'
@@ -138,10 +184,12 @@ class RDocCommentTest < RDoc::TestCase
 
   def test_text_equals_parsed
     document = @comment.parse
+    markup_source = @comment.markup_source
 
     @comment.text = 'other'
 
     refute_equal document, @comment.parse
+    assert_same markup_source, @comment.markup_source
   end
 
   def test_tomdoc_eh

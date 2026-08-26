@@ -492,10 +492,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     while !@unprocessed_comments.empty? && @unprocessed_comments.first[0] <= line_no_until
       line_no, start_line, text = @unprocessed_comments.shift
       if @markup == 'tomdoc'
-        comment = RDoc::Comment.new(text, @top_level, :ruby)
-        comment.format = 'tomdoc'
-        parse_comment_tomdoc(@container, comment, line_no, start_line)
+        comment = build_comment(text, start_line, 'tomdoc')
         @preprocess.run_post_processes(comment, @container)
+        comment.normalize
+        parse_comment_tomdoc(@container, comment, line_no, start_line)
       elsif (comment_text, directives = parse_comment_text_to_directives(text, start_line))
         handle_standalone_consecutive_comment_directive(comment_text, directives, text.start_with?(/#\#$/), line_no, start_line)
       end
@@ -526,19 +526,30 @@ class RDoc::Parser::Ruby < RDoc::Parser
   def parse_comment_text_to_directives(comment_text, start_line) # :nodoc:
     type_signature_lines = extract_type_signature!(comment_text, start_line)
     comment_text, directives = @preprocess.parse_comment(comment_text, start_line, :ruby)
-    comment = RDoc::Comment.new(comment_text, @top_level, :ruby)
-    comment.normalized = true
-    comment.line = start_line
     markup, = directives['markup']
-    comment.format = markup&.downcase || @markup
+    format = markup&.downcase || @markup
     if (section, directive_line = directives['section'])
       # If comment has :section:, it is not a documentable comment for a code object
-      comment.text = extract_section_comment(comment_text, directive_line - start_line)
+      comment_text = extract_section_comment(comment_text, directive_line - start_line)
+      comment = build_comment(comment_text, start_line, format, normalized: true)
       @container.set_current_section(section, comment)
       return
     end
+    comment = build_comment(comment_text, start_line, format, normalized: true)
     @preprocess.run_post_processes(comment, @container)
     [comment, directives, type_signature_lines]
+  end
+
+  def build_comment(text, start_line, format, normalized: false) # :nodoc:
+    comment = RDoc::Comment.new(
+      text,
+      markup_source: @top_level,
+      language: :ruby,
+      format: format,
+      normalized: normalized
+    )
+    comment.line = start_line
+    comment
   end
 
   # Extracts the comment for this section from the normalized comment block.
