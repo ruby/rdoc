@@ -553,10 +553,28 @@ class RDoc::Parser::Ruby < RDoc::Parser
     comment_text
   end
 
-  # Returns syntax highlighted tokens of the given node
+  # Returns syntax-highlighted tokens for +node+, or an empty Array when
+  # method source storage is disabled.
 
   def syntax_highlighted_tokens(node)
+    return [] unless store_method_source?
+
     RDoc::Parser::RubyColorizer.partial_colorize(@content, node, @prism_tokens)
+  end
+
+  # Returns whether syntax-highlighted method source should be stored.
+  # Generators that do not render method source can disable its collection:
+  #
+  #   class RDoc::Generator::POT
+  #     def self.store_method_source? = false
+  #   end
+
+  private def store_method_source?
+    # Coverage reports inspect documentation metadata, not method bodies.
+    return false if @options.coverage_report
+
+    generator = @options.generator
+    !generator.respond_to?(:store_method_source?) || generator.store_method_source?
   end
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`

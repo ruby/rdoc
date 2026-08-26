@@ -81,6 +81,8 @@ class RDoc::Generator::POT
     end
   end
 
+  def self.store_method_source? = false
+
   private
   def extract_messages
     extractor = MessageExtractor.new(@store)

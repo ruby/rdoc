@@ -27,4 +27,5 @@ class RDoc::Generator::RI
     @store.save
   end
 
+  def self.store_method_source? = false
 end
