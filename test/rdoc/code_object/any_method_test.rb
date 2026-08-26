@@ -152,6 +152,20 @@ each_line(foo)
     assert_equal '', @c2_a.markup_code
   end
 
+  def test_markup_code_raises_when_method_source_not_stored
+    @options.generator = RDoc::Generator::RI
+
+    error = assert_raise(RDoc::Error) { @c1_m.markup_code }
+    assert_equal 'method source for C1#m was not stored; set store_method_source? to true', error.message
+  end
+
+  def test_token_stream_raises_when_method_source_not_stored
+    @options.generator = RDoc::Generator::RI
+
+    error = assert_raise(RDoc::Error) { @c1_m.token_stream }
+    assert_equal 'method source for C1#m was not stored; set store_method_source? to true', error.message
+  end
+
   def test_param_seq_with_variable_expansion
     m = RDoc::AnyMethod.new 'method'
     m.parent = @c1
