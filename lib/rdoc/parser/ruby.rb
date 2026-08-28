@@ -143,6 +143,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @token_listeners = nil
     content = RDoc::Encoding.remove_magic_comment content
     @content = content
+    @colorizer_context = RDoc::Parser::RubyColorizer::DeferredContext.new(content)
     @markup = @options.markup
     @track_visibility = :nodoc != @options.visibility
     @encoding = @options.encoding
@@ -551,7 +552,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Returns syntax highlighted tokens of the given node
 
   def syntax_highlighted_tokens(node)
-    RDoc::Parser::RubyColorizer.deferred_token_stream(@content, node)
+    @colorizer_context.deferred_token_stream(node)
   end
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`

@@ -2736,8 +2736,16 @@ end
     RUBY
 
     foo, bar = @top_level.classes.first.method_list
-    assert_equal(['  ', 'def', ' ', 'foo', "\n", '    ', '42', "\n", '  ', 'end'], foo.token_stream.map(&:text))
-    assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
+    parse_lex_calls = 0
+    trace = TracePoint.new(:call, :c_call) do |event|
+      parse_lex_calls += 1 if event.self.equal?(Prism) && event.method_id == :parse_lex
+    end
+
+    trace.enable do
+      assert_equal(['  ', 'def', ' ', 'foo', "\n", '    ', '42', "\n", '  ', 'end'], foo.token_stream.map(&:text))
+      assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
+    end
+    assert_equal 1, parse_lex_calls
   end
 
   def test_markup_first_comment

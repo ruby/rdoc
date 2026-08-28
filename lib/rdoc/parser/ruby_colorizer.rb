@@ -10,32 +10,66 @@ module RDoc::Parser::RubyColorizer
 
   ColoredToken = Struct.new(:kind, :text)
 
-  # Defers Ruby source colorization until a generator requests the tokens.
+  # A token stream populated by its file's DeferredContext.
   class DeferredTokenStream
-    def initialize(source, node)
-      @source = source
-      @node_type = node.type
-      @start_offset = node.location.start_offset
-      @end_offset = node.location.end_offset
+    #: (DeferredContext) -> void
+    def initialize(context)
+      @context = context
       @tokens = nil
     end
 
+    #: () -> Array[ColoredToken]
     def materialize
       return @tokens if @tokens
 
-      source = @source
-      result = Prism.parse_lex(source)
-      program_node, unordered_tokens = result.value
-      prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
-      node = program_node.breadth_first_search do |candidate|
-        candidate.type == @node_type &&
-          candidate.location.start_offset == @start_offset &&
-          candidate.location.end_offset == @end_offset
-      end
-      tokens = RDoc::Parser::RubyColorizer.partial_colorize(source, node, prism_tokens)
-      @tokens = tokens
-      @source = nil
+      @context&.materialize
       @tokens
+    end
+
+    #: (Array[ColoredToken]) -> void
+    def resolve(tokens)
+      @tokens = tokens
+      @context = nil
+    end
+  end
+
+  # Defers colorization for all nodes in one source file until first access.
+  class DeferredContext
+    #: (String) -> void
+    def initialize(source)
+      @source = source
+      @streams = {}
+      @mutex = Mutex.new
+    end
+
+    #: (Prism::Node) -> DeferredTokenStream
+    def deferred_token_stream(node)
+      stream = DeferredTokenStream.new(self)
+      (@streams[node.node_id] ||= []) << stream
+      stream
+    end
+
+    #: () -> void
+    def materialize
+      @mutex.synchronize do
+        return unless @source
+
+        source = @source
+        program_node, unordered_tokens = Prism.parse_lex(source).value
+        prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
+        nodes = [program_node]
+        until nodes.empty? || @streams.empty?
+          node = nodes.pop
+          if (streams = @streams.delete(node.node_id))
+            tokens = RDoc::Parser::RubyColorizer.partial_colorize(source, node, prism_tokens)
+            streams.each { |stream| stream.resolve(tokens) }
+          end
+          nodes.concat(node.compact_child_nodes)
+        end
+      ensure
+        @source = nil
+        @streams = nil
+      end
     end
   end
 
@@ -84,12 +118,6 @@ module RDoc::Parser::RubyColorizer
       program_node, unordered_tokens = result.value
       prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
       partial_colorize(code, program_node, prism_tokens, 0, code.bytesize)
-    end
-
-    # Returns a token stream that defers parsing and lexing +whole_code+ until
-    # +node+ is first accessed.
-    def deferred_token_stream(whole_code, node)
-      DeferredTokenStream.new(whole_code, node)
     end
 
     # Colorize partial +node+ in +whole_code+ and returns colored token stream.
