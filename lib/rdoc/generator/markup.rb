@@ -138,8 +138,7 @@ class RDoc::MethodAttr
   # Prepends line numbers if +options.line_numbers+ is true.
 
   def markup_code
-    tokens = token_stream
-    return '' if !tokens
+    return '' if !(tokens = token_stream)
 
     src = RDoc::TokenStream.to_html tokens
 

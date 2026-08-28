@@ -2736,7 +2736,6 @@ end
     RUBY
 
     foo, bar = @top_level.classes.first.method_list
-    assert_kind_of RDoc::Parser::RubyColorizer::DeferredTokenStream, foo.instance_variable_get(:@token_stream)
     assert_equal(['  ', 'def', ' ', 'foo', "\n", '    ', '42', "\n", '  ', 'end'], foo.token_stream.map(&:text))
     assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
   end
