@@ -23,7 +23,7 @@ module RDoc::Parser::RubyColorizer
     def token_stream_loader(node_id)
       tokens = nil
       (@streams[node_id] ||= []) << ->(resolved_tokens) { tokens = resolved_tokens }
-      -> { tokens || (materialize; tokens) }
+      -> { @source ? (materialize; tokens) : tokens }
     end
 
     #: () -> void
@@ -34,18 +34,24 @@ module RDoc::Parser::RubyColorizer
         source = @source
         program_node, unordered_tokens = Prism.parse_lex(source).value
         prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
+        staged_tokens = {}
         nodes = [program_node]
-        until nodes.empty? || @streams.empty?
+        until nodes.empty? || staged_tokens.size == @streams.size
           node = nodes.pop
-          if (streams = @streams.delete(node.node_id))
-            tokens = RDoc::Parser::RubyColorizer.partial_colorize(source, node, prism_tokens)
-            streams.each { |resolve| resolve.call(tokens) }
+          if @streams.key?(node.node_id)
+            staged_tokens[node.node_id] = RDoc::Parser::RubyColorizer.partial_colorize(source, node, prism_tokens)
           end
           nodes.concat(node.compact_child_nodes)
         end
-      ensure
-        @source = nil
+
+        missing_node_ids = @streams.keys - staged_tokens.keys
+        raise KeyError, "Prism nodes not found: #{missing_node_ids.join(', ')}" unless missing_node_ids.empty?
+
+        @streams.each do |node_id, streams|
+          streams.each { |resolve| resolve.call(staged_tokens.fetch(node_id)) }
+        end
         @streams = nil
+        @source = nil
       end
     end
   end

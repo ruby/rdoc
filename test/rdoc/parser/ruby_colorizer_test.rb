@@ -39,6 +39,41 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     assert_equal expected, loader.call
   end
 
+  def test_deferred_token_stream_retries_atomically
+    code = "first\nsecond\n"
+    nodes = Prism.parse(code).value.statements.body
+    context = RDoc::Parser::RubyColorizer::DeferredContext.new(code)
+    loaders = nodes.map { |node| context.token_stream_loader(node.node_id) }
+    colorizer = RDoc::Parser::RubyColorizer
+    partial_colorize = colorizer.method(:partial_colorize)
+    calls = 0
+
+    colorizer.define_singleton_method(:partial_colorize) do |*arguments|
+      calls += 1
+      raise 'colorization failed' if calls == 2
+
+      partial_colorize.call(*arguments)
+    end
+    begin
+      assert_raise(RuntimeError) { loaders.first.call }
+    ensure
+      colorizer.define_singleton_method(:partial_colorize, partial_colorize)
+    end
+
+    assert_equal %w[first second], loaders.map { |loader| loader.call.map(&:text).join }
+  end
+
+  def test_deferred_token_stream_rejects_unmatched_node_id
+    code = "first\n"
+    node = Prism.parse(code).value.statements.body.first
+    context = RDoc::Parser::RubyColorizer::DeferredContext.new(code)
+    loader = context.token_stream_loader(node.node_id)
+    missing_loader = context.token_stream_loader(node.node_id + 1_000_000)
+
+    2.times { assert_raise(KeyError) { loader.call } }
+    assert_raise(KeyError) { missing_loader.call }
+  end
+
   def test_partial_colorize
     code = <<~RUBY
       class A
