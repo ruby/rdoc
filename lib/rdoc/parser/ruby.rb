@@ -1229,10 +1229,10 @@ module RDoc
         def visibility_method_arguments(call_node, singleton:)
           arguments_node = call_node.arguments
           return unless arguments_node
-          symbols = symbol_arguments(call_node)
-          if symbols
-            # module_function :foo, :bar
-            return symbols.map(&:to_s)
+          names = call_node_name_arguments(call_node)
+          if names
+            # module_function :foo, "bar"
+            return names
           else
             return unless arguments_node.arguments.size == 1
             arg = arguments_node.arguments.first
@@ -1322,14 +1322,14 @@ module RDoc
 
         def _visit_call_public_constant(call_node)
           return if @scanner.in_proc_block || @scanner.singleton
-          names = symbol_arguments(call_node)
-          @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
+          names = call_node_name_arguments(call_node)
+          @scanner.container.set_constant_visibility_for(names, :public) if names
         end
 
         def _visit_call_private_constant(call_node)
           return if @scanner.in_proc_block || @scanner.singleton
-          names = symbol_arguments(call_node)
-          @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
+          names = call_node_name_arguments(call_node)
+          @scanner.container.set_constant_visibility_for(names, :private) if names
         end
 
         def _visit_call_attr_reader_writer_accessor(call_node, rw)
