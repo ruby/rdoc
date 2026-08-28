@@ -85,6 +85,14 @@ class RDocTokenStreamTest < RDoc::TestCase
     assert_equal [], foo.token_stream
   end
 
+  def test_collect_tokens_does_not_accept_initial_stream
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+
+    assert_raise(ArgumentError) { foo.collect_tokens(:ruby, [:token]) }
+  end
+
   def test_collect_tokens_with_loader
     foo = Class.new do
       include RDoc::TokenStream
