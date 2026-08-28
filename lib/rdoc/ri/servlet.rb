@@ -120,14 +120,14 @@ class RDoc::RI::Servlet < WEBrick::HTTPServlet::AbstractServlet
     req.path.sub!(/\A#{Regexp.escape @mount_path}/, '') if @mount_path
 
     case req.path
-    when '/' then
+    when '/'
       root req, res
     when '/js/darkfish.js', '/js/jquery.js', '/js/search.js',
-         %r%^/css/%, %r%^/images/%, %r%^/fonts/% then
+         %r%^/css/%, %r%^/images/%, %r%^/fonts/%
       asset :darkfish, req, res
-    when '/js/navigation.js', '/js/searcher.js' then
+    when '/js/navigation.js', '/js/searcher.js'
       asset :json_index, req, res
-    when '/js/search_index.js' then
+    when '/js/search_index.js'
       root_search req, res
     else
       show_documentation req, res
@@ -153,11 +153,11 @@ class RDoc::RI::Servlet < WEBrick::HTTPServlet::AbstractServlet
     text_name = path.chomp '.html'
     name = text_name.gsub '/', '::'
 
-    if klass = store.find_class_or_module(name) then
+    if klass = store.find_class_or_module(name)
       res.body = generator.generate_class klass
-    elsif page = store.find_text_page(name.sub(/_([^_]*)\z/, '.\1')) then
+    elsif page = store.find_text_page(name.sub(/_([^_]*)\z/, '.\1'))
       res.body = generator.generate_page page
-    elsif page = store.find_text_page(text_name.sub(/_([^_]*)\z/, '.\1')) then
+    elsif page = store.find_text_page(text_name.sub(/_([^_]*)\z/, '.\1'))
       res.body = generator.generate_page page
     else
       not_found generator, req, res
@@ -274,7 +274,7 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
 
     ims = Time.parse ims
 
-    unless ims < last_modified then
+    unless ims < last_modified
       res.body = ''
       raise WEBrick::HTTPStatus::NotModified
     end
@@ -295,16 +295,16 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
       exists = File.exist? store.cache_path
 
       case type
-      when :gem then
+      when :gem
         gem_path = path[%r%/([^/]*)/ri$%, 1]
         [gem_path, "#{gem_path}/", exists, type, path]
-      when :system then
+      when :system
         ['Ruby Documentation', 'ruby/', exists, type, path]
-      when :site then
+      when :site
         ['Site Documentation', 'site/', exists, type, path]
-      when :home then
+      when :home
         ['Home Documentation', 'home/', exists, type, path]
-      when :extra then
+      when :extra
         extra_counter += 1
         store.load_cache if exists
         title = store.title || "Extra Documentation"
@@ -361,13 +361,13 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
 
         path    = spec.full_name
         comment = spec.summary
-      when :system then
+      when :system
         path    = 'ruby'
         comment = 'Documentation for the Ruby standard library'
-      when :site then
+      when :site
         path    = 'site'
         comment = 'Documentation for non-gem libraries'
-      when :home then
+      when :home
         path    = 'home'
         comment = 'Documentation from your home directory'
       when :extra
@@ -401,11 +401,11 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
     generator = generator_for store
 
     case path
-    when nil, '', 'index.html' then
+    when nil, '', 'index.html'
       res.body = generator.generate_index
-    when 'table_of_contents.html' then
+    when 'table_of_contents.html'
       res.body = generator.generate_table_of_contents
-    when 'js/search_index.js' then
+    when 'js/search_index.js'
       documentation_search store, generator, req, res
     else
       documentation_page store, generator, path, req, res
@@ -419,13 +419,13 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
 
   def store_for(source_name)
     case source_name
-    when 'home' then
+    when 'home'
       RDoc::Store.new(@options, path: RDoc::RI::Paths.home_dir, type: :home)
-    when 'ruby' then
+    when 'ruby'
       RDoc::Store.new(@options, path: RDoc::RI::Paths.system_dir, type: :system)
-    when 'site' then
+    when 'site'
       RDoc::Store.new(@options, path: RDoc::RI::Paths.site_dir, type: :site)
-    when /\Aextra-(\d+)\z/ then
+    when /\Aextra-(\d+)\z/
       index = $1.to_i - 1
       ri_dir = installed_docs[index][4]
       RDoc::Store.new(@options, path: ri_dir, type: :extra)

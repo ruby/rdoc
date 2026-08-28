@@ -74,7 +74,7 @@ module RDoc::RI::Paths
       [File.join(spec.doc_dir, 'ri'), spec.name, spec.version]
     end
 
-    if filter == :all then
+    if filter == :all
       gemdirs = []
 
       all.group_by do |_, name, _|
@@ -95,7 +95,7 @@ module RDoc::RI::Paths
     all.each do |dir, name, ver|
       next unless File.exist? dir
 
-      if ri_paths[name].nil? or ver > ri_paths[name].first then
+      if ri_paths[name].nil? or ver > ri_paths[name].first
         ri_paths[name] = [ver, name, dir]
       end
     end

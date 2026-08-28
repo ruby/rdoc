@@ -42,9 +42,9 @@ module RDoc::Encoding
       encoding ||= Encoding.default_external
       orig_encoding = content.encoding
 
-      if not orig_encoding.ascii_compatible? then
+      if not orig_encoding.ascii_compatible?
         content = content.encode encoding
-      elsif utf8 then
+      elsif utf8
         content = RDoc::Encoding.change_encoding content, Encoding::UTF_8
         content = content.encode encoding
       else
@@ -52,19 +52,19 @@ module RDoc::Encoding
         content = RDoc::Encoding.change_encoding content, encoding
       end
 
-      unless content.valid_encoding? then
+      unless content.valid_encoding?
         # revert and try to transcode
         content = RDoc::Encoding.change_encoding content, orig_encoding
         content = content.encode encoding
       end
 
-      unless content.valid_encoding? then
+      unless content.valid_encoding?
         warn "unable to convert #{filename} to #{encoding}, skipping"
         content = nil
       end
     rescue Encoding::InvalidByteSequenceError,
            Encoding::UndefinedConversionError => e
-      if force_transcode then
+      if force_transcode
         content = RDoc::Encoding.change_encoding content, orig_encoding
         content = content.encode(encoding,
                                  :invalid => :replace,

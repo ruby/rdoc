@@ -33,7 +33,7 @@ class RDoc::Stats::Normal < RDoc::Stats::Quiet
       terminal_width = size[1].to_i.nonzero? || 80
       max_filename_size = (terminal_width - progress_bar.size) - 1
 
-      if filename.size > max_filename_size then
+      if filename.size > max_filename_size
         # Turn "some_long_filename.rb" to "...ong_filename.rb"
         filename = filename[(filename.size - max_filename_size) .. -1]
         filename[0..2] = "..."

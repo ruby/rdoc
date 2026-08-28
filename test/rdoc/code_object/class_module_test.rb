@@ -760,7 +760,7 @@ class RDocClassModuleTest < XrefTestCase
     removed = []
 
     cm1.merge_collections cm1.constants, cm2.constants, cm2.in_files do |add, c|
-      if add then
+      if add
         added << c
       else
         removed << c

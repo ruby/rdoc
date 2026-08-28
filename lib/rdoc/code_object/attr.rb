@@ -153,7 +153,7 @@ class RDoc::Attr < RDoc::MethodAttr
 
   def pretty_print(q) # :nodoc:
     q.group 2, "[#{self.class.name} #{full_name} #{rw} #{visibility}", "]" do
-      unless comment.empty? then
+      unless comment.empty?
         q.breakable
         q.text "comment:"
         q.breakable

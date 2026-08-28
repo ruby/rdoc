@@ -139,7 +139,7 @@ class RDoc::ClassModule < RDoc::Context
     original = comment
 
     comment = case comment
-              when RDoc::Comment then
+              when RDoc::Comment
                 comment.normalize
               else
                 normalize_comment comment
@@ -229,7 +229,7 @@ class RDoc::ClassModule < RDoc::Context
 
   def comment=(comment) # :nodoc:
     comment = case comment
-              when RDoc::Comment then
+              when RDoc::Comment
                 comment.normalize
               else
                 normalize_comment comment
@@ -314,7 +314,7 @@ class RDoc::ClassModule < RDoc::Context
   # Return the fully qualified name of this class or module
 
   def full_name
-    @full_name ||= if RDoc::ClassModule === parent then
+    @full_name ||= if RDoc::ClassModule === parent
                      "#{parent.full_name}::#{@name}"
                    else
                      @name
@@ -427,7 +427,7 @@ class RDoc::ClassModule < RDoc::Context
 
     array[6].each do |constant, document, file|
       case constant
-      when RDoc::Constant then
+      when RDoc::Constant
         add_constant constant
       else
         constant = add_constant RDoc::Constant.new(constant, nil, RDoc::Comment.from_document(document))
@@ -485,7 +485,7 @@ class RDoc::ClassModule < RDoc::Context
 
     other_document = parse class_module.comment_location
 
-    if other_document then
+    if other_document
       document = parse @comment_location
 
       document = document.merge other_document
@@ -503,7 +503,7 @@ class RDoc::ClassModule < RDoc::Context
     other_files = cm.in_files
 
     merge_collections attributes, cm.attributes, other_files do |add, attr|
-      if add then
+      if add
         add_attribute attr
       else
         @attributes.delete attr
@@ -512,7 +512,7 @@ class RDoc::ClassModule < RDoc::Context
     end
 
     merge_collections constants, cm.constants, other_files do |add, const|
-      if add then
+      if add
         add_constant const
       else
         @constants.delete const
@@ -521,7 +521,7 @@ class RDoc::ClassModule < RDoc::Context
     end
 
     merge_collections includes, cm.includes, other_files do |add, incl|
-      if add then
+      if add
         add_include incl
       else
         @includes.delete incl
@@ -531,7 +531,7 @@ class RDoc::ClassModule < RDoc::Context
     @includes.uniq! # clean up
 
     merge_collections extends, cm.extends, other_files do |add, ext|
-      if add then
+      if add
         add_extend ext
       else
         @extends.delete ext
@@ -541,7 +541,7 @@ class RDoc::ClassModule < RDoc::Context
     @extends.uniq! # clean up
 
     merge_collections method_list, cm.method_list, other_files do |add, meth|
-      if add then
+      if add
         add_method meth
       else
         @method_list.delete meth
@@ -562,7 +562,7 @@ class RDoc::ClassModule < RDoc::Context
   # item to be added or removed.
   #
   #   merge_collections things, other.things, other.in_files do |add, thing|
-  #     if add then
+  #     if add
   #       # add the thing
   #     else
   #       # remove the thing
@@ -602,7 +602,7 @@ class RDoc::ClassModule < RDoc::Context
           other_files = other_section.in_files
 
           merge_collections my_comments, other_comments, other_files do |add, comment|
-            if add then
+            if add
               my_section.add_comment comment
             else
               my_section.remove_comment comment
@@ -639,9 +639,9 @@ class RDoc::ClassModule < RDoc::Context
 
   def parse(comment_location)
     case comment_location
-    when String then
+    when String
       super
-    when Hash then
+    when Hash
       docs = comment_location.flat_map do |location, comments|
         comments.map do |comment|
           doc = super comment
@@ -651,11 +651,11 @@ class RDoc::ClassModule < RDoc::Context
       end
 
       RDoc::Markup::Document.new(*docs)
-    when RDoc::Comment then
+    when RDoc::Comment
       doc = super comment_location.text, comment_location.format
       doc.file = comment_location.location
       doc
-    when RDoc::Markup::Document then
+    when RDoc::Markup::Document
       return comment_location
     else
       raise ArgumentError, "unknown comment class #{comment_location.class}"
@@ -827,7 +827,7 @@ class RDoc::ClassModule < RDoc::Context
   end
 
   def to_s # :nodoc:
-    if is_alias_for then
+    if is_alias_for
       "#{self.class.name} #{self.full_name} -> #{is_alias_for}"
     else
       super
@@ -895,7 +895,7 @@ class RDoc::ClassModule < RDoc::Context
       cm_alias.aliases.clear
       cm_alias.is_alias_for = cm
 
-      if cm.module? then
+      if cm.module?
         @store.modules_hash[cm_alias.full_name] = cm_alias
         modules_hash[const.name] = cm_alias
       else

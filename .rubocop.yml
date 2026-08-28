@@ -31,3 +31,12 @@ Lint/UnreachableCode:
 
 Style/MethodDefParentheses:
   Enabled: true
+
+Style/MultilineIfThen:
+  Enabled: true
+
+Style/MultilineWhenThen:
+  Enabled: true
+
+Style/MultilineInPatternThen:
+  Enabled: true

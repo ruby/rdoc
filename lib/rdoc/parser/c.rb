@@ -227,7 +227,7 @@ class RDoc::Parser::C < RDoc::Parser
                    \s*\)/xm) do |var_name, new_name, old_name|
       class_name = @known_classes[var_name]
 
-      unless class_name then
+      unless class_name
         @options.warn "Enclosing class or module %p for alias %s %s is not known" % [
           var_name, new_name, old_name]
         next
@@ -540,7 +540,7 @@ class RDoc::Parser::C < RDoc::Parser
   def find_attr_comment(var_name, attr_name, read = nil, write = nil)
     attr_name = Regexp.escape attr_name
 
-    rw = if read and write then
+    rw = if read and write
            /\s*#{read}\s*,\s*#{write}\s*/xm
          else
            /.*?/m
@@ -549,16 +549,16 @@ class RDoc::Parser::C < RDoc::Parser
     comment = if @content =~ %r%((?>/\*.*?\*/\s+))
                                 rb_define_attr\((?:\s*#{var_name},)?\s*
                                                 "#{attr_name}"\s*,
-                                                #{rw}\)\s*;%xm then
+                                                #{rw}\)\s*;%xm
                 $1
               elsif @content =~ %r%((?>/\*.*?\*/\s+))
                                    rb_attr\(\s*#{var_name}\s*,
                                             \s*#{attr_name}\s*,
-                                            #{rw},.*?\)\s*;%xm then
+                                            #{rw},.*?\)\s*;%xm
                 $1
               elsif @content =~ %r%(/\*.*?(?:\s*\*\s*)?)
                                    Document-attr:\s#{attr_name}\s*?\n
-                                   ((?>(.|\n)*?\*/))%x then
+                                   ((?>(.|\n)*?\*/))%x
                 "#{$1}\n#{$2}"
               else
                 ''
@@ -658,7 +658,7 @@ class RDoc::Parser::C < RDoc::Parser
     else # No body, but might still have an override comment
       comment = find_override_comment class_name, meth_obj
 
-      if comment then
+      if comment
         find_modifiers comment, meth_obj
         meth_obj.comment = comment
 
@@ -722,16 +722,16 @@ class RDoc::Parser::C < RDoc::Parser
         ((?>/\*.*?\*/\s+))
         (static\s+)?
         void\s+
-        Init(?:VM)?_(?i:#{class_name})\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)%xm then
+        Init(?:VM)?_(?i:#{class_name})\s*(?:_\(\s*)?\(\s*(?:void\s*)?\)%xm
       comment = $1.sub(%r%Document-(?:class|module):\s+#{class_name}%, '')
     elsif @content =~ %r%Document-(?:class|module):\s+#{class_name}\s*?
-                         (?:<\s+[:,\w]+)?\n((?>.*?\*/))%xm then
+                         (?:<\s+[:,\w]+)?\n((?>.*?\*/))%xm
       comment = "/*\n#{$1}"
     elsif @content =~ %r%((?>/\*.*?\*/\s+))
-                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module)[\t (]*?"(#{class_name})"%xm then
+                         ([\w\.\s]+\s* = \s+)?rb_define_(class|module)[\t (]*?"(#{class_name})"%xm
       comment = $1
     elsif @content =~ %r%((?>/\*.*?\*/\s+))
-                         ([\w\. \t]+ = \s+)?rb_define_(class|module)_under[\t\w, (]*?"(#{class_name.split('::').last})"%xm then
+                         ([\w\. \t]+ = \s+)?rb_define_(class|module)_under[\t\w, (]*?"(#{class_name.split('::').last})"%xm
       comment = $1
     else
       comment = ''
@@ -814,10 +814,10 @@ class RDoc::Parser::C < RDoc::Parser
 
     comment = if @content =~ %r%Document-method:
                                 \s+#{class_name}#{prefix}#{name}
-                                \s*?\n((?>.*?\*/))%xm then
+                                \s*?\n((?>.*?\*/))%xm
                 "/*\n#{$1}"
               elsif @content =~ %r%Document-method:
-                                   \s#{name}\s*?\n((?>.*?\*/))%xm then
+                                   \s#{name}\s*?\n((?>.*?\*/))%xm
                 "/*\n#{$1}"
               end
 
@@ -862,16 +862,16 @@ class RDoc::Parser::C < RDoc::Parser
   def handle_class_module(var_name, type, class_name, parent, in_module)
     parent_name = @known_classes[parent] || parent
 
-    if in_module then
+    if in_module
       enclosure = @classes[in_module] || @store.find_c_enclosure(in_module)
 
-      if enclosure.nil? and enclosure = @known_classes[in_module] then
+      if enclosure.nil? and enclosure = @known_classes[in_module]
         enc_type = /^rb_m/ =~ in_module ? :module : :class
         handle_class_module in_module, enc_type, enclosure, nil, nil
         enclosure = @classes[in_module]
       end
 
-      unless enclosure then
+      unless enclosure
         @enclosure_dependencies[in_module] << var_name
         @missing_dependencies[var_name] =
           [var_name, type, class_name, parent, in_module]
@@ -882,14 +882,14 @@ class RDoc::Parser::C < RDoc::Parser
       enclosure = @top_level
     end
 
-    if type == :class then
-      full_name = if RDoc::ClassModule === enclosure then
+    if type == :class
+      full_name = if RDoc::ClassModule === enclosure
                     enclosure.full_name + "::#{class_name}"
                   else
                     class_name
                   end
 
-      if @content =~ %r%Document-class:\s+#{full_name}\s*<\s+([:,\w]+)% then
+      if @content =~ %r%Document-class:\s+#{full_name}\s*<\s+([:,\w]+)%
         parent_name = $1
       end
 
@@ -932,7 +932,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     class_obj = find_class var_name, class_name, class_name[/::\K[^:]+\z/]
 
-    unless class_obj then
+    unless class_obj
       @options.warn 'Enclosing class or module %p is not known' % [const_name]
       return
     end
@@ -943,7 +943,7 @@ class RDoc::Parser::C < RDoc::Parser
     # In the case of rb_define_const, the definition and comment are in
     # "/* definition: comment */" form.  The literal ':' and '\' characters
     # can be escaped with a backslash.
-    if type.downcase == 'const' then
+    if type.downcase == 'const'
       if /\A(.+?)?:(?!\S)/ =~ comment.text
         new_definition, new_comment = $1, $'
 
@@ -999,8 +999,8 @@ class RDoc::Parser::C < RDoc::Parser
       add_alias(var_name, class_obj, existing_method.name, meth_name, existing_method.comment, singleton: singleton)
     end
 
-    if class_obj then
-      if meth_name == 'initialize' then
+    if class_obj
+      if meth_name == 'initialize'
         meth_name = 'new'
         singleton = true
         type = 'method' # force public
@@ -1011,10 +1011,10 @@ class RDoc::Parser::C < RDoc::Parser
 
       p_count = Integer(param_count) rescue -1
 
-      if source_file then
+      if source_file
         file_name = File.join @file_dir, source_file
 
-        if File.exist? file_name then
+        if File.exist? file_name
           file_content = RDoc::Encoding.read_file file_name, @options.encoding
         else
           @options.warn "unknown source #{source_file} for #{meth_name} in #{@file_name}"
@@ -1025,10 +1025,10 @@ class RDoc::Parser::C < RDoc::Parser
 
       body = find_body class_name, function, meth_obj, file_content
 
-      if body and meth_obj.document_self then
-        meth_obj.params = if p_count < -1 then # -2 is Array
+      if body and meth_obj.document_self
+        meth_obj.params = if p_count < -1 # -2 is Array
                             '(*args)'
-                          elsif p_count == -1 then # argc, argv
+                          elsif p_count == -1 # argc, argv
                             rb_scan_args body
                           else
                             args = (1..p_count).map { |i| "p#{i}" }
@@ -1075,7 +1075,7 @@ class RDoc::Parser::C < RDoc::Parser
     name_map.each do |variable, name|
       next unless mod = @store.find_class_or_module(name)
 
-      class_map[variable] = if map_name == :c_class_variables then
+      class_map[variable] = if map_name == :c_class_variables
                               mod
                             else
                               name
@@ -1116,13 +1116,13 @@ class RDoc::Parser::C < RDoc::Parser
 
     lead = opt = trail = 0
 
-    if format.first =~ /\d/ then
+    if format.first =~ /\d/
       lead = $&.to_i
       format.shift
-      if format.first =~ /\d/ then
+      if format.first =~ /\d/
         opt = $&.to_i
         format.shift
-        if format.first =~ /\d/ then
+        if format.first =~ /\d/
           trail = $&.to_i
           format.shift
           block_arg = true
@@ -1130,21 +1130,21 @@ class RDoc::Parser::C < RDoc::Parser
       end
     end
 
-    if format.first == '*' and not block_arg then
+    if format.first == '*' and not block_arg
       var = true
       format.shift
-      if format.first =~ /\d/ then
+      if format.first =~ /\d/
         trail = $&.to_i
         format.shift
       end
     end
 
-    if format.first == ':' then
+    if format.first == ':'
       hash = true
       format.shift
     end
 
-    if format.first == '&' then
+    if format.first == '&'
       block = true
       format.shift
     end
@@ -1166,7 +1166,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     position += opt
 
-    if var then
+    if var
       args << '*args'
       position += 1
     end
@@ -1177,7 +1177,7 @@ class RDoc::Parser::C < RDoc::Parser
 
     position += trail
 
-    if hash then
+    if hash
       args << "p#{position} = {}"
     end
 

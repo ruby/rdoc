@@ -124,9 +124,9 @@ class RDoc::Parser
     ext_name = File.extname file_name
     return parser if ext_name.empty?
 
-    if parser == RDoc::Parser::Simple and ext_name !~ /txt|rdoc/ then
+    if parser == RDoc::Parser::Simple and ext_name !~ /txt|rdoc/
       case mode = check_modeline(file_name)
-      when nil, 'rdoc' then # continue
+      when nil, 'rdoc' # continue
       else
         RDoc::Parser.parsers.find { |_, p| return p if mode.casecmp?(p.name[/\w+\z/]) }
         return nil
@@ -149,7 +149,7 @@ class RDoc::Parser
 
     return nil unless type = $1
 
-    if /;/ =~ type then
+    if /;/ =~ type
       return nil unless /(?:\s|\A)mode:\s*([^\s;]+)/i =~ type
       type = $1
     end
@@ -172,11 +172,11 @@ class RDoc::Parser
 
     parser = use_markup content
 
-    unless parser then
+    unless parser
       parse_name = file_name
 
       # If no extension, look for shebang
-      if file_name !~ /\.\w+$/ && content =~ %r{\A#!(.+)} then
+      if file_name !~ /\.\w+$/ && content =~ %r{\A#!(.+)}
         shebang = $1
         case shebang
         when %r{env\s+ruby}, %r{/ruby}

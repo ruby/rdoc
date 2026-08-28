@@ -109,10 +109,10 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
   def accept_list_item_end(list_item)
     width = case @list_type.last
-            when :BULLET then
+            when :BULLET
               2
-            when :NOTE, :LABEL then
-              if @prefix then
+            when :NOTE, :LABEL
+              if @prefix
                 @res << @prefix.strip
                 @prefix = nil
               end
@@ -135,7 +135,7 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
     type = @list_type.last
 
     case type
-    when :NOTE, :LABEL then
+    when :NOTE, :LABEL
       stripped_labels = Array(list_item.label).map do |label|
         attributes(label).strip
       end
@@ -166,19 +166,19 @@ class RDoc::Markup::ToRdoc < RDoc::Markup::Formatter
 
   def accept_list_start(list)
     case list.type
-    when :BULLET then
+    when :BULLET
       @list_index << nil
       @list_width << 1
-    when :LABEL, :NOTE then
+    when :LABEL, :NOTE
       @list_index << nil
       @list_width << 2
-    when :LALPHA then
+    when :LALPHA
       @list_index << 'a'
       @list_width << list.items.length.to_s.length
-    when :NUMBER then
+    when :NUMBER
       @list_index << 1
       @list_width << list.items.length.to_s.length
-    when :UALPHA then
+    when :UALPHA
       @list_index << 'A'
       @list_width << list.items.length.to_s.length
     else

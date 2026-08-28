@@ -39,12 +39,12 @@ class RDoc::Markup::Document
 
   def <<(part)
     case part
-    when RDoc::Markup::Document then
-      unless part.empty? then
+    when RDoc::Markup::Document
+      unless part.empty?
         parts.concat part.parts
         parts << RDoc::Markup::BlankLine.new
       end
-    when String then
+    when String
       raise ArgumentError,
             "expected RDoc::Markup::Document and friends, got String" unless
         part.empty?
@@ -96,7 +96,7 @@ class RDoc::Markup::Document
 
   def file=(location)
     @file = case location
-            when RDoc::TopLevel then
+            when RDoc::TopLevel
               location.relative_name
             else
               location
@@ -112,7 +112,7 @@ class RDoc::Markup::Document
   # The information in +other+ is preferred over the receiver
 
   def merge(other)
-    if empty? then
+    if empty?
       @parts = other.parts
       return self
     end

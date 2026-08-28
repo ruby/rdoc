@@ -283,7 +283,7 @@ or the PAGER environment variable.
              "documentation in addition to the standard",
              "directories.  May be repeated.") do |value|
         value.each do |dir|
-          unless File.directory? dir then
+          unless File.directory? dir
             raise OptionParser::InvalidArgument, "#{dir} is not a directory"
           end
 
@@ -387,7 +387,7 @@ or the PAGER environment variable.
   def self.run(argv = ARGV)
     options = process_args argv
 
-    if options[:dump_path] then
+    if options[:dump_path]
       dump options[:dump_path]
       return
     end
@@ -456,7 +456,7 @@ or the PAGER environment variable.
   # +classes+.
 
   def add_class(out, name, classes)
-    heading = if classes.all? { |klass| klass.module? } then
+    heading = if classes.all? { |klass| klass.module? }
                 name
               else
                 superclass = classes.map do |klass|
@@ -497,7 +497,7 @@ or the PAGER environment variable.
     out << RDoc::Markup::Heading.new(1, "#{type}:")
 
     extensions.each do |modules, store|
-      if modules.length == 1 then
+      if modules.length == 1
         add_extension_modules_single out, store, modules.first
       else
         add_extension_modules_multiple out, store, modules
@@ -521,7 +521,7 @@ or the PAGER environment variable.
       out << incl.comment.parse
     end
 
-    unless wout.empty? then
+    unless wout.empty?
       verb = RDoc::Markup::Verbatim.new
 
       wout.each do |incl|
@@ -540,7 +540,7 @@ or the PAGER environment variable.
     path = store.friendly_path
     out << RDoc::Markup::Paragraph.new("#{name} (from #{path})")
 
-    if include.comment then
+    if include.comment
       out << RDoc::Markup::BlankLine.new
       out << include.comment.parse
     end
@@ -583,7 +583,7 @@ or the PAGER environment variable.
     out << RDoc::Markup::Heading.new(1, "#{name}:")
     out << RDoc::Markup::BlankLine.new
 
-    if @use_stdout and !@interactive then
+    if @use_stdout and !@interactive
       out.concat methods.map { |method|
         RDoc::Markup::Verbatim.new method
       }
@@ -658,10 +658,10 @@ or the PAGER environment variable.
   # Adds the class +comment+ to +out+.
 
   def class_document_comment(out, document) # :nodoc:
-    unless document.empty? then
+    unless document.empty?
       out << RDoc::Markup::Rule.new(1)
 
-      if document.merged? then
+      if document.merged?
         parts = document.parts
         parts = parts.zip [RDoc::Markup::BlankLine.new] * parts.length
         parts.flatten!
@@ -763,27 +763,27 @@ or the PAGER environment variable.
     # may need to include Foo when given Foo::
     klass_name = method ? name : klass
 
-    if name !~ /#|\./ then
+    if name !~ /#|\./
       completions.replace klasses.grep(/^#{Regexp.escape klass_name}[^:]*$/)
       completions.concat klasses.grep(/^#{Regexp.escape name}[^:]*$/) if
         name =~ /::$/
 
       completions << klass if classes.key? klass # to complete a method name
-    elsif selector then
+    elsif selector
       completions << klass if classes.key? klass
-    elsif classes.key? klass_name then
+    elsif classes.key? klass_name
       completions << klass_name
     end
   end
 
   def complete_method(name, klass, selector, completions) # :nodoc:
-    if completions.include? klass and name =~ /#|\.|::/ then
+    if completions.include? klass and name =~ /#|\.|::/
       methods = list_methods_matching name
 
-      if not methods.empty? then
+      if not methods.empty?
         # remove Foo if given Foo:: and a method was found
         completions.delete klass
-      elsif selector then
+      elsif selector
         # replace Foo with Foo:: as given
         completions.delete klass
         completions << "#{klass}#{selector}"
@@ -850,7 +850,7 @@ or the PAGER environment variable.
   # be guessed, raises an error if +name+ couldn't be guessed.
 
   def display_name(name)
-    if name =~ /\w:(\w|$)/ then
+    if name =~ /\w:(\w|$)/
       display_page name
       return true
     end
@@ -898,14 +898,14 @@ or the PAGER environment variable.
 
     pages = store.cache[:pages]
 
-    unless pages.include? page_name then
+    unless pages.include? page_name
       found_names = pages.select do |n|
         n =~ /#{Regexp.escape page_name}\.[^.]+$/
       end
 
-      if found_names.length.zero? then
+      if found_names.length.zero?
         return display_page_list store, pages
-      elsif found_names.length > 1 then
+      elsif found_names.length > 1
         return display_page_list store, found_names, page_name
       end
 
@@ -923,7 +923,7 @@ or the PAGER environment variable.
   def display_page_list(store, pages = store.cache[:pages], search = nil)
     out = RDoc::Markup::Document.new
 
-    title = if search then
+    title = if search
               "#{search} pages"
             else
               'Pages'
@@ -988,7 +988,7 @@ or the PAGER environment variable.
     return [selector, method].join if klass.empty?
 
     case selector
-    when ':' then
+    when ':'
       [find_store(klass),   selector, method]
     else
       [expand_class(klass), selector, method]
@@ -1024,7 +1024,7 @@ or the PAGER environment variable.
     klasses = nil
     ambiguous = klass.empty?
 
-    if ambiguous then
+    if ambiguous
       klasses = classes.keys
     else
       klasses = ancestors_of klass
@@ -1080,9 +1080,9 @@ or the PAGER environment variable.
   # use it.  If we're outputting to a pager, use bs, otherwise ansi.
 
   def formatter(io)
-    if @formatter_klass then
+    if @formatter_klass
       @formatter_klass.new
-    elsif paging? or !io.tty? then
+    elsif paging? or !io.tty?
       RDoc::Markup::ToBs.new
     else
       RDoc::Markup::ToAnsi.new
@@ -1099,7 +1099,7 @@ or the PAGER environment variable.
       require 'readline'
     rescue LoadError
     end
-    if defined? Readline then
+    if defined? Readline
       Readline.completion_proc = method :complete
       puts "You can use tab to autocomplete."
     end
@@ -1107,7 +1107,7 @@ or the PAGER environment variable.
     puts "Enter a blank line to exit.\n\n"
 
     loop do
-      name = if defined? Readline then
+      name = if defined? Readline
                Readline.readline ">> ", true
              else
                print ">> "
@@ -1140,15 +1140,15 @@ or the PAGER environment variable.
 
     classes = classes.flatten.uniq.sort
 
-    unless names.empty? then
+    unless names.empty?
       filter = Regexp.union names.map { |name| /^#{name}/ }
 
       classes = classes.grep filter
     end
 
     page do |io|
-      if paging? or io.tty? then
-        if names.empty? then
+      if paging? or io.tty?
+        if names.empty?
           io.puts "Classes and Modules known to ri:"
         else
           io.puts "Classes and Modules starting with #{names.join ', '}:"
@@ -1167,10 +1167,10 @@ or the PAGER environment variable.
     found = []
 
     find_methods name do |store, klass, ancestor, types, method|
-      if types == :instance or types == :both then
+      if types == :instance or types == :both
         methods = store.instance_methods[ancestor]
 
-        if methods then
+        if methods
           matches = methods.grep(/^#{Regexp.escape method.to_s}/)
 
           matches = matches.map do |match|
@@ -1181,7 +1181,7 @@ or the PAGER environment variable.
         end
       end
 
-      if types == :class or types == :both then
+      if types == :class or types == :both
         methods = store.class_methods[ancestor]
 
         next unless methods
@@ -1304,7 +1304,7 @@ or the PAGER environment variable.
     klass, type, name = parse_name name
 
     case type
-    when '#', '::' then
+    when '#', '::'
       /^#{klass}#{type}#{Regexp.escape name}$/
     else
       /^#{klass}(#|::)#{Regexp.escape name}$/
@@ -1315,7 +1315,7 @@ or the PAGER environment variable.
   # Paginates output through a pager program.
 
   def page
-    if pager = setup_pager then
+    if pager = setup_pager
       begin
         yield pager
       ensure
@@ -1346,22 +1346,22 @@ or the PAGER environment variable.
   def parse_name(name)
     parts = name.split(/(::?|#|\.)/)
 
-    if parts.length == 1 then
-      if parts.first =~ /^[a-z]|^([%&*+\/<>^`|~-]|\+@|-@|<<|<=>?|===?|=>|=~|>>|\[\]=?|~@)$/ then
+    if parts.length == 1
+      if parts.first =~ /^[a-z]|^([%&*+\/<>^`|~-]|\+@|-@|<<|<=>?|===?|=>|=~|>>|\[\]=?|~@)$/
         type = '.'
         meth = parts.pop
       else
         type = nil
         meth = nil
       end
-    elsif parts.length == 2 or parts.last =~ /::|#|\./ then
+    elsif parts.length == 2 or parts.last =~ /::|#|\./
       type = parts.pop
       meth = nil
-    elsif parts[1] == ':' then
+    elsif parts[1] == ':'
       klass = parts.shift
       type  = parts.shift
       meth  = parts.join
-    elsif parts[-2] != '::' or parts.last !~ /^[A-Z]/ then
+    elsif parts[-2] != '::' or parts.last !~ /^[A-Z]/
       meth = parts.pop
       type = parts.pop
     end
@@ -1383,7 +1383,7 @@ or the PAGER environment variable.
     attributes       = store.attributes[klass.full_name]       || []
 
     if document.empty? and
-       instance_methods.empty? and class_methods.empty? then
+       instance_methods.empty? and class_methods.empty?
       also_in << store
       return
     end
@@ -1392,7 +1392,7 @@ or the PAGER environment variable.
 
     class_document_comment out, document
 
-    if class_methods or instance_methods or not klass.constants.empty? then
+    if class_methods or instance_methods or not klass.constants.empty?
       out << RDoc::Markup::Rule.new(1)
     end
 
@@ -1408,7 +1408,7 @@ or the PAGER environment variable.
   def render_method(out, store, method, name) # :nodoc:
     out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
 
-    unless name =~ /^#{Regexp.escape method.parent_name}/ then
+    unless name =~ /^#{Regexp.escape method.parent_name}/
       out << RDoc::Markup::Heading.new(3, "Implementation from #{method.parent_name}")
     end
 
@@ -1471,13 +1471,13 @@ or the PAGER environment variable.
   # Looks up and displays ri data according to the options given.
 
   def run
-    if @list_doc_dirs then
+    if @list_doc_dirs
       puts @doc_dirs
-    elsif @list then
+    elsif @list
       list_known_classes @names
-    elsif @server then
+    elsif @server
       start_server
-    elsif @interactive or @names.empty? then
+    elsif @interactive or @names.empty?
       interactive
     else
       display_names @names

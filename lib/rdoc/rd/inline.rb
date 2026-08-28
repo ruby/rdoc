@@ -21,7 +21,7 @@ class RDoc::RD::Inline
   # will use the text from +rdoc+.
 
   def self.new(rdoc, reference = rdoc)
-    if self === rdoc and reference.equal? rdoc then
+    if self === rdoc and reference.equal? rdoc
       rdoc
     else
       super
@@ -49,10 +49,10 @@ class RDoc::RD::Inline
 
   def append(more)
     case more
-    when String then
+    when String
       @reference += more
       @rdoc      += more
-    when RDoc::RD::Inline then
+    when RDoc::RD::Inline
       @reference += more.reference
       @rdoc      += more.rdoc
     else

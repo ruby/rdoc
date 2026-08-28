@@ -41,7 +41,7 @@ class RDoc::Markup::ToTtOnly < RDoc::Markup::Formatter
 
   def accept_list_item_start(list_item)
     case @list_type.last
-    when :NOTE, :LABEL then
+    when :NOTE, :LABEL
       Array(list_item.label).map do |label|
         tt_sections label
       end.flatten

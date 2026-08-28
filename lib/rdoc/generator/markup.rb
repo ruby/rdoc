@@ -56,7 +56,7 @@ module RDoc::Generator::Markup
   # will replace the %s using sprintf on the +url+.
 
   def cvs_url(url, full_path)
-    if /%s/ =~ url then
+    if /%s/ =~ url
       sprintf url, full_path
     else
       url + full_path
@@ -186,7 +186,7 @@ class RDoc::TopLevel
   def cvs_url
     url = @store.options.webcvs
 
-    if /%s/ =~ url then
+    if /%s/ =~ url
       url % @relative_name
     else
       url + @relative_name

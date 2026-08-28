@@ -240,7 +240,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def record_location(container) # :nodoc:
     case container
-    when RDoc::ClassModule then
+    when RDoc::ClassModule
       @top_level.add_to_classes_or_modules container
     end
 
@@ -577,9 +577,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
     new_methods.each do |method|
       case method
-      when RDoc::AnyMethod then
+      when RDoc::AnyMethod
         @container.add_method(method)
-      when RDoc::Attr then
+      when RDoc::Attr
         @container.add_attribute(method)
       end
       method.visibility = visibility
@@ -603,9 +603,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
     new_methods.each do |method|
       case method
-      when RDoc::AnyMethod then
+      when RDoc::AnyMethod
         @container.add_method(method)
-      when RDoc::Attr then
+      when RDoc::Attr
         @container.add_attribute(method)
       end
       method.visibility = :public

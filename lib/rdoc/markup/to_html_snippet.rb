@@ -139,9 +139,9 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     throw :done if @characters >= @character_limit
 
     case list_type
-    when :BULLET, :LALPHA, :NUMBER, :UALPHA then
+    when :BULLET, :LALPHA, :NUMBER, :UALPHA
       "<p>"
-    when :LABEL, :NOTE then
+    when :LABEL, :NOTE
       labels = Array(list_item.label).map do |label|
         to_html label
       end.join ', '
@@ -161,16 +161,16 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
   # type.
 
   def gen_url(url, text)
-    if url =~ /^rdoc-label:([^:]*)(?::(.*))?/ then
+    if url =~ /^rdoc-label:([^:]*)(?::(.*))?/
       type = "link"
-    elsif url =~ /([A-Za-z]+):(.*)/ then
+    elsif url =~ /([A-Za-z]+):(.*)/
       type = $1
     else
       type = "http"
     end
 
     if (type == "http" or type == "https" or type == "link") and
-       url =~ /\.(gif|png|jpg|jpeg|bmp)$/ then
+       url =~ /\.(gif|png|jpg|jpeg|bmp)$/
       ''
     else
       text.sub(%r%^#{type}:/*%, '')
