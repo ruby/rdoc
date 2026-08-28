@@ -1246,10 +1246,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     def visibility_method_arguments(call_node, singleton:)
       arguments_node = call_node.arguments
       return unless arguments_node
-      symbols = symbol_arguments(call_node)
-      if symbols
+      if (names = call_node_name_arguments(call_node))
         # module_function :foo, :bar
-        return symbols.map(&:to_s)
+        return names
       else
         return unless arguments_node.arguments.size == 1
         arg = arguments_node.arguments.first
@@ -1339,14 +1338,14 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     def _visit_call_public_constant(call_node)
       return if @scanner.in_proc_block || @scanner.singleton
-      names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
+      return unless names = call_node_name_arguments(call_node)
+      @scanner.container.set_constant_visibility_for(names, :public)
     end
 
     def _visit_call_private_constant(call_node)
       return if @scanner.in_proc_block || @scanner.singleton
-      names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
+      return unless names = call_node_name_arguments(call_node)
+      @scanner.container.set_constant_visibility_for(names, :private)
     end
 
     def _visit_call_attr_reader_writer_accessor(call_node, rw)
