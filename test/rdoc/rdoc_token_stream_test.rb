@@ -89,10 +89,14 @@ class RDocTokenStreamTest < RDoc::TestCase
     foo = Class.new do
       include RDoc::TokenStream
     end.new
-    foo.collect_tokens(:ruby, loader: -> { [:token] })
+    loads = 0
+    foo.collect_tokens(:ruby, loader: -> { loads += 1; [:token] })
     foo.freeze
 
-    assert_equal [:token], foo.token_stream
+    tokens = foo.token_stream
+    assert_equal [:token], tokens
+    assert_same tokens, foo.token_stream
+    assert_equal 1, loads
   end
 
   def test_pop_token

@@ -63,9 +63,11 @@ module RDoc::TokenStream
   ##
   # Starts collecting tokens
   #
+  # The optional +loader+ is called once on first access and its result is reused.
 
   def collect_tokens(language, loader: nil)
-    @token_stream = loader || []
+    loaded_tokens = nil
+    @token_stream = loader ? -> { loaded_tokens ||= loader.call } : []
     @token_stream_language = language
   end
 
