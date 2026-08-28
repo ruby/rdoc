@@ -16,6 +16,7 @@ module RDoc::Parser::RubyColorizer
     def initialize(source)
       @source = source
       @streams = {}
+      @mutex = Mutex.new
     end
 
     #: (Integer) -> ^() -> Array[ColoredToken]
@@ -27,29 +28,31 @@ module RDoc::Parser::RubyColorizer
 
     #: () -> void
     def materialize
-      return unless @source
+      @mutex.synchronize do
+        return unless @source
 
-      source = @source
-      program_node, unordered_tokens = Prism.parse_lex(source).value
-      prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
-      staged_tokens = {}
-      nodes = [program_node]
-      until nodes.empty? || staged_tokens.size == @streams.size
-        node = nodes.pop
-        if @streams.key?(node.node_id)
-          staged_tokens[node.node_id] = RDoc::Parser::RubyColorizer.partial_colorize(source, node, prism_tokens)
+        source = @source
+        program_node, unordered_tokens = Prism.parse_lex(source).value
+        prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
+        staged_tokens = {}
+        nodes = [program_node]
+        until nodes.empty? || staged_tokens.size == @streams.size
+          node = nodes.pop
+          if @streams.key?(node.node_id)
+            staged_tokens[node.node_id] = RDoc::Parser::RubyColorizer.partial_colorize(source, node, prism_tokens)
+          end
+          nodes.concat(node.compact_child_nodes)
         end
-        nodes.concat(node.compact_child_nodes)
-      end
 
-      missing_node_ids = @streams.keys - staged_tokens.keys
-      raise KeyError, "Prism nodes not found: #{missing_node_ids.join(', ')}" unless missing_node_ids.empty?
+        missing_node_ids = @streams.keys - staged_tokens.keys
+        raise KeyError, "Prism nodes not found: #{missing_node_ids.join(', ')}" unless missing_node_ids.empty?
 
-      @streams.each do |node_id, streams|
-        streams.each { |resolve| resolve.call(staged_tokens.fetch(node_id)) }
+        @streams.each do |node_id, streams|
+          streams.each { |resolve| resolve.call(staged_tokens.fetch(node_id)) }
+        end
+        @streams = nil
+        @source = nil
       end
-      @streams = nil
-      @source = nil
     end
   end
 
