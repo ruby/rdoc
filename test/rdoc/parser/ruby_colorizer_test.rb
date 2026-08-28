@@ -26,6 +26,35 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     assert_same loader.call, loader.call
   end
 
+  def test_deferred_token_stream_materializes_registered_nodes_once
+    code = "hidden\nfirst\nsecond\n"
+    nodes = Prism.parse(code).value.statements.body
+    context = RDoc::Parser::RubyColorizer::DeferredContext.new(code)
+    loaders = nodes.drop(1).map { |node| context.token_stream_loader(node.node_id) }
+    parse_lex_calls = partial_colorize_calls = 0
+    parse_lex = Prism.method(:parse_lex)
+    colorizer = RDoc::Parser::RubyColorizer
+    partial_colorize = colorizer.method(:partial_colorize)
+
+    Prism.define_singleton_method(:parse_lex) do |*arguments|
+      parse_lex_calls += 1
+      parse_lex.call(*arguments)
+    end
+    colorizer.define_singleton_method(:partial_colorize) do |*arguments|
+      partial_colorize_calls += 1
+      partial_colorize.call(*arguments)
+    end
+
+    begin
+      assert_equal %w[first second], loaders.map { |loader| loader.call.map(&:text).join }
+    ensure
+      Prism.define_singleton_method(:parse_lex, parse_lex)
+      colorizer.define_singleton_method(:partial_colorize, partial_colorize)
+    end
+    assert_equal 1, parse_lex_calls
+    assert_equal 2, partial_colorize_calls
+  end
+
   def test_deferred_token_stream_preserves_lexical_scope
     code = "x = 1\ny = 2\ni = 3\nx /y/i\n"
     program_node, unordered_tokens = Prism.parse_lex(code).value

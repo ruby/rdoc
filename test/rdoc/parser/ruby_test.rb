@@ -2725,8 +2725,6 @@ end
   def test_code_object_token_stream
     util_parser <<~RUBY
       class Foo
-        def hidden; end # :nodoc:
-
         def foo
           42
         end
@@ -2738,29 +2736,8 @@ end
     RUBY
 
     foo, bar = @top_level.classes.first.method_list
-    parse_lex_calls = partial_colorize_calls = 0
-    parse_lex = Prism.method(:parse_lex)
-    colorizer = RDoc::Parser::RubyColorizer
-    partial_colorize = colorizer.method(:partial_colorize)
-
-    Prism.define_singleton_method(:parse_lex) do |*arguments|
-      parse_lex_calls += 1
-      parse_lex.call(*arguments)
-    end
-    colorizer.define_singleton_method(:partial_colorize) do |*arguments|
-      partial_colorize_calls += 1
-      partial_colorize.call(*arguments)
-    end
-
-    begin
-      assert_equal(['  ', 'def', ' ', 'foo', "\n", '    ', '42', "\n", '  ', 'end'], foo.token_stream.map(&:text))
-      assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
-    ensure
-      Prism.define_singleton_method(:parse_lex, parse_lex)
-      colorizer.define_singleton_method(:partial_colorize, partial_colorize)
-    end
-    assert_equal 1, parse_lex_calls
-    assert_equal 2, partial_colorize_calls
+    assert_equal(['  ', 'def', ' ', 'foo', "\n", '    ', '42', "\n", '  ', 'end'], foo.token_stream.map(&:text))
+    assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
   end
 
   def test_markup_first_comment
