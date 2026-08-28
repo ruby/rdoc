@@ -100,6 +100,21 @@ class RDocTokenStreamTest < RDoc::TestCase
     assert_equal [], foo.token_stream
   end
 
+  def test_mutating_deferred_tokens
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+    deferred = Object.new
+    def deferred.materialize = [:first]
+    foo.collect_tokens(:ruby, deferred)
+
+    foo.add_token(:second)
+    foo.add_tokens([:third])
+
+    assert_equal :third, foo.pop_token
+    assert_equal [:first, :second], foo.token_stream
+  end
+
   def test_token_stream
     foo = Class.new do
       include RDoc::TokenStream
