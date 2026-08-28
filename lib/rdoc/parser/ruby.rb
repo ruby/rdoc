@@ -366,8 +366,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return unless meth.name
 
     node = @line_nodes[line_no]
-    tokens = node ? syntax_highlighted_tokens(node) : []
-    meth.start_collecting_tokens(:ruby, tokens)
+    token_stream_loader = syntax_highlighted_token_loader(node) if node
+    meth.start_collecting_tokens(:ruby, loader: token_stream_loader)
 
     container.add_method meth
     meth.comment = comment
@@ -437,12 +437,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     elsif line_no || node
       method_name ||= call_node_name_arguments(node).first if is_call_node
-      if node
-        tokens = syntax_highlighted_tokens(node)
-        line_no = node.location.start_line
-      else
-        tokens = []
-      end
+      token_stream_loader = syntax_highlighted_token_loader(node) if node
+      line_no = node.location.start_line if node
       internal_add_method(
         method_name,
         @container,
@@ -454,7 +450,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         params: nil,
         calls_super: false,
         block_params: nil,
-        tokens: tokens,
+        token_stream_loader: token_stream_loader,
       )
     end
   end
@@ -549,10 +545,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     comment_text
   end
 
-  # Returns syntax highlighted tokens of the given node
+  # Returns a loader for syntax highlighted tokens of the given node
 
-  def syntax_highlighted_tokens(node)
-    @colorizer_context.deferred_token_stream(node)
+  def syntax_highlighted_token_loader(node)
+    @colorizer_context.token_stream_loader(node)
   end
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
@@ -693,7 +689,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   # Adds a method defined by `def` syntax
 
-  def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
+  def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, token_stream_loader:, start_line:, args_end_line:, end_line:)
     comment, directives, type_signature_lines = consecutive_comment(start_line)
     apply_document_control_directive(directives) if directives
     handle_code_object_directives(@container, directives) if directives
@@ -713,12 +709,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
       params: params,
       calls_super: calls_super,
       block_params: block_params,
-      tokens: tokens,
+      token_stream_loader: token_stream_loader,
       type_signature_lines: type_signature_lines
     )
   end
 
-  private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature_lines: nil) # :nodoc:
+  private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, token_stream_loader:, type_signature_lines: nil) # :nodoc:
     meth = RDoc::AnyMethod.new(method_name, singleton: singleton)
     meth.comment = comment
     handle_code_object_directives(meth, directives) if directives
@@ -756,7 +752,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     record_location(meth)
     container.add_method(meth)
-    meth.start_collecting_tokens(:ruby, tokens)
+    meth.start_collecting_tokens(:ruby, loader: token_stream_loader)
   end
 
   # Find or create module or class from a given module name using Ruby lexical
@@ -1166,7 +1162,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
       name = node.name.to_s
       params, block_params, calls_super = MethodSignatureVisitor.scan_signature(node)
-      tokens = @scanner.syntax_highlighted_tokens(node)
+      token_stream_loader = @scanner.syntax_highlighted_token_loader(node)
 
       @scanner.add_method(
         name,
@@ -1177,7 +1173,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         params: params,
         block_params: block_params,
         calls_super: calls_super,
-        tokens: tokens,
+        token_stream_loader: token_stream_loader,
         start_line: start_line,
         args_end_line: args_end_line,
         end_line: end_line

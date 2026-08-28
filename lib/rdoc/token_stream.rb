@@ -64,8 +64,10 @@ module RDoc::TokenStream
   # Starts collecting tokens
   #
 
-  def collect_tokens(language, initial_stream = [])
+  def collect_tokens(language, initial_stream = [], loader: nil)
     @token_stream = initial_stream
+    loaded_tokens = nil
+    @token_stream_loader = loader && -> { loaded_tokens ||= loader.call }
     @token_stream_language = language
   end
 
@@ -82,8 +84,7 @@ module RDoc::TokenStream
   # Current token stream
 
   def token_stream
-    @token_stream = @token_stream.materialize if @token_stream.respond_to?(:materialize)
-    @token_stream
+    @token_stream_loader ? @token_stream_loader.call : @token_stream
   end
 
   ##

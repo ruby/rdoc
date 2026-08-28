@@ -83,11 +83,19 @@ class RDocTokenStreamTest < RDoc::TestCase
     end.new
     foo.collect_tokens(:ruby)
     assert_equal [], foo.token_stream
+  end
 
-    deferred = Object.new
-    def deferred.materialize = [:token]
-    foo.collect_tokens(:ruby, deferred)
+  def test_collect_tokens_with_loader
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+    loads = 0
+    foo.collect_tokens(:ruby, loader: -> { loads += 1; [:token] })
+    foo.freeze
+
     assert_equal [:token], foo.token_stream
+    assert_same foo.token_stream, foo.token_stream
+    assert_equal 1, loads
   end
 
   def test_pop_token
@@ -104,9 +112,7 @@ class RDocTokenStreamTest < RDoc::TestCase
     foo = Class.new do
       include RDoc::TokenStream
     end.new
-    deferred = Object.new
-    def deferred.materialize = [:first]
-    foo.collect_tokens(:ruby, deferred)
+    foo.collect_tokens(:ruby, loader: -> { [:first] })
 
     foo.add_token(:second)
     foo.add_tokens([:third])

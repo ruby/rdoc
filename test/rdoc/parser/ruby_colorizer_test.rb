@@ -20,10 +20,10 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
     expected = RDoc::Parser::RubyColorizer.partial_colorize(code, node, prism_tokens)
     context = RDoc::Parser::RubyColorizer::DeferredContext.new(code)
-    deferred = context.deferred_token_stream(node)
+    loader = context.token_stream_loader(node)
 
-    assert_equal expected, deferred.materialize
-    assert_same deferred.materialize, deferred.materialize
+    assert_equal expected, loader.call
+    assert_same loader.call, loader.call
   end
 
   def test_deferred_token_stream_preserves_lexical_scope
@@ -34,9 +34,9 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     expected = RDoc::Parser::RubyColorizer.partial_colorize(code, node, prism_tokens)
 
     context = RDoc::Parser::RubyColorizer::DeferredContext.new(code)
-    deferred = context.deferred_token_stream(node)
+    loader = context.token_stream_loader(node)
 
-    assert_equal expected, deferred.materialize
+    assert_equal expected, loader.call
   end
 
   def test_partial_colorize

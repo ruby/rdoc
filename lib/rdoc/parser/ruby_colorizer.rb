@@ -10,29 +10,6 @@ module RDoc::Parser::RubyColorizer
 
   ColoredToken = Struct.new(:kind, :text)
 
-  # A token stream populated by its file's DeferredContext.
-  class DeferredTokenStream
-    #: (DeferredContext) -> void
-    def initialize(context)
-      @context = context
-      @tokens = nil
-    end
-
-    #: () -> Array[ColoredToken]
-    def materialize
-      return @tokens if @tokens
-
-      @context&.materialize
-      @tokens
-    end
-
-    #: (Array[ColoredToken]) -> void
-    def resolve(tokens)
-      @tokens = tokens
-      @context = nil
-    end
-  end
-
   # Defers colorization for all nodes in one source file until first access.
   class DeferredContext
     #: (String) -> void
@@ -42,11 +19,11 @@ module RDoc::Parser::RubyColorizer
       @mutex = Mutex.new
     end
 
-    #: (Prism::Node) -> DeferredTokenStream
-    def deferred_token_stream(node)
-      stream = DeferredTokenStream.new(self)
-      (@streams[node.node_id] ||= []) << stream
-      stream
+    #: (Prism::Node) -> ^() -> Array[ColoredToken]
+    def token_stream_loader(node)
+      tokens = nil
+      (@streams[node.node_id] ||= []) << ->(resolved_tokens) { tokens = resolved_tokens }
+      -> { tokens || (materialize; tokens) }
     end
 
     #: () -> void
@@ -62,7 +39,7 @@ module RDoc::Parser::RubyColorizer
           node = nodes.pop
           if (streams = @streams.delete(node.node_id))
             tokens = RDoc::Parser::RubyColorizer.partial_colorize(source, node, prism_tokens)
-            streams.each { |stream| stream.resolve(tokens) }
+            streams.each { |resolve| resolve.call(tokens) }
           end
           nodes.concat(node.compact_child_nodes)
         end
