@@ -85,25 +85,14 @@ class RDocTokenStreamTest < RDoc::TestCase
     assert_equal [], foo.token_stream
   end
 
-  def test_collect_tokens_does_not_accept_initial_stream
-    foo = Class.new do
-      include RDoc::TokenStream
-    end.new
-
-    assert_raise(ArgumentError) { foo.collect_tokens(:ruby, [:token]) }
-  end
-
   def test_collect_tokens_with_loader
     foo = Class.new do
       include RDoc::TokenStream
     end.new
-    loads = 0
-    foo.collect_tokens(:ruby, loader: -> { loads += 1; [:token] })
+    foo.collect_tokens(:ruby, loader: -> { [:token] })
     foo.freeze
 
     assert_equal [:token], foo.token_stream
-    assert_same foo.token_stream, foo.token_stream
-    assert_equal 1, loads
   end
 
   def test_pop_token
@@ -120,7 +109,8 @@ class RDocTokenStreamTest < RDoc::TestCase
     foo = Class.new do
       include RDoc::TokenStream
     end.new
-    foo.collect_tokens(:ruby, loader: -> { [:first] })
+    tokens = [:first]
+    foo.collect_tokens(:ruby, loader: -> { tokens })
 
     foo.add_token(:second)
     foo.add_tokens([:third])

@@ -2725,6 +2725,8 @@ end
   def test_code_object_token_stream
     util_parser <<~RUBY
       class Foo
+        def hidden; end # :nodoc:
+
         def foo
           42
         end
@@ -2736,9 +2738,10 @@ end
     RUBY
 
     foo, bar = @top_level.classes.first.method_list
-    parse_lex_calls = 0
+    parse_lex_calls = partial_colorize_calls = 0
     trace = TracePoint.new(:call, :c_call) do |event|
       parse_lex_calls += 1 if event.self.equal?(Prism) && event.method_id == :parse_lex
+      partial_colorize_calls += 1 if event.self.equal?(RDoc::Parser::RubyColorizer) && event.method_id == :partial_colorize
     end
 
     trace.enable do
@@ -2746,26 +2749,7 @@ end
       assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
     end
     assert_equal 1, parse_lex_calls
-  end
-
-  def test_rejected_method_token_stream_is_not_colorized
-    util_parser <<~RUBY
-      class Foo
-        def hidden; end # :nodoc:
-        def visible; end
-      end
-    RUBY
-
-    visible = @top_level.classes.first.method_list.first
-    partial_colorize_calls = 0
-    trace = TracePoint.new(:call) do |event|
-      if event.self.equal?(RDoc::Parser::RubyColorizer) && event.method_id == :partial_colorize
-        partial_colorize_calls += 1
-      end
-    end
-
-    trace.enable { visible.token_stream }
-    assert_equal 1, partial_colorize_calls
+    assert_equal 2, partial_colorize_calls
   end
 
   def test_markup_first_comment

@@ -65,8 +65,7 @@ module RDoc::TokenStream
   #
 
   def collect_tokens(language, loader: nil)
-    loaded_tokens = nil
-    @token_stream = loader ? -> { loaded_tokens ||= loader.call } : []
+    @token_stream = loader || []
     @token_stream_language = language
   end
 

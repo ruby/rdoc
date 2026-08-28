@@ -366,7 +366,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     return unless meth.name
 
     node = @line_nodes[line_no]
-    token_stream_loader = syntax_highlighted_token_loader(node.node_id) if node
+    token_stream_loader = @colorizer_context.token_stream_loader(node.node_id) if node
     meth.start_collecting_tokens(:ruby, loader: token_stream_loader)
 
     container.add_method meth
@@ -542,12 +542,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     # Comment is already normalized and doesn't end with a newline
     comment_text.delete_suffix!(prefix.chomp)
     comment_text
-  end
-
-  # Returns a loader for syntax highlighted tokens of the given node ID
-
-  def syntax_highlighted_token_loader(node_id)
-    @colorizer_context.token_stream_loader(node_id)
   end
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
@@ -751,7 +745,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     record_location(meth)
     container.add_method(meth)
-    token_stream_loader = syntax_highlighted_token_loader(node_id) if node_id
+    token_stream_loader = @colorizer_context.token_stream_loader(node_id) if node_id
     meth.start_collecting_tokens(:ruby, loader: token_stream_loader)
   end
 
