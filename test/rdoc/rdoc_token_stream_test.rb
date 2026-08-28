@@ -3,26 +3,6 @@ require_relative 'helper'
 
 class RDocTokenStreamTest < RDoc::TestCase
 
-  class DeferredStream
-    attr_reader :materializations
-
-    def initialize(tokens)
-      @tokens = tokens
-      @materializations = 0
-    end
-
-    def materialize
-      @materializations += 1
-      @tokens
-    end
-  end
-
-  def token_collector
-    Class.new do
-      include RDoc::TokenStream
-    end.new
-  end
-
   def test_class_to_html
     tokens = [
       { kind: :constant, text: 'CONSTANT' },
@@ -98,54 +78,16 @@ class RDocTokenStreamTest < RDoc::TestCase
   end
 
   def test_collect_tokens
-    foo = token_collector
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
     foo.collect_tokens(:ruby)
     assert_equal [], foo.token_stream
-  end
 
-  def test_collect_deferred_tokens
-    tokens = [{ kind: :identifier, text: 'foo' }]
-    deferred = DeferredStream.new(tokens)
-    foo = token_collector
-
+    deferred = Object.new
+    def deferred.materialize = [:token]
     foo.collect_tokens(:ruby, deferred)
-
-    assert_equal 0, deferred.materializations
-    assert_same tokens, foo.token_stream
-    assert_same tokens, foo.token_stream
-    assert_equal 1, deferred.materializations
-  end
-
-  def test_collect_existing_token_array
-    tokens = [{ kind: :identifier, text: 'foo' }]
-    foo = token_collector
-
-    foo.collect_tokens(:c, tokens)
-
-    assert_same tokens, foo.token_stream
-  end
-
-  def test_mutating_deferred_tokens
-    deferred = DeferredStream.new([:first])
-    foo = token_collector
-    foo.collect_tokens(:ruby, deferred)
-    foo.add_token(:second)
-    assert_equal [:first, :second], foo.token_stream
-    assert_equal 1, deferred.materializations
-
-    deferred = DeferredStream.new([:first])
-    foo = token_collector
-    foo.collect_tokens(:ruby, deferred)
-    foo.add_tokens([:second, :third])
-    assert_equal [:first, :second, :third], foo.token_stream
-    assert_equal 1, deferred.materializations
-
-    deferred = DeferredStream.new([:first])
-    foo = token_collector
-    foo.collect_tokens(:ruby, deferred)
-    assert_equal :first, foo.pop_token
-    assert_equal [], foo.token_stream
-    assert_equal 1, deferred.materializations
+    assert_equal [:token], foo.token_stream
   end
 
   def test_pop_token
@@ -190,12 +132,4 @@ class RDocTokenStreamTest < RDoc::TestCase
     assert_equal "", foo.tokens_to_s
   end
 
-  def test_tokens_to_s_with_deferred_tokens
-    foo = token_collector
-    deferred = DeferredStream.new([{ kind: :identifier, text: 'foo' }])
-    foo.collect_tokens(:ruby, deferred)
-
-    assert_equal 'foo', foo.tokens_to_s
-    assert_equal 1, deferred.materializations
-  end
 end
