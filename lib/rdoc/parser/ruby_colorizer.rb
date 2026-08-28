@@ -21,8 +21,13 @@ module RDoc::Parser::RubyColorizer
 
     #: (Prism::Node) -> ^() -> Array[ColoredToken]
     def token_stream_loader(node)
+      token_stream_loader_for(node.node_id)
+    end
+
+    #: (Integer) -> ^() -> Array[ColoredToken]
+    private def token_stream_loader_for(node_id)
       tokens = nil
-      (@streams[node.node_id] ||= []) << ->(resolved_tokens) { tokens = resolved_tokens }
+      (@streams[node_id] ||= []) << ->(resolved_tokens) { tokens = resolved_tokens }
       -> { tokens || (materialize; tokens) }
     end
 
