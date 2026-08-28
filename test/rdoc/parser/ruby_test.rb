@@ -1580,14 +1580,14 @@ class RDocParserRubyTest < RDoc::TestCase
         # attrs
         attr :attr1, :attr2
         # readers
-        attr_reader :reader1, :reader2
+        attr_reader :reader1, "reader2"
         # writers
-        attr_writer :writer1, :writer2
+        attr_writer "writer1", :writer2
         # accessors
         attr_accessor :accessor1, :accessor2
         # :stopdoc:
         attr :attr3, :attr4
-        attr_reader :reader3, :reader4
+        attr_reader :reader3, "reader4"
         attr_writer :write3, :writer4
         attr_accessor :accessor3, :accessor4
       end
@@ -1614,16 +1614,44 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal [@top_level] * 8, [a1, a2, r1, r2, w1, w2, rw1, rw2].map(&:file)
   end
 
-  def test_undocumentable_attributes
+  def test_ignored_undocumentable_attributes
     util_parser <<~RUBY
       class Foo
-        attr
-        attr 42, :foo
+        # attrs
+        attr :attr1, *ignored1, :attr2, (ignored2), kwarg: :ignored3
+        # readers
+        attr_reader ignored3, :reader1, ignored4, :reader2, kw: ignored5
+        # writers
+        attr_writer :writer1, *%i[ignored6], :writer2, kwarg: :ignored7
+        # accessors
+        attr_accessor ignored8, :accessor1, (:ignored9), :accessor2, kw: :ignored10
+        # ignored
+        attr          ignored11
+        attr_reader   ignored12
+        attr_writer   ignored13
+        attr_accessor ignored14
       end
     RUBY
     klass = @store.find_class_named 'Foo'
-    assert_empty klass.method_list
-    assert_empty klass.attributes
+    assert_equal 8, klass.attributes.size
+    a1, a2, r1, r2, w1, w2, rw1, rw2 = klass.attributes
+    assert_equal ['attr1', 'attr2'], [a1.name, a2.name]
+    assert_equal ['reader1', 'reader2'], [r1.name, r2.name]
+    assert_equal ['writer1', 'writer2'], [w1.name, w2.name]
+    assert_equal ['accessor1', 'accessor2'], [rw1.name, rw2.name]
+    assert_equal ['R', 'R'], [a1.rw, a2.rw]
+    assert_equal ['R', 'R'], [r1.rw, r2.rw]
+    assert_equal ['W', 'W'], [w1.rw, w2.rw]
+    assert_equal ['RW', 'RW'], [rw1.rw, rw2.rw]
+    assert_equal ['attrs', 'attrs'], [a1.comment.text, a2.comment.text]
+    assert_equal ['readers', 'readers'], [r1.comment.text, r2.comment.text]
+    assert_equal ['writers', 'writers'], [w1.comment.text, w2.comment.text]
+    assert_equal ['accessors', 'accessors'], [rw1.comment.text, rw2.comment.text]
+    assert_equal [3, 3], [a1.line, a2.line]
+    assert_equal [5, 5], [r1.line, r2.line]
+    assert_equal [7, 7], [w1.line, w2.line]
+    assert_equal [9, 9], [rw1.line, rw2.line]
+    assert_equal [@top_level] * 8, [a1, a2, r1, r2, w1, w2, rw1, rw2].map(&:file)
   end
 
   def test_singleton_class_attributes
