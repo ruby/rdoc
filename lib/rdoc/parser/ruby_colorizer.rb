@@ -12,9 +12,11 @@ module RDoc::Parser::RubyColorizer
 
   # Defers Ruby source colorization until a generator requests the tokens.
   class DeferredTokenStream
-    def initialize(source, start_column)
+    def initialize(source, node)
       @source = source
-      @start_column = start_column
+      @node_type = node.type
+      @start_offset = node.location.start_offset
+      @end_offset = node.location.end_offset
       @tokens = nil
     end
 
@@ -25,11 +27,12 @@ module RDoc::Parser::RubyColorizer
       result = Prism.parse_lex(source)
       program_node, unordered_tokens = result.value
       prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
-      node = program_node.statements.body.first.breadth_first_search do |candidate|
-        candidate.location.start_offset == 0 && (candidate.is_a?(Prism::DefNode) || candidate.is_a?(Prism::CallNode))
+      node = program_node.breadth_first_search do |candidate|
+        candidate.type == @node_type &&
+          candidate.location.start_offset == @start_offset &&
+          candidate.location.end_offset == @end_offset
       end
       tokens = RDoc::Parser::RubyColorizer.partial_colorize(source, node, prism_tokens)
-      tokens.unshift(ColoredToken.new(:plain, ' ' * @start_column)) if @start_column > 0
       @tokens = tokens
       @source = nil
       @tokens
@@ -83,16 +86,10 @@ module RDoc::Parser::RubyColorizer
       partial_colorize(code, program_node, prism_tokens, 0, code.bytesize)
     end
 
-    # Returns a token stream that retains only the source needed to colorize
-    # +node+ when first accessed.
+    # Returns a token stream that defers parsing and lexing +whole_code+ until
+    # +node+ is first accessed.
     def deferred_token_stream(whole_code, node)
-      visitor = NodeColorizeVisitor.new(false)
-      node.accept(visitor)
-      start_offset = node.location.start_offset
-      end_offset = [node.location.end_offset, visitor.effective_end_offset].max
-      source = String.new(capacity: end_offset - start_offset, encoding: whole_code.encoding)
-      source << whole_code.byteslice(start_offset...end_offset)
-      DeferredTokenStream.new(source, node.location.start_column)
+      DeferredTokenStream.new(whole_code, node)
     end
 
     # Colorize partial +node+ in +whole_code+ and returns colored token stream.
@@ -171,11 +168,10 @@ module RDoc::Parser::RubyColorizer
   # Visitor to determine node colorizing which can't be determined by tokens.
   # STRING_CONTENT/EMBEXPR_BEGIN/EMBEXPR_END in string/regexp/symbol have different colorizing
   class NodeColorizeVisitor < Prism::Visitor # :nodoc:
-    attr_reader :effective_end_offset, :tokens
+    attr_reader :tokens
 
-    def initialize(collect_tokens = true)
-      @effective_end_offset = 0
-      @tokens = [] if collect_tokens
+    def initialize
+      @tokens = []
     end
 
     def visit_symbol_node(node)
@@ -260,8 +256,7 @@ module RDoc::Parser::RubyColorizer
     def push_location(kind, location)
       # Only push tokens that have a non-zero length
       if location && location.start_offset < location.end_offset
-        @effective_end_offset = location.end_offset if location.end_offset > @effective_end_offset
-        @tokens << [kind, location.start_offset, location.end_offset] if @tokens
+        @tokens << [kind, location.start_offset, location.end_offset]
       end
     end
 

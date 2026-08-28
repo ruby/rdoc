@@ -9,18 +9,32 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
 
   def test_deferred_token_stream
     code = <<~'RUBY'
-      method(<<~TEXT) && sibling
-        value
-      TEXT
+      first(<<~ONE); second(<<~TWO) && sibling
+        one
+      ONE
+        two
+      TWO
     RUBY
     program_node, unordered_tokens = Prism.parse_lex(code).value
-    node = program_node.statements.body.first.left
+    node = program_node.statements.body.last.left
     prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
     expected = RDoc::Parser::RubyColorizer.partial_colorize(code, node, prism_tokens)
     deferred = RDoc::Parser::RubyColorizer.deferred_token_stream(code, node)
 
     assert_equal expected, deferred.materialize
     assert_same deferred.materialize, deferred.materialize
+  end
+
+  def test_deferred_token_stream_preserves_lexical_scope
+    code = "x = 1\ny = 2\ni = 3\nx /y/i\n"
+    program_node, unordered_tokens = Prism.parse_lex(code).value
+    node = program_node.statements.body.last
+    prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
+    expected = RDoc::Parser::RubyColorizer.partial_colorize(code, node, prism_tokens)
+
+    deferred = RDoc::Parser::RubyColorizer.deferred_token_stream(code, node)
+
+    assert_equal expected, deferred.materialize
   end
 
   def test_partial_colorize
