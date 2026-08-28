@@ -807,6 +807,9 @@ end
     assert_equal @top_level, one.file
     assert_equal @top_level, two.file
     assert_equal @top_level, three.file
+    assert_equal [], one.token_stream
+    assert_equal [], two.token_stream
+    assert_equal [], three.token_stream
   end
 
   def test_invalid_meta_method
@@ -978,6 +981,7 @@ end
     assert_equal 'my method', method.comment.text.strip
     assert_equal 4, method.line
     assert_equal @top_level, method.file
+    assert_equal '  add_my_method :method_foo, :arg', method.token_stream.map(&:text).join
   end
 
   def test_first_comment_is_not_a_meta_method
@@ -1383,6 +1387,11 @@ end
     assert_equal [:private, :public, :private, :private], instance_methods.map(&:visibility)
     assert_equal ['m1', 'm3', 'm4'], singleton_methods.map(&:name)
     assert_equal [:public, :public, :public], singleton_methods.map(&:visibility)
+
+    instance_m4 = instance_methods.last
+    singleton_m4 = singleton_methods.last
+    assert_same instance_m4.instance_variable_get(:@token_stream), singleton_m4.instance_variable_get(:@token_stream)
+    assert_same instance_m4.token_stream, singleton_m4.token_stream
   end
 
   def test_class_method_visibility
@@ -2736,6 +2745,8 @@ end
     RUBY
 
     foo, bar = @top_level.classes.first.method_list
+    assert_kind_of RDoc::Parser::RubyColorizer::DeferredTokenStream, foo.instance_variable_get(:@token_stream)
+    assert_kind_of RDoc::Parser::RubyColorizer::DeferredTokenStream, bar.instance_variable_get(:@token_stream)
     assert_equal(['  ', 'def', ' ', 'foo', "\n", '    ', '42', "\n", '  ', 'end'], foo.token_stream.map(&:text))
     assert_equal(['          ', 'def', ' ', 'bar', "\n", '    ', 'baz', "\n", '  ', 'end'], bar.token_stream.map(&:text))
   end
@@ -2789,6 +2800,8 @@ end
         #
         # field - A field name.
 
+        find_by_fields :dynamic
+
       end
     RUBY
 
@@ -2808,6 +2821,7 @@ end
     expected.file = @top_level
 
     assert_equal expected, m.comment.parse
+    assert_equal '  find_by_fields :dynamic', m.token_stream.map(&:text).join
   end
 
   def test_tomdoc_postprocess

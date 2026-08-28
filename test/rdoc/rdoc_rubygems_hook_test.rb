@@ -11,7 +11,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
       s.platform    = Gem::Platform::RUBY
       s.name        = "a"
       s.version     = 2
-      s.rdoc_options = %w[--main MyTitle]
+      s.rdoc_options = %w[--main MyTitle --format=ri]
       s.extra_rdoc_files = %w[README]
     end
     @tempdir = File.realpath(Dir.mktmpdir("test_rubygems_hook_"))
@@ -41,7 +41,9 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
     File.open(File.join(@tempdir, 'a-2', 'lib', 'a.rb'), 'w') do |f|
       f.puts '# comment'
       f.puts '# :include: include.txt'
-      f.puts 'class A; end'
+      f.puts 'class A'
+      f.puts '  def visible_method; :visible_body; end'
+      f.puts 'end'
     end
     File.open(File.join(@tempdir, 'a-2', 'include.txt'), 'w') do |f|
       f.puts 'included content'
@@ -136,6 +138,8 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
 
     assert @hook.rdoc_installed?
     assert @hook.ri_installed?
+    assert_path_exist File.join(@a.doc_dir('ri'), 'cache.ri')
+    assert_include File.read(File.join(@a.doc_dir('rdoc'), 'A.html')), 'visible_body'
 
     rdoc = @hook.instance_variable_get :@rdoc
 
@@ -242,6 +246,7 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
   end
 
   def test_generate_with_ri_opt
+    @a.rdoc_options.delete '--format=ri'
     @a.rdoc_options << '--ri'
     FileUtils.mkdir_p @a.doc_dir
     FileUtils.mkdir_p File.join(@a.gem_dir, 'lib')

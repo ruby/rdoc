@@ -138,9 +138,10 @@ class RDoc::MethodAttr
   # Prepends line numbers if +options.line_numbers+ is true.
 
   def markup_code
-    return '' if !@token_stream
+    tokens = token_stream
+    return '' if !tokens
 
-    src = RDoc::TokenStream.to_html @token_stream
+    src = RDoc::TokenStream.to_html tokens
 
     # dedent the source
     common_indent = src.length

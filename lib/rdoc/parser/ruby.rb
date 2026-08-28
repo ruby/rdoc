@@ -251,11 +251,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def scan
     @lines = @content.lines
-    result = Prism.parse_lex(@content)
-    @program_node, unordered_tokens = result.value
-    # Heredoc tokens are not in start_offset order.
-    # Need to sort them to use bsearch for finding tokens from location.
-    @prism_tokens = unordered_tokens.map(&:first).sort_by { |t| t.location.start_offset }
+    result = Prism.parse(@content)
+    @program_node = result.value
     @line_nodes = {}
     prepare_line_nodes(@program_node)
     prepare_comments(result.comments)
@@ -367,10 +364,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.call_seq = signature
     return unless meth.name
 
-    meth.start_collecting_tokens(:ruby)
     node = @line_nodes[line_no]
     tokens = node ? syntax_highlighted_tokens(node) : []
-    tokens.each { |token| meth.token_stream << token }
+    meth.start_collecting_tokens(:ruby, tokens)
 
     container.add_method meth
     meth.comment = comment
@@ -555,7 +551,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
   # Returns syntax highlighted tokens of the given node
 
   def syntax_highlighted_tokens(node)
-    RDoc::Parser::RubyColorizer.partial_colorize(@content, node, @prism_tokens)
+    RDoc::Parser::RubyColorizer.deferred_token_stream(@content, node)
   end
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
@@ -745,7 +741,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.calls_super = calls_super
     meth.block_params ||= block_params if block_params
     meth.type_signature_lines = type_signature_lines
-
     # An instance method `initialize` is documented as `::new` unless the
     # :notnew: directive is given
     if method_name == 'initialize' && !singleton
@@ -760,10 +755,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     record_location(meth)
     container.add_method(meth)
-    meth.start_collecting_tokens(:ruby)
-    tokens.each do |token|
-      meth.token_stream << token
-    end
+    meth.start_collecting_tokens(:ruby, tokens)
   end
 
   # Find or create module or class from a given module name using Ruby lexical

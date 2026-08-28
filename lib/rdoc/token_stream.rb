@@ -50,22 +50,22 @@ module RDoc::TokenStream
   # Adds +tokens+ to the collected tokens
 
   def add_tokens(tokens)
-    @token_stream.concat(tokens)
+    token_stream.concat(tokens)
   end
 
   ##
   # Adds one +token+ to the collected tokens
 
   def add_token(token)
-    @token_stream.push(token)
+    token_stream.push(token)
   end
 
   ##
   # Starts collecting tokens
   #
 
-  def collect_tokens(language)
-    @token_stream = []
+  def collect_tokens(language, initial_stream = [])
+    @token_stream = initial_stream
     @token_stream_language = language
   end
 
@@ -75,13 +75,14 @@ module RDoc::TokenStream
   # Remove the last token from the collected tokens
 
   def pop_token
-    @token_stream.pop
+    token_stream.pop
   end
 
   ##
   # Current token stream
 
   def token_stream
+    @token_stream = @token_stream.materialize if @token_stream.respond_to?(:materialize)
     @token_stream
   end
 

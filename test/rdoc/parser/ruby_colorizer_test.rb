@@ -7,6 +7,88 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     RDoc::Parser::RubyColorizer::ColoredToken.new(kind, text)
   end
 
+  def assert_deferred_matches_eager(code)
+    parse_result = Prism.parse_lex(code)
+    program_node, unordered_tokens = parse_result.value
+    prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
+    node = block_given? ? yield(program_node) : program_node.statements.body.first
+    eager = RDoc::Parser::RubyColorizer.partial_colorize(code, node, prism_tokens)
+    deferred = RDoc::Parser::RubyColorizer.deferred_token_stream(code, node)
+
+    assert_equal eager.map { |token| [token.kind, token.text] }, deferred.materialize.map { |token| [token.kind, token.text] }
+    assert_same deferred.materialize, deferred.materialize
+    assert_nil deferred.instance_variable_get(:@source)
+    deferred
+  end
+
+  def test_deferred_token_stream
+    assert_deferred_matches_eager <<~'RUBY'
+        def ordinary(value = '💎')
+          "string#{value}"
+          /regexp#{value}/
+          :"symbol#{value}"
+        end
+    RUBY
+
+    assert_deferred_matches_eager <<~RUBY
+      def endless = 42
+    RUBY
+  end
+
+  def test_deferred_token_stream_with_heredocs
+    assert_deferred_matches_eager <<~'RUBY'
+      def heredocs
+        string = <<~TEXT
+          string #{value}
+        TEXT
+        command = <<~`COMMAND`
+          echo value
+        COMMAND
+        [string, command]
+      end
+    RUBY
+
+    assert_deferred_matches_eager <<~'RUBY'
+      def endless = <<~TEXT
+        value
+      TEXT
+    RUBY
+
+    assert_deferred_matches_eager <<~'RUBY'
+      method <<~ONE, <<~TWO
+        one
+      ONE
+        two
+      TWO
+    RUBY
+  end
+
+  def test_deferred_token_stream_with_heredoc_and_sibling_statement
+    code = <<~'RUBY'
+      method <<~TEXT; sibling
+        value
+      TEXT
+    RUBY
+
+    assert_deferred_matches_eager code
+
+    deferred = RDoc::Parser::RubyColorizer.deferred_token_stream(code, Prism.parse(code).value.statements.body.first)
+    sibling = deferred.materialize.find { |token| token.text == 'sibling' }
+    assert_equal :plain, sibling.kind
+  end
+
+  def test_deferred_token_stream_with_heredoc_in_parent_expression
+    code = <<~'RUBY'
+      method(<<~TEXT) && sibling
+        value
+      TEXT
+    RUBY
+
+    deferred = assert_deferred_matches_eager(code) { |program| program.statements.body.first.left }
+    sibling = deferred.materialize.find { |token| token.text == 'sibling' }
+    assert_equal :plain, sibling.kind
+  end
+
   def test_partial_colorize
     code = <<~RUBY
       class A

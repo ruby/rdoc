@@ -202,6 +202,24 @@ each_line(foo)
     assert_equal section,        loaded.section
   end
 
+  def test_marshal_dump_does_not_materialize_deferred_tokens
+    source = 'def method; :unique_deferred_body; end'
+    node = Prism.parse(source).value.statements.body.first
+    deferred = RDoc::Parser::RubyColorizer.deferred_token_stream(source, node)
+    method = RDoc::AnyMethod.new 'method'
+    top_level = @store.add_file('deferred.rb')
+    method.record_location top_level
+    top_level.add_class(RDoc::ClassModule, 'Deferred').add_method(method)
+    method.start_collecting_tokens(:ruby, deferred)
+
+    dump = Marshal.dump(method)
+
+    assert_nil deferred.instance_variable_get(:@tokens)
+    assert_equal source, deferred.instance_variable_get(:@source)
+    refute_includes dump, 'unique_deferred_body'
+    assert_nil Marshal.load(dump).token_stream
+  end
+
   def test_marshal_dump_with_type_signature
     @store.path = Dir.tmpdir
     top_level = @store.add_file 'file.rb'
