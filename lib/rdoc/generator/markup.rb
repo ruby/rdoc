@@ -37,7 +37,7 @@ module RDoc
         return @formatter if defined? @formatter
 
         options = @store.options
-        this = ::RDoc::Context === self ? self : @parent
+        this = Context === self ? self : @parent
 
         @formatter = ::RDoc::Markup::ToHtmlCrossref.new(
           this.path, this,
@@ -84,7 +84,7 @@ end
 module RDoc
   class CodeObject
 
-    include ::RDoc::Generator::Markup
+    include Generator::Markup
 
   end
 end
@@ -149,7 +149,7 @@ module RDoc
     def markup_code
       return '' if !@token_stream
 
-      src = ::RDoc::TokenStream.to_html @token_stream
+      src = TokenStream.to_html @token_stream
 
       # dedent the source
       common_indent = src.length
@@ -187,7 +187,7 @@ module RDoc
   class Context
     class Section
 
-      include ::RDoc::Generator::Markup
+      include Generator::Markup
 
     end
   end

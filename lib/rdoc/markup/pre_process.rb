@@ -99,7 +99,7 @@ module RDoc
       # RDoc::CodeObject#metadata for details.
 
       def handle(text, code_object = nil, &block)
-        if ::RDoc::Comment === text
+        if Comment === text
           comment = text
           text = text.text
         end
@@ -142,7 +142,7 @@ module RDoc
         directives.each do |directive, (param, line_no)|
           handle_directive('', directive, param, code_object)
         end
-        if code_object.is_a?(::RDoc::AnyMethod) && (call_seq, = directives['call-seq']) && call_seq
+        if code_object.is_a?(AnyMethod) && (call_seq, = directives['call-seq']) && call_seq
           code_object.call_seq = call_seq.lines.map(&:chomp).reject(&:empty?).join("\n")
         end
         format, = directives['markup']
@@ -160,7 +160,7 @@ module RDoc
       # Parse comment and return [normalized_comment_text, directives_hash]
 
       def parse_comment(text, line_no, type)
-        ::RDoc::Comment.parse(text, @input_file_name, line_no, type) do |filename, prefix_indent|
+        Comment.parse(text, @input_file_name, line_no, type) do |filename, prefix_indent|
           include_file(filename, prefix_indent, text.encoding)
         end
       end
@@ -183,16 +183,16 @@ module RDoc
 
         case directive
         when 'arg', 'args'
-          return "#{prefix}:#{directive}: #{param}\n" unless code_object && code_object.kind_of?(::RDoc::AnyMethod)
+          return "#{prefix}:#{directive}: #{param}\n" unless code_object && code_object.kind_of?(AnyMethod)
 
           code_object.params = param
 
           blankline
         when 'category'
-          if ::RDoc::Context === code_object
+          if Context === code_object
             section = code_object.add_section param
             code_object.temporary_section = section
-          elsif ::RDoc::AnyMethod === code_object
+          elsif AnyMethod === code_object
             code_object.section_title = param
           end
 
@@ -218,7 +218,7 @@ module RDoc
 
           blankline
         when 'notnew', 'not_new', 'not-new'
-          return blankline unless ::RDoc::AnyMethod === code_object
+          return blankline unless AnyMethod === code_object
 
           code_object.dont_rename_initialize = true
 
@@ -251,8 +251,8 @@ module RDoc
           when nil
             code_object.metadata[directive] = param if code_object
 
-            if ::RDoc::Markup::PreProcess.registered.include? directive
-              handler = ::RDoc::Markup::PreProcess.registered[directive]
+            if Markup::PreProcess.registered.include? directive
+              handler = Markup::PreProcess.registered[directive]
               result = handler.call directive, param if handler
             else
               result = "#{prefix}:#{directive}: #{param}\n"
@@ -288,8 +288,8 @@ module RDoc
           return ''
         end
 
-        content = ::RDoc::Encoding.read_file full_name, encoding, true
-        content = ::RDoc::Encoding.remove_magic_comment content
+        content = Encoding.read_file full_name, encoding, true
+        content = Encoding.remove_magic_comment content
 
         # strip magic comment
         content = content.sub(/\A# .*coding[=:].*$/, '').lstrip

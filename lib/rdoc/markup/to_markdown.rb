@@ -6,7 +6,7 @@ module RDoc
     ##
     # Outputs parsed markup as Markdown
 
-    class ToMarkdown < ::RDoc::Markup::ToRdoc
+    class ToMarkdown < Markup::ToRdoc
 
       ##
       # Creates a new formatter that will output Markdown format text
@@ -148,7 +148,7 @@ module RDoc
         when :LALPHA, :NUMBER, :UALPHA
           @list_index << 1
         else
-          raise ::RDoc::Error, "invalid list type #{list.type}"
+          raise Error, "invalid list type #{list.type}"
         end
 
         @list_width << 4

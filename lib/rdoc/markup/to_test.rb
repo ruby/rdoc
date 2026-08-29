@@ -4,7 +4,7 @@ module RDoc
     ##
     # This Markup outputter is used for testing purposes.
 
-    class ToTest < ::RDoc::Markup::Formatter
+    class ToTest < Markup::Formatter
 
       # :stopdoc:
 

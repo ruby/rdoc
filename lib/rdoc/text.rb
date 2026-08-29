@@ -22,13 +22,13 @@ module RDoc
     # unknown, "rdoc" format is used.
 
     MARKUP_FORMAT = {
-      'markdown' => ::RDoc::Markdown,
-      'rdoc'     => ::RDoc::Markup,
-      'rd'       => ::RDoc::RD,
-      'tomdoc'   => ::RDoc::TomDoc,
+      'markdown' => Markdown,
+      'rdoc'     => Markup,
+      'rd'       => RD,
+      'tomdoc'   => TomDoc,
     }
 
-    MARKUP_FORMAT.default = ::RDoc::Markup
+    MARKUP_FORMAT.default = Markup
 
   ##
   # Expands tab characters in +text+ to eight spaces
@@ -39,7 +39,7 @@ module RDoc
     text.each_line do |line|
       nil while line.gsub!(/(?:\G|\r)((?:.{8})*?)([^\t\r\n]{0,7})\t/) do
         r = "#{$1}#{$2}#{' ' * (8 - $2.size)}"
-        r = ::RDoc::Encoding.change_encoding r, text.encoding
+        r = Encoding.change_encoding r, text.encoding
         r
       end
 
@@ -61,7 +61,7 @@ module RDoc
       end
 
       empty = ''
-      empty = ::RDoc::Encoding.change_encoding empty, text.encoding
+      empty = Encoding.change_encoding empty, text.encoding
 
       text.gsub(/^ {0,#{indent}}/, empty)
     end
@@ -78,7 +78,7 @@ module RDoc
         locale = nil
       end
       if locale
-        i18n_text = ::RDoc::I18n::Text.new(text)
+        i18n_text = I18n::Text.new(text)
         text = i18n_text.translate(locale)
       end
       parse(text).accept formatter
@@ -106,12 +106,12 @@ module RDoc
     # Normalizes +text+ then builds a RDoc::Markup::Document from it
 
     def parse(text, format = 'rdoc')
-      return text if ::RDoc::Markup::Document === text
-      return text.parse if ::RDoc::Comment === text
+      return text if Markup::Document === text
+      return text.parse if Comment === text
 
       text = normalize_comment text # TODO remove, should not be necessary
 
-      return ::RDoc::Markup::Document.new if text =~ /\A\n*\z/
+      return Markup::Document.new if text =~ /\A\n*\z/
 
       MARKUP_FORMAT[format].parse text
     end
@@ -122,7 +122,7 @@ module RDoc
     def snippet(text, limit = 100)
       document = parse text
 
-      ::RDoc::Markup::ToHtmlSnippet.new(limit).convert document
+      Markup::ToHtmlSnippet.new(limit).convert document
     end
 
     ##
@@ -132,7 +132,7 @@ module RDoc
       return text if text =~ /^(?>\s*)[^\#]/
 
       empty = ''
-      empty = ::RDoc::Encoding.change_encoding empty, text.encoding
+      empty = Encoding.change_encoding empty, text.encoding
 
       text.gsub(/^\s*(#+)/) { $1.tr '#', ' ' }.gsub(/^\s+$/, empty)
     end
@@ -155,14 +155,14 @@ module RDoc
       text = text.gsub %r%Document-method:\s+[\w:.#=!?|^&<>~+\-/*\%@`\[\]]+%, ''
 
       space = ' '
-      space = ::RDoc::Encoding.change_encoding space, encoding if encoding
+      space = Encoding.change_encoding space, encoding if encoding
 
       text.sub!  %r%/\*+%       do space * $&.length end
       text.sub!  %r%\*+/%       do space * $&.length end
       text.gsub! %r%^[ \t]*\*%m do space * $&.length end
 
       empty = ''
-      empty = ::RDoc::Encoding.change_encoding empty, encoding if encoding
+      empty = Encoding.change_encoding empty, encoding if encoding
       text.gsub(/^\s+$/, empty)
     end
 

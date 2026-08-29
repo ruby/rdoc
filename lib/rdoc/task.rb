@@ -25,7 +25,7 @@
 begin
   gem 'rdoc'
 rescue Gem::LoadError
-end unless defined?(::RDoc)
+end unless defined?(RDoc)
 
 begin
   gem 'rake'
@@ -233,7 +233,7 @@ module RDoc
         args = option_list + @rdoc_files
 
         $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
-        ::RDoc::RDoc.new.document args
+        RDoc.new.document args
       end
 
       namespace rdoc_task_name do
@@ -244,7 +244,7 @@ module RDoc
           args = opts + @rdoc_files
 
           $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
-          ::RDoc::RDoc.new.document args
+          RDoc.new.document args
         rescue SystemExit => exit
           raise "RDoc coverage is incomplete" unless exit.success?
         end
@@ -255,7 +255,7 @@ module RDoc
           args = option_list + ["--server"] + @rdoc_files
 
           $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
-          ::RDoc::RDoc.new.document args
+          RDoc.new.document args
         end
       end
 
@@ -353,7 +353,7 @@ module Rake
   ##
   # For backwards compatibility
 
-  RDocTask = ::RDoc::Task # :nodoc:
+  RDocTask = RDoc::Task # :nodoc:
 
 end
 # :startdoc:

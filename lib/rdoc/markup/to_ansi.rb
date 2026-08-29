@@ -4,7 +4,7 @@ module RDoc
     ##
     # Outputs RDoc markup with vibrant ANSI color!
 
-    class ToAnsi < ::RDoc::Markup::ToRdoc
+    class ToAnsi < Markup::ToRdoc
 
       ##
       # Creates a new ToAnsi visitor that is ready to output vibrant ANSI color!

@@ -36,8 +36,8 @@ module RDoc
 
       utf8 = content.sub!(/\A\xef\xbb\xbf/, '')
 
-      enc = ::RDoc::Encoding.detect_encoding content
-      content = ::RDoc::Encoding.change_encoding content, enc if enc
+      enc = Encoding.detect_encoding content
+      content = Encoding.change_encoding content, enc if enc
 
       begin
         encoding ||= ::Encoding.default_external
@@ -46,16 +46,16 @@ module RDoc
         if not orig_encoding.ascii_compatible?
           content = content.encode encoding
         elsif utf8
-          content = ::RDoc::Encoding.change_encoding content, ::Encoding::UTF_8
+          content = Encoding.change_encoding content, ::Encoding::UTF_8
           content = content.encode encoding
         else
           # assume the content is in our output encoding
-          content = ::RDoc::Encoding.change_encoding content, encoding
+          content = Encoding.change_encoding content, encoding
         end
 
         unless content.valid_encoding?
           # revert and try to transcode
-          content = ::RDoc::Encoding.change_encoding content, orig_encoding
+          content = Encoding.change_encoding content, orig_encoding
           content = content.encode encoding
         end
 
@@ -66,7 +66,7 @@ module RDoc
       rescue ::Encoding::InvalidByteSequenceError,
              ::Encoding::UndefinedConversionError => e
         if force_transcode
-          content = ::RDoc::Encoding.change_encoding content, orig_encoding
+          content = Encoding.change_encoding content, orig_encoding
           content = content.encode(encoding,
                                    :invalid => :replace,
                                    :undef => :replace,
@@ -111,7 +111,7 @@ module RDoc
     # string
 
     def self.change_encoding(text, encoding)
-      if text.kind_of? ::RDoc::Comment
+      if text.kind_of? Comment
         text.encode! encoding
       else
         String.new text, encoding: encoding

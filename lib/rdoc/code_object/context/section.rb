@@ -15,7 +15,7 @@ module RDoc
 
     class Section
 
-      include ::RDoc::Text
+      include Text
 
       MARSHAL_VERSION = 0 # :nodoc:
 
@@ -67,7 +67,7 @@ module RDoc
       def add_comment(comment)
         Array(comment).each do |c|
           next if c.nil?
-          raise TypeError, "unknown comment #{c.inspect}" unless ::RDoc::Comment === c
+          raise TypeError, "unknown comment #{c.inspect}" unless Comment === c
           @comments << c unless c.empty?
         end
       end
@@ -83,7 +83,7 @@ module RDoc
       def aref
         title = @title || '[untitled]'
 
-        ::RDoc::Text.to_anchor(title)
+        Text.to_anchor(title)
       end
 
       ##
@@ -134,7 +134,7 @@ module RDoc
         @parent  = nil
 
         @title    = array[1]
-        @comments = array[2].parts.map { |doc| ::RDoc::Comment.from_document(doc) }
+        @comments = array[2].parts.map { |doc| Comment.from_document(doc) }
       end
 
       ##
@@ -142,7 +142,7 @@ module RDoc
       # multiple RDoc::Markup::Documents with their file set.
 
       def to_document
-        ::RDoc::Markup::Document.new(*@comments.map(&:parse))
+        Markup::Document.new(*@comments.map(&:parse))
       end
 
       ##
@@ -159,7 +159,7 @@ module RDoc
 
       def comment
         return nil if @comments.empty?
-        ::RDoc::Comment.from_document(to_document)
+        Comment.from_document(to_document)
       end
 
       def description

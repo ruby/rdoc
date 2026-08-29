@@ -29,7 +29,7 @@ module RDoc
       ##
       # Base Driver error class
 
-      class Error < ::RDoc::RI::Error; end
+      class Error < RI::Error; end
 
       ##
       # Raised when a name isn't found in the ri data stores
@@ -114,7 +114,7 @@ module RDoc
 
         opts = OptionParser.new do |opt|
           opt.program_name = File.basename $0
-          opt.version = ::RDoc::VERSION
+          opt.version = VERSION
           opt.release = nil
           opt.summary_indent = ' ' * 4
 
@@ -232,7 +232,7 @@ or the PAGER environment variable.
 
           opt.separator nil
 
-          formatters = ::RDoc::Markup.constants.grep(/^To[A-Z][a-z]+$/).sort
+          formatters = Markup.constants.grep(/^To[A-Z][a-z]+$/).sort
           formatters = formatters.sort.map do |formatter|
             formatter.to_s.sub('To', '').downcase
           end
@@ -243,7 +243,7 @@ or the PAGER environment variable.
                  "formatter is bs for paged output and ansi",
                  "otherwise.  Valid formatters are:",
                  "#{formatters.join(', ')}.", formatters) do |value|
-            options[:formatter] = ::RDoc::Markup.const_get "To#{value.capitalize}"
+            options[:formatter] = Markup.const_get "To#{value.capitalize}"
           end
 
           opt.separator nil
@@ -417,12 +417,12 @@ or the PAGER environment variable.
         @doc_dirs = []
         @stores   = []
 
-        ::RDoc::RI::Paths.each(options[:use_system], options[:use_site],
+        RI::Paths.each(options[:use_system], options[:use_site],
                              options[:use_home], options[:use_gems],
                              *options[:extra_doc_dirs]) do |path, type|
           @doc_dirs << path
 
-          store = ::RDoc::RI::Store.new(::RDoc::Options.new, path: path, type: type)
+          store = RI::Store.new(Options.new, path: path, type: type)
           store.load_cache
           @stores << store
         end
@@ -443,10 +443,10 @@ or the PAGER environment variable.
       def add_also_in(out, also_in)
         return if also_in.empty?
 
-        out << ::RDoc::Markup::Rule.new(1)
-        out << ::RDoc::Markup::Paragraph.new("Also found in:")
+        out << Markup::Rule.new(1)
+        out << Markup::Paragraph.new("Also found in:")
 
-        paths = ::RDoc::Markup::Verbatim.new
+        paths = Markup::Verbatim.new
         also_in.each do |store|
           paths.parts.push store.friendly_path, "\n"
         end
@@ -470,15 +470,15 @@ or the PAGER environment variable.
                     "#{name} < #{superclass}"
                   end
 
-        out << ::RDoc::Markup::Heading.new(1, heading)
-        out << ::RDoc::Markup::BlankLine.new
+        out << Markup::Heading.new(1, heading)
+        out << Markup::BlankLine.new
       end
 
       ##
       # Adds "(from ...)" to +out+ for +store+
 
       def add_from(out, store)
-        out << ::RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
+        out << Markup::Paragraph.new("(from #{store.friendly_path})")
       end
 
       ##
@@ -495,8 +495,8 @@ or the PAGER environment variable.
       def add_extension_modules(out, type, extensions)
         return if extensions.empty?
 
-        out << ::RDoc::Markup::Rule.new(1)
-        out << ::RDoc::Markup::Heading.new(1, "#{type}:")
+        out << Markup::Rule.new(1)
+        out << Markup::Heading.new(1, "#{type}:")
 
         extensions.each do |modules, store|
           if modules.length == 1
@@ -511,20 +511,20 @@ or the PAGER environment variable.
       # Renders multiple included +modules+ from +store+ to +out+.
 
       def add_extension_modules_multiple(out, store, modules) # :nodoc:
-        out << ::RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
+        out << Markup::Paragraph.new("(from #{store.friendly_path})")
 
         wout, with = modules.partition { |incl| incl.comment.empty? }
 
-        out << ::RDoc::Markup::BlankLine.new unless with.empty?
+        out << Markup::BlankLine.new unless with.empty?
 
         with.each do |incl|
-          out << ::RDoc::Markup::Paragraph.new(incl.name)
-          out << ::RDoc::Markup::BlankLine.new
+          out << Markup::Paragraph.new(incl.name)
+          out << Markup::BlankLine.new
           out << incl.comment.parse
         end
 
         unless wout.empty?
-          verb = ::RDoc::Markup::Verbatim.new
+          verb = Markup::Verbatim.new
 
           wout.each do |incl|
             verb.push incl.name, "\n"
@@ -540,10 +540,10 @@ or the PAGER environment variable.
       def add_extension_modules_single(out, store, include) # :nodoc:
         name = include.name
         path = store.friendly_path
-        out << ::RDoc::Markup::Paragraph.new("#{name} (from #{path})")
+        out << Markup::Paragraph.new("#{name} (from #{path})")
 
         if include.comment
-          out << ::RDoc::Markup::BlankLine.new
+          out << Markup::BlankLine.new
           out << include.comment.parse
         end
       end
@@ -582,18 +582,18 @@ or the PAGER environment variable.
       def add_method_list(out, methods, name)
         return if methods.empty?
 
-        out << ::RDoc::Markup::Heading.new(1, "#{name}:")
-        out << ::RDoc::Markup::BlankLine.new
+        out << Markup::Heading.new(1, "#{name}:")
+        out << Markup::BlankLine.new
 
         if @use_stdout and !@interactive
           out.concat methods.map { |method|
-            ::RDoc::Markup::Verbatim.new method
+            Markup::Verbatim.new method
           }
         else
-          out << ::RDoc::Markup::IndentedParagraph.new(2, methods.join(', '))
+          out << Markup::IndentedParagraph.new(2, methods.join(', '))
         end
 
-        out << ::RDoc::Markup::BlankLine.new
+        out << Markup::BlankLine.new
       end
 
       ##
@@ -639,7 +639,7 @@ or the PAGER environment variable.
       def class_document(name, found, klasses, includes, extends)
         also_in = []
 
-        out = ::RDoc::Markup::Document.new
+        out = Markup::Document.new
 
         add_class out, name, klasses
 
@@ -661,11 +661,11 @@ or the PAGER environment variable.
 
       def class_document_comment(out, document) # :nodoc:
         unless document.empty?
-          out << ::RDoc::Markup::Rule.new(1)
+          out << Markup::Rule.new(1)
 
           if document.merged?
             parts = document.parts
-            parts = parts.zip [::RDoc::Markup::BlankLine.new] * parts.length
+            parts = parts.zip [Markup::BlankLine.new] * parts.length
             parts.flatten!
             parts.pop
 
@@ -682,22 +682,22 @@ or the PAGER environment variable.
       def class_document_constants(out, klass) # :nodoc:
         return if klass.constants.empty?
 
-        out << ::RDoc::Markup::Heading.new(1, "Constants:")
-        out << ::RDoc::Markup::BlankLine.new
-        list = ::RDoc::Markup::List.new :NOTE
+        out << Markup::Heading.new(1, "Constants:")
+        out << Markup::BlankLine.new
+        list = Markup::List.new :NOTE
 
         constants = klass.constants.sort_by { |constant| constant.name }
 
         list.items.concat constants.map { |constant|
           parts = constant.comment.parse.parts
-          parts << ::RDoc::Markup::Paragraph.new('[not documented]') if
+          parts << Markup::Paragraph.new('[not documented]') if
             parts.empty?
 
-          ::RDoc::Markup::ListItem.new(constant.name, *parts)
+          Markup::ListItem.new(constant.name, *parts)
         }
 
         out << list
-        out << ::RDoc::Markup::BlankLine.new
+        out << Markup::BlankLine.new
       end
 
       ##
@@ -836,7 +836,7 @@ or the PAGER environment variable.
       # Outputs formatted RI data for method +name+
 
       def display_method(name)
-        out = ::RDoc::Markup::Document.new
+        out = Markup::Document.new
 
         add_method out, name
 
@@ -923,7 +923,7 @@ or the PAGER environment variable.
       # Outputs a formatted RI page list for the pages in +store+.
 
       def display_page_list(store, pages = store.cache[:pages], search = nil)
-        out = ::RDoc::Markup::Document.new
+        out = Markup::Document.new
 
         title = if search
                   "#{search} pages"
@@ -931,13 +931,13 @@ or the PAGER environment variable.
                   'Pages'
                 end
 
-        out << ::RDoc::Markup::Heading.new(1, "#{title} in #{store.friendly_path}")
-        out << ::RDoc::Markup::BlankLine.new
+        out << Markup::Heading.new(1, "#{title} in #{store.friendly_path}")
+        out << Markup::BlankLine.new
 
-        list = ::RDoc::Markup::List.new(:BULLET)
+        list = Markup::List.new(:BULLET)
 
         pages.each do |page|
-          list << ::RDoc::Markup::Paragraph.new(page)
+          list << Markup::Paragraph.new(page)
         end
 
         out << list
@@ -1074,7 +1074,7 @@ or the PAGER environment variable.
             store.type == :gem and source =~ /^#{Regexp.escape name}-\d/
         end
 
-        raise ::RDoc::RI::Driver::NotFoundError, name
+        raise RI::Driver::NotFoundError, name
       end
 
       ##
@@ -1085,9 +1085,9 @@ or the PAGER environment variable.
         if @formatter_klass
           @formatter_klass.new
         elsif paging? or !io.tty?
-          ::RDoc::Markup::ToBs.new
+          Markup::ToBs.new
         else
-          ::RDoc::Markup::ToAnsi.new
+          Markup::ToAnsi.new
         end
       end
 
@@ -1217,10 +1217,10 @@ or the PAGER environment variable.
 
         store.load_method klass, "#{type}#{method}"
       rescue ::RDoc::Store::MissingFileError => e
-        comment = ::RDoc::Comment.new("missing documentation at #{e.file}")
+        comment = Comment.new("missing documentation at #{e.file}")
         comment.parse
 
-        method = ::RDoc::AnyMethod.new name
+        method = AnyMethod.new name
         method.comment = comment
         method
       end
@@ -1275,8 +1275,8 @@ or the PAGER environment variable.
       # Builds a RDoc::Markup::Document from +found+, +klasses+ and +includes+
 
       def method_document(out, name, filtered)
-        out << ::RDoc::Markup::Heading.new(1, name)
-        out << ::RDoc::Markup::BlankLine.new
+        out << Markup::Heading.new(1, name)
+        out << Markup::BlankLine.new
 
         filtered.each do |store, methods|
           methods.each do |method|
@@ -1395,7 +1395,7 @@ or the PAGER environment variable.
         class_document_comment out, document
 
         if class_methods or instance_methods or not klass.constants.empty?
-          out << ::RDoc::Markup::Rule.new(1)
+          out << Markup::Rule.new(1)
         end
 
         class_document_constants out, klass
@@ -1408,13 +1408,13 @@ or the PAGER environment variable.
       end
 
       def render_method(out, store, method, name) # :nodoc:
-        out << ::RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
+        out << Markup::Paragraph.new("(from #{store.friendly_path})")
 
         unless name =~ /^#{Regexp.escape method.parent_name}/
-          out << ::RDoc::Markup::Heading.new(3, "Implementation from #{method.parent_name}")
+          out << Markup::Heading.new(3, "Implementation from #{method.parent_name}")
         end
 
-        out << ::RDoc::Markup::Rule.new(1)
+        out << Markup::Rule.new(1)
 
         render_method_arguments out, method.arglists
         sig = method.type_signature_lines || store.rbs_signature_for(method)
@@ -1434,39 +1434,39 @@ or the PAGER environment variable.
 
         arglists = arglists.chomp.split "\n"
         arglists = arglists.map { |line| line + "\n" }
-        out << ::RDoc::Markup::Verbatim.new(*arglists)
-        out << ::RDoc::Markup::Rule.new(1)
+        out << Markup::Verbatim.new(*arglists)
+        out << Markup::Rule.new(1)
       end
 
       def render_method_comment(out, method, alias_for = nil)# :nodoc:
         if alias_for
           unless method.comment.nil? or method.comment.empty?
-            out << ::RDoc::Markup::BlankLine.new
+            out << Markup::BlankLine.new
             out << method.comment.parse
           end
-          out << ::RDoc::Markup::BlankLine.new
-          out << ::RDoc::Markup::Paragraph.new("(This method is an alias for #{alias_for.full_name}.)")
-          out << ::RDoc::Markup::BlankLine.new
+          out << Markup::BlankLine.new
+          out << Markup::Paragraph.new("(This method is an alias for #{alias_for.full_name}.)")
+          out << Markup::BlankLine.new
           out << alias_for.comment.parse
-          out << ::RDoc::Markup::BlankLine.new
+          out << Markup::BlankLine.new
         else
-          out << ::RDoc::Markup::BlankLine.new
+          out << Markup::BlankLine.new
           out << method.comment.parse
-          out << ::RDoc::Markup::BlankLine.new
+          out << Markup::BlankLine.new
         end
       end
 
       def render_method_type_signature(out, lines) # :nodoc:
-        out << ::RDoc::Markup::Verbatim.new(*lines.map { |s| s + "\n" })
+        out << Markup::Verbatim.new(*lines.map { |s| s + "\n" })
       end
 
       def render_method_superclass(out, method) # :nodoc:
         return unless
           method.respond_to?(:superclass_method) and method.superclass_method
 
-        out << ::RDoc::Markup::BlankLine.new
-        out << ::RDoc::Markup::Heading.new(4, "(Uses superclass method #{method.superclass_method})")
-        out << ::RDoc::Markup::Rule.new(1)
+        out << Markup::BlankLine.new
+        out << Markup::Heading.new(4, "(Uses superclass method #{method.superclass_method})")
+        out << Markup::Rule.new(1)
       end
 
       ##
@@ -1529,7 +1529,7 @@ or the PAGER environment variable.
 
         extra_doc_dirs = @stores.map {|s| s.type == :extra ? s.path : nil}.compact
 
-        server.mount '/', ::RDoc::RI::Servlet, nil, extra_doc_dirs
+        server.mount '/', RI::Servlet, nil, extra_doc_dirs
 
         trap 'INT'  do server.shutdown end
         trap 'TERM' do server.shutdown end
@@ -1566,8 +1566,8 @@ or the PAGER environment variable.
         end.compact
 
         found_pages.each do |page|
-          out << ::RDoc::Markup::Heading.new(4, "Expanded from #{page.full_name}")
-          out << ::RDoc::Markup::BlankLine.new
+          out << Markup::Heading.new(4, "Expanded from #{page.full_name}")
+          out << Markup::BlankLine.new
           out << page.comment.parse
         end
       end

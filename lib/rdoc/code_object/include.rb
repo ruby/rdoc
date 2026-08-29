@@ -5,7 +5,7 @@ module RDoc
   #
   #   RDoc::Include.new 'Enumerable', 'comment ...'
 
-  class Include < ::RDoc::Mixin
+  class Include < Mixin
 
   end
 end

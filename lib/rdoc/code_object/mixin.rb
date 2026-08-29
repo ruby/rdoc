@@ -4,7 +4,7 @@ module RDoc
   # A Mixin adds features from a module into another context.  RDoc::Include and
   # RDoc::Extend are both mixins.
 
-  class Mixin < ::RDoc::CodeObject
+  class Mixin < CodeObject
 
     ##
     # Name of included module
@@ -41,7 +41,7 @@ module RDoc
 
     def full_name
       m = self.module
-      ::RDoc::ClassModule === m ? m.full_name : @name
+      ClassModule === m ? m.full_name : @name
     end
 
     def hash # :nodoc:

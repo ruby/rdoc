@@ -122,7 +122,7 @@ module RDoc
           start_in_escaped = prefix.length
           end_in_escaped = start_in_escaped + escaped_name.length
 
-          href = ERB::Util.html_escape(::RDoc::Markup::Formatter.gen_relative_url(from_path, target_path))
+          href = ERB::Util.html_escape(Markup::Formatter.gen_relative_url(from_path, target_path))
           result[start_in_escaped...end_in_escaped] =
             "<a href=\"#{href}\" class=\"rbs-type\">#{escaped_name}</a>"
         end

@@ -177,7 +177,7 @@ module RDoc
 
     def add_file(absolute_name, relative_name: absolute_name, parser: nil)
       unless top_level = @files_hash[relative_name]
-        top_level = ::RDoc::TopLevel.new absolute_name, relative_name
+        top_level = TopLevel.new absolute_name, relative_name
         top_level.parser = parser if parser
         top_level.store = self
         @files_hash[relative_name] = top_level
@@ -240,7 +240,7 @@ module RDoc
         cm.external_aliases.reject! { |a| a.file == top_level }
 
         # Clear or remove comment entries from this file
-        if cm.is_a?(::RDoc::ClassModule)
+        if cm.is_a?(ClassModule)
           if keep_position
             cm.comment_location[top_level] = [] if cm.comment_location.key?(top_level)
           else
@@ -258,7 +258,7 @@ module RDoc
           # for classes that are only defined in the deleted file, while
           # preserving classes that span multiple files.
           if cm.in_files.empty?
-            if cm.is_a?(::RDoc::NormalModule)
+            if cm.is_a?(NormalModule)
               @modules_hash.delete(cm.full_name)
             else
               @classes_hash.delete(cm.full_name)
@@ -291,7 +291,7 @@ module RDoc
           cm.constants.any? { |c| c.file == tl } }
 
         if cm.in_files.empty?
-          if cm.is_a?(::RDoc::NormalModule)
+          if cm.is_a?(NormalModule)
             @modules_hash.delete(cm.full_name)
           else
             @classes_hash.delete(cm.full_name)
@@ -578,7 +578,7 @@ module RDoc
 
           file.store = self
 
-          mod = file.add_module ::RDoc::NormalModule, name
+          mod = file.add_module NormalModule, name
         end
 
         @c_enclosure_classes[variable] = mod
@@ -596,9 +596,9 @@ module RDoc
     # Finds the class with +name+ starting in namespace +from+
 
     def find_class_named_from(name, from)
-      from = find_class_named from unless ::RDoc::Context === from
+      from = find_class_named from unless Context === from
 
-      until ::RDoc::TopLevel === from do
+      until TopLevel === from do
         return nil unless from
 
         klass = from.find_class_named name
@@ -735,9 +735,9 @@ module RDoc
           descendent = find_class_or_module name
 
           case descendent
-          when ::RDoc::NormalClass
+          when NormalClass
             mod.classes_hash[name] = descendent
-          when ::RDoc::NormalModule
+          when NormalModule
             mod.modules_hash[name] = descendent
           end
         end
@@ -798,11 +798,11 @@ module RDoc
       obj.store = self
 
       case obj
-      when ::RDoc::NormalClass
+      when NormalClass
         @classes_hash[klass_name] = obj
-      when ::RDoc::SingleClass
+      when SingleClass
         @classes_hash[klass_name] = obj
-      when ::RDoc::NormalModule
+      when NormalModule
         @modules_hash[klass_name] = obj
       end
     end
@@ -1172,7 +1172,7 @@ module RDoc
       cms.each do |cm|
         remove_classes_and_modules(cm.classes_and_modules)
 
-        if cm.is_a?(::RDoc::NormalModule)
+        if cm.is_a?(NormalModule)
           @modules_hash.delete(cm.full_name)
         else
           @classes_hash.delete(cm.full_name)
@@ -1186,7 +1186,7 @@ module RDoc
 
     MarshalFilter = proc do |obj|
       case obj
-      when true, false, nil, Array, Class, ::Encoding, Hash, Integer, String, Symbol, ::RDoc::Text
+      when true, false, nil, Array, Class, ::Encoding, Hash, Integer, String, Symbol, Text
       else
         unless obj.class.name.start_with?("RDoc::")
           raise TypeError, "not permitted class: #{obj.class.name}"

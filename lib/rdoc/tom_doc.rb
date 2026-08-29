@@ -34,7 +34,7 @@ module RDoc
   # This class is documented in TomDoc format.  Since this is a subclass of the
   # RDoc markup parser there isn't much to see here, unfortunately.
 
-  class TomDoc < ::RDoc::Markup::Parser
+  class TomDoc < Markup::Parser
 
     # Internal: Token accessor
 
@@ -46,9 +46,9 @@ module RDoc
     # Returns nothing.
 
     def self.add_post_processor # :nodoc:
-      ::RDoc::Markup::PreProcess.post_process do |comment, code_object|
+      Markup::PreProcess.post_process do |comment, code_object|
         next unless code_object and
-                    ::RDoc::Comment === comment and comment.format == 'tomdoc'
+                    Comment === comment and comment.format == 'tomdoc'
 
         comment.text.gsub!(/\A(\s*# |)(Public|Internal|Deprecated):\s+/) do
           section = code_object.add_section $2
@@ -80,7 +80,7 @@ module RDoc
       parser = new
 
       parser.tokenize text
-      doc = ::RDoc::Markup::Document.new
+      doc = Markup::Document.new
       parser.parse doc
       doc
     end
@@ -105,13 +105,13 @@ module RDoc
         next false if found_signature
 
         found_heading ||=
-          ::RDoc::Markup::Heading === part && part.text == 'Signature'
+          Markup::Heading === part && part.text == 'Signature'
 
         next false unless found_heading
 
-        next true if ::RDoc::Markup::BlankLine === part
+        next true if Markup::BlankLine === part
 
-        if ::RDoc::Markup::Verbatim === part
+        if Markup::Verbatim === part
           signature = part
           found_signature = true
         end
@@ -168,7 +168,7 @@ module RDoc
     def build_paragraph(margin)
       p :paragraph_start => margin if @debug
 
-      paragraph = ::RDoc::Markup::Paragraph.new
+      paragraph = Markup::Paragraph.new
 
       until @tokens.empty? do
         type, data, = get
@@ -210,8 +210,8 @@ module RDoc
 
       if false == @seen_returns and 'Returns' == @section
         @seen_returns = true
-        parent << ::RDoc::Markup::Heading.new(3, 'Returns')
-        parent << ::RDoc::Markup::BlankLine.new
+        parent << Markup::Heading.new(3, 'Returns')
+        parent << Markup::BlankLine.new
       end
 
       parent << paragraph

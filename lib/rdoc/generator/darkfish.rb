@@ -56,7 +56,7 @@ module RDoc
 
     class Darkfish
 
-      ::RDoc::RDoc.add_generator self
+      RDoc.add_generator self
 
       include ERB::Util
 
@@ -164,7 +164,7 @@ module RDoc
         @methods = nil
         @modsort = nil
 
-        @json_index = ::RDoc::Generator::JsonIndex.new self, options
+        @json_index = Generator::JsonIndex.new self, options
       end
 
       ##
@@ -300,7 +300,7 @@ module RDoc
           here
         end
       rescue => e
-        error = ::RDoc::Error.new \
+        error = Error.new \
           "error generating index.html: #{e.message} (#{e.class})"
         error.set_backtrace e.backtrace
 
@@ -361,7 +361,7 @@ module RDoc
           generate_class klass, template_file
         end
       rescue => e
-        error = ::RDoc::Error.new \
+        error = Error.new \
           "error generating #{current.path}: #{e.message} (#{e.class})"
         error.set_backtrace e.backtrace
 
@@ -431,7 +431,7 @@ module RDoc
         end
       rescue => e
         error =
-          ::RDoc::Error.new "error generating #{out_file}: #{e.message} (#{e.class})"
+          Error.new "error generating #{out_file}: #{e.message} (#{e.class})"
         error.set_backtrace e.backtrace
 
         raise error
@@ -488,7 +488,7 @@ module RDoc
           here
         end
       rescue => e
-        error = ::RDoc::Error.new \
+        error = Error.new \
           "error generating servlet_not_found: #{e.message} (#{e.class})"
         error.set_backtrace e.backtrace
 
@@ -513,7 +513,7 @@ module RDoc
 
         render_template template_file do |io| binding end
       rescue => e
-        error = ::RDoc::Error.new \
+        error = Error.new \
           "error generating servlet_root: #{e.message} (#{e.class})"
         error.set_backtrace e.backtrace
 
@@ -545,7 +545,7 @@ module RDoc
           here
         end
       rescue => e
-        error = ::RDoc::Error.new \
+        error = Error.new \
           "error generating table_of_contents.html: #{e.message} (#{e.class})"
         error.set_backtrace e.backtrace
 
@@ -624,7 +624,7 @@ module RDoc
       def render(file_name)
         template_file = @template_dir + file_name
 
-        template = template_for template_file, false, ::RDoc::ERBPartial
+        template = template_for template_file, false, ERBPartial
 
         template.filename = template_file.to_s
 
@@ -641,7 +641,7 @@ module RDoc
 
       def render_template(template_file, out_file = nil) # :yield: io
         io_output = out_file && !@dry_run && @file_output
-        erb_klass = io_output ? ::RDoc::ERBIO : ERB
+        erb_klass = io_output ? ERBIO : ERB
 
         template = template_for template_file, true, erb_klass
 
@@ -677,7 +677,7 @@ module RDoc
         template.filename = template_file.to_s
         template.result context
       rescue NoMethodError => e
-        raise ::RDoc::Error, "Error while evaluating %s: %s" % [
+        raise Error, "Error while evaluating %s: %s" % [
           template_file.expand_path,
           e.message,
         ], e.backtrace
@@ -717,7 +717,7 @@ module RDoc
       # Returns an excerpt of the comment for usage in meta description tags
       def excerpt(comment)
         text = case comment
-        when ::RDoc::Comment
+        when Comment
           comment.text
         else
           comment
@@ -749,7 +749,7 @@ module RDoc
         ancestor = ancestors.shift
         content = +'<ul><li>'
 
-        if ancestor.is_a?(::RDoc::NormalClass)
+        if ancestor.is_a?(NormalClass)
           content << "<a href=\"#{klass.aref_to ancestor.path}\">#{ancestor.full_name}</a>"
         else
           content << ancestor.to_s

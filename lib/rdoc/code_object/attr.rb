@@ -4,7 +4,7 @@ module RDoc
   # An attribute created by \#attr, \#attr_reader, \#attr_writer or
   # \#attr_accessor
 
-  class Attr < ::RDoc::MethodAttr
+  class Attr < MethodAttr
 
     ##
     # 3::
@@ -139,7 +139,7 @@ module RDoc
       @full_name     = array[2]
       @rw            = array[3]
       @visibility    = array[4]
-      @comment       = ::RDoc::Comment.from_document array[5]
+      @comment       = Comment.from_document array[5]
       @singleton     = array[6] || false # MARSHAL_VERSION == 0
       #                      7 handled below
       @parent_name   = array[8]
@@ -147,7 +147,7 @@ module RDoc
       @section_title = array[10]
       @type_signature_lines = array[11]&.split("\n")
 
-      @file = ::RDoc::TopLevel.new array[7] if version > 1
+      @file = TopLevel.new array[7] if version > 1
 
       @parent_name ||= @full_name.split('#', 2).first
     end

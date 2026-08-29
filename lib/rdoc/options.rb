@@ -403,7 +403,7 @@ module RDoc
       @force_output = false
       @force_update = true
       @generator_name = "aliki"
-      @generators = ::RDoc::RDoc::GENERATORS
+      @generators = RDoc::GENERATORS
       @generator_options = []
       @hyperlink_all = false
       @line_numbers = false
@@ -657,7 +657,7 @@ module RDoc
       end
 
       if @locale_name
-        @locale = ::RDoc::I18n::Locale[@locale_name]
+        @locale = I18n::Locale[@locale_name]
         @locale.load(@locale_dir)
       else
         @locale = nil
@@ -692,7 +692,7 @@ module RDoc
     def generator_descriptions
       lengths = []
 
-      generators = ::RDoc::RDoc::GENERATORS.map do |name, generator|
+      generators = RDoc::GENERATORS.map do |name, generator|
         lengths << name.length
 
         description = generator::DESCRIPTION if
@@ -723,7 +723,7 @@ module RDoc
       opts = OptionParser.new do |opt|
         @option_parser = opt
         opt.program_name = File.basename $0
-        opt.version = ::RDoc::VERSION
+        opt.version = VERSION
         opt.release = nil
         opt.summary_indent = ' ' * 4
         opt.banner = <<-EOF
@@ -756,7 +756,7 @@ Usage: #{opt.program_name} [options] [names...]
 
         parsers = Hash.new { |h, parser| h[parser] = [] }
 
-        ::RDoc::Parser.parsers.each do |regexp, parser|
+        Parser.parsers.each do |regexp, parser|
           parsers[parser.name.sub('RDoc::Parser::', '')] << regexp.source
         end
 
@@ -870,7 +870,7 @@ Usage: #{opt.program_name} [options] [names...]
             raise OptionParser::InvalidArgument, "Invalid parameter to '-E'"
           end
 
-          unless ::RDoc::Parser.alias_extension old, new
+          unless Parser.alias_extension old, new
             raise OptionParser::InvalidArgument, "Unknown extension .#{old} to -E"
           end
         end
@@ -901,7 +901,7 @@ Usage: #{opt.program_name} [options] [names...]
 
         opt.separator nil
 
-        opt.on("--visibility=VISIBILITY", ::RDoc::VISIBILITIES + [:nodoc],
+        opt.on("--visibility=VISIBILITY", VISIBILITIES + [:nodoc],
                "Minimum visibility to document a method.",
                "One of 'public', 'protected' (the default),",
                "'private' or 'nodoc' (show everything)") do |value|
@@ -918,7 +918,7 @@ Usage: #{opt.program_name} [options] [names...]
 
         opt.separator nil
 
-        markup_formats = ::RDoc::Text::MARKUP_FORMAT.keys.sort
+        markup_formats = Text::MARKUP_FORMAT.keys.sort
 
         opt.on("--markup=MARKUP", markup_formats,
                "The markup format for the named files.",
@@ -1116,7 +1116,7 @@ Usage: #{opt.program_name} [options] [names...]
           check_generator
 
           @generator_name = "ri"
-          @op_dir ||= ::RDoc::RI::Paths::HOMEDIR
+          @op_dir ||= RI::Paths::HOMEDIR
           setup_generator
         end
 
@@ -1130,7 +1130,7 @@ Usage: #{opt.program_name} [options] [names...]
           check_generator
 
           @generator_name = "ri"
-          @op_dir = ::RDoc::RI::Paths.site_dir
+          @op_dir = RI::Paths.site_dir
           setup_generator
         end
 
@@ -1208,7 +1208,7 @@ Usage: #{opt.program_name} [options] [names...]
         opt.separator nil
 
         opt.on("--help", "-h", "Display this help") do
-          ::RDoc::RDoc::GENERATORS.each_key do |generator|
+          RDoc::GENERATORS.each_key do |generator|
             setup_generator generator
           end
 
@@ -1381,7 +1381,7 @@ Usage: #{opt.program_name} [options] [names...]
 
     def self.load_options
       options_file = File.expand_path '.rdoc_options'
-      return ::RDoc::Options.new unless File.exist? options_file
+      return Options.new unless File.exist? options_file
 
       ::RDoc.load_yaml
 
@@ -1389,22 +1389,22 @@ Usage: #{opt.program_name} [options] [names...]
 
       if defined?(Psych)
         begin
-          options = Psych.safe_load content, permitted_classes: [::RDoc::Options, Symbol]
+          options = Psych.safe_load content, permitted_classes: [Options, Symbol]
         rescue Psych::SyntaxError
-          raise ::RDoc::Error, "#{options_file} is not a valid rdoc options file"
+          raise Error, "#{options_file} is not a valid rdoc options file"
         end
       else
         options = ::RDoc.yaml_serializer.load(content)
       end
 
-      return ::RDoc::Options.new unless options # Allow empty file.
+      return Options.new unless options # Allow empty file.
 
-      raise ::RDoc::Error, "#{options_file} is not a valid rdoc options file" unless
-        ::RDoc::Options === options or Hash === options
+      raise Error, "#{options_file} is not a valid rdoc options file" unless
+        Options === options or Hash === options
 
       if Hash === options
         # Override the default values with the contents of YAML file.
-        options = ::RDoc::Options.new options
+        options = Options.new options
       end
 
       options

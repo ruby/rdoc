@@ -148,7 +148,7 @@ module RDoc
     end
 
     def create_generator
-      gen = ::RDoc::Generator::Aliki.new(@store, @options)
+      gen = Generator::Aliki.new(@store, @options)
       gen.file_output = false
       gen.asset_rel_path = ''
       gen.setup

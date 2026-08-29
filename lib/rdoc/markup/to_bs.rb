@@ -7,7 +7,7 @@ module RDoc
     #
     # This formatter won't work on 1.8.6 because it lacks String#chars.
 
-    class ToBs < ::RDoc::Markup::ToRdoc
+    class ToBs < Markup::ToRdoc
 
       ##
       # Returns a new ToBs that is ready for hot backspace action!

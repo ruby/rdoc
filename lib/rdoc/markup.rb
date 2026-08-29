@@ -120,8 +120,8 @@ module RDoc
     # Parses +str+ into an RDoc::Markup::Document.
 
     def self.parse(str)
-      ::RDoc::Markup::Parser.parse str
-    rescue ::RDoc::Markup::Parser::Error => e
+      Markup::Parser.parse str
+    rescue Markup::Parser::Error => e
       $stderr.puts <<-EOF
 While parsing markup, RDoc encountered a #{e.class}:
 
@@ -132,7 +132,7 @@ While parsing markup, RDoc encountered a #{e.class}:
 #{text}
 ---8<---
 
-RDoc #{::RDoc::VERSION}
+RDoc #{VERSION}
 
 Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} #{RUBY_RELEASE_DATE}
 
@@ -172,10 +172,10 @@ https://github.com/ruby/rdoc/issues
 
     def convert(input, formatter)
       document = case input
-                 when ::RDoc::Markup::Document
+                 when Markup::Document
                    input
                  else
-                   ::RDoc::Markup::Parser.parse input
+                   Markup::Parser.parse input
                  end
 
       document.accept formatter

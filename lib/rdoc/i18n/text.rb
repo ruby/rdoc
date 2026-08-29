@@ -89,7 +89,7 @@ module RDoc
 
       def each_line(raw, &block)
         case raw
-        when ::RDoc::Comment
+        when Comment
           raw.text.each_line(&block)
         when Hash
           raw.each_value do |comments|

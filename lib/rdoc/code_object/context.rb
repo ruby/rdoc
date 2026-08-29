@@ -5,7 +5,7 @@ module RDoc
   # aliases, requires, and includes. Classes, modules, and files are all
   # Contexts.
 
-  class Context < ::RDoc::CodeObject
+  class Context < CodeObject
 
     include Comparable
 
@@ -170,7 +170,7 @@ module RDoc
     # Contexts are sorted by full_name
 
     def <=>(other)
-      return nil unless ::RDoc::CodeObject === other
+      return nil unless CodeObject === other
 
       full_name <=> other.full_name
     end
@@ -182,11 +182,11 @@ module RDoc
     # Currently only RDoc::Extend and RDoc::Include are supported.
 
     def add(klass, name, comment)
-      if ::RDoc::Extend == klass
-        ext = ::RDoc::Extend.new name, comment
+      if Extend == klass
+        ext = Extend.new name, comment
         add_extend ext
-      elsif ::RDoc::Include == klass
-        incl = ::RDoc::Include.new name, comment
+      elsif Include == klass
+        incl = Include.new name, comment
         add_include incl
       else
         raise NotImplementedError, "adding a #{klass} is not implemented"
@@ -239,7 +239,7 @@ module RDoc
         if known
           known.comment = attribute.comment if known.comment.empty?
         elsif registered = @methods_hash[attribute.pretty_name + '='] and
-              ::RDoc::Attr === registered
+              Attr === registered
           registered.rw = 'RW'
         else
           @methods_hash[key] = attribute
@@ -254,7 +254,7 @@ module RDoc
         if known
           known.comment = attribute.comment if known.comment.empty?
         elsif registered = @methods_hash[attribute.pretty_name] and
-              ::RDoc::Attr === registered
+              Attr === registered
           registered.rw = 'RW'
         else
           @methods_hash[key] = attribute
@@ -347,7 +347,7 @@ module RDoc
         # did we believe it was a module?
         mod = @store.modules_hash.delete superclass
 
-        upgrade_to_class mod, ::RDoc::NormalClass, mod.parent if mod
+        upgrade_to_class mod, NormalClass, mod.parent if mod
 
         # e.g., Object < Object
         superclass = nil if superclass == full_name
@@ -373,7 +373,7 @@ module RDoc
         mod = @store.modules_hash.delete full_name
 
         if mod
-          klass = upgrade_to_class mod, ::RDoc::NormalClass, enclosing
+          klass = upgrade_to_class mod, NormalClass, enclosing
 
           klass.superclass = superclass unless superclass.nil?
         else
@@ -515,7 +515,7 @@ module RDoc
       path.to_s.split('::').inject(self) do |owner, name|
         owner.classes_hash[name] ||
           owner.modules_hash[name] ||
-          owner.add_module(::RDoc::NormalModule, name)
+          owner.add_module(NormalModule, name)
       end
     end
 
@@ -575,7 +575,7 @@ module RDoc
 
       # Registers a constant for this alias.  The constant value and comment
       # will be updated later, when the Ruby parser adds the constant
-      const = ::RDoc::Constant.new to.name, nil, new_to.comment
+      const = Constant.new to.name, nil, new_to.comment
       const.record_location file
       const.is_alias_for = from
       add_constant const
@@ -589,7 +589,7 @@ module RDoc
     def add_require(require)
       return require unless @document_self
 
-      if ::RDoc::TopLevel === self
+      if TopLevel === self
         add_to @requires, require
       else
         parent.add_require require
@@ -653,7 +653,7 @@ module RDoc
     def child_name(name)
       if name =~ /^:+/
         $'  #'
-      elsif ::RDoc::TopLevel === self
+      elsif TopLevel === self
         name
       else
         "#{self.full_name}::#{name}"
@@ -703,7 +703,7 @@ module RDoc
     end
 
     def display(method_attr) # :nodoc:
-      if method_attr.is_a? ::RDoc::Attr
+      if method_attr.is_a? Attr
         "#{method_attr.definition} #{method_attr.pretty_name}"
       else
         "method #{method_attr.pretty_name}"
@@ -919,14 +919,14 @@ module RDoc
           mod = searched.find_module_named(top)
           break unless mod
           result = @store.find_class_or_module "#{mod.full_name}::#{suffix}"
-          break if result || searched.is_a?(::RDoc::TopLevel)
+          break if result || searched.is_a?(TopLevel)
           searched = searched.parent
         end
       else
         searched = self
         while searched do
           result = searched.find_module_named(symbol)
-          break if result || searched.is_a?(::RDoc::TopLevel)
+          break if result || searched.is_a?(TopLevel)
           searched = searched.parent
         end
       end
@@ -983,7 +983,7 @@ module RDoc
 
       TYPES.each do |type|
         visibilities = {}
-        ::RDoc::VISIBILITIES.each do |vis|
+        VISIBILITIES.each do |vis|
           visibilities[vis] = []
         end
 
@@ -1207,7 +1207,7 @@ module RDoc
     def top_level
       return @top_level if defined? @top_level
       @top_level = self
-      @top_level = @top_level.parent until ::RDoc::TopLevel === @top_level
+      @top_level = @top_level.parent until TopLevel === @top_level
       @top_level
     end
 
@@ -1217,7 +1217,7 @@ module RDoc
     def upgrade_to_class(mod, class_type, enclosing)
       enclosing.modules_hash.delete mod.name
 
-      klass = ::RDoc::ClassModule.from_module class_type, mod
+      klass = ClassModule.from_module class_type, mod
       klass.store = @store
 
       # if it was there, then we keep it even if done_documenting

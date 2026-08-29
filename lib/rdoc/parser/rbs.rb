@@ -7,7 +7,7 @@ module RDoc
     ##
     # Parse RBS signature files as first-class RDoc input.
 
-    class RBS < ::RDoc::Parser
+    class RBS < Parser
       RBS_FILE_EXTENSION = /\.rbs$/
 
       parse_files_matching RBS_FILE_EXTENSION
@@ -25,7 +25,7 @@ module RDoc
       def record_object_location(object, location)
         object.line = location.start_line if location
 
-        if ::RDoc::ClassModule === object
+        if ClassModule === object
           @top_level.add_to_classes_or_modules object unless
             @top_level.classes_or_modules.include? object
         end
@@ -40,7 +40,7 @@ module RDoc
 
         # TODO: Run RBS comments through RDoc's directive preprocessor so
         # directives like :nodoc: affect the documented object.
-        comment = ::RDoc::Comment.new rbs_comment.string, @top_level
+        comment = Comment.new rbs_comment.string, @top_level
         comment.format = 'markdown'
         comment
       end
@@ -76,13 +76,13 @@ module RDoc
       end
 
       def merge_comments(object, comment)
-        document = ::RDoc::Markup::Document.new
+        document = Markup::Document.new
         document.concat object.parse(object.comment).parts
-        document << ::RDoc::Markup::Rule.new(1)
+        document << Markup::Rule.new(1)
         document.concat comment.parse.parts
 
         # Keep this text separator in sync with the Rule node above.
-        merged_comment = ::RDoc::Comment.new "#{object.comment}\n---\n#{comment}", comment.location
+        merged_comment = Comment.new "#{object.comment}\n---\n#{comment}", comment.location
         merged_comment.format = 'markdown'
         merged_comment.document = document
         merged_comment
@@ -147,7 +147,7 @@ module RDoc
           return
         end
 
-        attribute = ::RDoc::Attr.new(
+        attribute = Attr.new(
           name,
           rw,
           comment,
@@ -162,7 +162,7 @@ module RDoc
       def parse_class_decl(decl, context)
         owner, name = context.find_or_create_constant_owner_for_path decl.name
         superclass = decl.super_class&.name&.to_s || '::Object'
-        klass = owner.add_class ::RDoc::NormalClass, name, superclass
+        klass = owner.add_class NormalClass, name, superclass
         record_object_location klass, decl.location
         comment = rdoc_comment_for decl
         klass.add_comment comment, @top_level if comment
@@ -171,7 +171,7 @@ module RDoc
       end
 
       def parse_constant_decl(decl, context)
-        constant = ::RDoc::Constant.new decl.name.to_s, decl.type.to_s,
+        constant = Constant.new decl.name.to_s, decl.type.to_s,
                                       rdoc_comment_for(decl)
         record_object_location constant, decl.location
         context.add_constant constant
@@ -193,14 +193,14 @@ module RDoc
       end
 
       def parse_extend_decl(decl, context)
-        extend_decl = ::RDoc::Extend.new local_module_name(decl.name, context),
+        extend_decl = Extend.new local_module_name(decl.name, context),
                                        rdoc_comment_for(decl)
         record_object_location extend_decl, decl.location
         context.add_extend extend_decl
       end
 
       def parse_include_decl(decl, context)
-        include_decl = ::RDoc::Include.new local_module_name(decl.name, context),
+        include_decl = Include.new local_module_name(decl.name, context),
                                         rdoc_comment_for(decl)
         record_object_location include_decl, decl.location
         context.add_include include_decl
@@ -230,7 +230,7 @@ module RDoc
       end
 
       def parse_method_alias_decl(decl, context)
-        alias_def = ::RDoc::Alias.new(
+        alias_def = Alias.new(
           decl.old_name.to_s,
           decl.new_name.to_s,
           rdoc_comment_for(decl),
@@ -252,7 +252,7 @@ module RDoc
           return
         end
 
-        method = ::RDoc::AnyMethod.new method_name, singleton: singleton
+        method = AnyMethod.new method_name, singleton: singleton
         record_object_location method, decl.location
         method.type_signature_lines = type_signature_lines
 
@@ -267,7 +267,7 @@ module RDoc
       end
 
       def parse_module_decl(decl, context)
-        mod = context.add_module ::RDoc::NormalModule, decl.name.to_s
+        mod = context.add_module NormalModule, decl.name.to_s
         record_object_location mod, decl.location
         comment = rdoc_comment_for decl
         mod.add_comment comment, @top_level if comment

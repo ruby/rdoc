@@ -2,7 +2,7 @@
 begin
   gem 'rdoc'
 rescue Gem::LoadError
-end unless defined?(::RDoc)
+end unless defined?(RDoc)
 
 require_relative '../task'
 

@@ -7,7 +7,7 @@ module RDoc
   # TODO implement Alias as a proxy to a method/attribute, inheriting from
   #      MethodAttr
 
-  class Alias < ::RDoc::CodeObject
+  class Alias < CodeObject
 
     ##
     # Aliased method's name

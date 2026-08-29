@@ -6,7 +6,7 @@ module RDoc
 
   class Stats
 
-    include ::RDoc::Text
+    include Text
 
     ##
     # Display order for item types in the coverage report
@@ -226,7 +226,7 @@ module RDoc
 
     def report
       if @coverage_level > 0
-        extend ::RDoc::Text
+        extend Text
       end
 
       if @coverage_level.zero?
@@ -461,7 +461,7 @@ module RDoc
     # total parameter count and an Array of undocumented methods.
 
     def undoc_params(method)
-      @formatter ||= ::RDoc::Markup::ToTtOnly.new
+      @formatter ||= Markup::ToTtOnly.new
 
       params = method.param_list
 

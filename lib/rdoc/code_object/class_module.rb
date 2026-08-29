@@ -4,7 +4,7 @@ module RDoc
   # ClassModule is the base class for objects representing either a class or a
   # module.
 
-  class ClassModule < ::RDoc::Context
+  class ClassModule < Context
 
     ##
     # 1::
@@ -140,7 +140,7 @@ module RDoc
       original = comment
 
       comment = case comment
-                when ::RDoc::Comment
+                when Comment
                   comment.normalize
                 else
                   normalize_comment comment
@@ -230,7 +230,7 @@ module RDoc
 
     def comment=(comment) # :nodoc:
       comment = case comment
-                when ::RDoc::Comment
+                when Comment
                   comment.normalize
                 else
                   normalize_comment comment
@@ -315,7 +315,7 @@ module RDoc
     # Return the fully qualified name of this class or module
 
     def full_name
-      @full_name ||= if ::RDoc::ClassModule === parent
+      @full_name ||= if ClassModule === parent
                        "#{parent.full_name}::#{@name}"
                      else
                        @name
@@ -407,9 +407,9 @@ module RDoc
       @superclass = array[3]
       document    = array[4]
 
-      @comment    = ::RDoc::Comment.from_document document
+      @comment    = Comment.from_document document
 
-      @comment_location = if document.parts.first.is_a?(::RDoc::Markup::Document)
+      @comment_location = if document.parts.first.is_a?(Markup::Document)
                             document.parts.group_by(&:file)
                           else
                             { document.file => [document] }
@@ -419,26 +419,26 @@ module RDoc
         singleton  ||= false
         visibility ||= :public
 
-        attr = ::RDoc::Attr.new name, rw, nil, singleton: singleton
+        attr = Attr.new name, rw, nil, singleton: singleton
 
         add_attribute attr
         attr.visibility = visibility
-        attr.record_location ::RDoc::TopLevel.new file
+        attr.record_location TopLevel.new file
       end
 
       array[6].each do |constant, document, file|
         case constant
-        when ::RDoc::Constant
+        when Constant
           add_constant constant
         else
-          constant = add_constant ::RDoc::Constant.new(constant, nil, ::RDoc::Comment.from_document(document))
-          constant.record_location ::RDoc::TopLevel.new file
+          constant = add_constant Constant.new(constant, nil, Comment.from_document(document))
+          constant.record_location TopLevel.new file
         end
       end
 
       array[7].each do |name, document, file|
-        incl = add_include ::RDoc::Include.new(name, ::RDoc::Comment.from_document(document))
-        incl.record_location ::RDoc::TopLevel.new file
+        incl = add_include Include.new(name, Comment.from_document(document))
+        incl.record_location TopLevel.new file
       end
 
       array[8].each do |type, visibilities|
@@ -446,16 +446,16 @@ module RDoc
           @visibility = visibility
 
           methods.each do |name, file|
-            method = ::RDoc::AnyMethod.new name, singleton: type == 'class'
-            method.record_location ::RDoc::TopLevel.new file
+            method = AnyMethod.new name, singleton: type == 'class'
+            method.record_location TopLevel.new file
             add_method method
           end
         end
       end
 
       array[9].each do |name, document, file|
-        ext = add_extend ::RDoc::Extend.new(name, ::RDoc::Comment.from_document(document))
-        ext.record_location ::RDoc::TopLevel.new file
+        ext = add_extend Extend.new(name, Comment.from_document(document))
+        ext.record_location TopLevel.new file
       end if array[9] # Support Marshal version 1
 
       sections = (array[10] || []).map do |section|
@@ -468,7 +468,7 @@ module RDoc
       @in_files = []
 
       (array[11] || []).each do |filename|
-        record_location ::RDoc::TopLevel.new filename
+        record_location TopLevel.new filename
       end
 
       @parent_name  = array[12]
@@ -491,9 +491,9 @@ module RDoc
 
         document = document.merge other_document
 
-        @comment = ::RDoc::Comment.from_document(document)
+        @comment = Comment.from_document(document)
 
-        @comment_location = if document.parts.first.is_a?(::RDoc::Markup::Document)
+        @comment_location = if document.parts.first.is_a?(Markup::Document)
                               document.parts.group_by(&:file)
                             else
                               { document.file => [document] }
@@ -651,12 +651,12 @@ module RDoc
           end
         end
 
-        ::RDoc::Markup::Document.new(*docs)
-      when ::RDoc::Comment
+        Markup::Document.new(*docs)
+      when Comment
         doc = super comment_location.text, comment_location.format
         doc.file = comment_location.location
         doc
-      when ::RDoc::Markup::Document
+      when Markup::Document
         return comment_location
       else
         raise ArgumentError, "unknown comment class #{comment_location.class}"
@@ -761,7 +761,7 @@ module RDoc
         comments.filter_map { |c| c.to_s unless c.empty? }
       }
       merged = texts.join("\n---\n")
-      @comment = merged.empty? ? '' : ::RDoc::Comment.new(merged)
+      @comment = merged.empty? ? '' : Comment.new(merged)
     end
 
     ##
@@ -797,7 +797,7 @@ module RDoc
     def superclass=(superclass)
       raise NoMethodError, "#{full_name} is a module" if module?
       case superclass
-      when ::RDoc::ClassModule
+      when ClassModule
         @superclass = superclass.full_name
       when nil, String
         @superclass = superclass
@@ -860,7 +860,7 @@ module RDoc
     def update_aliases
       constants.each do |const|
         cm = const.is_alias_for
-        cm ||= const.resolved_alias_target if const.is_a?(::RDoc::Constant)
+        cm ||= const.resolved_alias_target if const.is_a?(Constant)
         next unless cm
 
         # Resolve chained aliases (A = B = C) to the real class/module.

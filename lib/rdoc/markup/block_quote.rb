@@ -4,7 +4,7 @@ module RDoc
     ##
     # A quoted section which contains markup items.
 
-    class BlockQuote < ::RDoc::Markup::Raw
+    class BlockQuote < Markup::Raw
 
       ##
       # Calls #accept_block_quote on +visitor+

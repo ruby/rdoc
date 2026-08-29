@@ -12,7 +12,7 @@ module RDoc
 
   class Comment
 
-    include ::RDoc::Text
+    include Text
 
     ##
     # The format of this comment.  Defaults to RDoc::Markup
@@ -151,7 +151,7 @@ module RDoc
     # An error is raised if the comment contains a document but no text.
 
     def text=(text)
-      raise ::RDoc::Error, 'replacing document-only comment is not allowed' if
+      raise Error, 'replacing document-only comment is not allowed' if
         @text.nil? and @document
 
       @document = nil
@@ -180,9 +180,9 @@ module RDoc
       # Create a new parsed comment from a document
 
       def from_document(document) # :nodoc:
-        comment = ::RDoc::Comment.new('')
+        comment = Comment.new('')
         comment.document = document
-        comment.location = ::RDoc::TopLevel.new(document.file) if document.file
+        comment.location = TopLevel.new(document.file) if document.file
         comment
       end
 

@@ -41,10 +41,10 @@ module RDoc
 
       def <<(part)
         case part
-        when ::RDoc::Markup::Document
+        when Markup::Document
           unless part.empty?
             parts.concat part.parts
-            parts << ::RDoc::Markup::BlankLine.new
+            parts << Markup::BlankLine.new
           end
         when String
           raise ArgumentError,
@@ -98,7 +98,7 @@ module RDoc
 
       def file=(location)
         @file = case location
-                when ::RDoc::TopLevel
+                when TopLevel
                   location.relative_name
                 else
                   location
@@ -134,7 +134,7 @@ module RDoc
       # Does this Document contain other Documents?
 
       def merged?
-        ::RDoc::Markup::Document === @parts.first
+        Markup::Document === @parts.first
       end
 
       def pretty_print(q) # :nodoc:
@@ -160,7 +160,7 @@ module RDoc
       # Require 'rdoc/markup/formatter' before calling this method.
 
       def table_of_contents
-        accept ::RDoc::Markup::ToTableOfContents.to_toc
+        accept Markup::ToTableOfContents.to_toc
       end
 
     end

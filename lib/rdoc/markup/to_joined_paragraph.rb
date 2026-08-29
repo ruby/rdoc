@@ -9,7 +9,7 @@ module RDoc
     # This formatter only works on Paragraph instances.  Attempting to process
     # other markup syntax items will not work.
 
-    class ToJoinedParagraph < ::RDoc::Markup::Formatter
+    class ToJoinedParagraph < Markup::Formatter
       def start_accepting # :nodoc:
       end
 

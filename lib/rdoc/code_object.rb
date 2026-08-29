@@ -26,7 +26,7 @@ module RDoc
 
   class CodeObject
 
-    include ::RDoc::Text
+    include Text
 
     ##
     # Our comment
@@ -133,7 +133,7 @@ module RDoc
     def comment=(comment)
       @comment = case comment
                  when NilClass               then ''
-                 when ::RDoc::Comment          then comment.normalize
+                 when Comment          then comment.normalize
                  else
                    if comment and not comment.empty?
                      normalize_comment comment
@@ -141,7 +141,7 @@ module RDoc
                      # HACK correct fix is to have #initialize create @comment
                      #      with the correct encoding
                      if String === @comment and @comment.empty?
-                       @comment = ::RDoc::Encoding.change_encoding @comment, comment.encoding
+                       @comment = Encoding.change_encoding @comment, comment.encoding
                      end
                      @comment
                    end
@@ -279,7 +279,7 @@ module RDoc
     #          ClassModule#embed_mixins
 
     def options
-      @store&.options || ::RDoc::Options.new
+      @store&.options || Options.new
     end
 
     ##
@@ -290,7 +290,7 @@ module RDoc
       return @parent if @parent
       return nil unless @parent_name
 
-      if @parent_class == ::RDoc::TopLevel
+      if @parent_class == TopLevel
         @parent = @store.add_file @parent_name
       else
         @parent = @store.find_class_or_module @parent_name
@@ -299,7 +299,7 @@ module RDoc
 
         begin
           @parent = @store.load_class @parent_name
-        rescue ::RDoc::Store::MissingFileError
+        rescue Store::MissingFileError
           nil
         end
       end

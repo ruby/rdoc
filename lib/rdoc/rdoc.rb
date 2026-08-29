@@ -113,7 +113,7 @@ module RDoc
     # Report an error message and exit
 
     def error(msg)
-      raise ::RDoc::Error, msg
+      raise Error, msg
     end
 
     ##
@@ -142,9 +142,9 @@ module RDoc
     # Turns RDoc from stdin into HTML
 
     def handle_pipe
-      @html = ::RDoc::Markup::ToHtml.new(pipe: @options.pipe, output_decoration: @options.output_decoration)
+      @html = Markup::ToHtml.new(pipe: @options.pipe, output_decoration: @options.output_decoration)
 
-      parser = ::RDoc::Text::MARKUP_FORMAT[@options.markup]
+      parser = Text::MARKUP_FORMAT[@options.markup]
 
       document = parser.parse $stdin.read
 
@@ -280,7 +280,7 @@ option)
           mtime = (stat.mtime unless (last_modified = @last_modified[rel_file_name] and
                                       stat.mtime.to_i <= last_modified.to_i))
 
-          if force_doc or ::RDoc::Parser.can_parse(rel_file_name)
+          if force_doc or Parser.can_parse(rel_file_name)
             file_list[rel_file_name] = mtime
           end
         when "directory"
@@ -292,7 +292,7 @@ option)
           created_rid = File.join rel_file_name, "created.rid"
           next if File.file? created_rid
 
-          dot_doc = File.join rel_file_name, ::RDoc::DOT_DOC_FILENAME
+          dot_doc = File.join rel_file_name, DOT_DOC_FILENAME
 
           if File.file? dot_doc
             file_list.update(parse_dot_doc_file(rel_file_name, dot_doc))
@@ -328,15 +328,15 @@ option)
 
       @stats.add_file filename
 
-      return if ::RDoc::Parser.binary? filename
+      return if Parser.binary? filename
 
-      content = ::RDoc::Encoding.read_file filename, encoding
+      content = Encoding.read_file filename, encoding
 
       return unless content
 
       top_level = @store.add_file filename, relative_name: relative_path_for(filename)
 
-      parser = ::RDoc::Parser.for top_level, content, @options, @stats
+      parser = Parser.for top_level, content, @options, @stats
 
       return unless parser
 
@@ -389,10 +389,10 @@ The internal error was:
       raise e
     end
 
-    def syntax_check_command_for(filename, parser_class = ::RDoc::Parser.can_parse_by_name(filename))
-      if parser_class == ::RDoc::Parser::Ruby
+    def syntax_check_command_for(filename, parser_class = Parser.can_parse_by_name(filename))
+      if parser_class == Parser::Ruby
         "#{Gem.ruby} -c #{filename}"
-      elsif parser_class == ::RDoc::Parser::C
+      elsif parser_class == Parser::C
         cc = ENV['CC']
         cc = 'cc' if cc.nil? || cc.empty?
         "#{cc} -fsyntax-only #{filename}"
@@ -426,7 +426,7 @@ The internal error was:
 
     def parse_files(files)
       file_list = gather_files files
-      @stats = ::RDoc::Stats.new @store, file_list.length, @options.verbosity
+      @stats = Stats.new @store, file_list.length, @options.verbosity
 
       return [] if file_list.empty?
 
@@ -481,15 +481,15 @@ The internal error was:
     # current directory, so make sure you're somewhere writable before invoking.
 
     def document(options)
-      if ::RDoc::Options === options
+      if Options === options
         @options = options
       else
-        @options = ::RDoc::Options.load_options
+        @options = Options.load_options
         @options.parse options
       end
       @options.finish
 
-      @store = ::RDoc::Store.new(@options)
+      @store = Store.new(@options)
 
       if @options.pipe
         handle_pipe
@@ -592,7 +592,7 @@ The internal error was:
       sig_dirs = []
       sig_dir = File.join(@options.root.to_s, 'sig')
       sig_dirs << sig_dir if File.directory?(sig_dir)
-      signatures = ::RDoc::RbsHelper.load_signatures(*sig_dirs)
+      signatures = RbsHelper.load_signatures(*sig_dirs)
       @store.merge_rbs_signatures(signatures)
     rescue RBS::BaseError, Errno::ENOENT, LoadError => e
       # In server mode, a previous successful load may have populated the store;
@@ -673,7 +673,7 @@ The internal error was:
     # Called from #document when <tt>--server</tt> is given.
 
     def start_server
-      server = ::RDoc::Server.new(self, @options.server_port)
+      server = Server.new(self, @options.server_port)
       server.start
     end
 
@@ -714,7 +714,7 @@ begin
   rdoc_extensions = Gem.find_latest_files 'rdoc/discover'
 
   rdoc_extensions.each do |extension|
-    next if ::RDoc::RDoc.rbs_discovery_extension?(extension)
+    next if RDoc::RDoc.rbs_discovery_extension?(extension)
 
     begin
       load extension

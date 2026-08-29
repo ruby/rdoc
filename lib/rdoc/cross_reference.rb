@@ -167,7 +167,7 @@ module RDoc
       end
 
       if container
-        unless ::RDoc::TopLevel === container
+        unless TopLevel === container
           if '.' == type
             if 'new' == symbol # AnyClassName.new will be class method
               ref = container.find_local_symbol symbol
@@ -204,7 +204,7 @@ module RDoc
       # Try a page name
       ref = @store.page name if not ref and name =~ /^[\w.\/]+$/
 
-      ref = nil if ::RDoc::Alias === ref # external alias, can't link to it
+      ref = nil if Alias === ref # external alias, can't link to it
 
       ref = nil unless ref&.display?
 

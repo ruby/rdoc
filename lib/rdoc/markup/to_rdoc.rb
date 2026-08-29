@@ -4,7 +4,7 @@ module RDoc
     ##
     # Outputs RDoc markup as RDoc markup! (mostly)
 
-    class ToRdoc < ::RDoc::Markup::Formatter
+    class ToRdoc < Markup::Formatter
       DEFAULT_HEADINGS = {
           1 => ['= ',      ''],
           2 => ['== ',     ''],
@@ -184,7 +184,7 @@ module RDoc
           @list_index << 'A'
           @list_width << list.items.length.to_s.length
         else
-          raise ::RDoc::Error, "invalid list type #{list.type}"
+          raise Error, "invalid list type #{list.type}"
         end
 
         @list_type << list.type

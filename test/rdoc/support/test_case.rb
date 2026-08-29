@@ -47,20 +47,20 @@ module RDoc
 
       @top_level = nil
 
-      @RM = ::RDoc::Markup
+      @RM = Markup
 
       @pwd = Dir.pwd
 
-      @options = ::RDoc::Options.new
-      @store = ::RDoc::Store.new(@options)
+      @options = Options.new
+      @store = Store.new(@options)
 
-      @rdoc = ::RDoc::RDoc.new
+      @rdoc = RDoc.new
       @rdoc.store = @store
       @rdoc.options = @options
 
       @rdoc.generator = Object.new
 
-      ::RDoc::Markup::PreProcess.reset
+      Markup::PreProcess.reset
     end
 
     ##
@@ -113,7 +113,7 @@ module RDoc
     # By default the comment has the 'rdoc' format.
 
     def comment(text, top_level = @top_level, language = nil)
-      comment = ::RDoc::Comment.new text, top_level, language
+      comment = Comment.new text, top_level, language
       comment
     end
 
@@ -157,7 +157,7 @@ module RDoc
 
     def mu_pp(obj) # :nodoc:
       s = obj.pretty_inspect
-      s = ::RDoc::Encoding.change_encoding s, ::Encoding.default_external
+      s = Encoding.change_encoding s, ::Encoding.default_external
       s.chomp
     end
 

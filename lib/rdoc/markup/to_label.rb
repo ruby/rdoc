@@ -9,7 +9,7 @@ module RDoc
     # converted to their link part and cross-reference links have the suppression
     # marks removed (\\SomeClass is converted to SomeClass).
 
-    class ToLabel < ::RDoc::Markup::Formatter
+    class ToLabel < Markup::Formatter
 
       attr_reader :res # :nodoc:
 
@@ -19,7 +19,7 @@ module RDoc
       def initialize
         super
 
-        @markup.add_regexp_handling ::RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF
+        @markup.add_regexp_handling CrossReference::CROSSREF_REGEXP, :CROSSREF
 
         @res = []
       end
@@ -48,7 +48,7 @@ module RDoc
       def convert(text)
         label = extract_plaintext(text)
 
-        ::RDoc::Text.to_anchor(label)
+        Text.to_anchor(label)
       end
 
       ##

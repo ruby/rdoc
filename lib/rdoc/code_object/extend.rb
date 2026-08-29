@@ -5,7 +5,7 @@ module RDoc
   #
   #   RDoc::Extend.new 'Enumerable', 'comment ...'
 
-  class Extend < ::RDoc::Mixin
+  class Extend < Mixin
 
   end
 end

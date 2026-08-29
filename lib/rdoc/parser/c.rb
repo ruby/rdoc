@@ -118,7 +118,7 @@ module RDoc
     #    * block and return its value.
     #    */
 
-    class C < ::RDoc::Parser
+    class C < Parser
 
       parse_files_matching(/\.(?:([CcHh])\1?|c([+xp])\2|y)\z/)
 
@@ -173,7 +173,7 @@ module RDoc
       def initialize(top_level, content, options, stats)
         super
 
-        @known_classes = ::RDoc::KNOWN_CLASSES.dup
+        @known_classes = KNOWN_CLASSES.dup
         @content = handle_tab_width handle_ifdefs_in @content
         @file_dir = File.dirname @file_name
 
@@ -250,7 +250,7 @@ module RDoc
       # method that reference the same function.
 
       def add_alias(var_name, class_obj, old_name, new_name, comment, singleton:)
-        al = ::RDoc::Alias.new old_name, new_name, comment, singleton: singleton
+        al = Alias.new old_name, new_name, comment, singleton: singleton
         al.record_location @top_level
         class_obj.add_alias al
         @stats.add_alias al
@@ -446,7 +446,7 @@ module RDoc
           m = @known_classes[m] || m
 
           comment = new_comment '', @top_level, :c
-          incl = cls.add_include ::RDoc::Include.new(m, comment)
+          incl = cls.add_include Include.new(m, comment)
           incl.record_location @top_level
         end
       end
@@ -678,9 +678,9 @@ module RDoc
       def find_class(raw_name, name, base_name = nil)
         unless @classes[raw_name]
           if raw_name =~ /^rb_m/
-            container = @top_level.add_module ::RDoc::NormalModule, name
+            container = @top_level.add_module NormalModule, name
           else
-            container = @top_level.add_class ::RDoc::NormalClass, name
+            container = @top_level.add_class NormalClass, name
           end
           container.name = base_name if base_name
 
@@ -850,7 +850,7 @@ module RDoc
 
         name = attr_name.gsub(/rb_intern(?:_const)?\("([^"]+)"\)/, '\1')
 
-        attr = ::RDoc::Attr.new name, rw, comment
+        attr = Attr.new name, rw, comment
 
         attr.record_location @top_level
         class_obj.add_attribute attr
@@ -885,7 +885,7 @@ module RDoc
         end
 
         if type == :class
-          full_name = if ::RDoc::ClassModule === enclosure
+          full_name = if ClassModule === enclosure
                         enclosure.full_name + "::#{class_name}"
                       else
                         class_name
@@ -895,9 +895,9 @@ module RDoc
             parent_name = $1
           end
 
-          cm = enclosure.add_class ::RDoc::NormalClass, class_name, parent_name
+          cm = enclosure.add_class NormalClass, class_name, parent_name
         else
-          cm = enclosure.add_module ::RDoc::NormalModule, class_name
+          cm = enclosure.add_module NormalModule, class_name
         end
 
         cm.record_location enclosure.top_level
@@ -906,9 +906,9 @@ module RDoc
         find_class_comment cm.full_name, cm
 
         case cm
-        when ::RDoc::NormalClass
+        when NormalClass
           @stats.add_class cm
-        when ::RDoc::NormalModule
+        when NormalModule
           @stats.add_module cm
         end
 
@@ -961,12 +961,12 @@ module RDoc
 
             new_comment = self.new_comment(new_comment, @top_level, :c)
 
-            con = ::RDoc::Constant.new const_name, new_definition, new_comment
+            con = Constant.new const_name, new_definition, new_comment
           else
-            con = ::RDoc::Constant.new const_name, definition, comment
+            con = Constant.new const_name, definition, comment
           end
         else
-          con = ::RDoc::Constant.new const_name, definition, comment
+          con = Constant.new const_name, definition, comment
         end
 
         con.record_location @top_level
@@ -1008,7 +1008,7 @@ module RDoc
             type = 'method' # force public
           end
 
-          meth_obj = ::RDoc::AnyMethod.new meth_name, singleton: singleton
+          meth_obj = AnyMethod.new meth_name, singleton: singleton
           meth_obj.c_function = function
 
           p_count = Integer(param_count) rescue -1
@@ -1017,7 +1017,7 @@ module RDoc
             file_name = File.join @file_dir, source_file
 
             if File.exist? file_name
-              file_content = ::RDoc::Encoding.read_file file_name, @options.encoding
+              file_content = Encoding.read_file file_name, @options.encoding
             else
               @options.warn "unknown source #{source_file} for #{meth_name} in #{@file_name}"
             end
@@ -1221,7 +1221,7 @@ module RDoc
       # Creates a RDoc::Comment instance.
 
       def new_comment(text = nil, location = nil, language = nil)
-        ::RDoc::Comment.new(text, location, language).tap do |comment|
+        Comment.new(text, location, language).tap do |comment|
           comment.format = @markup
         end
       end

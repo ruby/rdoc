@@ -3,7 +3,7 @@ module RDoc
   ##
   # AnyMethod is the base class for objects representing methods
 
-  class AnyMethod < ::RDoc::MethodAttr
+  class AnyMethod < MethodAttr
 
     ##
     # 2::
@@ -37,7 +37,7 @@ module RDoc
 
     attr_accessor :calls_super
 
-    include ::RDoc::TokenStream
+    include TokenStream
 
     ##
     # Creates a new AnyMethod with name +name+
@@ -127,7 +127,7 @@ module RDoc
 
     def is_alias_for # :nodoc:
       case @is_alias_for
-      when ::RDoc::MethodAttr
+      when MethodAttr
         @is_alias_for
       when Array
         return nil unless @store
@@ -198,7 +198,7 @@ module RDoc
       @full_name     = array[2]
       @singleton     = array[3]
       @visibility    = array[4]
-      @comment       = ::RDoc::Comment.from_document array[5]
+      @comment       = Comment.from_document array[5]
       @call_seq      = array[6]
       @block_params  = array[7]
       #                      8 handled below
@@ -212,7 +212,7 @@ module RDoc
       @type_signature_lines = array[16]&.split("\n")
 
       array[8].each do |new_name, document|
-        add_alias ::RDoc::Alias.new(@name, new_name, ::RDoc::Comment.from_document(document), singleton: @singleton)
+        add_alias Alias.new(@name, new_name, Comment.from_document(document), singleton: @singleton)
       end
 
       @parent_name ||= if @full_name =~ /#/
@@ -223,7 +223,7 @@ module RDoc
                          name.join '::'
                        end
 
-      @file = ::RDoc::TopLevel.new array[10] if version > 0
+      @file = TopLevel.new array[10] if version > 0
     end
 
     ##

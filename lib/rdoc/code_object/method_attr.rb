@@ -3,7 +3,7 @@ module RDoc
   ##
   # Abstract class representing either a method or an attribute.
 
-  class MethodAttr < ::RDoc::CodeObject
+  class MethodAttr < CodeObject
 
     include Comparable
 

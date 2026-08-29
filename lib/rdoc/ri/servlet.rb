@@ -76,7 +76,7 @@ module RDoc
         @extra_doc_dirs = extra_doc_dirs
         @stores     = stores
 
-        @options = ::RDoc::Options.new
+        @options = Options.new
         @options.op_dir = '.'
 
         darkfish_dir = nil
@@ -221,7 +221,7 @@ module RDoc
 <h1>Error</h1>
 
 <p>While processing <code>#{ERB::Util.html_escape req.request_uri}</code> the
-RDoc (#{ERB::Util.html_escape(::RDoc::VERSION)}) server has encountered a
+RDoc (#{ERB::Util.html_escape(VERSION)}) server has encountered a
 <code>#{ERB::Util.html_escape exception.class}</code>
 exception:
 
@@ -246,12 +246,12 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
       # Instantiates a Darkfish generator for +store+
 
       def generator_for(store)
-        generator = ::RDoc::Generator::Darkfish.new store, @options
+        generator = Generator::Darkfish.new store, @options
         generator.file_output = false
         generator.asset_rel_path = '..'
         generator.setup
 
-        rdoc = ::RDoc::RDoc.new
+        rdoc = RDoc.new
         rdoc.store     = store
         rdoc.generator = generator
         rdoc.options   = @options
@@ -328,14 +328,14 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
       # Enumerates the ri paths.  See RDoc::RI::Paths#each
 
       def ri_paths(&block)
-        ::RDoc::RI::Paths.each true, true, true, :all, *@extra_doc_dirs, &block #TODO: pass extra_dirs
+        RI::Paths.each true, true, true, :all, *@extra_doc_dirs, &block #TODO: pass extra_dirs
       end
 
       ##
       # Generates the root page on +res+.  +req+ is ignored.
 
       def root(req, res)
-        generator = ::RDoc::Generator::Darkfish.new nil, @options
+        generator = Generator::Darkfish.new nil, @options
 
         res.body = generator.generate_servlet_root installed_docs
 
@@ -422,11 +422,11 @@ version.  If you're viewing Ruby's documentation, include the version of ruby.
       def store_for(source_name)
         case source_name
         when 'home'
-          ::RDoc::Store.new(@options, path: ::RDoc::RI::Paths.home_dir, type: :home)
+          ::RDoc::Store.new(@options, path: RI::Paths.home_dir, type: :home)
         when 'ruby'
-          ::RDoc::Store.new(@options, path: ::RDoc::RI::Paths.system_dir, type: :system)
+          ::RDoc::Store.new(@options, path: RI::Paths.system_dir, type: :system)
         when 'site'
-          ::RDoc::Store.new(@options, path: ::RDoc::RI::Paths.site_dir, type: :site)
+          ::RDoc::Store.new(@options, path: RI::Paths.site_dir, type: :site)
         when /\Aextra-(\d+)\z/
           index = $1.to_i - 1
           ri_dir = installed_docs[index][4]

@@ -3,7 +3,7 @@ module RDoc
   ##
   # A file loaded by \#require
 
-  class Require < ::RDoc::CodeObject
+  class Require < CodeObject
 
     ##
     # Name of the required file
@@ -38,11 +38,11 @@ module RDoc
 
     def top_level
       @top_level ||= begin
-        tl = ::RDoc::TopLevel.all_files_hash[name + '.rb']
+        tl = TopLevel.all_files_hash[name + '.rb']
 
-        if tl.nil? and ::RDoc::TopLevel.all_files.first.full_name =~ %r(^lib/)
+        if tl.nil? and TopLevel.all_files.first.full_name =~ %r(^lib/)
           # second chance
-          tl = ::RDoc::TopLevel.all_files_hash['lib/' + name + '.rb']
+          tl = TopLevel.all_files_hash['lib/' + name + '.rb']
         end
 
         tl

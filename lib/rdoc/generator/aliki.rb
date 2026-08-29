@@ -10,10 +10,10 @@ module RDoc
     # Author: Stan Lo
     #
 
-    class Aliki < ::RDoc::Generator::Darkfish
+    class Aliki < Generator::Darkfish
       DESCRIPTION = 'HTML generator, written by Stan Lo'
 
-      ::RDoc::RDoc.add_generator self
+      RDoc.add_generator self
 
       def initialize(store, options)
         super
@@ -129,7 +129,7 @@ module RDoc
         lines = method_attr.type_signature_lines || @store.rbs_signature_for(method_attr)
         return unless lines
 
-        ::RDoc::RbsHelper.signature_to_html(
+        RbsHelper.signature_to_html(
           lines,
           lookup: @store.type_name_lookup,
           from_path: from_path
@@ -159,8 +159,8 @@ module RDoc
 
       def build_class_module_entry(klass)
         type = case klass
-               when ::RDoc::NormalClass then 'class'
-               when ::RDoc::NormalModule then 'module'
+               when NormalClass then 'class'
+               when NormalModule then 'module'
                else 'class'
                end
 
