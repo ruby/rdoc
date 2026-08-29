@@ -2,472 +2,476 @@
 
 require_relative '../helper'
 
-class RDoc::Markup::PreProcessTest < RDoc::TestCase
+module RDoc
+  class Markup
+    class PreProcessTest < ::RDoc::TestCase
 
-  def setup
-    super
+      def setup
+        super
 
-    @tempfile = Tempfile.new 'test_rdoc_markup_pre_process'
-    @file_name = File.basename @tempfile.path
-    @dir  = File.dirname @tempfile.path
+        @tempfile = Tempfile.new 'test_rdoc_markup_pre_process'
+        @file_name = File.basename @tempfile.path
+        @dir  = File.dirname @tempfile.path
 
-    @pp = RDoc::Markup::PreProcess.new @tempfile.path, [@dir, File.expand_path('..', File.dirname(__FILE__))]
-  end
+        @pp = ::RDoc::Markup::PreProcess.new @tempfile.path, [@dir, File.expand_path('..', File.dirname(__FILE__))]
+      end
 
-  def teardown
-    super
+      def teardown
+        super
 
-    @tempfile.close!
-  end
+        @tempfile.close!
+      end
 
-  def test_class_register
-    RDoc::Markup::PreProcess.register 'for_test' do raise 'fail' end
+      def test_class_register
+        ::RDoc::Markup::PreProcess.register 'for_test' do raise 'fail' end
 
-    assert_equal %w[for_test], RDoc::Markup::PreProcess.registered.keys
-  end
+        assert_equal %w[for_test], ::RDoc::Markup::PreProcess.registered.keys
+      end
 
-  def test_class_post_process
-    RDoc::Markup::PreProcess.post_process do end
+      def test_class_post_process
+        ::RDoc::Markup::PreProcess.post_process do end
 
-    assert_equal 1, RDoc::Markup::PreProcess.post_processors.length,
-                 proc{RDoc::Markup::PreProcess.post_processors.inspect}
-  end
+        assert_equal 1, ::RDoc::Markup::PreProcess.post_processors.length,
+                     proc{::RDoc::Markup::PreProcess.post_processors.inspect}
+      end
 
-  def test_include_file
-    @tempfile.write <<-INCLUDE
+      def test_include_file
+        @tempfile.write <<-INCLUDE
 # -*- mode: rdoc; coding: utf-8; fill-column: 74; -*-
 
 Regular expressions (<i>regexp</i>s) are patterns which describe the
 contents of a string.
     INCLUDE
 
-    @tempfile.flush
-    @tempfile.rewind
+        @tempfile.flush
+        @tempfile.rewind
 
-    content = @pp.include_file @file_name, '', nil
+        content = @pp.include_file @file_name, '', nil
 
-    expected = <<-EXPECTED
+        expected = <<-EXPECTED
 Regular expressions (<i>regexp</i>s) are patterns which describe the
 contents of a string.
     EXPECTED
 
-    assert_equal expected, content
-  end
+        assert_equal expected, content
+      end
 
-  def test_include_file_encoding_incompatible
-    @tempfile.write <<-INCLUDE
+      def test_include_file_encoding_incompatible
+        @tempfile.write <<-INCLUDE
 # -*- mode: rdoc; coding: utf-8; fill-column: 74; -*-
 
 π
     INCLUDE
 
-    @tempfile.flush
-    @tempfile.rewind
+        @tempfile.flush
+        @tempfile.rewind
 
-    content = @pp.include_file @file_name, '', Encoding::US_ASCII
+        content = @pp.include_file @file_name, '', ::Encoding::US_ASCII
 
-    expected = "?\n"
+        expected = "?\n"
 
-    assert_equal expected, content
-  end
+        assert_equal expected, content
+      end
 
-  def test_include_file_in_other_directory
-    content = nil
-    out, err = capture_output do
-      content = @pp.include_file "test.txt", '', nil
+      def test_include_file_in_other_directory
+        content = nil
+        out, err = capture_output do
+          content = @pp.include_file "test.txt", '', nil
+        end
+
+        assert_empty out
+        assert_empty err
+
+        assert_equal "test file\n", content
+      end
+
+      def test_handle
+        text = "# :stopdoc:\n"
+        code_object = ::RDoc::CodeObject.new
+        output = @pp.handle text, code_object
+
+        assert_equal "#\n", output
+      end
+
+      def test_handle_comment
+        text = "# :stopdoc:\n"
+        c = comment text
+        code_object = ::RDoc::CodeObject.new
+
+        output = @pp.handle c, code_object
+
+        assert_equal "#\n", output
+      end
+
+      def test_handle_markup
+        c = comment ':markup: rd'
+
+        @pp.handle c
+
+        assert_equal 'rd', c.format
+      end
+
+      def test_handle_markup_empty
+        c = comment ':markup:'
+
+        @pp.handle c
+
+        assert_equal 'rdoc', c.format
+      end
+
+      def test_handle_post_process
+        cd = ::RDoc::CodeObject.new
+
+        ::RDoc::Markup::PreProcess.post_process do |text, code_object|
+          code_object.metadata[:stuff] = text
+
+          :junk
+        end
+
+        text = "# a b c\n"
+
+        out = @pp.handle text, cd
+
+        assert_equal "# a b c\n", out
+        assert_equal "# a b c\n", cd.metadata[:stuff]
+      end
+
+      def test_handle_unregistered
+        text = "# :x: y\n"
+        out = @pp.handle text
+
+        assert_equal text, out
+      end
+
+      def test_handle_directive_blankline
+        result = @pp.handle_directive '#', 'arg', 'a, b'
+
+        assert_equal "#:arg: a, b\n", result
+      end
+
+      def test_handle_directive_downcase
+        method = ::RDoc::AnyMethod.new 'm'
+
+        @pp.handle_directive '', 'ARG', 'a, b', method
+
+        assert_equal 'a, b', method.params
+      end
+
+      def test_handle_directive_arg
+        method = ::RDoc::AnyMethod.new 'm'
+
+        @pp.handle_directive '', 'arg', 'a, b', method
+
+        assert_equal 'a, b', method.params
+      end
+
+      def test_handle_directive_arg_no_context
+        result = @pp.handle_directive '', 'arg', 'a, b', nil
+
+        assert_equal ":arg: a, b\n", result
+      end
+
+      def test_handle_directive_args
+        method = ::RDoc::AnyMethod.new 'm'
+
+        @pp.handle_directive '', 'args', 'a, b', method
+
+        assert_equal 'a, b', method.params
+      end
+
+      def test_handle_directive_block
+        result = @pp.handle_directive '', 'x', 'y' do |directive, param|
+          ''
+        end
+
+        assert_empty result
+      end
+
+      def test_handle_directive_block_false
+        result = @pp.handle_directive '', 'x', 'y' do |directive, param|
+          false
+        end
+
+        assert_equal ":x: y\n", result
+      end
+
+      def test_handle_directive_block_nil
+        result = @pp.handle_directive '', 'x', 'y' do |directive, param|
+          nil
+        end
+
+        assert_equal ":x: y\n", result
+      end
+
+      def test_handle_directive_category
+        context = ::RDoc::Context.new
+        original_section = context.current_section
+
+        @pp.handle_directive '', 'category', 'other', context
+
+        refute_equal original_section, context.current_section
+      end
+
+      def test_handle_directive_doc
+        code_object = ::RDoc::CodeObject.new
+        code_object.document_self = false
+        code_object.force_documentation = false
+
+        @pp.handle_directive '', 'doc', nil, code_object
+
+        assert code_object.document_self
+        assert code_object.force_documentation
+      end
+
+      def test_handle_directive_doc_no_context
+        result = @pp.handle_directive '', 'doc', nil
+
+        assert_equal "\n", result
+      end
+
+      def test_handle_directive_enddoc
+        code_object = ::RDoc::CodeObject.new
+
+        @pp.handle_directive '', 'enddoc', nil, code_object
+
+        assert code_object.done_documenting
+      end
+
+      def test_handle_directive_include
+        @tempfile.write 'included'
+        @tempfile.flush
+
+        result = @pp.handle_directive '', 'include', @file_name
+
+        assert_equal 'included', result
+      end
+
+      def test_handle_directive_main
+        @pp.options = ::RDoc::Options.new
+
+        # :main: directive was removed; it is now treated as unhandled metadata
+        code_object = ::RDoc::CodeObject.new
+        @pp.handle_directive '', 'main', 'M', code_object
+
+        assert_equal 'M', code_object.metadata['main']
+      end
+
+      def test_handle_directive_notnew
+        m = ::RDoc::AnyMethod.new 'm'
+
+        @pp.handle_directive '', 'notnew', nil, m
+
+        assert m.dont_rename_initialize
+      end
+
+      def test_handle_directive_not_new
+        m = ::RDoc::AnyMethod.new 'm'
+
+        @pp.handle_directive '', 'not_new', nil, m
+
+        assert m.dont_rename_initialize
+      end
+
+      def test_handle_directive_not_dash_new
+        m = ::RDoc::AnyMethod.new 'm'
+
+        @pp.handle_directive '', 'not-new', nil, m
+
+        assert m.dont_rename_initialize
+      end
+
+      def test_handle_directive_nodoc
+        code_object = ::RDoc::CodeObject.new
+        code_object.document_self = true
+        code_object.document_children = true
+
+        @pp.handle_directive '', 'nodoc', nil, code_object
+
+        refute code_object.document_self
+        assert code_object.document_children
+      end
+
+      def test_handle_directive_nodoc_all
+        code_object = ::RDoc::CodeObject.new
+        code_object.document_self = true
+        code_object.document_children = true
+
+        @pp.handle_directive '', 'nodoc', 'all', code_object
+
+        refute code_object.document_self
+        refute code_object.document_children
+      end
+
+      def test_handle_directive_nodoc_no_context
+        result = @pp.handle_directive '', 'nodoc', nil
+
+        assert_equal "\n", result
+      end
+
+      def test_handle_directive_registered
+        ::RDoc::Markup::PreProcess.register 'x'
+
+        result = @pp.handle_directive '', 'x', 'y'
+
+        assert_nil result
+
+        result = @pp.handle_directive '', 'x', 'y' do |directive, param|
+          false
+        end
+
+        assert_equal ":x: y\n", result
+
+        result = @pp.handle_directive '', 'x', 'y' do |directive, param|
+          ''
+        end
+
+        assert_equal '', result
+      end
+
+      def test_handle_directive_registered_block
+        called = nil
+
+        ::RDoc::Markup::PreProcess.register 'x' do |directive, param|
+          called = [directive, param]
+          'blah'
+        end
+
+        result = @pp.handle_directive '', 'x', 'y'
+
+        assert_equal 'blah', result
+        assert_equal %w[x y], called
+      end
+
+      def test_handle_directive_registered_code_object
+        ::RDoc::Markup::PreProcess.register 'x'
+        code_object = ::RDoc::CodeObject.new
+
+        @pp.handle_directive '', 'x', 'y', code_object
+
+        assert_equal 'y', code_object.metadata['x']
+
+        code_object.metadata.clear
+
+        result = @pp.handle_directive '', 'x', 'y' do |directive, param|
+          false
+        end
+
+        assert_equal ":x: y\n", result
+        assert_empty code_object.metadata
+
+        result = @pp.handle_directive '', 'x', 'y' do |directive, param|
+          ''
+        end
+
+        assert_equal '', result
+        assert_empty code_object.metadata
+      end
+
+      def test_handle_directive_startdoc
+        code_object = ::RDoc::CodeObject.new
+        code_object.stop_doc
+        code_object.force_documentation = false
+
+        @pp.handle_directive '', 'startdoc', nil, code_object
+
+        assert code_object.document_self
+        assert code_object.document_children
+        assert code_object.force_documentation
+      end
+
+      def test_handle_directive_stopdoc
+        code_object = ::RDoc::CodeObject.new
+
+        @pp.handle_directive '', 'stopdoc', nil, code_object
+
+        refute code_object.document_self
+        refute code_object.document_children
+      end
+
+      def test_handle_directive_title
+        @pp.options = ::RDoc::Options.new
+
+        # :title: directive was removed; it is now treated as unhandled metadata
+        code_object = ::RDoc::CodeObject.new
+        @pp.handle_directive '', 'title', 'T', code_object
+
+        assert_equal 'T', code_object.metadata['title']
+      end
+
+      def test_handle_directive_unhandled
+        code_object = ::RDoc::CodeObject.new
+
+        @pp.handle_directive '', 'x', 'y', code_object
+
+        assert_equal 'y', code_object.metadata['x']
+
+        code_object.metadata.clear
+
+        @pp.handle_directive '', 'x', '', code_object
+
+        assert_includes code_object.metadata, 'x'
+      end
+
+      def test_handle_directive_unhandled_block
+        code_object = ::RDoc::CodeObject.new
+
+        @pp.handle_directive '', 'x', 'y', code_object do
+          false
+        end
+
+        assert_empty code_object.metadata
+
+        @pp.handle_directive '', 'x', 'y', code_object do
+          nil
+        end
+
+        assert_equal 'y', code_object.metadata['x']
+
+        code_object.metadata.clear
+
+        @pp.handle_directive '', 'x', 'y', code_object do
+          ''
+        end
+
+        assert_empty code_object.metadata
+      end
+
+      def test_handle_directive_yield
+        method = ::RDoc::AnyMethod.new 'm'
+        method.params = 'index, &block'
+
+        @pp.handle_directive '', 'yield', 'item', method
+
+        assert_equal 'item', method.block_params
+        assert_equal 'index', method.params
+      end
+
+      def test_handle_directive_yield_block_param
+        method = ::RDoc::AnyMethod.new 'm'
+        method.params = '&block'
+
+        @pp.handle_directive '', 'yield', 'item', method
+
+        assert_equal 'item', method.block_params
+        assert_empty method.params
+      end
+
+      def test_handle_directive_yield_no_context
+        method = ::RDoc::AnyMethod.new 'm'
+
+        @pp.handle_directive '', 'yield', 'item', method
+
+        assert_equal 'item', method.block_params
+      end
+
+      def test_handle_directive_yields
+        method = ::RDoc::AnyMethod.new 'm'
+
+        @pp.handle_directive '', 'yields', 'item', method
+
+        assert_equal 'item', method.block_params
+      end
+
     end
-
-    assert_empty out
-    assert_empty err
-
-    assert_equal "test file\n", content
   end
-
-  def test_handle
-    text = "# :stopdoc:\n"
-    code_object = RDoc::CodeObject.new
-    output = @pp.handle text, code_object
-
-    assert_equal "#\n", output
-  end
-
-  def test_handle_comment
-    text = "# :stopdoc:\n"
-    c = comment text
-    code_object = RDoc::CodeObject.new
-
-    output = @pp.handle c, code_object
-
-    assert_equal "#\n", output
-  end
-
-  def test_handle_markup
-    c = comment ':markup: rd'
-
-    @pp.handle c
-
-    assert_equal 'rd', c.format
-  end
-
-  def test_handle_markup_empty
-    c = comment ':markup:'
-
-    @pp.handle c
-
-    assert_equal 'rdoc', c.format
-  end
-
-  def test_handle_post_process
-    cd = RDoc::CodeObject.new
-
-    RDoc::Markup::PreProcess.post_process do |text, code_object|
-      code_object.metadata[:stuff] = text
-
-      :junk
-    end
-
-    text = "# a b c\n"
-
-    out = @pp.handle text, cd
-
-    assert_equal "# a b c\n", out
-    assert_equal "# a b c\n", cd.metadata[:stuff]
-  end
-
-  def test_handle_unregistered
-    text = "# :x: y\n"
-    out = @pp.handle text
-
-    assert_equal text, out
-  end
-
-  def test_handle_directive_blankline
-    result = @pp.handle_directive '#', 'arg', 'a, b'
-
-    assert_equal "#:arg: a, b\n", result
-  end
-
-  def test_handle_directive_downcase
-    method = RDoc::AnyMethod.new 'm'
-
-    @pp.handle_directive '', 'ARG', 'a, b', method
-
-    assert_equal 'a, b', method.params
-  end
-
-  def test_handle_directive_arg
-    method = RDoc::AnyMethod.new 'm'
-
-    @pp.handle_directive '', 'arg', 'a, b', method
-
-    assert_equal 'a, b', method.params
-  end
-
-  def test_handle_directive_arg_no_context
-    result = @pp.handle_directive '', 'arg', 'a, b', nil
-
-    assert_equal ":arg: a, b\n", result
-  end
-
-  def test_handle_directive_args
-    method = RDoc::AnyMethod.new 'm'
-
-    @pp.handle_directive '', 'args', 'a, b', method
-
-    assert_equal 'a, b', method.params
-  end
-
-  def test_handle_directive_block
-    result = @pp.handle_directive '', 'x', 'y' do |directive, param|
-      ''
-    end
-
-    assert_empty result
-  end
-
-  def test_handle_directive_block_false
-    result = @pp.handle_directive '', 'x', 'y' do |directive, param|
-      false
-    end
-
-    assert_equal ":x: y\n", result
-  end
-
-  def test_handle_directive_block_nil
-    result = @pp.handle_directive '', 'x', 'y' do |directive, param|
-      nil
-    end
-
-    assert_equal ":x: y\n", result
-  end
-
-  def test_handle_directive_category
-    context = RDoc::Context.new
-    original_section = context.current_section
-
-    @pp.handle_directive '', 'category', 'other', context
-
-    refute_equal original_section, context.current_section
-  end
-
-  def test_handle_directive_doc
-    code_object = RDoc::CodeObject.new
-    code_object.document_self = false
-    code_object.force_documentation = false
-
-    @pp.handle_directive '', 'doc', nil, code_object
-
-    assert code_object.document_self
-    assert code_object.force_documentation
-  end
-
-  def test_handle_directive_doc_no_context
-    result = @pp.handle_directive '', 'doc', nil
-
-    assert_equal "\n", result
-  end
-
-  def test_handle_directive_enddoc
-    code_object = RDoc::CodeObject.new
-
-    @pp.handle_directive '', 'enddoc', nil, code_object
-
-    assert code_object.done_documenting
-  end
-
-  def test_handle_directive_include
-    @tempfile.write 'included'
-    @tempfile.flush
-
-    result = @pp.handle_directive '', 'include', @file_name
-
-    assert_equal 'included', result
-  end
-
-  def test_handle_directive_main
-    @pp.options = RDoc::Options.new
-
-    # :main: directive was removed; it is now treated as unhandled metadata
-    code_object = RDoc::CodeObject.new
-    @pp.handle_directive '', 'main', 'M', code_object
-
-    assert_equal 'M', code_object.metadata['main']
-  end
-
-  def test_handle_directive_notnew
-    m = RDoc::AnyMethod.new 'm'
-
-    @pp.handle_directive '', 'notnew', nil, m
-
-    assert m.dont_rename_initialize
-  end
-
-  def test_handle_directive_not_new
-    m = RDoc::AnyMethod.new 'm'
-
-    @pp.handle_directive '', 'not_new', nil, m
-
-    assert m.dont_rename_initialize
-  end
-
-  def test_handle_directive_not_dash_new
-    m = RDoc::AnyMethod.new 'm'
-
-    @pp.handle_directive '', 'not-new', nil, m
-
-    assert m.dont_rename_initialize
-  end
-
-  def test_handle_directive_nodoc
-    code_object = RDoc::CodeObject.new
-    code_object.document_self = true
-    code_object.document_children = true
-
-    @pp.handle_directive '', 'nodoc', nil, code_object
-
-    refute code_object.document_self
-    assert code_object.document_children
-  end
-
-  def test_handle_directive_nodoc_all
-    code_object = RDoc::CodeObject.new
-    code_object.document_self = true
-    code_object.document_children = true
-
-    @pp.handle_directive '', 'nodoc', 'all', code_object
-
-    refute code_object.document_self
-    refute code_object.document_children
-  end
-
-  def test_handle_directive_nodoc_no_context
-    result = @pp.handle_directive '', 'nodoc', nil
-
-    assert_equal "\n", result
-  end
-
-  def test_handle_directive_registered
-    RDoc::Markup::PreProcess.register 'x'
-
-    result = @pp.handle_directive '', 'x', 'y'
-
-    assert_nil result
-
-    result = @pp.handle_directive '', 'x', 'y' do |directive, param|
-      false
-    end
-
-    assert_equal ":x: y\n", result
-
-    result = @pp.handle_directive '', 'x', 'y' do |directive, param|
-      ''
-    end
-
-    assert_equal '', result
-  end
-
-  def test_handle_directive_registered_block
-    called = nil
-
-    RDoc::Markup::PreProcess.register 'x' do |directive, param|
-      called = [directive, param]
-      'blah'
-    end
-
-    result = @pp.handle_directive '', 'x', 'y'
-
-    assert_equal 'blah', result
-    assert_equal %w[x y], called
-  end
-
-  def test_handle_directive_registered_code_object
-    RDoc::Markup::PreProcess.register 'x'
-    code_object = RDoc::CodeObject.new
-
-    @pp.handle_directive '', 'x', 'y', code_object
-
-    assert_equal 'y', code_object.metadata['x']
-
-    code_object.metadata.clear
-
-    result = @pp.handle_directive '', 'x', 'y' do |directive, param|
-      false
-    end
-
-    assert_equal ":x: y\n", result
-    assert_empty code_object.metadata
-
-    result = @pp.handle_directive '', 'x', 'y' do |directive, param|
-      ''
-    end
-
-    assert_equal '', result
-    assert_empty code_object.metadata
-  end
-
-  def test_handle_directive_startdoc
-    code_object = RDoc::CodeObject.new
-    code_object.stop_doc
-    code_object.force_documentation = false
-
-    @pp.handle_directive '', 'startdoc', nil, code_object
-
-    assert code_object.document_self
-    assert code_object.document_children
-    assert code_object.force_documentation
-  end
-
-  def test_handle_directive_stopdoc
-    code_object = RDoc::CodeObject.new
-
-    @pp.handle_directive '', 'stopdoc', nil, code_object
-
-    refute code_object.document_self
-    refute code_object.document_children
-  end
-
-  def test_handle_directive_title
-    @pp.options = RDoc::Options.new
-
-    # :title: directive was removed; it is now treated as unhandled metadata
-    code_object = RDoc::CodeObject.new
-    @pp.handle_directive '', 'title', 'T', code_object
-
-    assert_equal 'T', code_object.metadata['title']
-  end
-
-  def test_handle_directive_unhandled
-    code_object = RDoc::CodeObject.new
-
-    @pp.handle_directive '', 'x', 'y', code_object
-
-    assert_equal 'y', code_object.metadata['x']
-
-    code_object.metadata.clear
-
-    @pp.handle_directive '', 'x', '', code_object
-
-    assert_includes code_object.metadata, 'x'
-  end
-
-  def test_handle_directive_unhandled_block
-    code_object = RDoc::CodeObject.new
-
-    @pp.handle_directive '', 'x', 'y', code_object do
-      false
-    end
-
-    assert_empty code_object.metadata
-
-    @pp.handle_directive '', 'x', 'y', code_object do
-      nil
-    end
-
-    assert_equal 'y', code_object.metadata['x']
-
-    code_object.metadata.clear
-
-    @pp.handle_directive '', 'x', 'y', code_object do
-      ''
-    end
-
-    assert_empty code_object.metadata
-  end
-
-  def test_handle_directive_yield
-    method = RDoc::AnyMethod.new 'm'
-    method.params = 'index, &block'
-
-    @pp.handle_directive '', 'yield', 'item', method
-
-    assert_equal 'item', method.block_params
-    assert_equal 'index', method.params
-  end
-
-  def test_handle_directive_yield_block_param
-    method = RDoc::AnyMethod.new 'm'
-    method.params = '&block'
-
-    @pp.handle_directive '', 'yield', 'item', method
-
-    assert_equal 'item', method.block_params
-    assert_empty method.params
-  end
-
-  def test_handle_directive_yield_no_context
-    method = RDoc::AnyMethod.new 'm'
-
-    @pp.handle_directive '', 'yield', 'item', method
-
-    assert_equal 'item', method.block_params
-  end
-
-  def test_handle_directive_yields
-    method = RDoc::AnyMethod.new 'm'
-
-    @pp.handle_directive '', 'yields', 'item', method
-
-    assert_equal 'item', method.block_params
-  end
-
 end

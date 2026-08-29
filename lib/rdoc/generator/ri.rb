@@ -1,30 +1,34 @@
 # frozen_string_literal: true
-##
-# Generates ri data files
+module RDoc
+  module Generator
+    ##
+    # Generates ri data files
 
-class RDoc::Generator::RI
+    class RI
 
-  RDoc::RDoc.add_generator self
+      ::RDoc::RDoc.add_generator self
 
-  ##
-  # Description of this generator
+      ##
+      # Description of this generator
 
-  DESCRIPTION = 'creates ri data files'
+      DESCRIPTION = 'creates ri data files'
 
-  ##
-  # Set up a new ri generator
+      ##
+      # Set up a new ri generator
 
-  def initialize(store, options) #:not-new:
-    @options    = options
-    @store      = store
-    @store.path = '.'
+      def initialize(store, options) #:not-new:
+        @options    = options
+        @store      = store
+        @store.path = '.'
+      end
+
+      ##
+      # Writes the parsed data store to disk for use by ri.
+
+      def generate
+        @store.save
+      end
+
+    end
   end
-
-  ##
-  # Writes the parsed data store to disk for use by ri.
-
-  def generate
-    @store.save
-  end
-
 end

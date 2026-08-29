@@ -7,191 +7,192 @@ require 'pathname'
 require 'time'
 require_relative 'rbs_helper'
 
-##
-# This is the driver for generating RDoc output.  It handles file parsing and
-# generation of output.
-#
-# To use this class to generate RDoc output via the API, the recommended way
-# is:
-#
-#   rdoc = RDoc::RDoc.new
-#   options = RDoc::Options.load_options # returns an RDoc::Options instance
-#   # set extra options
-#   rdoc.document options
-#
-# You can also generate output like the +rdoc+ executable:
-#
-#   rdoc = RDoc::RDoc.new
-#   rdoc.document argv
-#
-# Where +argv+ is an array of strings, each corresponding to an argument you'd
-# give rdoc on the command line.  See <tt>rdoc --help</tt> for details.
-
-class RDoc::RDoc
-
-  @current = nil
-
+module RDoc
   ##
-  # This is the list of supported output generators
+  # This is the driver for generating RDoc output.  It handles file parsing and
+  # generation of output.
+  #
+  # To use this class to generate RDoc output via the API, the recommended way
+  # is:
+  #
+  #   rdoc = RDoc::RDoc.new
+  #   options = RDoc::Options.load_options # returns an RDoc::Options instance
+  #   # set extra options
+  #   rdoc.document options
+  #
+  # You can also generate output like the +rdoc+ executable:
+  #
+  #   rdoc = RDoc::RDoc.new
+  #   rdoc.document argv
+  #
+  # Where +argv+ is an array of strings, each corresponding to an argument you'd
+  # give rdoc on the command line.  See <tt>rdoc --help</tt> for details.
 
-  GENERATORS = {}
+  class RDoc
 
-  ##
-  # List of directory names always skipped
+    @current = nil
 
-  UNCONDITIONALLY_SKIPPED_DIRECTORIES = %w[CVS .svn .git].freeze
+    ##
+    # This is the list of supported output generators
 
-  ##
-  # List of directory names skipped if test suites should be skipped
+    GENERATORS = {}
 
-  TEST_SUITE_DIRECTORY_NAMES = %w[spec test].freeze
+    ##
+    # List of directory names always skipped
+
+    UNCONDITIONALLY_SKIPPED_DIRECTORIES = %w[CVS .svn .git].freeze
+
+    ##
+    # List of directory names skipped if test suites should be skipped
+
+    TEST_SUITE_DIRECTORY_NAMES = %w[spec test].freeze
 
 
-  ##
-  # Generator instance used for creating output
+    ##
+    # Generator instance used for creating output
 
-  attr_accessor :generator
+    attr_accessor :generator
 
-  ##
-  # Hash of files and their last modified times.
+    ##
+    # Hash of files and their last modified times.
 
-  attr_reader :last_modified
+    attr_reader :last_modified
 
-  ##
-  # RDoc options
+    ##
+    # RDoc options
 
-  attr_accessor :options
+    attr_accessor :options
 
-  ##
-  # Accessor for statistics.  Available after each call to parse_files
+    ##
+    # Accessor for statistics.  Available after each call to parse_files
 
-  attr_reader :stats
+    attr_reader :stats
 
-  ##
-  # The current documentation store
+    ##
+    # The current documentation store
 
-  attr_accessor :store
+    attr_accessor :store
 
-  ##
-  # Add +klass+ that can generate output after parsing
+    ##
+    # Add +klass+ that can generate output after parsing
 
-  def self.add_generator(klass)
-    name = klass.name.sub(/^RDoc::Generator::/, '').downcase
-    GENERATORS[name] = klass
-  end
-
-  ##
-  # Active RDoc::RDoc instance
-
-  def self.current
-    @current
-  end
-
-  ##
-  # Sets the active RDoc::RDoc instance
-
-  def self.current=(rdoc)
-    @current = rdoc
-  end
-
-  ##
-  # Creates a new RDoc::RDoc instance.  Call #document to parse files and
-  # generate documentation.
-
-  def initialize
-    @current       = nil
-    @generator     = nil
-    @last_modified = {}
-    @old_siginfo   = nil
-    @options       = nil
-    @stats         = nil
-    @store         = nil
-  end
-
-  ##
-  # Report an error message and exit
-
-  def error(msg)
-    raise RDoc::Error, msg
-  end
-
-  ##
-  # Gathers a set of parseable files from the files and directories listed in
-  # +files+.
-
-  def gather_files(files)
-    files = [@options.root.to_s] if files.empty?
-
-    file_list = normalized_file_list files, true, @options.exclude
-
-    file_list = remove_duplicate_files(remove_unparseable(file_list))
-
-    if file_list.count {|name, mtime|
-         file_list[name] = @last_modified[name] unless mtime
-         mtime
-       } > 0
-      @last_modified.replace file_list
-      file_list.keys.sort
-    else
-      []
+    def self.add_generator(klass)
+      name = klass.name.sub(/^RDoc::Generator::/, '').downcase
+      GENERATORS[name] = klass
     end
-  end
 
-  ##
-  # Turns RDoc from stdin into HTML
+    ##
+    # Active RDoc::RDoc instance
 
-  def handle_pipe
-    @html = RDoc::Markup::ToHtml.new(pipe: @options.pipe, output_decoration: @options.output_decoration)
-
-    parser = RDoc::Text::MARKUP_FORMAT[@options.markup]
-
-    document = parser.parse $stdin.read
-
-    out = @html.convert document
-
-    $stdout.write out
-  end
-
-  ##
-  # Installs a siginfo handler that prints the current filename.
-
-  def install_siginfo_handler
-    return unless Signal.list.include? 'INFO'
-
-    @old_siginfo = trap 'INFO' do
-      puts @current if @current
+    def self.current
+      @current
     end
-  end
 
-  ##
-  # Create an output dir if it doesn't exist. If it does exist, but doesn't
-  # contain the flag file <tt>created.rid</tt> then we refuse to use it, as
-  # we may clobber some manually generated documentation
+    ##
+    # Sets the active RDoc::RDoc instance
 
-  def setup_output_dir(dir, force)
-    flag_file = output_flag_file dir
+    def self.current=(rdoc)
+      @current = rdoc
+    end
 
-    last = {}
+    ##
+    # Creates a new RDoc::RDoc instance.  Call #document to parse files and
+    # generate documentation.
 
-    if @options.dry_run
-      # do nothing
-    elsif File.exist? dir
-      error "#{dir} exists and is not a directory" unless File.directory? dir
+    def initialize
+      @current       = nil
+      @generator     = nil
+      @last_modified = {}
+      @old_siginfo   = nil
+      @options       = nil
+      @stats         = nil
+      @store         = nil
+    end
 
-      begin
-        File.open flag_file do |io|
-          unless force
-            Time.parse io.gets
+    ##
+    # Report an error message and exit
 
-            io.each do |line|
-              file, time = line.split "\t", 2
-              time = Time.parse(time) rescue next
-              last[file] = time
+    def error(msg)
+      raise ::RDoc::Error, msg
+    end
+
+    ##
+    # Gathers a set of parseable files from the files and directories listed in
+    # +files+.
+
+    def gather_files(files)
+      files = [@options.root.to_s] if files.empty?
+
+      file_list = normalized_file_list files, true, @options.exclude
+
+      file_list = remove_duplicate_files(remove_unparseable(file_list))
+
+      if file_list.count {|name, mtime|
+           file_list[name] = @last_modified[name] unless mtime
+           mtime
+         } > 0
+        @last_modified.replace file_list
+        file_list.keys.sort
+      else
+        []
+      end
+    end
+
+    ##
+    # Turns RDoc from stdin into HTML
+
+    def handle_pipe
+      @html = ::RDoc::Markup::ToHtml.new(pipe: @options.pipe, output_decoration: @options.output_decoration)
+
+      parser = ::RDoc::Text::MARKUP_FORMAT[@options.markup]
+
+      document = parser.parse $stdin.read
+
+      out = @html.convert document
+
+      $stdout.write out
+    end
+
+    ##
+    # Installs a siginfo handler that prints the current filename.
+
+    def install_siginfo_handler
+      return unless Signal.list.include? 'INFO'
+
+      @old_siginfo = trap 'INFO' do
+        puts @current if @current
+      end
+    end
+
+    ##
+    # Create an output dir if it doesn't exist. If it does exist, but doesn't
+    # contain the flag file <tt>created.rid</tt> then we refuse to use it, as
+    # we may clobber some manually generated documentation
+
+    def setup_output_dir(dir, force)
+      flag_file = output_flag_file dir
+
+      last = {}
+
+      if @options.dry_run
+        # do nothing
+      elsif File.exist? dir
+        error "#{dir} exists and is not a directory" unless File.directory? dir
+
+        begin
+          File.open flag_file do |io|
+            unless force
+              Time.parse io.gets
+
+              io.each do |line|
+                file, time = line.split "\t", 2
+                time = Time.parse(time) rescue next
+                last[file] = time
+              end
             end
           end
-        end
-      rescue SystemCallError, TypeError
-        error <<-ERROR
+        rescue SystemCallError, TypeError
+          error <<-ERROR
 
 Directory #{dir} already exists, but it looks like it isn't an RDoc directory.
 
@@ -200,179 +201,179 @@ you'll need to specify a different output directory name (using the --op <dir>
 option)
 
         ERROR
-      end unless @options.force_output
-    else
-      FileUtils.mkdir_p dir
-      FileUtils.touch flag_file
-    end
-
-    last
-  end
-
-  ##
-  # Update the flag file in an output directory.
-
-  def update_output_dir(op_dir, time, last = {})
-    return if @options.dry_run or not @options.update_output_dir
-    unless ENV['SOURCE_DATE_EPOCH'].nil?
-      time = Time.at(ENV['SOURCE_DATE_EPOCH'].to_i).gmtime
-    end
-
-    File.open output_flag_file(op_dir), "w" do |f|
-      f.puts time.rfc2822
-      last.each do |n, t|
-        f.puts "#{n}\t#{t.rfc2822}"
-      end
-    end
-  end
-
-  ##
-  # Return the path name of the flag file in an output directory.
-
-  def output_flag_file(op_dir)
-    File.join op_dir, "created.rid"
-  end
-
-  ##
-  # The .document file contains a list of file and directory name patterns,
-  # representing candidates for documentation. It may also contain comments
-  # (starting with '#')
-
-  def parse_dot_doc_file(in_dir, filename)
-    # read and strip comments
-    patterns = File.read(filename).gsub(/#.*/, '')
-
-    result = {}
-
-    patterns.split(' ').each do |patt|
-      candidates = Dir.glob(File.join(in_dir, patt))
-      result.update normalized_file_list(candidates, false, @options.exclude)
-    end
-
-    result
-  end
-
-  ##
-  # Given a list of files and directories, create a list of all the Ruby
-  # files they contain.
-  #
-  # If +force_doc+ is true we always add the given files, if false, only
-  # add files that we guarantee we can parse.  It is true when looking at
-  # files given on the command line, false when recursing through
-  # subdirectories.
-  #
-  # The effect of this is that if you want a file with a non-standard
-  # extension parsed, you must name it explicitly.
-
-  def normalized_file_list(relative_files, force_doc = false,
-                           exclude_pattern = nil)
-    file_list = {}
-
-    relative_files.each do |rel_file_name|
-      rel_file_name = rel_file_name.sub(/^\.\//, '')
-      next if rel_file_name.end_with? 'created.rid'
-      next if exclude_pattern && exclude_pattern =~ rel_file_name
-      stat = File.stat rel_file_name rescue next
-
-      case type = stat.ftype
-      when "file"
-        mtime = (stat.mtime unless (last_modified = @last_modified[rel_file_name] and
-                                    stat.mtime.to_i <= last_modified.to_i))
-
-        if force_doc or RDoc::Parser.can_parse(rel_file_name)
-          file_list[rel_file_name] = mtime
-        end
-      when "directory"
-        next if UNCONDITIONALLY_SKIPPED_DIRECTORIES.include?(rel_file_name)
-
-        basename = File.basename(rel_file_name)
-        next if options.skip_tests && TEST_SUITE_DIRECTORY_NAMES.include?(basename)
-
-        created_rid = File.join rel_file_name, "created.rid"
-        next if File.file? created_rid
-
-        dot_doc = File.join rel_file_name, RDoc::DOT_DOC_FILENAME
-
-        if File.file? dot_doc
-          file_list.update(parse_dot_doc_file(rel_file_name, dot_doc))
-        else
-          file_list.update(list_files_in_directory(rel_file_name))
-        end
+        end unless @options.force_output
       else
-        warn "rdoc can't parse the #{type} #{rel_file_name}"
+        FileUtils.mkdir_p dir
+        FileUtils.touch flag_file
+      end
+
+      last
+    end
+
+    ##
+    # Update the flag file in an output directory.
+
+    def update_output_dir(op_dir, time, last = {})
+      return if @options.dry_run or not @options.update_output_dir
+      unless ENV['SOURCE_DATE_EPOCH'].nil?
+        time = Time.at(ENV['SOURCE_DATE_EPOCH'].to_i).gmtime
+      end
+
+      File.open output_flag_file(op_dir), "w" do |f|
+        f.puts time.rfc2822
+        last.each do |n, t|
+          f.puts "#{n}\t#{t.rfc2822}"
+        end
       end
     end
 
-    file_list
-  end
+    ##
+    # Return the path name of the flag file in an output directory.
 
-  ##
-  # Return a list of the files to be processed in a directory. We know that
-  # this directory doesn't have a .document file, so we're looking for real
-  # files. However we may well contain subdirectories which must be tested
-  # for .document files.
-
-  def list_files_in_directory(dir)
-    files = Dir.glob File.join(dir, "*")
-
-    normalized_file_list files, false, @options.exclude
-  end
-
-  ##
-  # Parses +filename+ and returns an RDoc::TopLevel
-
-  def parse_file(filename)
-    encoding = @options.encoding
-    filename = filename.encode encoding
-
-    @stats.add_file filename
-
-    return if RDoc::Parser.binary? filename
-
-    content = RDoc::Encoding.read_file filename, encoding
-
-    return unless content
-
-    top_level = @store.add_file filename, relative_name: relative_path_for(filename)
-
-    parser = RDoc::Parser.for top_level, content, @options, @stats
-
-    return unless parser
-
-    parser.scan
-
-    # restart documentation for the classes & modules found
-    top_level.classes_or_modules.each do |cm|
-      cm.done_documenting = false
+    def output_flag_file(op_dir)
+      File.join op_dir, "created.rid"
     end
 
-    top_level
+    ##
+    # The .document file contains a list of file and directory name patterns,
+    # representing candidates for documentation. It may also contain comments
+    # (starting with '#')
 
-  rescue Errno::EACCES => e
-    $stderr.puts <<-EOF
+    def parse_dot_doc_file(in_dir, filename)
+      # read and strip comments
+      patterns = File.read(filename).gsub(/#.*/, '')
+
+      result = {}
+
+      patterns.split(' ').each do |patt|
+        candidates = Dir.glob(File.join(in_dir, patt))
+        result.update normalized_file_list(candidates, false, @options.exclude)
+      end
+
+      result
+    end
+
+    ##
+    # Given a list of files and directories, create a list of all the Ruby
+    # files they contain.
+    #
+    # If +force_doc+ is true we always add the given files, if false, only
+    # add files that we guarantee we can parse.  It is true when looking at
+    # files given on the command line, false when recursing through
+    # subdirectories.
+    #
+    # The effect of this is that if you want a file with a non-standard
+    # extension parsed, you must name it explicitly.
+
+    def normalized_file_list(relative_files, force_doc = false,
+                             exclude_pattern = nil)
+      file_list = {}
+
+      relative_files.each do |rel_file_name|
+        rel_file_name = rel_file_name.sub(/^\.\//, '')
+        next if rel_file_name.end_with? 'created.rid'
+        next if exclude_pattern && exclude_pattern =~ rel_file_name
+        stat = File.stat rel_file_name rescue next
+
+        case type = stat.ftype
+        when "file"
+          mtime = (stat.mtime unless (last_modified = @last_modified[rel_file_name] and
+                                      stat.mtime.to_i <= last_modified.to_i))
+
+          if force_doc or ::RDoc::Parser.can_parse(rel_file_name)
+            file_list[rel_file_name] = mtime
+          end
+        when "directory"
+          next if UNCONDITIONALLY_SKIPPED_DIRECTORIES.include?(rel_file_name)
+
+          basename = File.basename(rel_file_name)
+          next if options.skip_tests && TEST_SUITE_DIRECTORY_NAMES.include?(basename)
+
+          created_rid = File.join rel_file_name, "created.rid"
+          next if File.file? created_rid
+
+          dot_doc = File.join rel_file_name, ::RDoc::DOT_DOC_FILENAME
+
+          if File.file? dot_doc
+            file_list.update(parse_dot_doc_file(rel_file_name, dot_doc))
+          else
+            file_list.update(list_files_in_directory(rel_file_name))
+          end
+        else
+          warn "rdoc can't parse the #{type} #{rel_file_name}"
+        end
+      end
+
+      file_list
+    end
+
+    ##
+    # Return a list of the files to be processed in a directory. We know that
+    # this directory doesn't have a .document file, so we're looking for real
+    # files. However we may well contain subdirectories which must be tested
+    # for .document files.
+
+    def list_files_in_directory(dir)
+      files = Dir.glob File.join(dir, "*")
+
+      normalized_file_list files, false, @options.exclude
+    end
+
+    ##
+    # Parses +filename+ and returns an RDoc::TopLevel
+
+    def parse_file(filename)
+      encoding = @options.encoding
+      filename = filename.encode encoding
+
+      @stats.add_file filename
+
+      return if ::RDoc::Parser.binary? filename
+
+      content = ::RDoc::Encoding.read_file filename, encoding
+
+      return unless content
+
+      top_level = @store.add_file filename, relative_name: relative_path_for(filename)
+
+      parser = ::RDoc::Parser.for top_level, content, @options, @stats
+
+      return unless parser
+
+      parser.scan
+
+      # restart documentation for the classes & modules found
+      top_level.classes_or_modules.each do |cm|
+        cm.done_documenting = false
+      end
+
+      top_level
+
+    rescue Errno::EACCES => e
+      $stderr.puts <<-EOF
 Unable to read #{filename}, #{e.message}
 
 Please check the permissions for this file.  Perhaps you do not have access to
 it or perhaps the original author's permissions are to restrictive.  If the
 this is not your library please report a bug to the author.
     EOF
-  rescue => e
-    syntax_check_command = syntax_check_command_for filename, parser&.class
-    syntax_check_message = if syntax_check_command
-      <<~MESSAGE
+    rescue => e
+      syntax_check_command = syntax_check_command_for filename, parser&.class
+      syntax_check_message = if syntax_check_command
+                               <<~MESSAGE
 Before reporting this, could you check that the file you're documenting
 has proper syntax:
 
   #{syntax_check_command}
       MESSAGE
-    else
-      <<~MESSAGE
+      else
+        <<~MESSAGE
 Before reporting this, could you check that the file you're documenting
 has proper syntax for its language?
       MESSAGE
-    end
+      end
 
-    $stderr.puts <<-EOF
+      $stderr.puts <<-EOF
 #{syntax_check_message}
 RDoc's parsers are not full language parsers and may fail when fed invalid
 source files.
@@ -383,323 +384,324 @@ The internal error was:
 
     EOF
 
-    $stderr.puts e.backtrace.join("\n\t") if $DEBUG_RDOC
+      $stderr.puts e.backtrace.join("\n\t") if $DEBUG_RDOC
 
-    raise e
-  end
-
-  def syntax_check_command_for(filename, parser_class = RDoc::Parser.can_parse_by_name(filename))
-    if parser_class == RDoc::Parser::Ruby
-      "#{Gem.ruby} -c #{filename}"
-    elsif parser_class == RDoc::Parser::C
-      cc = ENV['CC']
-      cc = 'cc' if cc.nil? || cc.empty?
-      "#{cc} -fsyntax-only #{filename}"
-    end
-  end
-
-  ##
-  # Returns the relative path for +filename+ against +options.root+ (and
-  # +options.page_dir+ when set).  This is the key used by RDoc::Store to
-  # identify files.
-
-  def relative_path_for(filename)
-    filename_path = Pathname(filename).expand_path
-    begin
-      relative_path = filename_path.relative_path_from @options.root
-    rescue ArgumentError
-      relative_path = filename_path
+      raise e
     end
 
-    if @options.page_dir &&
-       relative_path.to_s.start_with?(@options.page_dir.to_s)
-      relative_path =
-        relative_path.relative_path_from @options.page_dir
+    def syntax_check_command_for(filename, parser_class = ::RDoc::Parser.can_parse_by_name(filename))
+      if parser_class == ::RDoc::Parser::Ruby
+        "#{Gem.ruby} -c #{filename}"
+      elsif parser_class == ::RDoc::Parser::C
+        cc = ENV['CC']
+        cc = 'cc' if cc.nil? || cc.empty?
+        "#{cc} -fsyntax-only #{filename}"
+      end
     end
 
-    relative_path.to_s
-  end
+    ##
+    # Returns the relative path for +filename+ against +options.root+ (and
+    # +options.page_dir+ when set).  This is the key used by RDoc::Store to
+    # identify files.
 
-  ##
-  # Parse each file on the command line, recursively entering directories.
+    def relative_path_for(filename)
+      filename_path = Pathname(filename).expand_path
+      begin
+        relative_path = filename_path.relative_path_from @options.root
+      rescue ArgumentError
+        relative_path = filename_path
+      end
 
-  def parse_files(files)
-    file_list = gather_files files
-    @stats = RDoc::Stats.new @store, file_list.length, @options.verbosity
+      if @options.page_dir &&
+         relative_path.to_s.start_with?(@options.page_dir.to_s)
+        relative_path =
+          relative_path.relative_path_from @options.page_dir
+      end
 
-    return [] if file_list.empty?
-
-    # This workaround can be removed after the :main: directive is removed
-    original_options = @options.dup
-    @stats.begin_adding
-
-    file_info = file_list.map do |filename|
-      @current = filename
-      parse_file filename
-    end.compact
-
-    @store.resolve_c_superclasses
-
-    @stats.done_adding
-    @options = original_options
-
-    file_info
-  end
-
-  ##
-  # Removes file extensions known to be unparseable from +files+ and TAGS
-  # files for emacs and vim.
-
-  def remove_unparseable(files)
-    files.reject do |file, *|
-      file =~ /\.(?:class|eps|erb|scpt\.txt|svg|ttf|yml)\z/i or
-        (file =~ /tags\z/i and
-         /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(File.binread(file, 100)))
-    end
-  end
-
-  ##
-  # Removes duplicate canonical paths while preserving the first path found.
-
-  def remove_duplicate_files(files)
-    files.uniq { |file,| File.realpath(file) }.to_h
-  end
-
-  ##
-  # Generates documentation or a coverage report depending upon the settings
-  # in +options+.
-  #
-  # +options+ can be either an RDoc::Options instance or an array of strings
-  # equivalent to the strings that would be passed on the command line like
-  # <tt>%w[-q -o doc -t My\ Doc\ Title]</tt>.  #document will automatically
-  # call RDoc::Options#finish if an options instance was given.
-  #
-  # For a list of options, see either RDoc::Options or <tt>rdoc --help</tt>.
-  #
-  # By default, output will be stored in a directory called "doc" below the
-  # current directory, so make sure you're somewhere writable before invoking.
-
-  def document(options)
-    if RDoc::Options === options
-      @options = options
-    else
-      @options = RDoc::Options.load_options
-      @options.parse options
-    end
-    @options.finish
-
-    @store = RDoc::Store.new(@options)
-
-    if @options.pipe
-      handle_pipe
-      exit
+      relative_path.to_s
     end
 
-    if @options.server_port
+    ##
+    # Parse each file on the command line, recursively entering directories.
+
+    def parse_files(files)
+      file_list = gather_files files
+      @stats = ::RDoc::Stats.new @store, file_list.length, @options.verbosity
+
+      return [] if file_list.empty?
+
+      # This workaround can be removed after the :main: directive is removed
+      original_options = @options.dup
+      @stats.begin_adding
+
+      file_info = file_list.map do |filename|
+        @current = filename
+        parse_file filename
+      end.compact
+
+      @store.resolve_c_superclasses
+
+      @stats.done_adding
+      @options = original_options
+
+      file_info
+    end
+
+    ##
+    # Removes file extensions known to be unparseable from +files+ and TAGS
+    # files for emacs and vim.
+
+    def remove_unparseable(files)
+      files.reject do |file, *|
+        file =~ /\.(?:class|eps|erb|scpt\.txt|svg|ttf|yml)\z/i or
+          (file =~ /tags\z/i and
+           /\A(\f\n[^,]+,\d+$|!_TAG_)/.match?(File.binread(file, 100)))
+      end
+    end
+
+    ##
+    # Removes duplicate canonical paths while preserving the first path found.
+
+    def remove_duplicate_files(files)
+      files.uniq { |file,| File.realpath(file) }.to_h
+    end
+
+    ##
+    # Generates documentation or a coverage report depending upon the settings
+    # in +options+.
+    #
+    # +options+ can be either an RDoc::Options instance or an array of strings
+    # equivalent to the strings that would be passed on the command line like
+    # <tt>%w[-q -o doc -t My\ Doc\ Title]</tt>.  #document will automatically
+    # call RDoc::Options#finish if an options instance was given.
+    #
+    # For a list of options, see either RDoc::Options or <tt>rdoc --help</tt>.
+    #
+    # By default, output will be stored in a directory called "doc" below the
+    # current directory, so make sure you're somewhere writable before invoking.
+
+    def document(options)
+      if ::RDoc::Options === options
+        @options = options
+      else
+        @options = ::RDoc::Options.load_options
+        @options.parse options
+      end
+      @options.finish
+
+      @store = ::RDoc::Store.new(@options)
+
+      if @options.pipe
+        handle_pipe
+        exit
+      end
+
+      if @options.server_port
+        @store.load_cache
+
+        parse_files @options.files
+        record_auto_discovered_rbs_signature_mtimes
+
+        @options.default_title = "RDoc Documentation"
+
+        load_auto_discovered_rbs_signatures
+        @store.complete @options.visibility
+
+        start_server
+        exit
+      end
+
+      unless @options.coverage_report
+        @last_modified = setup_output_dir @options.op_dir, @options.force_update
+      end
+
+      @start_time = Time.now
+
       @store.load_cache
 
-      parse_files @options.files
+      auto_discovered_rbs_signatures_changed = auto_discovered_rbs_signatures_changed?
+      # When only auto-discovered RBS signatures changed, no Ruby file would be
+      # reparsed under normal mtime checks.  The store cache holds class metadata
+      # but not live RDoc::Context objects, so the generator would have nothing
+      # to iterate.  Force a full reparse so updated signatures show up in the
+      # rendered output.
+      @last_modified.clear if auto_discovered_rbs_signatures_changed
+
+      file_info = parse_files @options.files
       record_auto_discovered_rbs_signature_mtimes
 
       @options.default_title = "RDoc Documentation"
 
       load_auto_discovered_rbs_signatures
+
       @store.complete @options.visibility
 
-      start_server
-      exit
+      @stats.coverage_level = @options.coverage_report
+
+      if @options.coverage_report
+        puts
+
+        puts @stats.report
+      elsif file_info.empty? && !auto_discovered_rbs_signatures_changed
+        $stderr.puts "\nNo newer files." unless @options.quiet
+      else
+        gen_klass = @options.generator
+
+        @generator = gen_klass.new @store, @options
+
+        generate
+      end
+
+      if @stats and (@options.coverage_report or not @options.quiet)
+        puts
+        puts @stats.summary
+      end
+
+      exit @stats.fully_documented? if @options.coverage_report
     end
 
-    unless @options.coverage_report
-      @last_modified = setup_output_dir @options.op_dir, @options.force_update
-    end
+    ##
+    # Generates documentation for +file_info+ (from #parse_files) into the
+    # output dir using the generator selected
+    # by the RDoc options
 
-    @start_time = Time.now
-
-    @store.load_cache
-
-    auto_discovered_rbs_signatures_changed = auto_discovered_rbs_signatures_changed?
-    # When only auto-discovered RBS signatures changed, no Ruby file would be
-    # reparsed under normal mtime checks.  The store cache holds class metadata
-    # but not live RDoc::Context objects, so the generator would have nothing
-    # to iterate.  Force a full reparse so updated signatures show up in the
-    # rendered output.
-    @last_modified.clear if auto_discovered_rbs_signatures_changed
-
-    file_info = parse_files @options.files
-    record_auto_discovered_rbs_signature_mtimes
-
-    @options.default_title = "RDoc Documentation"
-
-    load_auto_discovered_rbs_signatures
-
-    @store.complete @options.visibility
-
-    @stats.coverage_level = @options.coverage_report
-
-    if @options.coverage_report
-      puts
-
-      puts @stats.report
-    elsif file_info.empty? && !auto_discovered_rbs_signatures_changed
-      $stderr.puts "\nNo newer files." unless @options.quiet
-    else
-      gen_klass = @options.generator
-
-      @generator = gen_klass.new @store, @options
-
-      generate
-    end
-
-    if @stats and (@options.coverage_report or not @options.quiet)
-      puts
-      puts @stats.summary
-    end
-
-    exit @stats.fully_documented? if @options.coverage_report
-  end
-
-  ##
-  # Generates documentation for +file_info+ (from #parse_files) into the
-  # output dir using the generator selected
-  # by the RDoc options
-
-  def generate
-    if @options.dry_run
-      # do nothing
-      @generator.generate
-    else
-      Dir.chdir @options.op_dir do
-        unless @options.quiet
-          $stderr.puts "\nGenerating #{@generator.class.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
-          uri = "file://#{Dir.pwd}/index.html"
-          ref = $stderr.tty? ? "\e]8;;#{uri}\e\\#{uri}\e]8;;\e\\" : uri
-          $stderr.puts "\nYou can visit the home page at: #{ref}"
-        end
-
+    def generate
+      if @options.dry_run
+        # do nothing
         @generator.generate
-        update_output_dir '.', @start_time, @last_modified
+      else
+        Dir.chdir @options.op_dir do
+          unless @options.quiet
+            $stderr.puts "\nGenerating #{@generator.class.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
+            uri = "file://#{Dir.pwd}/index.html"
+            ref = $stderr.tty? ? "\e]8;;#{uri}\e\\#{uri}\e]8;;\e\\" : uri
+            $stderr.puts "\nYou can visit the home page at: #{ref}"
+          end
+
+          @generator.generate
+          update_output_dir '.', @start_time, @last_modified
+        end
       end
     end
-  end
 
-  ##
-  # Loads RBS type signatures from the project's +sig+ directory and RBS
-  # stdlib, then merges them into the store's code objects.
+    ##
+    # Loads RBS type signatures from the project's +sig+ directory and RBS
+    # stdlib, then merges them into the store's code objects.
 
-  def load_auto_discovered_rbs_signatures
-    sig_dirs = []
-    sig_dir = File.join(@options.root.to_s, 'sig')
-    sig_dirs << sig_dir if File.directory?(sig_dir)
-    signatures = RDoc::RbsHelper.load_signatures(*sig_dirs)
-    @store.merge_rbs_signatures(signatures)
-  rescue RBS::BaseError, Errno::ENOENT, LoadError => e
-    # In server mode, a previous successful load may have populated the store;
-    # drop those signatures so a now-broken sig file doesn't keep showing
-    # stale types alongside the warning.
-    @store.clear_rbs_signatures
-    @options.warn "Failed to load RBS type signatures: #{e.message}"
-  end
-
-  ##
-  # Returns RBS files that RDoc auto-discovers for signature loading.
-
-  def auto_discovered_rbs_signature_files
-    Dir[File.join(@options.root.to_s, 'sig', '**', '*.rbs')].sort
-  end
-
-  ##
-  # Returns true if any auto-discovered RBS signature file has changed since
-  # the last run.
-
-  def auto_discovered_rbs_signatures_changed?
-    current = auto_discovered_rbs_signature_mtimes
-    previous = @last_modified.select { |file, _| auto_discovered_rbs_signature_file?(file) }
-
-    return true unless (previous.keys - current.keys).empty?
-
-    current.any? do |file, mtime|
-      last_modified = @last_modified[file]
-      last_modified.nil? || mtime.to_i > last_modified.to_i
+    def load_auto_discovered_rbs_signatures
+      sig_dirs = []
+      sig_dir = File.join(@options.root.to_s, 'sig')
+      sig_dirs << sig_dir if File.directory?(sig_dir)
+      signatures = ::RDoc::RbsHelper.load_signatures(*sig_dirs)
+      @store.merge_rbs_signatures(signatures)
+    rescue RBS::BaseError, Errno::ENOENT, LoadError => e
+      # In server mode, a previous successful load may have populated the store;
+      # drop those signatures so a now-broken sig file doesn't keep showing
+      # stale types alongside the warning.
+      @store.clear_rbs_signatures
+      @options.warn "Failed to load RBS type signatures: #{e.message}"
     end
-  end
 
-  ##
-  # Records auto-discovered RBS signature file mtimes so normal generation
-  # freshness checks and the live server watcher can see signature-only edits.
+    ##
+    # Returns RBS files that RDoc auto-discovers for signature loading.
 
-  def record_auto_discovered_rbs_signature_mtimes
-    @last_modified.reject! { |file, _| auto_discovered_rbs_signature_file?(file) }
-    @last_modified.merge! auto_discovered_rbs_signature_mtimes
-  end
-
-  ##
-  # Files watched by the live preview server.
-
-  def watch_files
-    (@last_modified.keys + auto_discovered_rbs_signature_files).uniq
-  end
-
-  ##
-  # Returns true for project RBS files that are auto-discovered for signature
-  # loading. RDoc parses any selected .rbs file as documentation input, but
-  # only +sig/**/*.rbs+ files are loaded through RBS::EnvironmentLoader for
-  # type signature merging and live-reload bookkeeping.
-
-  def auto_discovered_rbs_signature_file?(file) # :nodoc:
-    return false unless File.extname(file) == '.rbs'
-
-    root = Pathname(@options.root.to_s).expand_path
-    relative_path = Pathname(file).expand_path.relative_path_from root
-    relative_path.each_filename.first == 'sig'
-  rescue ArgumentError
-    # file and root may be on different drives on Windows
-    false
-  end
-
-  ##
-  # Returns mtimes for auto-discovered RBS signature files.
-
-  def auto_discovered_rbs_signature_mtimes # :nodoc:
-    auto_discovered_rbs_signature_files.each_with_object({}) do |file, mtimes|
-      mtime = RDoc.safe_mtime(file)
-      mtimes[file] = mtime if mtime
+    def auto_discovered_rbs_signature_files
+      Dir[File.join(@options.root.to_s, 'sig', '**', '*.rbs')].sort
     end
-  end
 
-  ##
-  # Starts a live-reloading HTTP server for previewing documentation.
-  # Called from #document when <tt>--server</tt> is given.
+    ##
+    # Returns true if any auto-discovered RBS signature file has changed since
+    # the last run.
 
-  def start_server
-    server = RDoc::Server.new(self, @options.server_port)
-    server.start
-  end
+    def auto_discovered_rbs_signatures_changed?
+      current = auto_discovered_rbs_signature_mtimes
+      previous = @last_modified.select { |file, _| auto_discovered_rbs_signature_file?(file) }
 
-  ##
-  # Removes a siginfo handler and replaces the previous
+      return true unless (previous.keys - current.keys).empty?
 
-  def remove_siginfo_handler
-    return unless Signal.list.key? 'INFO'
-
-    handler = @old_siginfo || 'DEFAULT'
-
-    trap 'INFO', handler
-  end
-
-  ##
-  # Returns true when +extension+ is the RBS gem's RDoc discovery hook.
-  # Released RBS gems install their plugin through this hook, so skip it to
-  # avoid replacing the built-in parser during discovery.
-
-  def self.rbs_discovery_extension?(extension) # :nodoc:
-    extension = File.expand_path(extension)
-
-    Gem::Specification.find_all_by_name('rbs').any? do |spec|
-      File.expand_path('lib/rdoc/discover.rb', spec.full_gem_path) == extension
+      current.any? do |file, mtime|
+        last_modified = @last_modified[file]
+        last_modified.nil? || mtime.to_i > last_modified.to_i
+      end
     end
-  end
 
+    ##
+    # Records auto-discovered RBS signature file mtimes so normal generation
+    # freshness checks and the live server watcher can see signature-only edits.
+
+    def record_auto_discovered_rbs_signature_mtimes
+      @last_modified.reject! { |file, _| auto_discovered_rbs_signature_file?(file) }
+      @last_modified.merge! auto_discovered_rbs_signature_mtimes
+    end
+
+    ##
+    # Files watched by the live preview server.
+
+    def watch_files
+      (@last_modified.keys + auto_discovered_rbs_signature_files).uniq
+    end
+
+    ##
+    # Returns true for project RBS files that are auto-discovered for signature
+    # loading. RDoc parses any selected .rbs file as documentation input, but
+    # only +sig/**/*.rbs+ files are loaded through RBS::EnvironmentLoader for
+    # type signature merging and live-reload bookkeeping.
+
+    def auto_discovered_rbs_signature_file?(file) # :nodoc:
+      return false unless File.extname(file) == '.rbs'
+
+      root = Pathname(@options.root.to_s).expand_path
+      relative_path = Pathname(file).expand_path.relative_path_from root
+      relative_path.each_filename.first == 'sig'
+    rescue ArgumentError
+      # file and root may be on different drives on Windows
+      false
+    end
+
+    ##
+    # Returns mtimes for auto-discovered RBS signature files.
+
+    def auto_discovered_rbs_signature_mtimes # :nodoc:
+      auto_discovered_rbs_signature_files.each_with_object({}) do |file, mtimes|
+        mtime = ::RDoc.safe_mtime(file)
+        mtimes[file] = mtime if mtime
+      end
+    end
+
+    ##
+    # Starts a live-reloading HTTP server for previewing documentation.
+    # Called from #document when <tt>--server</tt> is given.
+
+    def start_server
+      server = ::RDoc::Server.new(self, @options.server_port)
+      server.start
+    end
+
+    ##
+    # Removes a siginfo handler and replaces the previous
+
+    def remove_siginfo_handler
+      return unless Signal.list.key? 'INFO'
+
+      handler = @old_siginfo || 'DEFAULT'
+
+      trap 'INFO', handler
+    end
+
+    ##
+    # Returns true when +extension+ is the RBS gem's RDoc discovery hook.
+    # Released RBS gems install their plugin through this hook, so skip it to
+    # avoid replacing the built-in parser during discovery.
+
+    def self.rbs_discovery_extension?(extension) # :nodoc:
+      extension = File.expand_path(extension)
+
+      Gem::Specification.find_all_by_name('rbs').any? do |spec|
+        File.expand_path('lib/rdoc/discover.rb', spec.full_gem_path) == extension
+      end
+    end
+
+  end
 end
 
 # Load built-in parser registrations before RubyGems discovery, then skip the
@@ -712,7 +714,7 @@ begin
   rdoc_extensions = Gem.find_latest_files 'rdoc/discover'
 
   rdoc_extensions.each do |extension|
-    next if RDoc::RDoc.rbs_discovery_extension?(extension)
+    next if ::RDoc::RDoc.rbs_discovery_extension?(extension)
 
     begin
       load extension
