@@ -650,6 +650,25 @@ class RDocStoreTest < XrefTestCase
     assert_equal page, @store.page('PAGE.txt')
   end
 
+  def test_page_index
+    page = @store.add_file 'PAGE.txt', parser: RDoc::Parser::Simple
+    page_name = page.page_name
+    page_name_calls = 0
+    page.define_singleton_method(:page_name) do
+      page_name_calls += 1
+      page_name
+    end
+
+    2.times { assert_same page, @store.page('PAGE') }
+    assert_equal 1, page_name_calls
+
+    other_page = @store.add_file 'doc/PAGE.md', parser: RDoc::Parser::Simple
+    assert_same page, @store.page('PAGE')
+
+    @store.remove_file 'PAGE.txt'
+    assert_same other_page, @store.page('PAGE')
+  end
+
   def test_save
     FileUtils.mkdir_p @tmpdir
 
