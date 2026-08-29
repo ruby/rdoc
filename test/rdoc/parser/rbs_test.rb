@@ -143,6 +143,71 @@ class RDocParserRBSTest < RDoc::TestCase
     assert_equal ['() -> String'], greet.type_signature_lines
   end
 
+  def test_scan_finds_existing_method_after_store_index_rebuild
+    ruby_top_level = @store.add_file 'sample.rb'
+    sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
+
+    name = RDoc::AnyMethod.new 'name'
+    name.record_location ruby_top_level
+    sample.add_method name
+
+    name_writer = RDoc::Attr.new 'name', 'W', nil
+    name_writer.record_location ruby_top_level
+    sample.add_attribute name_writer
+
+    util_parser("class Sample\nend\n").scan
+    @store.clear_file_contributions @filename, keep_position: true
+    util_parser(<<~RBS).scan
+      class Sample
+        def name: () -> String
+      end
+    RBS
+
+    assert_equal ['() -> String'], name.type_signature_lines
+  end
+
+  def test_scan_indexes_forward_method_and_attribute_aliases
+    util_parser(<<~RBS).scan
+      class Sample
+        # Method alias docs.
+        alias salutation greet
+        alias display_name name
+
+        def greet: () -> String
+        # Base attribute docs.
+        attr_reader name: String
+
+        # Dedicated method docs.
+        def salutation: () -> String
+        # Dedicated attribute docs.
+        attr_reader display_name: String
+      end
+    RBS
+
+    sample = @store.find_class_named 'Sample'
+    salutation = sample.find_method 'salutation', false
+    display_name = sample.find_attribute 'display_name', false
+
+    assert_equal "Method alias docs.\n---\nDedicated method docs.", salutation.comment.to_s.strip
+    assert_equal "Base attribute docs.\n---\nDedicated attribute docs.", display_name.comment.to_s.strip
+  end
+
+  def test_scan_treats_legacy_nil_singleton_as_instance_method
+    ruby_top_level = @store.add_file 'sample.rb'
+    sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
+    greet = RDoc::AnyMethod.new 'greet'
+    greet.singleton = nil
+    sample.add_method greet
+
+    util_parser(<<~RBS).scan
+      class Sample
+        def greet: () -> String
+      end
+    RBS
+
+    assert_equal ['() -> String'], greet.type_signature_lines
+  end
+
   def test_scan_preserves_rbs_markdown_when_extending_method_documentation
     ruby_top_level = @store.add_file 'sample.rb'
     sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
@@ -264,6 +329,38 @@ class RDocParserRBSTest < RDoc::TestCase
     private_sample = @store.find_class_named 'PrivateSample'
     private_constructor = private_sample.find_method 'new', true
     assert_equal :public, private_constructor.visibility
+  end
+
+  def test_scan_method_lookup_is_linear
+    name_calls = 0
+    original_name = RDoc::AnyMethod.instance_method :name
+    RDoc::AnyMethod.define_method(:name) do
+      name_calls += 1
+      original_name.bind_call self
+    end
+
+    methods = 100.times.map { |i| "  def m#{i}: () -> void" }.join("\n")
+    util_parser("class C\n#{methods}\nend\n").scan
+
+    assert_operator name_calls, :<=, 1_000
+  ensure
+    RDoc::AnyMethod.define_method :name, original_name
+  end
+
+  def test_scan_attribute_lookup_is_linear
+    name_calls = 0
+    original_name = RDoc::Attr.instance_method :name
+    RDoc::Attr.define_method(:name) do
+      name_calls += 1
+      original_name.bind_call self
+    end
+
+    attributes = 100.times.map { |i| "  attr_reader a#{i}: String" }.join("\n")
+    util_parser("class C\n#{attributes}\nend\n").scan
+
+    assert_operator name_calls, :<=, 1_000
+  ensure
+    RDoc::Attr.remove_method :name
   end
 
   def util_parser(content)
