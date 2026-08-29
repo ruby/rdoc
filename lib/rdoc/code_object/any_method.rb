@@ -196,7 +196,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @name          = array[1]
     @full_name     = array[2]
     @singleton     = array[3]
-    @visibility    = array[4]
+    @visibility    = array[4] || :public
     @comment       = RDoc::Comment.from_document array[5]
     @call_seq      = array[6]
     @block_params  = array[7]

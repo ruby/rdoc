@@ -137,7 +137,7 @@ class RDoc::Attr < RDoc::MethodAttr
     @name          = array[1]
     @full_name     = array[2]
     @rw            = array[3]
-    @visibility    = array[4]
+    @visibility    = array[4] || :public
     @comment       = RDoc::Comment.from_document array[5]
     @singleton     = array[6] || false # MARSHAL_VERSION == 0
     #                      7 handled below
