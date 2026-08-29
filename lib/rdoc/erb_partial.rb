@@ -1,18 +1,20 @@
 # frozen_string_literal: true
-##
-# Allows an ERB template to be rendered in the context (binding) of an
-# existing ERB template evaluation.
-
-class RDoc::ERBPartial < ERB
-
+module RDoc
   ##
-  # Overrides +compiler+ startup to set the +eoutvar+ to an empty string only
-  # if it isn't already set.
+  # Allows an ERB template to be rendered in the context (binding) of an
+  # existing ERB template evaluation.
 
-  def set_eoutvar(compiler, eoutvar = '_erbout')
-    super
+  class ERBPartial < ERB
 
-    compiler.pre_cmd = ["#{eoutvar} ||= +''"]
+    ##
+    # Overrides +compiler+ startup to set the +eoutvar+ to an empty string only
+    # if it isn't already set.
+
+    def set_eoutvar(compiler, eoutvar = '_erbout')
+      super
+
+      compiler.pre_cmd = ["#{eoutvar} ||= +''"]
+    end
+
   end
-
 end

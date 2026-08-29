@@ -29,6 +29,10 @@ Layout/SpaceAfterComma:
 Lint/UnreachableCode:
   Enabled: true
 
+Style/ClassAndModuleChildren:
+  Enabled: true
+  EnforcedStyle: nested
+
 Style/MethodDefParentheses:
   Enabled: true
 

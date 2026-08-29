@@ -3,255 +3,257 @@ require 'rubygems/user_interaction'
 require 'fileutils'
 require_relative '../rdoc'
 
-# We define the following two similar name classes in this file:
-#
-# - RDoc::RubyGemsHook
-# - RDoc::RubygemsHook
-#
-# RDoc::RubyGemsHook is the main class that has real logic.
-#
-# RDoc::RubygemsHook is a class that is only for
-# compatibility. RDoc::RubygemsHook is used by RubyGems directly. We
-# can remove this when all maintained RubyGems remove
-# `rubygems/rdoc.rb`.
+module RDoc
+  # We define the following two similar name classes in this file:
+  #
+  # - RDoc::RubyGemsHook
+  # - RDoc::RubygemsHook
+  #
+  # RDoc::RubyGemsHook is the main class that has real logic.
+  #
+  # RDoc::RubygemsHook is a class that is only for
+  # compatibility. RDoc::RubygemsHook is used by RubyGems directly. We
+  # can remove this when all maintained RubyGems remove
+  # `rubygems/rdoc.rb`.
 
-class RDoc::RubyGemsHook
+  class RubyGemsHook
 
-  include Gem::UserInteraction
-  extend  Gem::UserInteraction
+    include Gem::UserInteraction
+    extend  Gem::UserInteraction
 
-  @rdoc_version = nil
-  @specs = []
-
-  ##
-  # Force installation of documentation?
-
-  attr_accessor :force
-
-  ##
-  # Generate rdoc?
-
-  attr_accessor :generate_rdoc
-
-  ##
-  # Generate ri data?
-
-  attr_accessor :generate_ri
-
-  class << self
+    @rdoc_version = nil
+    @specs = []
 
     ##
-    # Loaded version of RDoc.  Set by ::load_rdoc
+    # Force installation of documentation?
 
-    attr_reader :rdoc_version
+    attr_accessor :force
 
-  end
+    ##
+    # Generate rdoc?
 
-  ##
-  # Post installs hook that generates documentation for each specification in
-  # +specs+
+    attr_accessor :generate_rdoc
 
-  def self.generate(installer, specs)
-    start = Time.now
-    types = installer.document
+    ##
+    # Generate ri data?
 
-    generate_rdoc = types.include? 'rdoc'
-    generate_ri   = types.include? 'ri'
+    attr_accessor :generate_ri
 
-    specs.each do |spec|
-      new(spec, generate_rdoc, generate_ri).generate
+    class << self
+
+      ##
+      # Loaded version of RDoc.  Set by ::load_rdoc
+
+      attr_reader :rdoc_version
+
     end
 
-    return unless generate_rdoc or generate_ri
+    ##
+    # Post installs hook that generates documentation for each specification in
+    # +specs+
 
-    duration = (Time.now - start).to_i
-    names    = specs.map(&:name).join ', '
+    def self.generate(installer, specs)
+      start = Time.now
+      types = installer.document
 
-    say "Done installing documentation for #{names} after #{duration} seconds"
-  end
+      generate_rdoc = types.include? 'rdoc'
+      generate_ri   = types.include? 'ri'
 
-  def self.remove(uninstaller)
-    new(uninstaller.spec).remove
-  end
+      specs.each do |spec|
+        new(spec, generate_rdoc, generate_ri).generate
+      end
 
-  ##
-  # Loads the RDoc generator
+      return unless generate_rdoc or generate_ri
 
-  def self.load_rdoc
-    return if @rdoc_version
+      duration = (Time.now - start).to_i
+      names    = specs.map(&:name).join ', '
 
-    require_relative 'rdoc'
-
-    @rdoc_version = Gem::Version.new ::RDoc::VERSION
-  end
-
-  ##
-  # Creates a new documentation generator for +spec+.  RDoc and ri data
-  # generation can be enabled or disabled through +generate_rdoc+ and
-  # +generate_ri+ respectively.
-  #
-  # Only +generate_ri+ is enabled by default.
-
-  def initialize(spec, generate_rdoc = false, generate_ri = true)
-    @doc_dir   = spec.doc_dir
-    @force     = false
-    @rdoc      = nil
-    @spec      = spec
-
-    @generate_rdoc = generate_rdoc
-    @generate_ri   = generate_ri
-
-    @rdoc_dir = spec.doc_dir 'rdoc'
-    @ri_dir   = spec.doc_dir 'ri'
-  end
-
-  ##
-  # Removes legacy rdoc arguments from +args+
-  #--
-  # TODO move to RDoc::Options
-
-  def delete_legacy_args(args)
-    args.delete '--inline-source'
-    args.delete '--promiscuous'
-    args.delete '-p'
-    args.delete '--one-file'
-  end
-
-  ##
-  # Generates documentation using the named +generator+ ("aliki" or "ri")
-  # and following the given +options+.
-  #
-  # Documentation will be generated into +destination+
-
-  def document(generator, options, destination)
-    generator_name = generator
-
-    options = options.dup
-    options.exclude ||= [] # TODO maybe move to RDoc::Options#finish
-    options.setup_generator generator
-    options.op_dir = destination
-    Dir.chdir @spec.full_gem_path do
-      options.finish
+      say "Done installing documentation for #{names} after #{duration} seconds"
     end
 
-    generator = options.generator.new @rdoc.store, options
+    def self.remove(uninstaller)
+      new(uninstaller.spec).remove
+    end
 
-    @rdoc.options = options
-    @rdoc.generator = generator
+    ##
+    # Loads the RDoc generator
 
-    say "Installing #{generator_name} documentation for #{@spec.full_name}"
+    def self.load_rdoc
+      return if @rdoc_version
 
-    FileUtils.mkdir_p options.op_dir
+      require_relative 'rdoc'
 
-    Dir.chdir options.op_dir do
-      begin
-        @rdoc.class.current = @rdoc
-        @rdoc.generator.generate
-      ensure
-        @rdoc.class.current = nil
+      @rdoc_version = Gem::Version.new ::RDoc::VERSION
+    end
+
+    ##
+    # Creates a new documentation generator for +spec+.  RDoc and ri data
+    # generation can be enabled or disabled through +generate_rdoc+ and
+    # +generate_ri+ respectively.
+    #
+    # Only +generate_ri+ is enabled by default.
+
+    def initialize(spec, generate_rdoc = false, generate_ri = true)
+      @doc_dir   = spec.doc_dir
+      @force     = false
+      @rdoc      = nil
+      @spec      = spec
+
+      @generate_rdoc = generate_rdoc
+      @generate_ri   = generate_ri
+
+      @rdoc_dir = spec.doc_dir 'rdoc'
+      @ri_dir   = spec.doc_dir 'ri'
+    end
+
+    ##
+    # Removes legacy rdoc arguments from +args+
+    #--
+    # TODO move to RDoc::Options
+
+    def delete_legacy_args(args)
+      args.delete '--inline-source'
+      args.delete '--promiscuous'
+      args.delete '-p'
+      args.delete '--one-file'
+    end
+
+    ##
+    # Generates documentation using the named +generator+ ("aliki" or "ri")
+    # and following the given +options+.
+    #
+    # Documentation will be generated into +destination+
+
+    def document(generator, options, destination)
+      generator_name = generator
+
+      options = options.dup
+      options.exclude ||= [] # TODO maybe move to RDoc::Options#finish
+      options.setup_generator generator
+      options.op_dir = destination
+      Dir.chdir @spec.full_gem_path do
+        options.finish
+      end
+
+      generator = options.generator.new @rdoc.store, options
+
+      @rdoc.options = options
+      @rdoc.generator = generator
+
+      say "Installing #{generator_name} documentation for #{@spec.full_name}"
+
+      FileUtils.mkdir_p options.op_dir
+
+      Dir.chdir options.op_dir do
+        begin
+          @rdoc.class.current = @rdoc
+          @rdoc.generator.generate
+        ensure
+          @rdoc.class.current = nil
+        end
       end
     end
-  end
 
-  ##
-  # Generates RDoc and ri data
+    ##
+    # Generates RDoc and ri data
 
-  def generate
-    return if @spec.default_gem?
-    return unless @generate_ri or @generate_rdoc
+    def generate
+      return if @spec.default_gem?
+      return unless @generate_ri or @generate_rdoc
 
-    setup
+      setup
 
-    options = nil
+      options = nil
 
-    args = @spec.rdoc_options
-    args.concat @spec.source_paths
-    args.concat @spec.extra_rdoc_files
+      args = @spec.rdoc_options
+      args.concat @spec.source_paths
+      args.concat @spec.extra_rdoc_files
 
-    case config_args = Gem.configuration[:rdoc]
-    when String
-      args = args.concat config_args.split(' ')
-    when Array
-      args = args.concat config_args
+      case config_args = Gem.configuration[:rdoc]
+      when String
+        args = args.concat config_args.split(' ')
+      when Array
+        args = args.concat config_args
+      end
+
+      delete_legacy_args args
+
+      Dir.chdir @spec.full_gem_path do
+        options = ::RDoc::Options.new
+        options.default_title = "#{@spec.full_name} Documentation"
+        options.parse args
+        options.quiet = !Gem.configuration.really_verbose
+      end
+
+      @rdoc = new_rdoc
+
+      say "Parsing documentation for #{@spec.full_name}"
+
+      Dir.chdir @spec.full_gem_path do
+        # RDoc::Options#finish must be called before parse_files.
+        # RDoc::Options#finish is also called after ri/aliki generator setup.
+        # We need to dup the options to avoid modifying it after finish is called.
+        parse_options = options.dup
+        parse_options.finish
+        @rdoc.options = parse_options
+        @rdoc.store = ::RDoc::Store.new(parse_options)
+        @rdoc.parse_files parse_options.files
+      end
+
+      document 'ri',       options, @ri_dir if
+        @generate_ri   and (@force or not File.exist? @ri_dir)
+
+      document 'aliki', options, @rdoc_dir if
+        @generate_rdoc and (@force or not File.exist? @rdoc_dir)
     end
 
-    delete_legacy_args args
+    ##
+    # #new_rdoc creates a new RDoc instance.  This method is provided only to
+    # make testing easier.
 
-    Dir.chdir @spec.full_gem_path do
-      options = ::RDoc::Options.new
-      options.default_title = "#{@spec.full_name} Documentation"
-      options.parse args
-      options.quiet = !Gem.configuration.really_verbose
+    def new_rdoc # :nodoc:
+      ::RDoc::RDoc.new
     end
 
-    @rdoc = new_rdoc
+    ##
+    # Is rdoc documentation installed?
 
-    say "Parsing documentation for #{@spec.full_name}"
-
-    Dir.chdir @spec.full_gem_path do
-      # RDoc::Options#finish must be called before parse_files.
-      # RDoc::Options#finish is also called after ri/aliki generator setup.
-      # We need to dup the options to avoid modifying it after finish is called.
-      parse_options = options.dup
-      parse_options.finish
-      @rdoc.options = parse_options
-      @rdoc.store = RDoc::Store.new(parse_options)
-      @rdoc.parse_files parse_options.files
+    def rdoc_installed?
+      File.exist? @rdoc_dir
     end
 
-    document 'ri',       options, @ri_dir if
-      @generate_ri   and (@force or not File.exist? @ri_dir)
+    ##
+    # Removes generated RDoc and ri data
 
-    document 'aliki', options, @rdoc_dir if
-      @generate_rdoc and (@force or not File.exist? @rdoc_dir)
+    def remove
+      base_dir = @spec.base_dir
+
+      raise Gem::FilePermissionError, base_dir unless File.writable? base_dir
+
+      FileUtils.rm_rf @rdoc_dir
+      FileUtils.rm_rf @ri_dir
+    end
+
+    ##
+    # Is ri data installed?
+
+    def ri_installed?
+      File.exist? @ri_dir
+    end
+
+    ##
+    # Prepares the spec for documentation generation
+
+    def setup
+      self.class.load_rdoc
+
+      raise Gem::FilePermissionError, @doc_dir if
+        File.exist?(@doc_dir) and not File.writable?(@doc_dir)
+
+      FileUtils.mkdir_p @doc_dir unless File.exist? @doc_dir
+    end
+
   end
-
-  ##
-  # #new_rdoc creates a new RDoc instance.  This method is provided only to
-  # make testing easier.
-
-  def new_rdoc # :nodoc:
-    ::RDoc::RDoc.new
-  end
-
-  ##
-  # Is rdoc documentation installed?
-
-  def rdoc_installed?
-    File.exist? @rdoc_dir
-  end
-
-  ##
-  # Removes generated RDoc and ri data
-
-  def remove
-    base_dir = @spec.base_dir
-
-    raise Gem::FilePermissionError, base_dir unless File.writable? base_dir
-
-    FileUtils.rm_rf @rdoc_dir
-    FileUtils.rm_rf @ri_dir
-  end
-
-  ##
-  # Is ri data installed?
-
-  def ri_installed?
-    File.exist? @ri_dir
-  end
-
-  ##
-  # Prepares the spec for documentation generation
-
-  def setup
-    self.class.load_rdoc
-
-    raise Gem::FilePermissionError, @doc_dir if
-      File.exist?(@doc_dir) and not File.writable?(@doc_dir)
-
-    FileUtils.mkdir_p @doc_dir unless File.exist? @doc_dir
-  end
-
 end
 
 module RDoc

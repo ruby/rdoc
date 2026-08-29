@@ -1,261 +1,265 @@
 # frozen_string_literal: true
-##
-# Subclass of the RDoc::Markup::ToHtml class that supports looking up method
-# names, classes, etc to create links.  RDoc::CrossReference is used to
-# generate those links based on the current context.
+module RDoc
+  class Markup
+    ##
+    # Subclass of the RDoc::Markup::ToHtml class that supports looking up method
+    # names, classes, etc to create links.  RDoc::CrossReference is used to
+    # generate those links based on the current context.
 
-class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
+    class ToHtmlCrossref < ::RDoc::Markup::ToHtml
 
-  # :stopdoc:
-  ALL_CROSSREF_REGEXP = RDoc::CrossReference::ALL_CROSSREF_REGEXP
-  CROSSREF_REGEXP     = RDoc::CrossReference::CROSSREF_REGEXP
-  # :startdoc:
+      # :stopdoc:
+      ALL_CROSSREF_REGEXP = ::RDoc::CrossReference::ALL_CROSSREF_REGEXP
+      CROSSREF_REGEXP     = ::RDoc::CrossReference::CROSSREF_REGEXP
+      # :startdoc:
 
-  ##
-  # RDoc::CodeObject for generating references
+      ##
+      # RDoc::CodeObject for generating references
 
-  attr_accessor :context
+      attr_accessor :context
 
-  ##
-  # Should we show '#' characters on method references?
+      ##
+      # Should we show '#' characters on method references?
 
-  attr_accessor :show_hash
+      attr_accessor :show_hash
 
-  ##
-  # Creates a new crossref resolver that generates links relative to +context+
-  # which lives at +from_path+ in the generated files.  '#' characters on
-  # references are removed unless +show_hash+ is true.  Only method names
-  # preceded by '#' or '::' are linked, unless +hyperlink_all+ is true.
+      ##
+      # Creates a new crossref resolver that generates links relative to +context+
+      # which lives at +from_path+ in the generated files.  '#' characters on
+      # references are removed unless +show_hash+ is true.  Only method names
+      # preceded by '#' or '::' are linked, unless +hyperlink_all+ is true.
 
-  def initialize(from_path, context, pipe: false, output_decoration: true,
-                 hyperlink_all: false, show_hash: false,
-                 autolink_excluded_words: [], warn_missing_rdoc_ref: true)
-    raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
+      def initialize(from_path, context, pipe: false, output_decoration: true,
+                     hyperlink_all: false, show_hash: false,
+                     autolink_excluded_words: [], warn_missing_rdoc_ref: true)
+        raise ArgumentError, 'from_path cannot be nil' if from_path.nil?
 
-    super(pipe: pipe, output_decoration: output_decoration)
+        super(pipe: pipe, output_decoration: output_decoration)
 
-    @context       = context
-    @from_path     = from_path
-    @hyperlink_all = hyperlink_all
-    @show_hash     = show_hash
-    @autolink_excluded_words = autolink_excluded_words
-    @warn_missing_rdoc_ref = warn_missing_rdoc_ref
+        @context       = context
+        @from_path     = from_path
+        @hyperlink_all = hyperlink_all
+        @show_hash     = show_hash
+        @autolink_excluded_words = autolink_excluded_words
+        @warn_missing_rdoc_ref = warn_missing_rdoc_ref
 
-    @cross_reference = RDoc::CrossReference.new @context
-  end
-
-  # :nodoc:
-  def init_link_notation_regexp_handlings
-    add_regexp_handling_RDOCLINK
-
-    # The crossref must be linked before tidylink because Klass.method[:sym]
-    # will be processed as a tidylink first and will be broken.
-    crossref_re = @hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
-    @markup.add_regexp_handling crossref_re, :CROSSREF
-  end
-
-  ##
-  # Creates a link to the reference +name+ if the name exists.  If +text+ is
-  # given it is used as the link text, otherwise +name+ is used.
-  # Returns +nil+ if the link target could not be resolved.
-
-  def cross_reference(name, text = nil, code = true, rdoc_ref: false)
-    # Strip '#' for link display text (e.g. #method shows as "method" in links)
-    display = !@show_hash && name.start_with?('#') ? name[1..] : name
-
-    if !display.end_with?('+@', '-@') && match = display.match(/(.*[^#:])?@(.*)/)
-      context_name = match[1]
-      label = convert_string(RDoc::Text.decode_legacy_label(match[2]))
-      text ||= "#{label} at <code>#{convert_string(context_name)}</code>" if context_name
-      text ||= label
-      code = false
-    else
-      text ||= convert_string(display)
-    end
-
-    link(name, text, code, rdoc_ref: rdoc_ref)
-  end
-
-  ##
-  # We're invoked when any text matches the CROSSREF pattern.  If we find the
-  # corresponding reference, generate a link.  If the name we're looking for
-  # contains no punctuation, we look for it up the module/class chain.  For
-  # example, ToHtml is found, even without the <tt>RDoc::Markup::</tt> prefix,
-  # because we look for it in module Markup first.
-
-  def handle_regexp_CROSSREF(name)
-    return convert_string(name) if in_tidylink_label?
-    return name if @autolink_excluded_words&.include?(name)
-
-    return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
-
-    unless @hyperlink_all
-      # This ensures that words entirely consisting of lowercase letters will
-      # not have cross-references generated (to suppress lots of erroneous
-      # cross-references to "new" in text, for instance)
-      return name if name =~ /\A[a-z]*\z/
-    end
-    cross_reference(name, rdoc_ref: false) || convert_string(name)
-  end
-
-  ##
-  # Handles <tt>rdoc-ref:</tt> scheme links and allows RDoc::Markup::ToHtml to
-  # handle other schemes.
-
-  def handle_regexp_HYPERLINK(url)
-    return convert_string(url) if in_tidylink_label?
-
-    case url
-    when /\Ardoc-ref:/
-      ref = $'
-      cross_reference(ref, rdoc_ref: true) || convert_string(ref)
-    else
-      super
-    end
-  end
-
-  ##
-  # +target+ is an rdoc-schemed link that will be converted into a hyperlink.
-  # For the rdoc-ref scheme the cross-reference will be looked up and the
-  # given name will be used.
-  #
-  # All other contents are handled by
-  # {the superclass}[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK]
-
-  def handle_regexp_RDOCLINK(url)
-    case url
-    when /\Ardoc-ref:/
-      if in_tidylink_label?
-        convert_string(url)
-      else
-        ref = $'
-        cross_reference(ref, rdoc_ref: true) || convert_string(ref)
+        @cross_reference = ::RDoc::CrossReference.new @context
       end
-    else
-      super
-    end
-  end
 
-  ##
-  # Generates links for <tt>rdoc-ref:</tt> scheme URLs and allows
-  # RDoc::Markup::ToHtml to handle other schemes.
+      # :nodoc:
+      def init_link_notation_regexp_handlings
+        add_regexp_handling_RDOCLINK
 
-  def gen_url(url, text)
-    if url =~ /\Ardoc-ref:/
-      name = $'
-      cross_reference(name, text, name == text, rdoc_ref: true) || text
-    else
-      super
-    end
-  end
-
-  ##
-  # Creates an HTML link to +name+ with the given +html_string+.
-  # +html_string+ should be already escaped and may contain HTML tags.
-  # Returns the link HTML string, or +nil+ if the reference could not be resolved.
-
-  def link(name, html_string, code = true, rdoc_ref: false)
-    if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
-      name = $1
-      label = $'
-    end
-
-    ref = @cross_reference.resolve name if name
-
-    # Non-text source files (C, Ruby, etc.) don't get HTML pages generated,
-    # so don't auto-link to them. Explicit rdoc-ref: links are still allowed.
-    if !rdoc_ref && RDoc::TopLevel === ref && !ref.text?
-      return
-    end
-
-    if ref
-      path = ref.as_href(@from_path)
-
-      if code and RDoc::CodeObject === ref and !(RDoc::TopLevel === ref)
-        html_string = "<code>#{html_string}</code>"
+        # The crossref must be linked before tidylink because Klass.method[:sym]
+        # will be processed as a tidylink first and will be broken.
+        crossref_re = @hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
+        @markup.add_regexp_handling crossref_re, :CROSSREF
       end
-    elsif name
-      if rdoc_ref && @warn_missing_rdoc_ref
-        puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{html_string}`"
+
+      ##
+      # Creates a link to the reference +name+ if the name exists.  If +text+ is
+      # given it is used as the link text, otherwise +name+ is used.
+      # Returns +nil+ if the link target could not be resolved.
+
+      def cross_reference(name, text = nil, code = true, rdoc_ref: false)
+        # Strip '#' for link display text (e.g. #method shows as "method" in links)
+        display = !@show_hash && name.start_with?('#') ? name[1..] : name
+
+        if !display.end_with?('+@', '-@') && match = display.match(/(.*[^#:])?@(.*)/)
+          context_name = match[1]
+          label = convert_string(::RDoc::Text.decode_legacy_label(match[2]))
+          text ||= "#{label} at <code>#{convert_string(context_name)}</code>" if context_name
+          text ||= label
+          code = false
+        else
+          text ||= convert_string(display)
+        end
+
+        link(name, text, code, rdoc_ref: rdoc_ref)
       end
-      return
-    else
-      # A bare label reference like @foo still produces a valid anchor link
-      return unless label
-      path = +""
-    end
 
-    if label
-      # Decode legacy labels (e.g., "What-27s+Here" -> "What's Here")
-      # then convert to GitHub-style anchor format
-      decoded_label = RDoc::Text.decode_legacy_label(label)
-      formatted_label = RDoc::Text.to_anchor(decoded_label)
+      ##
+      # We're invoked when any text matches the CROSSREF pattern.  If we find the
+      # corresponding reference, generate a link.  If the name we're looking for
+      # contains no punctuation, we look for it up the module/class chain.  For
+      # example, ToHtml is found, even without the <tt>RDoc::Markup::</tt> prefix,
+      # because we look for it in module Markup first.
 
-      # Case 1: Path already has an anchor (e.g., method link)
-      #   Input:  C1#method@label -> path="C1.html#method-i-m"
-      #   Output: C1.html#method-i-m-label
-      if path =~ /#/
-        path << "-#{formatted_label}"
+      def handle_regexp_CROSSREF(name)
+        return convert_string(name) if in_tidylink_label?
+        return name if @autolink_excluded_words&.include?(name)
 
-      # Case 2: Label matches a section title
-      #   Input:  C1@Section -> path="C1.html", section "Section" exists
-      #   Output: C1.html#section (uses section.aref for GitHub-style)
-      elsif (section = ref&.sections&.find { |s| decoded_label == s.title })
-        path << "##{section.aref}"
+        return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
 
-      # Case 3: Ref has an aref (class/module context)
-      #   Input:  C1@heading -> path="C1.html", ref=C1 class
-      #   Output: C1.html#class-c1-heading
-      elsif ref.respond_to?(:aref)
-        path << "##{ref.aref}-#{formatted_label}"
-
-      # Case 4: No context, just the label (e.g., TopLevel/file)
-      #   Input:  README@section -> path="README_md.html"
-      #   Output: README_md.html#section
-      else
-        path << "##{formatted_label}"
+        unless @hyperlink_all
+          # This ensures that words entirely consisting of lowercase letters will
+          # not have cross-references generated (to suppress lots of erroneous
+          # cross-references to "new" in text, for instance)
+          return name if name =~ /\A[a-z]*\z/
+        end
+        cross_reference(name, rdoc_ref: false) || convert_string(name)
       end
-    end
 
-    "<a href=\"#{path}\">#{html_string}</a>"
-  end
+      ##
+      # Handles <tt>rdoc-ref:</tt> scheme links and allows RDoc::Markup::ToHtml to
+      # handle other schemes.
 
-  def handle_TT(code)
-    emit_inline(tt_cross_reference(code) || "<code>#{convert_string(code)}</code>")
-  end
+      def handle_regexp_HYPERLINK(url)
+        return convert_string(url) if in_tidylink_label?
 
-  # Applies additional special handling on top of the one defined in ToHtml.
-  # When a tidy link is <tt>{Foo}[rdoc-ref:Foo]</tt>, the label part is surrounded by <tt><code></code></tt>.
-  # TODO: reconsider this workaround.
-  def apply_tidylink_label_special_handling(label, url)
-    if url == "rdoc-ref:#{label}" && cross_reference(label)&.include?('<code>')
-      "<code>#{convert_string(label)}</code>"
-    else
-      super
-    end
-  end
+        case url
+        when /\Ardoc-ref:/
+          ref = $'
+          cross_reference(ref, rdoc_ref: true) || convert_string(ref)
+        else
+          super
+        end
+      end
 
-  # Handles cross-reference and suppressed-crossref inside tt tag.
-  # Returns nil if code is not an existing cross-reference nor a suppressed-crossref.
-  def tt_cross_reference(code)
-    return if in_tidylink_label?
+      ##
+      # +target+ is an rdoc-schemed link that will be converted into a hyperlink.
+      # For the rdoc-ref scheme the cross-reference will be looked up and the
+      # given name will be used.
+      #
+      # All other contents are handled by
+      # {the superclass}[rdoc-ref:RDoc::Markup::ToHtml#handle_regexp_RDOCLINK]
 
-    crossref_regexp = @hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
-    # REGEXP sometimes matches a string that starts with a backslash but is not a
-    # suppressed cross-reference (for example, `\+`), so the backslash-removed
-    # part needs to be checked against crossref_regexp.
-    match = crossref_regexp.match(code.delete_prefix('\\'))
-    return unless match && match.begin(1).zero?
-    return unless match.post_match.match?(/\A[[:punct:]\s]*\z/)
+      def handle_regexp_RDOCLINK(url)
+        case url
+        when /\Ardoc-ref:/
+          if in_tidylink_label?
+            convert_string(url)
+          else
+            ref = $'
+            cross_reference(ref, rdoc_ref: true) || convert_string(ref)
+          end
+        else
+          super
+        end
+      end
 
-    # cross_reference(file_page) may return a link without code tag.
-    # We need to check it because this method shouldn't return an html text without code tag.
-    if code.start_with?('\\')
-      # Remove leading backslash if crossref exists
-      "<code>#{convert_string(code[1..])}</code>" if cross_reference(code[1..])&.include?('<code>')
-    else
-      html = cross_reference(code)
-      html if html&.include?('<code>')
+      ##
+      # Generates links for <tt>rdoc-ref:</tt> scheme URLs and allows
+      # RDoc::Markup::ToHtml to handle other schemes.
+
+      def gen_url(url, text)
+        if url =~ /\Ardoc-ref:/
+          name = $'
+          cross_reference(name, text, name == text, rdoc_ref: true) || text
+        else
+          super
+        end
+      end
+
+      ##
+      # Creates an HTML link to +name+ with the given +html_string+.
+      # +html_string+ should be already escaped and may contain HTML tags.
+      # Returns the link HTML string, or +nil+ if the reference could not be resolved.
+
+      def link(name, html_string, code = true, rdoc_ref: false)
+        if !(name.end_with?('+@', '-@')) and name =~ /(.*[^#:])?@/
+          name = $1
+          label = $'
+        end
+
+        ref = @cross_reference.resolve name if name
+
+        # Non-text source files (C, Ruby, etc.) don't get HTML pages generated,
+        # so don't auto-link to them. Explicit rdoc-ref: links are still allowed.
+        if !rdoc_ref && ::RDoc::TopLevel === ref && !ref.text?
+          return
+        end
+
+        if ref
+          path = ref.as_href(@from_path)
+
+          if code and ::RDoc::CodeObject === ref and !(::RDoc::TopLevel === ref)
+            html_string = "<code>#{html_string}</code>"
+          end
+        elsif name
+          if rdoc_ref && @warn_missing_rdoc_ref
+            puts "#{@from_path}: `rdoc-ref:#{name}` can't be resolved for `#{html_string}`"
+          end
+          return
+        else
+          # A bare label reference like @foo still produces a valid anchor link
+          return unless label
+          path = +""
+        end
+
+        if label
+          # Decode legacy labels (e.g., "What-27s+Here" -> "What's Here")
+          # then convert to GitHub-style anchor format
+          decoded_label = ::RDoc::Text.decode_legacy_label(label)
+          formatted_label = ::RDoc::Text.to_anchor(decoded_label)
+
+          # Case 1: Path already has an anchor (e.g., method link)
+          #   Input:  C1#method@label -> path="C1.html#method-i-m"
+          #   Output: C1.html#method-i-m-label
+          if path =~ /#/
+            path << "-#{formatted_label}"
+
+          # Case 2: Label matches a section title
+          #   Input:  C1@Section -> path="C1.html", section "Section" exists
+          #   Output: C1.html#section (uses section.aref for GitHub-style)
+          elsif (section = ref&.sections&.find { |s| decoded_label == s.title })
+            path << "##{section.aref}"
+
+          # Case 3: Ref has an aref (class/module context)
+          #   Input:  C1@heading -> path="C1.html", ref=C1 class
+          #   Output: C1.html#class-c1-heading
+          elsif ref.respond_to?(:aref)
+            path << "##{ref.aref}-#{formatted_label}"
+
+          # Case 4: No context, just the label (e.g., TopLevel/file)
+          #   Input:  README@section -> path="README_md.html"
+          #   Output: README_md.html#section
+          else
+            path << "##{formatted_label}"
+          end
+        end
+
+        "<a href=\"#{path}\">#{html_string}</a>"
+      end
+
+      def handle_TT(code)
+        emit_inline(tt_cross_reference(code) || "<code>#{convert_string(code)}</code>")
+      end
+
+      # Applies additional special handling on top of the one defined in ToHtml.
+      # When a tidy link is <tt>{Foo}[rdoc-ref:Foo]</tt>, the label part is surrounded by <tt><code></code></tt>.
+      # TODO: reconsider this workaround.
+      def apply_tidylink_label_special_handling(label, url)
+        if url == "rdoc-ref:#{label}" && cross_reference(label)&.include?('<code>')
+          "<code>#{convert_string(label)}</code>"
+        else
+          super
+        end
+      end
+
+      # Handles cross-reference and suppressed-crossref inside tt tag.
+      # Returns nil if code is not an existing cross-reference nor a suppressed-crossref.
+      def tt_cross_reference(code)
+        return if in_tidylink_label?
+
+        crossref_regexp = @hyperlink_all ? ALL_CROSSREF_REGEXP : CROSSREF_REGEXP
+        # REGEXP sometimes matches a string that starts with a backslash but is not a
+        # suppressed cross-reference (for example, `\+`), so the backslash-removed
+        # part needs to be checked against crossref_regexp.
+        match = crossref_regexp.match(code.delete_prefix('\\'))
+        return unless match && match.begin(1).zero?
+        return unless match.post_match.match?(/\A[[:punct:]\s]*\z/)
+
+        # cross_reference(file_page) may return a link without code tag.
+        # We need to check it because this method shouldn't return an html text without code tag.
+        if code.start_with?('\\')
+          # Remove leading backslash if crossref exists
+          "<code>#{convert_string(code[1..])}</code>" if cross_reference(code[1..])&.include?('<code>')
+        else
+          html = cross_reference(code)
+          html if html&.include?('<code>')
+        end
+      end
     end
   end
 end

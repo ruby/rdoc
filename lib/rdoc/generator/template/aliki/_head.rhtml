@@ -112,52 +112,52 @@
 </script>
 
 <script
-  src="<%= h asset_rel_prefix %>/js/theme-toggle.js?v=<%= h RDoc::VERSION %>"
+  src="<%= h asset_rel_prefix %>/js/theme-toggle.js?v=<%= h ::RDoc::VERSION %>"
 ></script>
 
 <script
-  src="<%= h asset_rel_prefix %>/js/search_navigation.js?v=<%= h RDoc::VERSION %>"
+  src="<%= h asset_rel_prefix %>/js/search_navigation.js?v=<%= h ::RDoc::VERSION %>"
   defer
 ></script>
 
 <script
-  src="<%= h asset_rel_prefix %>/js/search_data.js?v=<%= h RDoc::VERSION %>"
+  src="<%= h asset_rel_prefix %>/js/search_data.js?v=<%= h ::RDoc::VERSION %>"
   defer
 ></script>
 
 <script
-  src="<%= h asset_rel_prefix %>/js/search_ranker.js?v=<%= h RDoc::VERSION %>"
+  src="<%= h asset_rel_prefix %>/js/search_ranker.js?v=<%= h ::RDoc::VERSION %>"
   defer
 ></script>
 
 <script
-  src="<%= h asset_rel_prefix %>/js/search_controller.js?v=<%= h RDoc::VERSION %>"
+  src="<%= h asset_rel_prefix %>/js/search_controller.js?v=<%= h ::RDoc::VERSION %>"
   defer
 ></script>
 
 <script
-  src="<%= h asset_rel_prefix %>/js/c_highlighter.js?v=<%= h RDoc::VERSION %>"
+  src="<%= h asset_rel_prefix %>/js/c_highlighter.js?v=<%= h ::RDoc::VERSION %>"
   defer
 ></script>
 
 <script
-  src="<%= h asset_rel_prefix %>/js/bash_highlighter.js?v=<%= h RDoc::VERSION %>"
+  src="<%= h asset_rel_prefix %>/js/bash_highlighter.js?v=<%= h ::RDoc::VERSION %>"
   defer
 ></script>
 
 <script
-  src="<%= h asset_rel_prefix %>/js/aliki.js?v=<%= h RDoc::VERSION %>"
+  src="<%= h asset_rel_prefix %>/js/aliki.js?v=<%= h ::RDoc::VERSION %>"
   defer
 ></script>
 
 <link
-  href="<%= h asset_rel_prefix %>/css/rdoc.css?v=<%= h RDoc::VERSION %>"
+  href="<%= h asset_rel_prefix %>/css/rdoc.css?v=<%= h ::RDoc::VERSION %>"
   rel="stylesheet"
 >
 
 <%- @options.template_stylesheets.each do |stylesheet| %>
   <link
-    href="<%= h asset_rel_prefix %>/<%= h File.basename stylesheet %>?v=<%= h RDoc::VERSION %>"
+    href="<%= h asset_rel_prefix %>/<%= h File.basename stylesheet %>?v=<%= h ::RDoc::VERSION %>"
     rel="stylesheet"
   >
 <%- end %>

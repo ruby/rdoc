@@ -25,7 +25,7 @@
 begin
   gem 'rdoc'
 rescue Gem::LoadError
-end unless defined?(RDoc)
+end unless defined?(::RDoc)
 
 begin
   gem 'rake'
@@ -36,313 +36,315 @@ require_relative '../rdoc'
 require 'rake'
 require 'rake/tasklib'
 
-##
-# RDoc::Task creates the following rake tasks to generate and clean up RDoc
-# output:
-#
-# [rdoc]
-#   Main task for this RDoc task.
-#
-# [clobber_rdoc]
-#   Delete all the rdoc files.  This target is automatically added to the main
-#   clobber target.
-#
-# [rerdoc]
-#   Rebuild the rdoc files from scratch, even if they are not out of date.
-#
-# [rdoc:coverage]
-#   Print RDoc coverage report for all rdoc files.
-#
-# Simple Example:
-#
-#   require 'rdoc/task'
-#
-#   RDoc::Task.new do |rdoc|
-#     rdoc.main = "README.md"
-#     rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
-#   end
-#
-# The +rdoc+ object passed to the block is an RDoc::Task object. See the
-# attributes list for the RDoc::Task class for available customization options.
-#
-# == Specifying different task names
-#
-# You may wish to give the task a different name, such as if you are
-# generating two sets of documentation.  For instance, if you want to have a
-# development set of documentation including private methods:
-#
-#   require 'rdoc/task'
-#
-#   RDoc::Task.new :rdoc_dev do |rdoc|
-#     rdoc.main = "README.md"
-#     rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
-#     rdoc.options << "--all"
-#   end
-#
-# The tasks would then be named :<em>rdoc_dev</em>,
-# :clobber_<em>rdoc_dev</em>, and :re<em>rdoc_dev</em>.
-#
-# If you wish to have completely different task names, then pass a Hash as
-# first argument. With the <tt>:rdoc</tt>, <tt>:clobber_rdoc</tt> and
-# <tt>:rerdoc</tt> options, you can customize the task names to your liking.
-#
-# For example:
-#
-#   require 'rdoc/task'
-#
-#   RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean",
-#                  :rerdoc => "rdoc:force")
-#
-# This will create the tasks <tt>:rdoc</tt>, <tt>:rdoc:clean</tt>,
-# <tt>:rdoc:force</tt>, and <tt>:rdoc:coverage</tt>.
-
-class RDoc::Task < Rake::TaskLib
-
+module RDoc
   ##
-  # Name of the main, top level task.  (default is :rdoc)
+  # RDoc::Task creates the following rake tasks to generate and clean up RDoc
+  # output:
+  #
+  # [rdoc]
+  #   Main task for this RDoc task.
+  #
+  # [clobber_rdoc]
+  #   Delete all the rdoc files.  This target is automatically added to the main
+  #   clobber target.
+  #
+  # [rerdoc]
+  #   Rebuild the rdoc files from scratch, even if they are not out of date.
+  #
+  # [rdoc:coverage]
+  #   Print RDoc coverage report for all rdoc files.
+  #
+  # Simple Example:
+  #
+  #   require 'rdoc/task'
+  #
+  #   RDoc::Task.new do |rdoc|
+  #     rdoc.main = "README.md"
+  #     rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
+  #   end
+  #
+  # The +rdoc+ object passed to the block is an RDoc::Task object. See the
+  # attributes list for the RDoc::Task class for available customization options.
+  #
+  # == Specifying different task names
+  #
+  # You may wish to give the task a different name, such as if you are
+  # generating two sets of documentation.  For instance, if you want to have a
+  # development set of documentation including private methods:
+  #
+  #   require 'rdoc/task'
+  #
+  #   RDoc::Task.new :rdoc_dev do |rdoc|
+  #     rdoc.main = "README.md"
+  #     rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
+  #     rdoc.options << "--all"
+  #   end
+  #
+  # The tasks would then be named :<em>rdoc_dev</em>,
+  # :clobber_<em>rdoc_dev</em>, and :re<em>rdoc_dev</em>.
+  #
+  # If you wish to have completely different task names, then pass a Hash as
+  # first argument. With the <tt>:rdoc</tt>, <tt>:clobber_rdoc</tt> and
+  # <tt>:rerdoc</tt> options, you can customize the task names to your liking.
+  #
+  # For example:
+  #
+  #   require 'rdoc/task'
+  #
+  #   RDoc::Task.new(:rdoc => "rdoc", :clobber_rdoc => "rdoc:clean",
+  #                  :rerdoc => "rdoc:force")
+  #
+  # This will create the tasks <tt>:rdoc</tt>, <tt>:rdoc:clean</tt>,
+  # <tt>:rdoc:force</tt>, and <tt>:rdoc:coverage</tt>.
 
-  attr_accessor :name
+  class Task < Rake::TaskLib
 
-  ##
-  # The markup format; one of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
-  # See {Markup Formats}[rdoc-ref:RDoc::Markup@Markup+Formats].
-  attr_accessor :markup
+    ##
+    # Name of the main, top level task.  (default is :rdoc)
 
-  ##
-  # Name of directory to receive the html output files. (default is "html")
+    attr_accessor :name
 
-  attr_accessor :rdoc_dir
+    ##
+    # The markup format; one of: +rdoc+ (the default), +markdown+, +rd+, +tomdoc+.
+    # See {Markup Formats}[rdoc-ref:RDoc::Markup@Markup+Formats].
+    attr_accessor :markup
 
-  ##
-  # Title of RDoc documentation. (defaults to rdoc's default)
+    ##
+    # Name of directory to receive the html output files. (default is "html")
 
-  attr_accessor :title
+    attr_accessor :rdoc_dir
 
-  ##
-  # Name of file to be used as the main, top level file of the RDoc. (default
-  # is none)
+    ##
+    # Title of RDoc documentation. (defaults to rdoc's default)
 
-  attr_accessor :main
+    attr_accessor :title
 
-  ##
-  # Name of template to be used by rdoc. (defaults to rdoc's default)
+    ##
+    # Name of file to be used as the main, top level file of the RDoc. (default
+    # is none)
 
-  attr_accessor :template
+    attr_accessor :main
 
-  ##
-  # Name of format generator (<tt>--format</tt>) used by rdoc. (defaults to
-  # rdoc's default)
+    ##
+    # Name of template to be used by rdoc. (defaults to rdoc's default)
 
-  attr_accessor :generator
+    attr_accessor :template
 
-  ##
-  # List of files to be included in the rdoc generation. (default is [])
+    ##
+    # Name of format generator (<tt>--format</tt>) used by rdoc. (defaults to
+    # rdoc's default)
 
-  attr_accessor :rdoc_files
+    attr_accessor :generator
 
-  ##
-  # Additional list of options to be passed rdoc.  (default is [])
+    ##
+    # List of files to be included in the rdoc generation. (default is [])
 
-  attr_accessor :options
+    attr_accessor :rdoc_files
 
-  ##
-  # Whether to run the rdoc process as an external shell (default is false)
+    ##
+    # Additional list of options to be passed rdoc.  (default is [])
 
-  attr_accessor :external
+    attr_accessor :options
 
-  ##
-  # Create an RDoc task with the given name. See the RDoc::Task class overview
-  # for documentation.
+    ##
+    # Whether to run the rdoc process as an external shell (default is false)
 
-  def initialize(name = :rdoc) # :yield: self
-    defaults
+    attr_accessor :external
 
-    check_names name
+    ##
+    # Create an RDoc task with the given name. See the RDoc::Task class overview
+    # for documentation.
 
-    @name = name
+    def initialize(name = :rdoc) # :yield: self
+      defaults
 
-    yield self if block_given?
+      check_names name
 
-    define
-  end
+      @name = name
 
-  ##
-  # Ensures that +names+ only includes names for the :rdoc, :clobber_rdoc and
-  # :rerdoc.  If other names are given an ArgumentError is raised.
+      yield self if block_given?
 
-  def check_names(names)
-    return unless Hash === names
-
-    invalid_options =
-      names.keys.map { |k| k.to_sym } - [:rdoc, :clobber_rdoc, :rerdoc]
-
-    unless invalid_options.empty?
-      raise ArgumentError, "invalid options: #{invalid_options.join ', '}"
-    end
-  end
-
-  ##
-  # Task description for the clobber rdoc task or its renamed equivalent
-
-  def clobber_task_description
-    "Remove RDoc HTML files"
-  end
-
-  ##
-  # Sets default task values
-
-  def defaults
-    @name = :rdoc
-    @rdoc_files = Rake::FileList.new
-    @rdoc_dir = 'html'
-    @main = nil
-    @title = nil
-    @template = nil
-    @generator = nil
-    @options = []
-  end
-
-  ##
-  # Create the tasks defined by this task lib.
-
-  def define
-    desc rdoc_task_description
-    task rdoc_task_name
-
-    desc rerdoc_task_description
-    task rerdoc_task_name => [clobber_task_name, rdoc_task_name]
-
-    desc clobber_task_description
-    task clobber_task_name do
-      rm_r @rdoc_dir rescue nil
+      define
     end
 
-    task :clobber => [clobber_task_name]
+    ##
+    # Ensures that +names+ only includes names for the :rdoc, :clobber_rdoc and
+    # :rerdoc.  If other names are given an ArgumentError is raised.
 
-    directory @rdoc_dir
+    def check_names(names)
+      return unless Hash === names
 
-    rdoc_target_deps = [
-      @rdoc_files,
-      Rake.application.rakefile
-    ].flatten.compact
+      invalid_options =
+        names.keys.map { |k| k.to_sym } - [:rdoc, :clobber_rdoc, :rerdoc]
 
-    task rdoc_task_name => [rdoc_target]
-    file rdoc_target => rdoc_target_deps do
-      @before_running_rdoc.call if @before_running_rdoc
-      args = option_list + @rdoc_files
-
-      $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
-      RDoc::RDoc.new.document args
-    end
-
-    namespace rdoc_task_name do
-      desc coverage_task_description
-      task coverage_task_name do
-        @before_running_rdoc.call if @before_running_rdoc
-        opts = option_list << "-C"
-        args = opts + @rdoc_files
-
-        $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
-        RDoc::RDoc.new.document args
-      rescue SystemExit => exit
-        raise "RDoc coverage is incomplete" unless exit.success?
-      end
-
-      desc server_task_description
-      task "server" do
-        @before_running_rdoc.call if @before_running_rdoc
-        args = option_list + ["--server"] + @rdoc_files
-
-        $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
-        RDoc::RDoc.new.document args
+      unless invalid_options.empty?
+        raise ArgumentError, "invalid options: #{invalid_options.join ', '}"
       end
     end
 
-    self
-  end
+    ##
+    # Task description for the clobber rdoc task or its renamed equivalent
 
-  ##
-  # List of options that will be supplied to RDoc
+    def clobber_task_description
+      "Remove RDoc HTML files"
+    end
 
-  def option_list
-    result = @options.dup
-    result << "-o"       << @rdoc_dir
-    result << "--main"   << main      if main
-    result << "--markup" << markup    if markup
-    result << "--title"  << title     if title
-    result << "-T"       << template  if template
-    result << '-f'       << generator if generator
-    result
-  end
+    ##
+    # Sets default task values
 
-  ##
-  # The block passed to this method will be called just before running the
-  # RDoc generator. It is allowed to modify RDoc::Task attributes inside the
-  # block.
+    def defaults
+      @name = :rdoc
+      @rdoc_files = Rake::FileList.new
+      @rdoc_dir = 'html'
+      @main = nil
+      @title = nil
+      @template = nil
+      @generator = nil
+      @options = []
+    end
 
-  def before_running_rdoc(&block)
-    @before_running_rdoc = block
-  end
+    ##
+    # Create the tasks defined by this task lib.
 
-  ##
-  # Task description for the rdoc task or its renamed equivalent
+    def define
+      desc rdoc_task_description
+      task rdoc_task_name
 
-  def rdoc_task_description
-    'Build RDoc HTML files'
-  end
+      desc rerdoc_task_description
+      task rerdoc_task_name => [clobber_task_name, rdoc_task_name]
 
-  ##
-  # Task description for the rerdoc task or its renamed description
+      desc clobber_task_description
+      task clobber_task_name do
+        rm_r @rdoc_dir rescue nil
+      end
 
-  def rerdoc_task_description
-    "Rebuild RDoc HTML files"
-  end
+      task :clobber => [clobber_task_name]
 
-  ##
-  # Task description for the coverage task or its renamed description
+      directory @rdoc_dir
 
-  def coverage_task_description
-    "Print RDoc coverage report"
-  end
+      rdoc_target_deps = [
+        @rdoc_files,
+        Rake.application.rakefile
+      ].flatten.compact
 
-  ##
-  # Task description for the server task
+      task rdoc_task_name => [rdoc_target]
+      file rdoc_target => rdoc_target_deps do
+        @before_running_rdoc.call if @before_running_rdoc
+        args = option_list + @rdoc_files
 
-  def server_task_description
-    "Start a live-reloading documentation server"
-  end
+        $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
+        ::RDoc::RDoc.new.document args
+      end
+
+      namespace rdoc_task_name do
+        desc coverage_task_description
+        task coverage_task_name do
+          @before_running_rdoc.call if @before_running_rdoc
+          opts = option_list << "-C"
+          args = opts + @rdoc_files
+
+          $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
+          ::RDoc::RDoc.new.document args
+        rescue SystemExit => exit
+          raise "RDoc coverage is incomplete" unless exit.success?
+        end
+
+        desc server_task_description
+        task "server" do
+          @before_running_rdoc.call if @before_running_rdoc
+          args = option_list + ["--server"] + @rdoc_files
+
+          $stderr.puts "rdoc #{args.join ' '}" if Rake.application.options.trace
+          ::RDoc::RDoc.new.document args
+        end
+      end
+
+      self
+    end
+
+    ##
+    # List of options that will be supplied to RDoc
+
+    def option_list
+      result = @options.dup
+      result << "-o"       << @rdoc_dir
+      result << "--main"   << main      if main
+      result << "--markup" << markup    if markup
+      result << "--title"  << title     if title
+      result << "-T"       << template  if template
+      result << '-f'       << generator if generator
+      result
+    end
+
+    ##
+    # The block passed to this method will be called just before running the
+    # RDoc generator. It is allowed to modify RDoc::Task attributes inside the
+    # block.
+
+    def before_running_rdoc(&block)
+      @before_running_rdoc = block
+    end
+
+    ##
+    # Task description for the rdoc task or its renamed equivalent
+
+    def rdoc_task_description
+      'Build RDoc HTML files'
+    end
+
+    ##
+    # Task description for the rerdoc task or its renamed description
+
+    def rerdoc_task_description
+      "Rebuild RDoc HTML files"
+    end
+
+    ##
+    # Task description for the coverage task or its renamed description
+
+    def coverage_task_description
+      "Print RDoc coverage report"
+    end
+
+    ##
+    # Task description for the server task
+
+    def server_task_description
+      "Start a live-reloading documentation server"
+    end
 
   private
 
-  def rdoc_target
-    "#{rdoc_dir}/created.rid"
-  end
-
-  def rdoc_task_name
-    case name
-    when Hash then (name[:rdoc] || "rdoc").to_s
-    else           name.to_s
+    def rdoc_target
+      "#{rdoc_dir}/created.rid"
     end
-  end
 
-  def clobber_task_name
-    case name
-    when Hash then (name[:clobber_rdoc] || "clobber_rdoc").to_s
-    else           "clobber_#{name}"
+    def rdoc_task_name
+      case name
+      when Hash then (name[:rdoc] || "rdoc").to_s
+      else           name.to_s
+      end
     end
-  end
 
-  def rerdoc_task_name
-    case name
-    when Hash then (name[:rerdoc] || "rerdoc").to_s
-    else           "re#{name}"
+    def clobber_task_name
+      case name
+      when Hash then (name[:clobber_rdoc] || "clobber_rdoc").to_s
+      else           "clobber_#{name}"
+      end
     end
-  end
 
-  def coverage_task_name
-    "coverage"
-  end
+    def rerdoc_task_name
+      case name
+      when Hash then (name[:rerdoc] || "rerdoc").to_s
+      else           "re#{name}"
+      end
+    end
 
+    def coverage_task_name
+      "coverage"
+    end
+
+  end
 end
 
 # :stopdoc:
@@ -351,7 +353,7 @@ module Rake
   ##
   # For backwards compatibility
 
-  RDocTask = RDoc::Task # :nodoc:
+  RDocTask = ::RDoc::Task # :nodoc:
 
 end
 # :startdoc:

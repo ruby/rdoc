@@ -1,14 +1,18 @@
 # frozen_string_literal: true
-##
-# A quoted section which contains markup items.
+module RDoc
+  class Markup
+    ##
+    # A quoted section which contains markup items.
 
-class RDoc::Markup::BlockQuote < RDoc::Markup::Raw
+    class BlockQuote < ::RDoc::Markup::Raw
 
-  ##
-  # Calls #accept_block_quote on +visitor+
+      ##
+      # Calls #accept_block_quote on +visitor+
 
-  def accept(visitor)
-    visitor.accept_block_quote self
+      def accept(visitor)
+        visitor.accept_block_quote self
+      end
+
+    end
   end
-
 end

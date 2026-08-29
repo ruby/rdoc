@@ -1,387 +1,389 @@
 # frozen_string_literal: true
-##
-# AnyMethod is the base class for objects representing methods
-
-class RDoc::AnyMethod < RDoc::MethodAttr
-
+module RDoc
   ##
-  # 2::
-  #   RDoc 4
-  #   Added calls_super
-  #   Added parent name and class
-  #   Added section title
-  # 3::
-  #   RDoc 4.1
-  #   Added is_alias_for
-  # 4::
-  #   Added type_signature_lines (serialized as joined string)
+  # AnyMethod is the base class for objects representing methods
 
-  MARSHAL_VERSION = 4 # :nodoc:
+  class AnyMethod < ::RDoc::MethodAttr
 
-  ##
-  # Don't rename \#initialize to \::new
+    ##
+    # 2::
+    #   RDoc 4
+    #   Added calls_super
+    #   Added parent name and class
+    #   Added section title
+    # 3::
+    #   RDoc 4.1
+    #   Added is_alias_for
+    # 4::
+    #   Added type_signature_lines (serialized as joined string)
 
-  attr_accessor :dont_rename_initialize
+    MARSHAL_VERSION = 4 # :nodoc:
 
-  ##
-  # The C function that implements this method (if it was defined in a C file)
+    ##
+    # Don't rename \#initialize to \::new
 
-  attr_accessor :c_function
+    attr_accessor :dont_rename_initialize
 
-  # The section title of the method (if defined in a C file via +:category:+)
-  attr_accessor :section_title
+    ##
+    # The C function that implements this method (if it was defined in a C file)
 
-  ##
-  # If true this method uses +super+ to call a superclass version
+    attr_accessor :c_function
 
-  attr_accessor :calls_super
+    # The section title of the method (if defined in a C file via +:category:+)
+    attr_accessor :section_title
 
-  include RDoc::TokenStream
+    ##
+    # If true this method uses +super+ to call a superclass version
 
-  ##
-  # Creates a new AnyMethod with name +name+
+    attr_accessor :calls_super
 
-  def initialize(name, singleton: false)
-    super(name, singleton: singleton)
+    include ::RDoc::TokenStream
 
-    @c_function = nil
-    @dont_rename_initialize = false
-    @token_stream = nil
-    @calls_super = false
-    @superclass_method = nil
-  end
+    ##
+    # Creates a new AnyMethod with name +name+
 
-  ##
-  # Adds +an_alias+ as an alias for this method in +context+.
+    def initialize(name, singleton: false)
+      super(name, singleton: singleton)
 
-  def add_alias(an_alias, context = nil)
-    method = self.class.new an_alias.new_name, singleton: singleton
-
-    method.record_location an_alias.file
-    method.params = self.params
-    method.visibility = self.visibility
-    method.comment = an_alias.comment
-    method.is_alias_for = self
-    method.type_signature_lines = self.type_signature_lines
-    @aliases << method
-    context.add_method method if context
-    method
-  end
-
-  ##
-  # Prefix for +aref+ is 'method'.
-
-  def aref_prefix
-    'method'
-  end
-
-  ##
-  # The call_seq or the param_seq with method name, if there is no call_seq.
-  #
-  # Use this for displaying a method's argument lists.
-
-  def arglists
-    if @call_seq
-      @call_seq
-    elsif @params
-      "#{name}#{param_seq}"
-    end
-  end
-
-  ##
-  # Different ways to call this method
-
-  def call_seq
-    unless call_seq = _call_seq
-      call_seq = is_alias_for._call_seq if is_alias_for
+      @c_function = nil
+      @dont_rename_initialize = false
+      @token_stream = nil
+      @calls_super = false
+      @superclass_method = nil
     end
 
-    return unless call_seq
+    ##
+    # Adds +an_alias+ as an alias for this method in +context+.
 
-    deduplicate_call_seq(call_seq)
-  end
+    def add_alias(an_alias, context = nil)
+      method = self.class.new an_alias.new_name, singleton: singleton
 
-  ##
-  # Sets the different ways you can call this method.  If an empty +call_seq+
-  # is given nil is assumed.
-  #
-  # See also #param_seq
-
-  def call_seq=(call_seq)
-    return if call_seq.nil? || call_seq.empty?
-
-    @call_seq = call_seq
-  end
-
-  ##
-  # Whether the method has a call-seq.
-
-  def has_call_seq?
-    !!(@call_seq || is_alias_for&._call_seq)
-  end
-
-  ##
-  # Loads is_alias_for from the internal name.  Returns nil if the alias
-  # cannot be found.
-
-  def is_alias_for # :nodoc:
-    case @is_alias_for
-    when RDoc::MethodAttr
-      @is_alias_for
-    when Array
-      return nil unless @store
-
-      klass_name, singleton, method_name = @is_alias_for
-
-      return nil unless klass = @store.find_class_or_module(klass_name)
-
-      @is_alias_for = klass.find_method method_name, singleton
-    end
-  end
-
-  ##
-  # Dumps this AnyMethod for use by ri.  See also #marshal_load
-
-  def marshal_dump
-    aliases = @aliases.map do |a|
-      [a.name, parse(a.comment)]
+      method.record_location an_alias.file
+      method.params = self.params
+      method.visibility = self.visibility
+      method.comment = an_alias.comment
+      method.is_alias_for = self
+      method.type_signature_lines = self.type_signature_lines
+      @aliases << method
+      context.add_method method if context
+      method
     end
 
-    is_alias_for = [
-      @is_alias_for.parent.full_name,
-      @is_alias_for.singleton,
-      @is_alias_for.name
-    ] if @is_alias_for
+    ##
+    # Prefix for +aref+ is 'method'.
 
-    [ MARSHAL_VERSION,
-      @name,
-      full_name,
-      @singleton,
-      @visibility,
-      parse(@comment),
-      @call_seq,
-      @block_params,
-      aliases,
-      @params,
-      @file.relative_name,
-      @calls_super,
-      @parent.name,
-      @parent.class,
-      @section.title,
-      is_alias_for,
-      @type_signature_lines&.join("\n"),
-    ]
-  end
-
-  ##
-  # Loads this AnyMethod from +array+.  For a loaded AnyMethod the following
-  # methods will return cached values:
-  #
-  # * #full_name
-  # * #parent_name
-
-  def marshal_load(array)
-    initialize_visibility
-
-    @dont_rename_initialize = nil
-    @token_stream           = nil
-    @aliases                = []
-    @parent                 = nil
-    @parent_name            = nil
-    @parent_class           = nil
-    @section                = nil
-    @file                   = nil
-
-    version        = array[0]
-    @name          = array[1]
-    @full_name     = array[2]
-    @singleton     = array[3]
-    @visibility    = array[4]
-    @comment       = RDoc::Comment.from_document array[5]
-    @call_seq      = array[6]
-    @block_params  = array[7]
-    #                      8 handled below
-    @params        = array[9]
-    #                      10 handled below
-    @calls_super   = array[11]
-    @parent_name   = array[12]
-    @parent_title  = array[13]
-    @section_title = array[14]
-    @is_alias_for  = array[15]
-    @type_signature_lines = array[16]&.split("\n")
-
-    array[8].each do |new_name, document|
-      add_alias RDoc::Alias.new(@name, new_name, RDoc::Comment.from_document(document), singleton: @singleton)
+    def aref_prefix
+      'method'
     end
 
-    @parent_name ||= if @full_name =~ /#/
-                       $`
-                     else
-                       name = @full_name.split('::')
-                       name.pop
-                       name.join '::'
-                     end
+    ##
+    # The call_seq or the param_seq with method name, if there is no call_seq.
+    #
+    # Use this for displaying a method's argument lists.
 
-    @file = RDoc::TopLevel.new array[10] if version > 0
-  end
-
-  ##
-  # Method name
-  #
-  # If the method has no assigned name, it extracts it from #call_seq.
-
-  def name
-    return @name if @name
-
-    @name =
-      @call_seq[/^.*?\.(\w+)/, 1] ||
-      @call_seq[/^.*?(\w+)/, 1] ||
-      @call_seq if @call_seq
-  end
-
-  ##
-  # A list of this method's method and yield parameters.  +call-seq+ params
-  # are preferred over parsed method and block params.
-
-  def param_list
-    if @call_seq
-      params = @call_seq.split("\n").last
-      params = params.sub(/.*?\((.*)\)/, '\1')
-      params = params.sub(/(\{|do)\s*\|([^|]*)\|.*/, ',\2')
-    elsif @params
-      params = @params.sub(/\((.*)\)/, '\1')
-
-      params << ",#{@block_params}" if @block_params
-    elsif @block_params
-      params = @block_params
-    else
-      return []
-    end
-
-    if @block_params
-      # If this method has explicit block parameters, remove any explicit
-      # &block
-      params = params.sub(/,?\s*&\w+/, '')
-    else
-      params = params.sub(/\&(\w+)/, '\1')
-    end
-
-    params = params.gsub(/\s+/, '').split(',').reject(&:empty?)
-
-    params.map { |param| param.sub(/=.*/, '') }
-  end
-
-  ##
-  # Pretty parameter list for this method.  If the method's parameters were
-  # given by +call-seq+ it is preferred over the parsed values.
-
-  def param_seq
-    if @call_seq
-      params = @call_seq.split("\n").last
-      params = params.sub(/[^( ]+/, '')
-      params = params.sub(/(\|[^|]+\|)\s*\.\.\.\s*(end|\})/, '\1 \2')
-    elsif @params
-      params = @params.gsub(/\s*\#.*/, '')
-      params = params.tr_s("\n ", " ")
-      params = "(#{params})" unless params[0] == ?(
-    else
-      params = ''
-    end
-
-    if @block_params
-      # If this method has explicit block parameters, remove any explicit
-      # &block
-      params = params.sub(/,?\s*&\w+/, '')
-
-      block = @block_params.tr_s("\n ", " ")
-      if block[0] == ?(
-        block = block.sub(/^\(/, '').sub(/\)/, '')
-      end
-      params << " { |#{block}| ... }"
-    end
-
-    params
-  end
-
-  ##
-  # Whether to skip the method description, true for methods that have
-  # aliases with a call-seq that doesn't include the method name.
-
-  def skip_description?
-    has_call_seq? && call_seq.nil? && !!(is_alias_for || !aliases.empty?)
-  end
-
-  ##
-  # Sets the store for this method and its referenced code objects.
-
-  def store=(store)
-    super
-
-    @file = @store.add_file @file.full_name if @file
-  end
-
-  ##
-  # For methods that +super+, find the superclass method that would be called.
-
-  def superclass_method
-    return unless @calls_super
-    return @superclass_method if @superclass_method
-
-    parent.each_ancestor do |ancestor|
-      if method = ancestor.method_list.find { |m| m.name == @name }
-        @superclass_method = method
-        break
+    def arglists
+      if @call_seq
+        @call_seq
+      elsif @params
+        "#{name}#{param_seq}"
       end
     end
 
-    @superclass_method
-  end
+    ##
+    # Different ways to call this method
+
+    def call_seq
+      unless call_seq = _call_seq
+        call_seq = is_alias_for._call_seq if is_alias_for
+      end
+
+      return unless call_seq
+
+      deduplicate_call_seq(call_seq)
+    end
+
+    ##
+    # Sets the different ways you can call this method.  If an empty +call_seq+
+    # is given nil is assumed.
+    #
+    # See also #param_seq
+
+    def call_seq=(call_seq)
+      return if call_seq.nil? || call_seq.empty?
+
+      @call_seq = call_seq
+    end
+
+    ##
+    # Whether the method has a call-seq.
+
+    def has_call_seq?
+      !!(@call_seq || is_alias_for&._call_seq)
+    end
+
+    ##
+    # Loads is_alias_for from the internal name.  Returns nil if the alias
+    # cannot be found.
+
+    def is_alias_for # :nodoc:
+      case @is_alias_for
+      when ::RDoc::MethodAttr
+        @is_alias_for
+      when Array
+        return nil unless @store
+
+        klass_name, singleton, method_name = @is_alias_for
+
+        return nil unless klass = @store.find_class_or_module(klass_name)
+
+        @is_alias_for = klass.find_method method_name, singleton
+      end
+    end
+
+    ##
+    # Dumps this AnyMethod for use by ri.  See also #marshal_load
+
+    def marshal_dump
+      aliases = @aliases.map do |a|
+        [a.name, parse(a.comment)]
+      end
+
+      is_alias_for = [
+        @is_alias_for.parent.full_name,
+        @is_alias_for.singleton,
+        @is_alias_for.name
+      ] if @is_alias_for
+
+      [ MARSHAL_VERSION,
+        @name,
+        full_name,
+        @singleton,
+        @visibility,
+        parse(@comment),
+        @call_seq,
+        @block_params,
+        aliases,
+        @params,
+        @file.relative_name,
+        @calls_super,
+        @parent.name,
+        @parent.class,
+        @section.title,
+        is_alias_for,
+        @type_signature_lines&.join("\n"),
+      ]
+    end
+
+    ##
+    # Loads this AnyMethod from +array+.  For a loaded AnyMethod the following
+    # methods will return cached values:
+    #
+    # * #full_name
+    # * #parent_name
+
+    def marshal_load(array)
+      initialize_visibility
+
+      @dont_rename_initialize = nil
+      @token_stream           = nil
+      @aliases                = []
+      @parent                 = nil
+      @parent_name            = nil
+      @parent_class           = nil
+      @section                = nil
+      @file                   = nil
+
+      version        = array[0]
+      @name          = array[1]
+      @full_name     = array[2]
+      @singleton     = array[3]
+      @visibility    = array[4]
+      @comment       = ::RDoc::Comment.from_document array[5]
+      @call_seq      = array[6]
+      @block_params  = array[7]
+      #                      8 handled below
+      @params        = array[9]
+      #                      10 handled below
+      @calls_super   = array[11]
+      @parent_name   = array[12]
+      @parent_title  = array[13]
+      @section_title = array[14]
+      @is_alias_for  = array[15]
+      @type_signature_lines = array[16]&.split("\n")
+
+      array[8].each do |new_name, document|
+        add_alias ::RDoc::Alias.new(@name, new_name, ::RDoc::Comment.from_document(document), singleton: @singleton)
+      end
+
+      @parent_name ||= if @full_name =~ /#/
+                         $`
+                       else
+                         name = @full_name.split('::')
+                         name.pop
+                         name.join '::'
+                       end
+
+      @file = ::RDoc::TopLevel.new array[10] if version > 0
+    end
+
+    ##
+    # Method name
+    #
+    # If the method has no assigned name, it extracts it from #call_seq.
+
+    def name
+      return @name if @name
+
+      @name =
+        @call_seq[/^.*?\.(\w+)/, 1] ||
+        @call_seq[/^.*?(\w+)/, 1] ||
+        @call_seq if @call_seq
+    end
+
+    ##
+    # A list of this method's method and yield parameters.  +call-seq+ params
+    # are preferred over parsed method and block params.
+
+    def param_list
+      if @call_seq
+        params = @call_seq.split("\n").last
+        params = params.sub(/.*?\((.*)\)/, '\1')
+        params = params.sub(/(\{|do)\s*\|([^|]*)\|.*/, ',\2')
+      elsif @params
+        params = @params.sub(/\((.*)\)/, '\1')
+
+        params << ",#{@block_params}" if @block_params
+      elsif @block_params
+        params = @block_params
+      else
+        return []
+      end
+
+      if @block_params
+        # If this method has explicit block parameters, remove any explicit
+        # &block
+        params = params.sub(/,?\s*&\w+/, '')
+      else
+        params = params.sub(/\&(\w+)/, '\1')
+      end
+
+      params = params.gsub(/\s+/, '').split(',').reject(&:empty?)
+
+      params.map { |param| param.sub(/=.*/, '') }
+    end
+
+    ##
+    # Pretty parameter list for this method.  If the method's parameters were
+    # given by +call-seq+ it is preferred over the parsed values.
+
+    def param_seq
+      if @call_seq
+        params = @call_seq.split("\n").last
+        params = params.sub(/[^( ]+/, '')
+        params = params.sub(/(\|[^|]+\|)\s*\.\.\.\s*(end|\})/, '\1 \2')
+      elsif @params
+        params = @params.gsub(/\s*\#.*/, '')
+        params = params.tr_s("\n ", " ")
+        params = "(#{params})" unless params[0] == ?(
+      else
+        params = ''
+      end
+
+      if @block_params
+        # If this method has explicit block parameters, remove any explicit
+        # &block
+        params = params.sub(/,?\s*&\w+/, '')
+
+        block = @block_params.tr_s("\n ", " ")
+        if block[0] == ?(
+          block = block.sub(/^\(/, '').sub(/\)/, '')
+        end
+        params << " { |#{block}| ... }"
+      end
+
+      params
+    end
+
+    ##
+    # Whether to skip the method description, true for methods that have
+    # aliases with a call-seq that doesn't include the method name.
+
+    def skip_description?
+      has_call_seq? && call_seq.nil? && !!(is_alias_for || !aliases.empty?)
+    end
+
+    ##
+    # Sets the store for this method and its referenced code objects.
+
+    def store=(store)
+      super
+
+      @file = @store.add_file @file.full_name if @file
+    end
+
+    ##
+    # For methods that +super+, find the superclass method that would be called.
+
+    def superclass_method
+      return unless @calls_super
+      return @superclass_method if @superclass_method
+
+      parent.each_ancestor do |ancestor|
+        if method = ancestor.method_list.find { |m| m.name == @name }
+          @superclass_method = method
+          break
+        end
+      end
+
+      @superclass_method
+    end
 
   protected
 
-  ##
-  # call_seq without deduplication and alias lookup.
+    ##
+    # call_seq without deduplication and alias lookup.
 
-  def _call_seq
-    @call_seq if defined?(@call_seq) && @call_seq
-  end
+    def _call_seq
+      @call_seq if defined?(@call_seq) && @call_seq
+    end
 
   private
 
-  ##
-  # call_seq with alias examples information removed, if this
-  # method is an alias method.
+    ##
+    # call_seq with alias examples information removed, if this
+    # method is an alias method.
 
-  def deduplicate_call_seq(call_seq)
-    return call_seq unless is_alias_for || !aliases.empty?
+    def deduplicate_call_seq(call_seq)
+      return call_seq unless is_alias_for || !aliases.empty?
 
-    method_name = self.name
+      method_name = self.name
 
-    entries = call_seq.split "\n"
+      entries = call_seq.split "\n"
 
-    ignore = aliases.map(&:name)
-    if is_alias_for
-      ignore << is_alias_for.name
-      ignore.concat is_alias_for.aliases.map(&:name)
-    end
-
-    ignore.delete(method_name)
-    ignore_bracket_methods, ignore_other_methods = ignore.partition {|i| i.start_with?('[') }
-
-    if ignore_other_methods.any?
-      ignore_union = Regexp.union(ignore_other_methods)
-      entries.reject! do |entry|
-        /\A(?:\w*\.)?#{ignore_union}(?:[(\s]|\z)/.match?(entry) ||
-          /\s#{ignore_union}\s/.match?(entry)
+      ignore = aliases.map(&:name)
+      if is_alias_for
+        ignore << is_alias_for.name
+        ignore.concat is_alias_for.aliases.map(&:name)
       end
-    end
-    if ignore_bracket_methods.any?
-      entries.reject! do |entry|
-        # Ignore `receiver[arg] -> return_type` `[](arg)` `[]`
-        /\A\w*\[.*?\](?:[(\s]|\z)/.match?(entry)
-      end
-    end
 
-    entries.empty? ? nil : entries.join("\n")
+      ignore.delete(method_name)
+      ignore_bracket_methods, ignore_other_methods = ignore.partition {|i| i.start_with?('[') }
+
+      if ignore_other_methods.any?
+        ignore_union = Regexp.union(ignore_other_methods)
+        entries.reject! do |entry|
+          /\A(?:\w*\.)?#{ignore_union}(?:[(\s]|\z)/.match?(entry) ||
+            /\s#{ignore_union}\s/.match?(entry)
+        end
+      end
+      if ignore_bracket_methods.any?
+        entries.reject! do |entry|
+          # Ignore `receiver[arg] -> return_type` `[](arg)` `[]`
+          /\A\w*\[.*?\](?:[(\s]|\z)/.match?(entry)
+        end
+      end
+
+      entries.empty? ? nil : entries.join("\n")
+    end
   end
 end
