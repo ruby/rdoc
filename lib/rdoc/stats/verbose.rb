@@ -5,7 +5,7 @@ module RDoc
     # Stats printer that prints everything documented, including the documented
     # status
 
-    class Verbose < ::RDoc::Stats::Normal
+    class Verbose < Stats::Normal
 
       ##
       # Returns a marker for RDoc::CodeObject +co+ being undocumented

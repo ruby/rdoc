@@ -4,7 +4,7 @@ module RDoc
     ##
     # An Indented Paragraph of text
 
-    class IndentedParagraph < ::RDoc::Markup::Raw
+    class IndentedParagraph < Markup::Raw
 
       ##
       # The indent in number of spaces
@@ -38,7 +38,7 @@ module RDoc
 
       def text(hard_break = nil)
         @parts.map do |part|
-          if ::RDoc::Markup::HardBreak === part
+          if Markup::HardBreak === part
             '%1$s%3$*2$s' % [hard_break, @indent, ' '] if hard_break
           else
             part

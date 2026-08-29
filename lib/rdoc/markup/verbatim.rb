@@ -4,7 +4,7 @@ module RDoc
     ##
     # A section of verbatim text
 
-    class Verbatim < ::RDoc::Markup::Raw
+    class Verbatim < Markup::Raw
 
       ##
       # Format of this verbatim section

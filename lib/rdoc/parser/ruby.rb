@@ -3,10 +3,10 @@
 require 'prism'
 require_relative '../rbs_helper'
 
-# Parse and collect document from Ruby source code.
-
 module RDoc
   class Parser
+    # Parse and collect document from Ruby source code.
+
     ##
     # Extracts code elements from a source file returning a TopLevel object
     # containing the constituent file elements.
@@ -126,7 +126,7 @@ module RDoc
     # Note that by default, the :method: directive will be ignored if there is a
     # standard rdocable item following it.
 
-    class Ruby < ::RDoc::Parser
+    class Ruby < Parser
 
       parse_files_matching(/\.rbw?$/)
 
@@ -143,9 +143,9 @@ module RDoc
 
         @size = 0
         @token_listeners = nil
-        content = ::RDoc::Encoding.remove_magic_comment content
+        content = Encoding.remove_magic_comment content
         @content = content
-        @colorizer_context = ::RDoc::Parser::RubyColorizer::DeferredContext.new(content)
+        @colorizer_context = Parser::RubyColorizer::DeferredContext.new(content)
         @markup = @options.markup
         @track_visibility = :nodoc != @options.visibility
         @encoding = @options.encoding
@@ -201,7 +201,7 @@ module RDoc
         return if container.received_nodoc || !container.ignored?
         record_location(container)
         container.start_doc
-        mark_container_documentable(container.parent) if container.parent.is_a?(::RDoc::ClassModule)
+        mark_container_documentable(container.parent) if container.parent.is_a?(ClassModule)
       end
 
       # Suppress `extend` and `include` within block
@@ -243,7 +243,7 @@ module RDoc
 
       def record_location(container) # :nodoc:
         case container
-        when ::RDoc::ClassModule
+        when ClassModule
           @top_level.add_to_classes_or_modules container
         end
 
@@ -314,7 +314,7 @@ module RDoc
             consecutive_comments << [comment] << (current = [])
           elsif comment.location.start_line_slice.match?(/\S/)
             text = comment.slice
-            text = ::RDoc::Encoding.change_encoding(text, @encoding) if @encoding
+            text = Encoding.change_encoding(text, @encoding) if @encoding
             @modifier_comments[comment.location.start_line] = text
           elsif current.empty? || current.last.location.end_line + 1 == comment.location.start_line
             current << comment
@@ -338,7 +338,7 @@ module RDoc
             c.is_a?(Prism::EmbDocComment) ? c.slice.lines[1...-1].join : c.slice
           end
           text = texts.join("\n")
-          text = ::RDoc::Encoding.change_encoding(text, @encoding) if @encoding
+          text = Encoding.change_encoding(text, @encoding) if @encoding
           line_no += 1 while @lines[line_no - 1]&.match?(/\A\s*$/)
           [line_no, start_line, text]
         end
@@ -357,11 +357,11 @@ module RDoc
 
       def parse_comment_tomdoc(container, comment, line_no, start_line)
         return if document_suppressed?
-        return unless signature = ::RDoc::TomDoc.signature(comment)
+        return unless signature = TomDoc.signature(comment)
 
         name, = signature.split %r%[ \(]%, 2
 
-        meth = ::RDoc::AnyMethod.new name
+        meth = AnyMethod.new name
         record_location(meth)
         meth.line = start_line
         meth.call_seq = signature
@@ -429,7 +429,7 @@ module RDoc
 
         if attributes
           attributes.each do |attr|
-            a = ::RDoc::Attr.new(attr, rw, comment, singleton: @singleton)
+            a = Attr.new(attr, rw, comment, singleton: @singleton)
             a.store = @store
             a.line = line_no
             a.visibility = visibility
@@ -485,7 +485,7 @@ module RDoc
         while !@unprocessed_comments.empty? && @unprocessed_comments.first[0] <= line_no_until
           line_no, start_line, text = @unprocessed_comments.shift
           if @markup == 'tomdoc'
-            comment = ::RDoc::Comment.new(text, @top_level, :ruby)
+            comment = Comment.new(text, @top_level, :ruby)
             comment.format = 'tomdoc'
             parse_comment_tomdoc(@container, comment, line_no, start_line)
             @preprocess.run_post_processes(comment, @container)
@@ -519,7 +519,7 @@ module RDoc
       def parse_comment_text_to_directives(comment_text, start_line) # :nodoc:
         type_signature_lines = extract_type_signature!(comment_text, start_line)
         comment_text, directives = @preprocess.parse_comment(comment_text, start_line, :ruby)
-        comment = ::RDoc::Comment.new(comment_text, @top_level, :ruby)
+        comment = Comment.new(comment_text, @top_level, :ruby)
         comment.normalized = true
         comment.line = start_line
         markup, = directives['markup']
@@ -565,9 +565,9 @@ module RDoc
         new_methods.each do |method|
           method.visibility = visibility
           case method
-          when ::RDoc::AnyMethod
+          when AnyMethod
             @container.add_method(method)
-          when ::RDoc::Attr
+          when Attr
             @container.add_attribute(method)
           end
         end
@@ -591,9 +591,9 @@ module RDoc
         new_methods.each do |method|
           method.visibility = :public
           case method
-          when ::RDoc::AnyMethod
+          when AnyMethod
             @container.add_method(method)
-          when ::RDoc::Attr
+          when Attr
             @container.add_attribute(method)
           end
         end
@@ -616,7 +616,7 @@ module RDoc
         handle_code_object_directives(@container, directives) if directives
         return if document_suppressed?
 
-        a = ::RDoc::Alias.new(old_name, new_name, comment, singleton: @singleton)
+        a = Alias.new(old_name, new_name, comment, singleton: @singleton)
         handle_modifier_directive(a, line_no)
         a.store = @store
         a.line = line_no
@@ -637,7 +637,7 @@ module RDoc
         return unless @container.document_children
 
         names.each do |symbol|
-          a = ::RDoc::Attr.new(symbol.to_s, rw, comment, singleton: @singleton)
+          a = Attr.new(symbol.to_s, rw, comment, singleton: @singleton)
           a.store = @store
           a.line = line_no
           a.type_signature_lines = type_signature_lines
@@ -673,13 +673,13 @@ module RDoc
       # Handle `include Foo, Bar`
 
       def add_includes(names, line_no) # :nodoc:
-        add_includes_extends(names, ::RDoc::Include, line_no)
+        add_includes_extends(names, Include, line_no)
       end
 
       # Handle `extend Foo, Bar`
 
       def add_extends(names, line_no) # :nodoc:
-        add_includes_extends(names, ::RDoc::Extend, line_no)
+        add_includes_extends(names, Extend, line_no)
       end
 
       # Adds a method defined by `def` syntax
@@ -710,7 +710,7 @@ module RDoc
       end
 
     private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, node_id:, type_signature_lines: nil) # :nodoc:
-      meth = ::RDoc::AnyMethod.new(method_name, singleton: singleton)
+      meth = AnyMethod.new(method_name, singleton: singleton)
       meth.comment = comment
       handle_code_object_directives(meth, directives) if directives
       modifier_comment_lines&.each do |line|
@@ -761,9 +761,9 @@ module RDoc
           created =
             case mode
             when :class
-              mod.add_class(::RDoc::NormalClass, name, 'Object').tap { |m| m.store = @store }
+              mod.add_class(NormalClass, name, 'Object').tap { |m| m.store = @store }
             when :module
-              mod.add_module(::RDoc::NormalModule, name).tap { |m| m.store = @store }
+              mod.add_module(NormalModule, name).tap { |m| m.store = @store }
             end
           # add_class/add_module may return an existing object created by another
           # file (in_files is not empty then), which must not be ignored here.
@@ -780,7 +780,7 @@ module RDoc
             break if mod
             # If a constant is found and it is not a module or class, RDoc can't document about it.
             # Return an anonymous module to avoid wrong document creation.
-            return ::RDoc::NormalModule.new(nil) if nesting.find_constant_named(root_name)
+            return NormalModule.new(nil) if nesting.find_constant_named(root_name)
           end
           last_nesting, = @module_nesting.reverse_each.find { |_, singleton| !singleton }
           return mod || add_module.call(last_nesting, root_name, create_mode) unless name
@@ -835,14 +835,14 @@ module RDoc
         owner, name = find_or_create_lexical_constant_owner_name(constant_name)
         return unless owner
 
-        constant = ::RDoc::Constant.new(name, rhs_name, comment)
+        constant = Constant.new(name, rhs_name, comment)
         constant.store = @store
         constant.line = start_line
         constant.is_alias_for_path = alias_path
         handle_modifier_directive(constant, start_line)
         handle_modifier_directive(constant, end_line)
         # A constant marked :nodoc: must not make an ignored owner documentable
-        mark_container_documentable(owner) if constant.document_self && owner.is_a?(::RDoc::ClassModule)
+        mark_container_documentable(owner) if constant.document_self && owner.is_a?(ClassModule)
         record_location(constant)
         owner.add_constant(constant)
         return unless alias_path
@@ -886,7 +886,7 @@ module RDoc
           unless mod
             # add_class may return an existing class created by another file
             # (in_files is not empty then), which must not be ignored here
-            mod = owner.add_class(::RDoc::NormalClass, name, superclass_name || superclass_expr || '::Object')
+            mod = owner.add_class(NormalClass, name, superclass_name || superclass_expr || '::Object')
             mod.ignore if document_suppressed? && mod.in_files.empty?
           end
 
@@ -901,7 +901,7 @@ module RDoc
         else
           mod = owner.modules_hash[name]
           unless mod
-            mod = owner.add_module(::RDoc::NormalModule, name)
+            mod = owner.add_module(NormalModule, name)
             mod.ignore if document_suppressed? && mod.in_files.empty?
           end
         end
@@ -921,7 +921,7 @@ module RDoc
             mark_container_documentable(mod)
           else
             # A class/module marked :nodoc: must not make an ignored owner documentable
-            mark_container_documentable(owner) if mod.document_self && owner.is_a?(::RDoc::ClassModule)
+            mark_container_documentable(owner) if mod.document_self && owner.is_a?(ClassModule)
             record_location(mod)
           end
           mod.add_comment(comment, @top_level) if comment
@@ -954,8 +954,8 @@ module RDoc
 
       def warn_invalid_type_signature(type_signature_lines, line_no)
         type_signature_lines.each_with_index do |line, i|
-          next if ::RDoc::RbsHelper.valid_method_type?(line)
-          next if ::RDoc::RbsHelper.valid_type?(line)
+          next if RbsHelper.valid_method_type?(line)
+          next if RbsHelper.valid_type?(line)
           @options.warn "#{@top_level.relative_name}:#{line_no + i}: invalid RBS type signature: #{line.inspect}"
         end
       end
@@ -1096,7 +1096,7 @@ module RDoc
           case expression
           when Prism::ConstantWriteNode
             # Accept `class << (NameErrorCheckers = Object.new)` as a module which is not actually a module
-            mod = @scanner.container.add_module(::RDoc::NormalModule, expression.name.to_s)
+            mod = @scanner.container.add_module(NormalModule, expression.name.to_s)
             mod.ignore if @scanner.document_suppressed? && mod.in_files.empty?
           when Prism::ConstantPathNode, Prism::ConstantReadNode
             expression_name = constant_path_string(expression)
@@ -1260,7 +1260,7 @@ module RDoc
           return unless call_node.arguments&.arguments&.size == 1
           arg = call_node.arguments.arguments.first
           return unless arg.is_a?(Prism::StringNode)
-          @scanner.container.add_require(::RDoc::Require.new(arg.unescaped, nil))
+          @scanner.container.add_require(Require.new(arg.unescaped, nil))
         end
 
         def _visit_call_module_function(call_node)

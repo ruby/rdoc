@@ -83,7 +83,7 @@ module RDoc
 
       require_relative 'rdoc'
 
-      @rdoc_version = Gem::Version.new ::RDoc::VERSION
+      @rdoc_version = Gem::Version.new VERSION
     end
 
     ##
@@ -179,7 +179,7 @@ module RDoc
       delete_legacy_args args
 
       Dir.chdir @spec.full_gem_path do
-        options = ::RDoc::Options.new
+        options = Options.new
         options.default_title = "#{@spec.full_name} Documentation"
         options.parse args
         options.quiet = !Gem.configuration.really_verbose
@@ -196,7 +196,7 @@ module RDoc
         parse_options = options.dup
         parse_options.finish
         @rdoc.options = parse_options
-        @rdoc.store = ::RDoc::Store.new(parse_options)
+        @rdoc.store = Store.new(parse_options)
         @rdoc.parse_files parse_options.files
       end
 
@@ -212,7 +212,7 @@ module RDoc
     # make testing easier.
 
     def new_rdoc # :nodoc:
-      ::RDoc::RDoc.new
+      RDoc.new
     end
 
     ##

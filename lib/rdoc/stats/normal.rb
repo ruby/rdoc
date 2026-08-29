@@ -12,7 +12,7 @@ module RDoc
     # Stats printer that prints just the files being documented with a progress
     # bar
 
-    class Normal < ::RDoc::Stats::Quiet
+    class Normal < Stats::Quiet
 
       def begin_adding # :nodoc:
         puts "Parsing sources..."

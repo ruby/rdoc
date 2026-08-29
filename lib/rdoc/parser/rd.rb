@@ -5,9 +5,9 @@ module RDoc
     # Parse a RD format file.  The parsed RDoc::Markup::Document is attached as a
     # file comment.
 
-    class RD < ::RDoc::Parser
+    class RD < Parser
 
-      include ::RDoc::Parser::Text
+      include Parser::Text
 
       parse_files_matching(/\.rd(?:\.[^.]+)?$/)
 
@@ -15,7 +15,7 @@ module RDoc
       # Creates an rd-format TopLevel for the given file.
 
       def scan
-        comment = ::RDoc::Comment.new @content, @top_level
+        comment = Comment.new @content, @top_level
         comment.format = 'rd'
 
         @top_level.comment = comment

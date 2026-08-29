@@ -28,7 +28,7 @@ module RDoc
     #
     #  end
 
-    class TextFormatterTestCase < ::RDoc::Markup::FormatterTestCase
+    class TextFormatterTestCase < Markup::FormatterTestCase
 
       ##
       # Adds test cases to the calling TestCase.

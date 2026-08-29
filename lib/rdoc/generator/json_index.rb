@@ -78,7 +78,7 @@ module RDoc
 
     class JsonIndex
 
-      include ::RDoc::Text
+      include Text
 
       ##
       # Where the search index lives in the generated output

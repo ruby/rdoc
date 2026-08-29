@@ -54,7 +54,7 @@ module RDoc
         when String
           @reference += more
           @rdoc      += more
-        when ::RDoc::RD::Inline
+        when RD::Inline
           @reference += more.reference
           @rdoc      += more.rdoc
         else

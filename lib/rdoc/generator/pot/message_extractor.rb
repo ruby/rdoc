@@ -12,7 +12,7 @@ module RDoc
 
         def initialize(store)
           @store = store
-          @po = ::RDoc::Generator::POT::PO.new
+          @po = Generator::POT::PO.new
         end
 
         ##
@@ -58,14 +58,14 @@ module RDoc
             :extracted_comment => comment,
             :references => [location].compact,
           }
-          i18n_text = ::RDoc::I18n::Text.new(text)
+          i18n_text = I18n::Text.new(text)
           i18n_text.extract_messages do |part|
             @po.add(entry(part[:paragraph], options))
           end
         end
 
         def entry(msgid, options)
-          ::RDoc::Generator::POT::POEntry.new(msgid, options)
+          Generator::POT::POEntry.new(msgid, options)
         end
 
       end

@@ -48,7 +48,7 @@ module RDoc
           until nodes.empty?
             node = nodes.pop
             if @token_streams.key?(node.node_id)
-              staged_tokens[node.node_id] = RDoc::Parser::RubyColorizer.partial_colorize(@source, node, prism_tokens)
+              staged_tokens[node.node_id] = RubyColorizer.partial_colorize(@source, node, prism_tokens)
             end
             nodes.concat(node.compact_child_nodes)
           end

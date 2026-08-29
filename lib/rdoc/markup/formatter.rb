@@ -44,7 +44,7 @@ module RDoc
       # Creates a new Formatter
 
       def initialize
-        @markup = ::RDoc::Markup.new
+        @markup = Markup.new
 
         @from_path = '.'
       end
@@ -55,7 +55,7 @@ module RDoc
       def accept_document(document)
         document.parts.each do |item|
           case item
-          when ::RDoc::Markup::Document # HACK
+          when Markup::Document # HACK
             accept_document item
           else
             item.accept self
@@ -198,7 +198,7 @@ module RDoc
       # Parses inline +text+, traverse the resulting nodes, and calls the appropriate handler methods.
 
       def handle_inline(text)
-        nodes = ::RDoc::Markup::InlineParser.new(text).parse
+        nodes = Markup::InlineParser.new(text).parse
         traverse_inline_nodes(nodes)
       end
 

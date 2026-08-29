@@ -4,7 +4,7 @@ require_relative '../helper'
 
 module RDoc
   class Markup
-    class PreProcessTest < ::RDoc::TestCase
+    class PreProcessTest < TestCase
 
       def setup
         super
@@ -13,7 +13,7 @@ module RDoc
         @file_name = File.basename @tempfile.path
         @dir  = File.dirname @tempfile.path
 
-        @pp = ::RDoc::Markup::PreProcess.new @tempfile.path, [@dir, File.expand_path('..', File.dirname(__FILE__))]
+        @pp = Markup::PreProcess.new @tempfile.path, [@dir, File.expand_path('..', File.dirname(__FILE__))]
       end
 
       def teardown
@@ -23,16 +23,16 @@ module RDoc
       end
 
       def test_class_register
-        ::RDoc::Markup::PreProcess.register 'for_test' do raise 'fail' end
+        Markup::PreProcess.register 'for_test' do raise 'fail' end
 
-        assert_equal %w[for_test], ::RDoc::Markup::PreProcess.registered.keys
+        assert_equal %w[for_test], Markup::PreProcess.registered.keys
       end
 
       def test_class_post_process
-        ::RDoc::Markup::PreProcess.post_process do end
+        Markup::PreProcess.post_process do end
 
-        assert_equal 1, ::RDoc::Markup::PreProcess.post_processors.length,
-                     proc{::RDoc::Markup::PreProcess.post_processors.inspect}
+        assert_equal 1, Markup::PreProcess.post_processors.length,
+                     proc{Markup::PreProcess.post_processors.inspect}
       end
 
       def test_include_file
@@ -87,7 +87,7 @@ contents of a string.
 
       def test_handle
         text = "# :stopdoc:\n"
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
         output = @pp.handle text, code_object
 
         assert_equal "#\n", output
@@ -96,7 +96,7 @@ contents of a string.
       def test_handle_comment
         text = "# :stopdoc:\n"
         c = comment text
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
 
         output = @pp.handle c, code_object
 
@@ -120,9 +120,9 @@ contents of a string.
       end
 
       def test_handle_post_process
-        cd = ::RDoc::CodeObject.new
+        cd = CodeObject.new
 
-        ::RDoc::Markup::PreProcess.post_process do |text, code_object|
+        Markup::PreProcess.post_process do |text, code_object|
           code_object.metadata[:stuff] = text
 
           :junk
@@ -150,7 +150,7 @@ contents of a string.
       end
 
       def test_handle_directive_downcase
-        method = ::RDoc::AnyMethod.new 'm'
+        method = AnyMethod.new 'm'
 
         @pp.handle_directive '', 'ARG', 'a, b', method
 
@@ -158,7 +158,7 @@ contents of a string.
       end
 
       def test_handle_directive_arg
-        method = ::RDoc::AnyMethod.new 'm'
+        method = AnyMethod.new 'm'
 
         @pp.handle_directive '', 'arg', 'a, b', method
 
@@ -172,7 +172,7 @@ contents of a string.
       end
 
       def test_handle_directive_args
-        method = ::RDoc::AnyMethod.new 'm'
+        method = AnyMethod.new 'm'
 
         @pp.handle_directive '', 'args', 'a, b', method
 
@@ -204,7 +204,7 @@ contents of a string.
       end
 
       def test_handle_directive_category
-        context = ::RDoc::Context.new
+        context = Context.new
         original_section = context.current_section
 
         @pp.handle_directive '', 'category', 'other', context
@@ -213,7 +213,7 @@ contents of a string.
       end
 
       def test_handle_directive_doc
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
         code_object.document_self = false
         code_object.force_documentation = false
 
@@ -230,7 +230,7 @@ contents of a string.
       end
 
       def test_handle_directive_enddoc
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
 
         @pp.handle_directive '', 'enddoc', nil, code_object
 
@@ -247,17 +247,17 @@ contents of a string.
       end
 
       def test_handle_directive_main
-        @pp.options = ::RDoc::Options.new
+        @pp.options = Options.new
 
         # :main: directive was removed; it is now treated as unhandled metadata
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
         @pp.handle_directive '', 'main', 'M', code_object
 
         assert_equal 'M', code_object.metadata['main']
       end
 
       def test_handle_directive_notnew
-        m = ::RDoc::AnyMethod.new 'm'
+        m = AnyMethod.new 'm'
 
         @pp.handle_directive '', 'notnew', nil, m
 
@@ -265,7 +265,7 @@ contents of a string.
       end
 
       def test_handle_directive_not_new
-        m = ::RDoc::AnyMethod.new 'm'
+        m = AnyMethod.new 'm'
 
         @pp.handle_directive '', 'not_new', nil, m
 
@@ -273,7 +273,7 @@ contents of a string.
       end
 
       def test_handle_directive_not_dash_new
-        m = ::RDoc::AnyMethod.new 'm'
+        m = AnyMethod.new 'm'
 
         @pp.handle_directive '', 'not-new', nil, m
 
@@ -281,7 +281,7 @@ contents of a string.
       end
 
       def test_handle_directive_nodoc
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
         code_object.document_self = true
         code_object.document_children = true
 
@@ -292,7 +292,7 @@ contents of a string.
       end
 
       def test_handle_directive_nodoc_all
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
         code_object.document_self = true
         code_object.document_children = true
 
@@ -309,7 +309,7 @@ contents of a string.
       end
 
       def test_handle_directive_registered
-        ::RDoc::Markup::PreProcess.register 'x'
+        Markup::PreProcess.register 'x'
 
         result = @pp.handle_directive '', 'x', 'y'
 
@@ -331,7 +331,7 @@ contents of a string.
       def test_handle_directive_registered_block
         called = nil
 
-        ::RDoc::Markup::PreProcess.register 'x' do |directive, param|
+        Markup::PreProcess.register 'x' do |directive, param|
           called = [directive, param]
           'blah'
         end
@@ -343,8 +343,8 @@ contents of a string.
       end
 
       def test_handle_directive_registered_code_object
-        ::RDoc::Markup::PreProcess.register 'x'
-        code_object = ::RDoc::CodeObject.new
+        Markup::PreProcess.register 'x'
+        code_object = CodeObject.new
 
         @pp.handle_directive '', 'x', 'y', code_object
 
@@ -368,7 +368,7 @@ contents of a string.
       end
 
       def test_handle_directive_startdoc
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
         code_object.stop_doc
         code_object.force_documentation = false
 
@@ -380,7 +380,7 @@ contents of a string.
       end
 
       def test_handle_directive_stopdoc
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
 
         @pp.handle_directive '', 'stopdoc', nil, code_object
 
@@ -389,17 +389,17 @@ contents of a string.
       end
 
       def test_handle_directive_title
-        @pp.options = ::RDoc::Options.new
+        @pp.options = Options.new
 
         # :title: directive was removed; it is now treated as unhandled metadata
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
         @pp.handle_directive '', 'title', 'T', code_object
 
         assert_equal 'T', code_object.metadata['title']
       end
 
       def test_handle_directive_unhandled
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
 
         @pp.handle_directive '', 'x', 'y', code_object
 
@@ -413,7 +413,7 @@ contents of a string.
       end
 
       def test_handle_directive_unhandled_block
-        code_object = ::RDoc::CodeObject.new
+        code_object = CodeObject.new
 
         @pp.handle_directive '', 'x', 'y', code_object do
           false
@@ -437,7 +437,7 @@ contents of a string.
       end
 
       def test_handle_directive_yield
-        method = ::RDoc::AnyMethod.new 'm'
+        method = AnyMethod.new 'm'
         method.params = 'index, &block'
 
         @pp.handle_directive '', 'yield', 'item', method
@@ -447,7 +447,7 @@ contents of a string.
       end
 
       def test_handle_directive_yield_block_param
-        method = ::RDoc::AnyMethod.new 'm'
+        method = AnyMethod.new 'm'
         method.params = '&block'
 
         @pp.handle_directive '', 'yield', 'item', method
@@ -457,7 +457,7 @@ contents of a string.
       end
 
       def test_handle_directive_yield_no_context
-        method = ::RDoc::AnyMethod.new 'm'
+        method = AnyMethod.new 'm'
 
         @pp.handle_directive '', 'yield', 'item', method
 
@@ -465,7 +465,7 @@ contents of a string.
       end
 
       def test_handle_directive_yields
-        method = ::RDoc::AnyMethod.new 'm'
+        method = AnyMethod.new 'm'
 
         @pp.handle_directive '', 'yields', 'item', method
 

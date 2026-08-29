@@ -65,7 +65,7 @@ Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;
             :translator_comment => comment,
             :flags => ['fuzzy'],
           }
-          ::RDoc::Generator::POT::POEntry.new('', options)
+          Generator::POT::POEntry.new('', options)
         end
 
         def sort_entries

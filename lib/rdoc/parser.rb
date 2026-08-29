@@ -63,7 +63,7 @@ module RDoc
       parser = can_parse_by_name "xxx.#{old_ext}"
       return false unless parser
 
-      ::RDoc::Parser.parsers.unshift [/\.#{new_ext}$/, parser]
+      Parser.parsers.unshift [/\.#{new_ext}$/, parser]
 
       true
     end
@@ -109,7 +109,7 @@ module RDoc
       parser = can_parse_by_name file_name
 
       # HACK Selenium hides a jar file using a .txt extension
-      return if parser == ::RDoc::Parser::Simple and zip? file_name
+      return if parser == Parser::Simple and zip? file_name
 
       parser
     end
@@ -119,17 +119,17 @@ module RDoc
     # not depend upon the file being readable.
 
     def self.can_parse_by_name(file_name)
-      _, parser = ::RDoc::Parser.parsers.find { |regexp,| regexp =~ file_name }
+      _, parser = Parser.parsers.find { |regexp,| regexp =~ file_name }
 
       # The default parser must not parse binary files
       ext_name = File.extname file_name
       return parser if ext_name.empty?
 
-      if parser == ::RDoc::Parser::Simple and ext_name !~ /txt|rdoc/
+      if parser == Parser::Simple and ext_name !~ /txt|rdoc/
         case mode = check_modeline(file_name)
         when nil, 'rdoc' # continue
         else
-          ::RDoc::Parser.parsers.find { |_, p| return p if mode.casecmp?(p.name[/\w+\z/]) }
+          Parser.parsers.find { |_, p| return p if mode.casecmp?(p.name[/\w+\z/]) }
           return nil
         end
       end
@@ -203,7 +203,7 @@ module RDoc
     # It is ok to call this multiple times.
 
     def self.parse_files_matching(regexp)
-      ::RDoc::Parser.parsers.unshift [regexp, self]
+      Parser.parsers.unshift [regexp, self]
     end
 
     ##
@@ -246,7 +246,7 @@ module RDoc
 
       markup = Regexp.escape markup
 
-      _, selected = ::RDoc::Parser.parsers.find do |_, parser|
+      _, selected = Parser.parsers.find do |_, parser|
         /^#{markup}$/i =~ parser.name.sub(/.*:/, '')
       end
 
@@ -269,7 +269,7 @@ module RDoc
       @options = options
       @stats = stats
 
-      @preprocess = ::RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include
+      @preprocess = Markup::PreProcess.new @file_name, @options.rdoc_include
       @preprocess.options = @options
     end
 

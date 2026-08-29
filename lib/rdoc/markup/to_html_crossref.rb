@@ -6,11 +6,11 @@ module RDoc
     # names, classes, etc to create links.  RDoc::CrossReference is used to
     # generate those links based on the current context.
 
-    class ToHtmlCrossref < ::RDoc::Markup::ToHtml
+    class ToHtmlCrossref < Markup::ToHtml
 
       # :stopdoc:
-      ALL_CROSSREF_REGEXP = ::RDoc::CrossReference::ALL_CROSSREF_REGEXP
-      CROSSREF_REGEXP     = ::RDoc::CrossReference::CROSSREF_REGEXP
+      ALL_CROSSREF_REGEXP = CrossReference::ALL_CROSSREF_REGEXP
+      CROSSREF_REGEXP     = CrossReference::CROSSREF_REGEXP
       # :startdoc:
 
       ##
@@ -43,7 +43,7 @@ module RDoc
         @autolink_excluded_words = autolink_excluded_words
         @warn_missing_rdoc_ref = warn_missing_rdoc_ref
 
-        @cross_reference = ::RDoc::CrossReference.new @context
+        @cross_reference = CrossReference.new @context
       end
 
       # :nodoc:
@@ -67,7 +67,7 @@ module RDoc
 
         if !display.end_with?('+@', '-@') && match = display.match(/(.*[^#:])?@(.*)/)
           context_name = match[1]
-          label = convert_string(::RDoc::Text.decode_legacy_label(match[2]))
+          label = convert_string(Text.decode_legacy_label(match[2]))
           text ||= "#{label} at <code>#{convert_string(context_name)}</code>" if context_name
           text ||= label
           code = false
@@ -166,14 +166,14 @@ module RDoc
 
         # Non-text source files (C, Ruby, etc.) don't get HTML pages generated,
         # so don't auto-link to them. Explicit rdoc-ref: links are still allowed.
-        if !rdoc_ref && ::RDoc::TopLevel === ref && !ref.text?
+        if !rdoc_ref && TopLevel === ref && !ref.text?
           return
         end
 
         if ref
           path = ref.as_href(@from_path)
 
-          if code and ::RDoc::CodeObject === ref and !(::RDoc::TopLevel === ref)
+          if code and CodeObject === ref and !(TopLevel === ref)
             html_string = "<code>#{html_string}</code>"
           end
         elsif name
@@ -190,8 +190,8 @@ module RDoc
         if label
           # Decode legacy labels (e.g., "What-27s+Here" -> "What's Here")
           # then convert to GitHub-style anchor format
-          decoded_label = ::RDoc::Text.decode_legacy_label(label)
-          formatted_label = ::RDoc::Text.to_anchor(decoded_label)
+          decoded_label = Text.decode_legacy_label(label)
+          formatted_label = Text.to_anchor(decoded_label)
 
           # Case 1: Path already has an anchor (e.g., method link)
           #   Input:  C1#method@label -> path="C1.html#method-i-m"

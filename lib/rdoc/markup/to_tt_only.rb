@@ -5,7 +5,7 @@ module RDoc
     # Extracts sections of text enclosed in plus, tt or code.  Used to discover
     # undocumented parameters.
 
-    class ToTtOnly < ::RDoc::Markup::Formatter
+    class ToTtOnly < Markup::Formatter
 
       ##
       # Stack of list types
@@ -75,7 +75,7 @@ module RDoc
       # Extracts tt sections from +text+
 
       def tt_sections(text)
-        parsed = ::RDoc::Markup::InlineParser.new(text).parse
+        parsed = Markup::InlineParser.new(text).parse
         traverse = -> node {
           next if String === node
           if node[:type] == :TT

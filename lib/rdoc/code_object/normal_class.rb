@@ -3,7 +3,7 @@ module RDoc
   ##
   # A normal class, neither singleton nor anonymous
 
-  class NormalClass < ::RDoc::ClassModule
+  class NormalClass < ClassModule
 
     ##
     # The ancestors of this class including modules.  Unlike Module#ancestors,

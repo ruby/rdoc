@@ -5,9 +5,9 @@ module RDoc
     # Parse a non-source file. We basically take the whole thing as one big
     # comment.
 
-    class Simple < ::RDoc::Parser
+    class Simple < Parser
 
-      include ::RDoc::Parser::Text
+      include Parser::Text
 
       parse_files_matching(//)
 
@@ -19,7 +19,7 @@ module RDoc
       def initialize(top_level, content, options, stats)
         super
 
-        preprocess = ::RDoc::Markup::PreProcess.new @file_name, @options.rdoc_include
+        preprocess = Markup::PreProcess.new @file_name, @options.rdoc_include
 
         content = ::RDoc::Text.expand_tabs(@content)
         @content, = preprocess.run_pre_processes(content, @top_level, 1, :simple)
@@ -31,7 +31,7 @@ module RDoc
       def scan
         content = remove_coding_comment @content
 
-        comment = ::RDoc::Comment.new content, @top_level
+        comment = Comment.new content, @top_level
 
         @top_level.comment = comment
         @top_level

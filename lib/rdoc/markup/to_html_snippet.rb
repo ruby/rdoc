@@ -4,7 +4,7 @@ module RDoc
     ##
     # Outputs RDoc markup as paragraphs with inline markup only.
 
-    class ToHtmlSnippet < ::RDoc::Markup::ToHtml
+    class ToHtmlSnippet < Markup::ToHtml
 
       ##
       # After this many characters the input will be cut off.
@@ -46,7 +46,7 @@ module RDoc
         @mask       = 0
         @paragraphs = 0
 
-        @markup.add_regexp_handling ::RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF
+        @markup.add_regexp_handling CrossReference::CROSSREF_REGEXP, :CROSSREF
       end
 
       ##
@@ -113,7 +113,7 @@ module RDoc
         @characters += input.length
         text << " #{TO_HTML_CHARACTERS[text.encoding][:ellipsis]}" unless text == input
 
-        super ::RDoc::Markup::Verbatim.new text
+        super Markup::Verbatim.new text
 
         add_paragraph
       end
@@ -154,7 +154,7 @@ module RDoc
           @characters += 1 # try to include the label
           start
         else
-          raise ::RDoc::Error, "Invalid list type: #{list_type.inspect}"
+          raise Error, "Invalid list type: #{list_type.inspect}"
         end
       end
 

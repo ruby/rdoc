@@ -3,7 +3,7 @@ module RDoc
   ##
   # A constant
 
-  class Constant < ::RDoc::CodeObject
+  class Constant < CodeObject
 
     MARSHAL_VERSION = 0 # :nodoc:
 
@@ -135,7 +135,7 @@ module RDoc
 
     def marshal_dump
       alias_name = case found = is_alias_for
-                   when ::RDoc::CodeObject then found.full_name
+                   when CodeObject then found.full_name
                    else                       found
                    end
 
@@ -160,7 +160,7 @@ module RDoc
     # * #parent_name
 
     def marshal_load(array)
-      initialize array[1], nil, ::RDoc::Comment.from_document(array[5])
+      initialize array[1], nil, Comment.from_document(array[5])
 
       @full_name     = array[2]
       @visibility    = array[3] || :public
@@ -171,7 +171,7 @@ module RDoc
       @parent_class  = array[8]
       @section_title = array[9]
 
-      @file = ::RDoc::TopLevel.new array[6]
+      @file = TopLevel.new array[6]
     end
 
     ##

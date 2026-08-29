@@ -4,7 +4,7 @@ module RDoc
     ##
     # A Paragraph of text
 
-    class Paragraph < ::RDoc::Markup::Raw
+    class Paragraph < Markup::Raw
 
       ##
       # Calls #accept_paragraph on +visitor+
@@ -19,7 +19,7 @@ module RDoc
 
       def text(hard_break = '')
         @parts.map do |part|
-          if ::RDoc::Markup::HardBreak === part
+          if Markup::HardBreak === part
             hard_break
           else
             part

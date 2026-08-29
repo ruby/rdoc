@@ -57,7 +57,7 @@ module RDoc
 
     class POT
 
-      ::RDoc::RDoc.add_generator self
+      RDoc.add_generator self
 
       ##
       # Description of this generator

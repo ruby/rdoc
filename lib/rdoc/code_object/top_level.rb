@@ -3,7 +3,7 @@ module RDoc
   ##
   # A TopLevel context is a representation of the contents of a single file
 
-  class TopLevel < ::RDoc::Context
+  class TopLevel < Context
 
     MARSHAL_VERSION = 0 # :nodoc:
 
@@ -202,7 +202,7 @@ module RDoc
       initialize array[1]
 
       @parser  = array[2]
-      @comment = ::RDoc::Comment.from_document array[3]
+      @comment = Comment.from_document array[3]
     end
 
     ##
@@ -212,7 +212,7 @@ module RDoc
 
     def object_class
       @object_class ||= begin
-        oc = @store.find_class_named('Object') || add_class(::RDoc::NormalClass, 'Object')
+        oc = @store.find_class_named('Object') || add_class(NormalClass, 'Object')
         oc.record_location self
         oc
       end
@@ -251,7 +251,7 @@ module RDoc
     # Use #search_snippet instead for getting documentation snippets.
 
     def search_record
-      return unless @parser < ::RDoc::Parser::Text
+      return unless @parser < Parser::Text
 
       [
         page_name,
@@ -277,7 +277,7 @@ module RDoc
     # Is this TopLevel from a text file instead of a source code file?
 
     def text?
-      @parser and @parser.include? ::RDoc::Parser::Text
+      @parser and @parser.include? Parser::Text
     end
 
     def to_s # :nodoc:

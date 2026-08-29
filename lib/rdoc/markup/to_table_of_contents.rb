@@ -5,7 +5,7 @@ module RDoc
     # Extracts just the RDoc::Markup::Heading elements from a
     # RDoc::Markup::Document to help build a table of contents
 
-    class ToTableOfContents < ::RDoc::Markup::Formatter
+    class ToTableOfContents < Markup::Formatter
 
       @to_toc = nil
 

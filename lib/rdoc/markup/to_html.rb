@@ -8,9 +8,9 @@ module RDoc
     ##
     # Outputs RDoc markup as HTML.
 
-    class ToHtml < ::RDoc::Markup::Formatter
+    class ToHtml < Markup::Formatter
 
-      include ::RDoc::Text
+      include Text
 
       # :section: Utilities
 
@@ -429,7 +429,7 @@ module RDoc
 
       def parsable_text_to_html(text)
         tokens = ::RDoc::Parser::RubyColorizer.colorize(text)
-        result = ::RDoc::TokenStream.to_html tokens
+        result = TokenStream.to_html tokens
         result = result + "\n" unless result.end_with?("\n")
         result
       end
@@ -633,7 +633,7 @@ module RDoc
 
       def html_list_name(list_type, open_tag)
         tags = LIST_TYPE_TO_HTML[list_type]
-        raise ::RDoc::Error, "Invalid list type: #{list_type.inspect}" unless tags
+        raise Error, "Invalid list type: #{list_type.inspect}" unless tags
         tags[open_tag ? 0 : 1]
       end
 
@@ -650,7 +650,7 @@ module RDoc
             "<dt>#{to_html label}</dt>\n"
           end.join << "<dd>"
         else
-          raise ::RDoc::Error, "Invalid list type: #{list_type.inspect}"
+          raise Error, "Invalid list type: #{list_type.inspect}"
         end
       end
 
@@ -664,7 +664,7 @@ module RDoc
         when :LABEL, :NOTE
           "</dd>"
         else
-          raise ::RDoc::Error, "Invalid list type: #{list_type.inspect}"
+          raise Error, "Invalid list type: #{list_type.inspect}"
         end
       end
 

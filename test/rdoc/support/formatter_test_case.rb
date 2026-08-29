@@ -37,7 +37,7 @@ module RDoc
     #
     #  end
 
-    class FormatterTestCase < ::RDoc::TestCase
+    class FormatterTestCase < TestCase
 
       ##
       # Call #setup when inheriting from this test case.
@@ -56,7 +56,7 @@ module RDoc
       def setup
         super
 
-        @options = ::RDoc::Options.new
+        @options = Options.new
 
         @m = @RM.new
 

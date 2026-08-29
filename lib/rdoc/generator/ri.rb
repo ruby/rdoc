@@ -6,7 +6,7 @@ module RDoc
 
     class RI
 
-      ::RDoc::RDoc.add_generator self
+      RDoc.add_generator self
 
       ##
       # Description of this generator

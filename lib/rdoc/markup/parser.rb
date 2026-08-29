@@ -20,7 +20,7 @@ module RDoc
 
     class Parser
 
-      include ::RDoc::Text
+      include Text
 
       ##
       # List token types
@@ -62,7 +62,7 @@ module RDoc
       def self.parse(str)
         parser = new
         parser.tokenize str
-        doc = ::RDoc::Markup::Document.new
+        doc = Markup::Document.new
         parser.parse doc
       end
 
@@ -101,7 +101,7 @@ module RDoc
                  ''
                end
 
-        ::RDoc::Markup::Heading.new level, text
+        Markup::Heading.new level, text
       end
 
       ##
@@ -110,7 +110,7 @@ module RDoc
       def build_list(margin)
         p :list_start => margin if @debug
 
-        list = ::RDoc::Markup::List.new
+        list = Markup::List.new
         label = nil
 
         until @tokens.empty? do
@@ -181,7 +181,7 @@ module RDoc
               label = nil
             end
 
-            list_item = ::RDoc::Markup::ListItem.new data
+            list_item = Markup::ListItem.new data
             parse list_item, column
             list << list_item
 
@@ -197,7 +197,7 @@ module RDoc
           return nil unless label
           return nil unless [:LABEL, :NOTE].include? list.type
 
-          list_item = ::RDoc::Markup::ListItem.new label, ::RDoc::Markup::BlankLine.new
+          list_item = Markup::ListItem.new label, Markup::BlankLine.new
           list << list_item
         end
 
@@ -210,7 +210,7 @@ module RDoc
       def build_paragraph(margin)
         p :paragraph_start => margin if @debug
 
-        paragraph = ::RDoc::Markup::Paragraph.new
+        paragraph = Markup::Paragraph.new
 
         until @tokens.empty? do
           type, data, column, = get
@@ -244,7 +244,7 @@ module RDoc
 
       def build_verbatim(margin)
         p :verbatim_begin => margin if @debug
-        verbatim = ::RDoc::Markup::Verbatim.new
+        verbatim = Markup::Verbatim.new
 
         min_indent = nil
         generate_leading_spaces = true
@@ -349,12 +349,12 @@ module RDoc
 
           case type
           when :BREAK
-            parent << ::RDoc::Markup::BlankLine.new
+            parent << Markup::BlankLine.new
             skip :NEWLINE, false
             next
           when :NEWLINE
             # trailing newlines are skipped below, so this is a blank line
-            parent << ::RDoc::Markup::BlankLine.new
+            parent << Markup::BlankLine.new
             skip :NEWLINE, false
             next
           end
@@ -374,7 +374,7 @@ module RDoc
           when :HEADER
             parent << build_heading(data)
           when :RULE
-            parent << ::RDoc::Markup::Rule.new(data)
+            parent << Markup::Rule.new(data)
             skip :NEWLINE
           when :TEXT
             unget
@@ -382,7 +382,7 @@ module RDoc
           when :BLOCKQUOTE
             nil while (type, = get; type) and type != :NEWLINE
             _, _, column, = peek_token
-            bq = ::RDoc::Markup::BlockQuote.new
+            bq = Markup::BlockQuote.new
             p :blockquote_start => [data, column] if @debug
             parse bq, column
             p :blockquote_end => indent if @debug

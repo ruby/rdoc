@@ -3,7 +3,7 @@ module RDoc
   ##
   # A singleton class
 
-  class SingleClass < ::RDoc::ClassModule
+  class SingleClass < ClassModule
 
     ##
     # Adds the superclass to the included modules.

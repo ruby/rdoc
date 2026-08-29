@@ -13,9 +13,9 @@ module RDoc
     # {GNU style Change
     # Log}[http://www.gnu.org/prep/standards/html_node/Style-of-Change-Logs.html].
 
-    class ChangeLog < ::RDoc::Parser
+    class ChangeLog < Parser
 
-      include ::RDoc::Parser::Text
+      include Parser::Text
 
       parse_files_matching(/(\/|\\|\A)ChangeLog[^\/\\]*\z/)
 
@@ -44,16 +44,16 @@ module RDoc
       # Creates an RDoc::Markup::Document given the +groups+ of ChangeLog entries.
 
       def create_document(groups)
-        doc = ::RDoc::Markup::Document.new
+        doc = Markup::Document.new
         doc.omit_headings_below = 2
         doc.file = @top_level
 
-        doc << ::RDoc::Markup::Heading.new(1, File.basename(@file_name))
-        doc << ::RDoc::Markup::BlankLine.new
+        doc << Markup::Heading.new(1, File.basename(@file_name))
+        doc << Markup::BlankLine.new
 
         groups.sort_by do |day,| day end.reverse_each do |day, entries|
-          doc << ::RDoc::Markup::Heading.new(2, day.dup)
-          doc << ::RDoc::Markup::BlankLine.new
+          doc << Markup::Heading.new(2, day.dup)
+          doc << Markup::BlankLine.new
 
           doc.concat create_entries entries
         end
@@ -69,8 +69,8 @@ module RDoc
         out = []
 
         entries.each do |entry, items|
-          out << ::RDoc::Markup::Heading.new(3, entry)
-          out << ::RDoc::Markup::BlankLine.new
+          out << Markup::Heading.new(3, entry)
+          out << Markup::BlankLine.new
 
           out << create_items(items)
         end
@@ -83,7 +83,7 @@ module RDoc
       # ChangeLog
 
       def create_items(items)
-        list = ::RDoc::Markup::List.new :NOTE
+        list = Markup::List.new :NOTE
 
         items.each do |item|
           item =~ /\A(.*?(?:\([^)]+\))?):\s*/
@@ -91,8 +91,8 @@ module RDoc
           title = $1
           body = $'
 
-          paragraph = ::RDoc::Markup::Paragraph.new body
-          list_item = ::RDoc::Markup::ListItem.new title, paragraph
+          paragraph = Markup::Paragraph.new body
+          list_item = Markup::ListItem.new title, paragraph
           list << list_item
         end
 
@@ -212,7 +212,7 @@ module RDoc
         grouped_entries = group_entries entries
 
         doc = create_document grouped_entries
-        comment = ::RDoc::Comment.new(@content)
+        comment = Comment.new(@content)
         comment.document = doc
         @top_level.comment = comment
 
@@ -299,13 +299,13 @@ module RDoc
 
               contents = ::RDoc::Markdown.parse(contents).parts.each do |body|
                 case body
-                when ::RDoc::Markup::Heading
+                when Markup::Heading
                   body.level += HEADING_LEVEL + 1
                 end
               end
               case first = contents[0]
-              when ::RDoc::Markup::Paragraph
-                contents[0] = ::RDoc::Markup::Heading.new(HEADING_LEVEL + 1, first.text)
+              when Markup::Paragraph
+                contents[0] = Markup::Heading.new(HEADING_LEVEL + 1, first.text)
               end
             end
             super

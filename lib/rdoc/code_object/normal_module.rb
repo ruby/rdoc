@@ -3,7 +3,7 @@ module RDoc
   ##
   # A normal module, like NormalClass
 
-  class NormalModule < ::RDoc::ClassModule
+  class NormalModule < ClassModule
 
     def aref_prefix # :nodoc:
       'module'
