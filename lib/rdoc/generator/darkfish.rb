@@ -212,6 +212,10 @@ class RDoc::Generator::Darkfish
   # objects containing the extracted information.
 
   def generate
+    if self.class == RDoc::Generator::Darkfish
+      warn "The Darkfish template is deprecated and will be removed in version 9.0."
+    end
+
     setup
 
     write_style_sheet

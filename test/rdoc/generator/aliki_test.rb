@@ -59,6 +59,14 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     FileUtils.rm_rf @tmpdir
   end
 
+  def test_generate_does_not_warn_about_darkfish_deprecation
+    _, err = capture_output do
+      @g.generate
+    end
+
+    assert_empty err
+  end
+
   def test_inheritance_and_template_dir
     assert_kind_of RDoc::Generator::Darkfish, @g
     assert_match %r{/template/aliki\z}, @g.template_dir.to_s

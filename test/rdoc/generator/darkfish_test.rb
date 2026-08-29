@@ -69,6 +69,14 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     FileUtils.rm_rf @tmpdir
   end
 
+  def test_generate_warns_about_deprecation
+    _, err = capture_output do
+      @g.generate
+    end
+
+    assert_equal "The Darkfish template is deprecated and will be removed in version 9.0.\n", err
+  end
+
   def test_generate
     top_level = @store.add_file 'file.rb'
     top_level.add_class @klass.class, @klass.name
