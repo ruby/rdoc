@@ -110,7 +110,7 @@ class RDoc::TomDoc < RDoc::Markup::Parser
 
       next true if RDoc::Markup::BlankLine === part
 
-      if RDoc::Markup::Verbatim === part then
+      if RDoc::Markup::Verbatim === part
         signature = part
         found_signature = true
       end
@@ -173,16 +173,16 @@ class RDoc::TomDoc < RDoc::Markup::Parser
       type, data, = get
 
       case type
-      when :TEXT then
+      when :TEXT
         @section = 'Returns' if data =~ /\A(Returns|Raises)/
 
         paragraph << data
-      when :NEWLINE then
-        if :TEXT == peek_token[0] then
+      when :NEWLINE
+        if :TEXT == peek_token[0]
           # Lines beginning with 'Raises' in the Returns section should not be
           # treated as multiline text
           if 'Returns' == @section and
-            peek_token[1].start_with?('Raises') then
+            peek_token[1].start_with?('Raises')
             break
           else
             paragraph << ' '
@@ -207,7 +207,7 @@ class RDoc::TomDoc < RDoc::Markup::Parser
   def parse_text(parent, indent) # :nodoc:
     paragraph = build_paragraph indent
 
-    if false == @seen_returns and 'Returns' == @section then
+    if false == @seen_returns and 'Returns' == @section
       @seen_returns = true
       parent << RDoc::Markup::Heading.new(3, 'Returns')
       parent << RDoc::Markup::BlankLine.new
@@ -235,15 +235,15 @@ class RDoc::TomDoc < RDoc::Markup::Parser
       next if @s.scan(/ +/)
 
       @tokens << case
-                 when @s.scan(/\r?\n/) then
+                 when @s.scan(/\r?\n/)
                    token = [:NEWLINE, @s.matched, *pos]
                    @s.newline!
                    token
-                 when @s.scan(/(Examples|Signature)$/) then
+                 when @s.scan(/(Examples|Signature)$/)
                    @tokens << [:HEADER, 3, *pos]
 
                    [:TEXT, @s[1], *pos]
-                 when @s.scan(/([:\w][\w\[\]]*)[ ]+- /) then
+                 when @s.scan(/([:\w][\w\[\]]*)[ ]+- /)
                    [:NOTE, @s[1], *pos]
                  else
                    @s.scan(/.*/)

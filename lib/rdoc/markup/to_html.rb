@@ -641,9 +641,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def list_item_start(list_item, list_type)
     case list_type
-    when :BULLET, :LALPHA, :NUMBER, :UALPHA then
+    when :BULLET, :LALPHA, :NUMBER, :UALPHA
       "<li>"
-    when :LABEL, :NOTE then
+    when :LABEL, :NOTE
       Array(list_item.label).map do |label|
         "<dt>#{to_html label}</dt>\n"
       end.join << "<dd>"
@@ -657,9 +657,9 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   def list_end_for(list_type)
     case list_type
-    when :BULLET, :LALPHA, :NUMBER, :UALPHA then
+    when :BULLET, :LALPHA, :NUMBER, :UALPHA
       "</li>"
-    when :LABEL, :NOTE then
+    when :LABEL, :NOTE
       "</dd>"
     else
       raise RDoc::Error, "Invalid list type: #{list_type.inspect}"

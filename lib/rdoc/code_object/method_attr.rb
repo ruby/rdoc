@@ -260,7 +260,7 @@ class RDoc::MethodAttr < RDoc::CodeObject
       case $2
       when 'to_s'      then $1
       when 'const_get' then 'const'
-      when 'new' then
+      when 'new'
         $1.split('::').last.  # ClassName => class_name
           gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
           gsub(/([a-z\d])([A-Z])/, '\1_\2').
@@ -298,9 +298,9 @@ class RDoc::MethodAttr < RDoc::CodeObject
 
   def inspect # :nodoc:
     alias_for =
-      if @is_alias_for.respond_to? :name then
+      if @is_alias_for.respond_to? :name
         " (alias for #{@is_alias_for.name})"
-      elsif Array === @is_alias_for then
+      elsif Array === @is_alias_for
         " (alias for #{@is_alias_for.last})"
       end
     visibility = self.visibility
@@ -350,19 +350,19 @@ class RDoc::MethodAttr < RDoc::CodeObject
 
   def pretty_print(q) # :nodoc:
     alias_for =
-      if @is_alias_for.respond_to? :name then
+      if @is_alias_for.respond_to? :name
         "alias for #{@is_alias_for.name}"
-      elsif Array === @is_alias_for then
+      elsif Array === @is_alias_for
         "alias for #{@is_alias_for.last}"
       end
 
     q.group 2, "[#{self.class.name} #{full_name} #{visibility}", "]" do
-      if alias_for then
+      if alias_for
         q.breakable
         q.text alias_for
       end
 
-      unless comment.empty? then
+      unless comment.empty?
         q.breakable
         q.text "comment:"
         q.breakable

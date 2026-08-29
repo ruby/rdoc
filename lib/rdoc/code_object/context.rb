@@ -181,10 +181,10 @@ class RDoc::Context < RDoc::CodeObject
   # Currently only RDoc::Extend and RDoc::Include are supported.
 
   def add(klass, name, comment)
-    if RDoc::Extend == klass then
+    if RDoc::Extend == klass
       ext = RDoc::Extend.new name, comment
       add_extend ext
-    elsif RDoc::Include == klass then
+    elsif RDoc::Include == klass
       incl = RDoc::Include.new name, comment
       add_include incl
     else
@@ -201,7 +201,7 @@ class RDoc::Context < RDoc::CodeObject
     method_attr = find_method(an_alias.old_name, an_alias.singleton) ||
                   find_attribute(an_alias.old_name, an_alias.singleton)
 
-    if method_attr then
+    if method_attr
       method_attr.add_alias an_alias, self
     else
       add_to @external_aliases, an_alias
@@ -231,14 +231,14 @@ class RDoc::Context < RDoc::CodeObject
 
     key = nil
 
-    if attribute.rw.index 'R' then
+    if attribute.rw.index 'R'
       key = attribute.pretty_name
       known = @methods_hash[key]
 
-      if known then
+      if known
         known.comment = attribute.comment if known.comment.empty?
       elsif registered = @methods_hash[attribute.pretty_name + '='] and
-            RDoc::Attr === registered then
+            RDoc::Attr === registered
         registered.rw = 'RW'
       else
         @methods_hash[key] = attribute
@@ -246,14 +246,14 @@ class RDoc::Context < RDoc::CodeObject
       end
     end
 
-    if attribute.rw.index 'W' then
+    if attribute.rw.index 'W'
       key = attribute.pretty_name + '='
       known = @methods_hash[key]
 
-      if known then
+      if known
         known.comment = attribute.comment if known.comment.empty?
       elsif registered = @methods_hash[attribute.pretty_name] and
-            RDoc::Attr === registered then
+            RDoc::Attr === registered
         registered.rw = 'RW'
       else
         @methods_hash[key] = attribute
@@ -261,7 +261,7 @@ class RDoc::Context < RDoc::CodeObject
       end
     end
 
-    if register then
+    if register
       attribute.visibility = @visibility
       add_to @attributes, attribute
       resolve_aliases attribute
@@ -295,19 +295,19 @@ class RDoc::Context < RDoc::CodeObject
     # superclass, we must honor it.
 
     # find the name & enclosing context
-    if given_name =~ /^:+(\w+)$/ then
+    if given_name =~ /^:+(\w+)$/
       full_name = $1
       enclosing = top_level
       name = full_name.split(/:+/).last
     else
       full_name = child_name given_name
 
-      if full_name =~ /^(.+)::(\w+)$/ then
+      if full_name =~ /^(.+)::(\w+)$/
         name = $2
         ename = $1
         enclosing = @store.classes_hash[ename] || @store.modules_hash[ename]
         # HACK: crashes in actionpack/lib/action_view/helpers/form_helper.rb (metaprogramming)
-        unless enclosing then
+        unless enclosing
           # try the given name at top level (will work for the above example)
           enclosing = @store.classes_hash[given_name] ||
                       @store.modules_hash[given_name]
@@ -322,18 +322,18 @@ class RDoc::Context < RDoc::CodeObject
     end
 
     # fix up superclass
-    if full_name == 'BasicObject' then
+    if full_name == 'BasicObject'
       superclass = nil
-    elsif full_name == 'Object' then
+    elsif full_name == 'Object'
       superclass = '::BasicObject'
     end
 
     # find the superclass full name
-    if superclass then
-      if superclass =~ /^:+/ then
+    if superclass
+      if superclass =~ /^:+/
         superclass = $' #'
       else
-        if superclass =~ /^(\w+):+(.+)$/ then
+        if superclass =~ /^(\w+):+(.+)$/
           suffix = $2
           mod = find_module_named($1)
           superclass = mod.full_name + '::' + suffix if mod
@@ -354,16 +354,16 @@ class RDoc::Context < RDoc::CodeObject
 
     klass = @store.classes_hash[full_name]
 
-    if klass then
+    if klass
       # if TopLevel, it may not be registered in the classes:
       enclosing.classes_hash[name] = klass
 
       # update the superclass if needed
-      if superclass then
+      if superclass
         existing = klass.superclass
         existing = existing.full_name unless existing.is_a?(String) if existing
         if existing.nil? ||
-           (existing == 'Object' && superclass != 'Object') then
+           (existing == 'Object' && superclass != 'Object')
           klass.superclass = superclass
         end
       end
@@ -371,7 +371,7 @@ class RDoc::Context < RDoc::CodeObject
       # this is a new class
       mod = @store.modules_hash.delete full_name
 
-      if mod then
+      if mod
         klass = upgrade_to_class mod, RDoc::NormalClass, enclosing
 
         klass.superclass = superclass unless superclass.nil?
@@ -402,7 +402,7 @@ class RDoc::Context < RDoc::CodeObject
     mod.full_name = nil
     mod.store = @store
 
-    unless @done_documenting then
+    unless @done_documenting
       self_hash[mod.name] = mod
       # this must be done AFTER adding mod to its parent, so that the full
       # name is correct:
@@ -423,7 +423,7 @@ class RDoc::Context < RDoc::CodeObject
     # (this is a #ifdef: should be handled by the C parser)
     known = @constants_hash[constant.name]
 
-    if known then
+    if known
       known.comment = constant.comment if known.comment.empty?
 
       known.value = constant.value if
@@ -468,8 +468,8 @@ class RDoc::Context < RDoc::CodeObject
     key = method.pretty_name
     known = @methods_hash[key]
 
-    if known then
-      if @store then # otherwise we are loading
+    if known
+      if @store # otherwise we are loading
         known.comment = method.comment if known.comment.empty?
         previously = ", previously in #{known.file}" unless
           method.file == known.file
@@ -564,7 +564,7 @@ class RDoc::Context < RDoc::CodeObject
     new_to.full_name = nil
     new_to.is_alias_for = from
 
-    if new_to.module? then
+    if new_to.module?
       @store.modules_hash[to_full_name] = new_to
       @modules[to.name] = new_to
     else
@@ -588,7 +588,7 @@ class RDoc::Context < RDoc::CodeObject
   def add_require(require)
     return require unless @document_self
 
-    if RDoc::TopLevel === self then
+    if RDoc::TopLevel === self
       add_to @requires, require
     else
       parent.add_require require
@@ -604,7 +604,7 @@ class RDoc::Context < RDoc::CodeObject
   # See also RDoc::Context::Section
 
   def add_section(title, comment = nil)
-    if section = @sections[title] then
+    if section = @sections[title]
       section.add_comment comment if comment
     else
       section = Section.new self, title, comment, @store
@@ -652,7 +652,7 @@ class RDoc::Context < RDoc::CodeObject
   def child_name(name)
     if name =~ /^:+/
       $'  #'
-    elsif RDoc::TopLevel === self then
+    elsif RDoc::TopLevel === self
       name
     else
       "#{self.full_name}::#{name}"
@@ -692,7 +692,7 @@ class RDoc::Context < RDoc::CodeObject
   # temporary_section is available it will be used.
 
   def current_section
-    if section = @temporary_section then
+    if section = @temporary_section
       @temporary_section = nil
     else
       section = @current_section
@@ -772,9 +772,9 @@ class RDoc::Context < RDoc::CodeObject
 
   def find_attribute_named(name)
     case name
-    when /\A#/ then
+    when /\A#/
       find_attribute name[1..-1], false
-    when /\A::/ then
+    when /\A::/
       find_attribute name[2..-1], true
     else
       @attributes.find { |a| a.name == name }
@@ -819,9 +819,9 @@ class RDoc::Context < RDoc::CodeObject
 
   def find_external_alias_named(name)
     case name
-    when /\A#/ then
+    when /\A#/
       find_external_alias name[1..-1], false
-    when /\A::/ then
+    when /\A::/
       find_external_alias name[2..-1], true
     else
       @external_aliases.find { |a| a.name == name }
@@ -866,9 +866,9 @@ class RDoc::Context < RDoc::CodeObject
 
   def find_method_named(name)
     case name
-    when /\A#/ then
+    when /\A#/
       find_method name[1..-1], false
-    when /\A::/ then
+    when /\A::/
       find_method name[2..-1], true
     else
       @method_list.find { |meth| meth.name == name }
@@ -908,7 +908,7 @@ class RDoc::Context < RDoc::CodeObject
 
     # look for a class or module 'symbol'
     case symbol
-    when /^::/ then
+    when /^::/
       result = @store.find_class_or_module symbol
     when /^(\w+):+(.+)$/
       suffix = $2
@@ -1082,7 +1082,7 @@ class RDoc::Context < RDoc::CodeObject
   # Only called when min_visibility == :public or :private
 
   def remove_invisible_in(array, min_visibility) # :nodoc:
-    if min_visibility == :public then
+    if min_visibility == :public
       array.reject! { |e|
         e.visibility != :public and not e.force_documentation
       }
@@ -1182,7 +1182,7 @@ class RDoc::Context < RDoc::CodeObject
 
     if titles.length > 1 and
        TOMDOC_TITLES_SORT ==
-         (titles | TOMDOC_TITLES).sort_by { |title| title.to_s } then
+         (titles | TOMDOC_TITLES).sort_by { |title| title.to_s }
       @sections.values_at(*TOMDOC_TITLES).compact
     else
       @sections.sort_by { |title, _|

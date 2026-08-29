@@ -62,7 +62,7 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     type = @list_type.last
 
     case type
-    when :NOTE, :LABEL then
+    when :NOTE, :LABEL
       bullets = Array(list_item.label).map do |label|
         attributes(label).strip
       end.join "\n"

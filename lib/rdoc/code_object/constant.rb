@@ -76,7 +76,7 @@ class RDoc::Constant < RDoc::CodeObject
     return true if super
     return false unless @is_alias_for
     case @is_alias_for
-    when String then
+    when String
       found = @store.find_class_or_module @is_alias_for
       return false unless found
       @is_alias_for = found
@@ -99,7 +99,7 @@ class RDoc::Constant < RDoc::CodeObject
 
   def is_alias_for
     case @is_alias_for
-    when String then
+    when String
       found = @store.find_class_or_module @is_alias_for
       @is_alias_for = found if found
       @is_alias_for
@@ -191,7 +191,7 @@ class RDoc::Constant < RDoc::CodeObject
 
   def pretty_print(q) # :nodoc:
     q.group 2, "[#{self.class.name} #{full_name}", "]" do
-      unless comment.empty? then
+      unless comment.empty?
         q.breakable
         q.text "comment:"
         q.breakable

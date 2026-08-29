@@ -134,12 +134,12 @@ class RDoc::CodeObject
                when NilClass               then ''
                when RDoc::Comment          then comment.normalize
                else
-                 if comment and not comment.empty? then
+                 if comment and not comment.empty?
                    normalize_comment comment
                  else
                    # HACK correct fix is to have #initialize create @comment
                    #      with the correct encoding
-                   if String === @comment and @comment.empty? then
+                   if String === @comment and @comment.empty?
                      @comment = RDoc::Encoding.change_encoding @comment, comment.encoding
                    end
                    @comment
@@ -289,7 +289,7 @@ class RDoc::CodeObject
     return @parent if @parent
     return nil unless @parent_name
 
-    if @parent_class == RDoc::TopLevel then
+    if @parent_class == RDoc::TopLevel
       @parent = @store.add_file @parent_name
     else
       @parent = @store.find_class_or_module @parent_name
@@ -361,7 +361,7 @@ class RDoc::CodeObject
 
     return unless @track_visibility
 
-    if :nodoc == options.visibility then
+    if :nodoc == options.visibility
       initialize_visibility
       @track_visibility = false
     end

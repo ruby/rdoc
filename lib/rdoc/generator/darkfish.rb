@@ -241,7 +241,7 @@ class RDoc::Generator::Darkfish
     fu_options = { :verbose => $DEBUG_RDOC, :noop => @dry_run }
 
     @options.static_path.each do |path|
-      unless File.directory? path then
+      unless File.directory? path
         FileUtils.install path, @outputdir, **fu_options.merge(:mode => 0644)
         next
       end
@@ -250,7 +250,7 @@ class RDoc::Generator::Darkfish
         Dir[File.join('**', '*')].each do |entry|
           dest_file = @outputdir + entry
 
-          if File.directory? entry then
+          if File.directory? entry
             FileUtils.mkdir_p entry, **fu_options
           else
             FileUtils.install entry, dest_file, **fu_options.merge(:mode => 0644)
@@ -390,7 +390,7 @@ class RDoc::Generator::Darkfish
 
       next if file.text? && file.full_name == @options.main_page
 
-      if file.text? and page_file.exist? then
+      if file.text? and page_file.exist?
         generate_page file
         next
       end
@@ -404,8 +404,8 @@ class RDoc::Generator::Darkfish
 
       asset_rel_prefix = rel_prefix + @asset_rel_path
 
-      unless filepage_file then
-        if file.text? then
+      unless filepage_file
+        if file.text?
           next unless page_file.exist?
           template_file = page_file
           @title = file.page_name
@@ -643,7 +643,7 @@ class RDoc::Generator::Darkfish
 
     template = template_for template_file, true, erb_klass
 
-    if io_output then
+    if io_output
       debug_msg "Outputting to %s" % [out_file.expand_path]
 
       out_file.dirname.mkpath
@@ -689,7 +689,7 @@ class RDoc::Generator::Darkfish
 
     return template if template
 
-    if page then
+    if page
       template = assemble_template file
       erbout = 'io'
     else

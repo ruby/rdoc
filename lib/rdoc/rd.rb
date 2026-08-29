@@ -78,7 +78,7 @@ class RDoc::RD
   def self.parse(rd)
     rd = rd.lines.to_a
 
-    if rd.find { |i| /\S/ === i } and !rd.find{|i| /^=begin\b/ === i } then
+    if rd.find { |i| /\S/ === i } and !rd.find{|i| /^=begin\b/ === i }
       rd.unshift("=begin\n").push("=end\n")
     end
 

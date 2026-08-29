@@ -53,7 +53,7 @@ class RDoc::Markup::Formatter
   def accept_document(document)
     document.parts.each do |item|
       case item
-      when RDoc::Markup::Document then # HACK
+      when RDoc::Markup::Document # HACK
         accept_document item
       else
         item.accept self
@@ -250,22 +250,22 @@ class RDoc::Markup::Formatter
 
   def parse_url(url)
     case url
-    when /^rdoc-label:([^:]*)(?::(.*))?/ then
+    when /^rdoc-label:([^:]*)(?::(.*))?/
       scheme = 'link'
       path   = "##{$1}"
       id     = " id=\"#{$2}\"" if $2
-    when /([A-Za-z]+):(.*)/ then
+    when /([A-Za-z]+):(.*)/
       scheme = $1.downcase
       path   = $2
-    when /^#/ then
+    when /^#/
     else
       scheme = 'http'
       path   = url
       url    = url
     end
 
-    if scheme == 'link' then
-      url = if path[0, 1] == '#' then # is this meaningful?
+    if scheme == 'link'
+      url = if path[0, 1] == '#' # is this meaningful?
               path
             else
               self.class.gen_relative_url @from_path, path

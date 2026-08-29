@@ -171,7 +171,7 @@ https://github.com/ruby/rdoc/issues
 
   def convert(input, formatter)
     document = case input
-               when RDoc::Markup::Document then
+               when RDoc::Markup::Document
                  input
                else
                  RDoc::Markup::Parser.parse input

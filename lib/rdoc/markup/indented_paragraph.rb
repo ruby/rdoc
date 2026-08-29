@@ -36,7 +36,7 @@ class RDoc::Markup::IndentedParagraph < RDoc::Markup::Raw
 
   def text(hard_break = nil)
     @parts.map do |part|
-      if RDoc::Markup::HardBreak === part then
+      if RDoc::Markup::HardBreak === part
         '%1$s%3$*2$s' % [hard_break, @indent, ' '] if hard_break
       else
         part

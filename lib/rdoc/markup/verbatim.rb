@@ -36,7 +36,7 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
 
     @parts.each do |part|
       case part
-      when /^\s*\n/ then
+      when /^\s*\n/
         newlines += 1
         parts << part if newlines == 1
       else
@@ -54,7 +54,7 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
     self.class.name =~ /.*::(\w{1,4})/i
 
     q.group 2, "[#{$1.downcase}: ", ']' do
-      if @format then
+      if @format
         q.text "format: #{@format}"
         q.breakable
       end

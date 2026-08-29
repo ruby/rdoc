@@ -81,9 +81,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # Use this for displaying a method's argument lists.
 
   def arglists
-    if @call_seq then
+    if @call_seq
       @call_seq
-    elsif @params then
+    elsif @params
       "#{name}#{param_seq}"
     end
   end
@@ -126,9 +126,9 @@ class RDoc::AnyMethod < RDoc::MethodAttr
 
   def is_alias_for # :nodoc:
     case @is_alias_for
-    when RDoc::MethodAttr then
+    when RDoc::MethodAttr
       @is_alias_for
-    when Array then
+    when Array
       return nil unless @store
 
       klass_name, singleton, method_name = @is_alias_for
@@ -214,7 +214,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       add_alias RDoc::Alias.new(@name, new_name, RDoc::Comment.from_document(document), singleton: @singleton)
     end
 
-    @parent_name ||= if @full_name =~ /#/ then
+    @parent_name ||= if @full_name =~ /#/
                        $`
                      else
                        name = @full_name.split('::')
@@ -244,21 +244,21 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # are preferred over parsed method and block params.
 
   def param_list
-    if @call_seq then
+    if @call_seq
       params = @call_seq.split("\n").last
       params = params.sub(/.*?\((.*)\)/, '\1')
       params = params.sub(/(\{|do)\s*\|([^|]*)\|.*/, ',\2')
-    elsif @params then
+    elsif @params
       params = @params.sub(/\((.*)\)/, '\1')
 
       params << ",#{@block_params}" if @block_params
-    elsif @block_params then
+    elsif @block_params
       params = @block_params
     else
       return []
     end
 
-    if @block_params then
+    if @block_params
       # If this method has explicit block parameters, remove any explicit
       # &block
       params = params.sub(/,?\s*&\w+/, '')
@@ -276,11 +276,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
   # given by +call-seq+ it is preferred over the parsed values.
 
   def param_seq
-    if @call_seq then
+    if @call_seq
       params = @call_seq.split("\n").last
       params = params.sub(/[^( ]+/, '')
       params = params.sub(/(\|[^|]+\|)\s*\.\.\.\s*(end|\})/, '\1 \2')
-    elsif @params then
+    elsif @params
       params = @params.gsub(/\s*\#.*/, '')
       params = params.tr_s("\n ", " ")
       params = "(#{params})" unless params[0] == ?(
@@ -288,7 +288,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       params = ''
     end
 
-    if @block_params then
+    if @block_params
       # If this method has explicit block parameters, remove any explicit
       # &block
       params = params.sub(/,?\s*&\w+/, '')
@@ -328,7 +328,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     return @superclass_method if @superclass_method
 
     parent.each_ancestor do |ancestor|
-      if method = ancestor.method_list.find { |m| m.name == @name } then
+      if method = ancestor.method_list.find { |m| m.name == @name }
         @superclass_method = method
         break
       end

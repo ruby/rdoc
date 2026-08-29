@@ -17,7 +17,7 @@ class RDoc::Markup::Paragraph < RDoc::Markup::Raw
 
   def text(hard_break = '')
     @parts.map do |part|
-      if RDoc::Markup::HardBreak === part then
+      if RDoc::Markup::HardBreak === part
         hard_break
       else
         part

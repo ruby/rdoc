@@ -26,12 +26,12 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
   def continue_entry_body(entry_body, continuation)
     return unless last = entry_body.last
 
-    if last =~ /\)\s*\z/ and continuation =~ /\A\(/ then
+    if last =~ /\)\s*\z/ and continuation =~ /\A\(/
       last.sub!(/\)\s*\z/, ',')
       continuation = continuation.sub(/\A\(/, '')
     end
 
-    if last =~ /\s\z/ then
+    if last =~ /\s\z/
       last << continuation
     else
       last << ' ' + continuation
@@ -161,9 +161,9 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
 
     @content.each_line do |line|
       case line
-      when /^\s*$/ then
+      when /^\s*$/
         next
-      when /^\w.*/ then
+      when /^\w.*/
         entries << [entry_name, entry_body] if entry_name
 
         entry_name = $&
@@ -176,17 +176,17 @@ class RDoc::Parser::ChangeLog < RDoc::Parser
         end
 
         entry_body = []
-      when /^(\t| {8})?\*\s*(.*)/ then # "\t* file.c (func): ..."
+      when /^(\t| {8})?\*\s*(.*)/ # "\t* file.c (func): ..."
         entry_body << $2.dup
-      when /^(\t| {8})?\s*(\(.*)/ then # "\t(func): ..."
+      when /^(\t| {8})?\s*(\(.*)/ # "\t(func): ..."
         entry = $2
 
-        if entry_body.last =~ /:/ then
+        if entry_body.last =~ /:/
           entry_body << entry.dup
         else
           continue_entry_body entry_body, entry
         end
-      when /^(\t| {8})?\s*(.*)/ then
+      when /^(\t| {8})?\s*(.*)/
         continue_entry_body entry_body, $2
       end
     end

@@ -173,14 +173,14 @@ class RDoc::RDoc
 
     last = {}
 
-    if @options.dry_run then
+    if @options.dry_run
       # do nothing
-    elsif File.exist? dir then
+    elsif File.exist? dir
       error "#{dir} exists and is not a directory" unless File.directory? dir
 
       begin
         File.open flag_file do |io|
-          unless force then
+          unless force
             Time.parse io.gets
 
             io.each do |line|
@@ -275,14 +275,14 @@ option)
       stat = File.stat rel_file_name rescue next
 
       case type = stat.ftype
-      when "file" then
+      when "file"
         mtime = (stat.mtime unless (last_modified = @last_modified[rel_file_name] and
                                     stat.mtime.to_i <= last_modified.to_i))
 
-        if force_doc or RDoc::Parser.can_parse(rel_file_name) then
+        if force_doc or RDoc::Parser.can_parse(rel_file_name)
           file_list[rel_file_name] = mtime
         end
-      when "directory" then
+      when "directory"
         next if UNCONDITIONALLY_SKIPPED_DIRECTORIES.include?(rel_file_name)
 
         basename = File.basename(rel_file_name)
@@ -293,7 +293,7 @@ option)
 
         dot_doc = File.join rel_file_name, RDoc::DOT_DOC_FILENAME
 
-        if File.file? dot_doc then
+        if File.file? dot_doc
           file_list.update(parse_dot_doc_file(rel_file_name, dot_doc))
         else
           file_list.update(list_files_in_directory(rel_file_name))
@@ -480,7 +480,7 @@ The internal error was:
   # current directory, so make sure you're somewhere writable before invoking.
 
   def document(options)
-    if RDoc::Options === options then
+    if RDoc::Options === options
       @options = options
     else
       @options = RDoc::Options.load_options
@@ -490,7 +490,7 @@ The internal error was:
 
     @store = RDoc::Store.new(@options)
 
-    if @options.pipe then
+    if @options.pipe
       handle_pipe
       exit
     end
@@ -510,7 +510,7 @@ The internal error was:
       exit
     end
 
-    unless @options.coverage_report then
+    unless @options.coverage_report
       @last_modified = setup_output_dir @options.op_dir, @options.force_update
     end
 
@@ -537,11 +537,11 @@ The internal error was:
 
     @stats.coverage_level = @options.coverage_report
 
-    if @options.coverage_report then
+    if @options.coverage_report
       puts
 
       puts @stats.report
-    elsif file_info.empty? && !auto_discovered_rbs_signatures_changed then
+    elsif file_info.empty? && !auto_discovered_rbs_signatures_changed
       $stderr.puts "\nNo newer files." unless @options.quiet
     else
       gen_klass = @options.generator
@@ -551,7 +551,7 @@ The internal error was:
       generate
     end
 
-    if @stats and (@options.coverage_report or not @options.quiet) then
+    if @stats and (@options.coverage_report or not @options.quiet)
       puts
       puts @stats.summary
     end
@@ -565,12 +565,12 @@ The internal error was:
   # by the RDoc options
 
   def generate
-    if @options.dry_run then
+    if @options.dry_run
       # do nothing
       @generator.generate
     else
       Dir.chdir @options.op_dir do
-        unless @options.quiet then
+        unless @options.quiet
           $stderr.puts "\nGenerating #{@generator.class.name.sub(/^.*::/, '')} format into #{Dir.pwd}..."
           uri = "file://#{Dir.pwd}/index.html"
           ref = $stderr.tty? ? "\e]8;;#{uri}\e\\#{uri}\e]8;;\e\\" : uri

@@ -25,11 +25,11 @@ rescue Errno::ENOSPC
 rescue SystemExit
   raise
 rescue Exception => e
-  if $DEBUG_RDOC then
+  if $DEBUG_RDOC
     $stderr.puts e.message
     $stderr.puts "#{e.backtrace.join "\n\t"}"
     $stderr.puts
-  elsif Interrupt === e then
+  elsif Interrupt === e
     $stderr.puts
     $stderr.puts 'Interrupted'
   else

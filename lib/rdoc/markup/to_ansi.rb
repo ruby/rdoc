@@ -77,10 +77,10 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
 
   def accept_list_item_end(list_item)
     width = case @list_type.last
-            when :BULLET then
+            when :BULLET
               2
-            when :NOTE, :LABEL then
-              if @prefix then
+            when :NOTE, :LABEL
+              if @prefix
                 @res << @prefix.strip
                 @prefix = nil
               end
@@ -101,9 +101,9 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
 
   def accept_list_item_start(list_item)
     bullet = case @list_type.last
-             when :BULLET then
+             when :BULLET
                '*'
-             when :NOTE, :LABEL then
+             when :NOTE, :LABEL
                labels = Array(list_item.label).map do |label|
                  attributes(label).strip
                end.join "\n"
@@ -116,7 +116,7 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
              end
 
     case @list_type.last
-    when :NOTE, :LABEL then
+    when :NOTE, :LABEL
       @indent += 2
       @prefix = bullet + (' ' * @indent)
     else

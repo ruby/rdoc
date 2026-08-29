@@ -176,7 +176,7 @@ class RDoc::Task < Rake::TaskLib
     invalid_options =
       names.keys.map { |k| k.to_sym } - [:rdoc, :clobber_rdoc, :rerdoc]
 
-    unless invalid_options.empty? then
+    unless invalid_options.empty?
       raise ArgumentError, "invalid options: #{invalid_options.join ', '}"
     end
   end

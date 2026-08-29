@@ -144,10 +144,10 @@ class RDoc::CrossReference
     container = nil
 
     case name
-    when /#{CLASS_REGEXP_STR}::([A-Z]\w*)\z/o then
+    when /#{CLASS_REGEXP_STR}::([A-Z]\w*)\z/o
       symbol = $2
       container = @context.find_symbol_module($1)
-    when /#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o then
+    when /#{CLASS_REGEXP_STR}([.#]|::)#{METHOD_REGEXP_STR}/o
       type = $2
       if '.' == type # will find either #method or ::method
         symbol = $3
@@ -155,7 +155,7 @@ class RDoc::CrossReference
         symbol = "#{type}#{$3}"
       end
       container = @context.find_symbol_module($1)
-    when /^([.#]|::)#{METHOD_REGEXP_STR}/o then
+    when /^([.#]|::)#{METHOD_REGEXP_STR}/o
       type = $1
       if '.' == type
         symbol = $2
@@ -165,10 +165,10 @@ class RDoc::CrossReference
       container = @context
     end
 
-    if container then
-      unless RDoc::TopLevel === container then
-        if '.' == type then
-          if 'new' == symbol then # AnyClassName.new will be class method
+    if container
+      unless RDoc::TopLevel === container
+        if '.' == type
+          if 'new' == symbol # AnyClassName.new will be class method
             ref = container.find_local_symbol symbol
             ref = container.find_ancestor_local_symbol symbol unless ref
           else

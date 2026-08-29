@@ -175,7 +175,7 @@ class RDoc::Store
   # created RDoc::TopLevel.
 
   def add_file(absolute_name, relative_name: absolute_name, parser: nil)
-    unless top_level = @files_hash[relative_name] then
+    unless top_level = @files_hash[relative_name]
       top_level = RDoc::TopLevel.new absolute_name, relative_name
       top_level.parser = parser if parser
       top_level.store = self
@@ -489,7 +489,7 @@ class RDoc::Store
 
   def clean_cache_collection(collection) # :nodoc:
     collection.each do |name, item|
-      if item.empty? then
+      if item.empty?
         collection.delete name
       else
         # HACK mongrel-1.1.5 documents its files twice
@@ -521,7 +521,7 @@ class RDoc::Store
     # cache included modules before they are removed from the documentation
     all_classes_and_modules.each { |cm| cm.ancestors }
 
-    unless min_visibility == :nodoc then
+    unless min_visibility == :nodoc
       remove_nodoc @classes_hash
       remove_nodoc @modules_hash
     end
@@ -536,13 +536,13 @@ class RDoc::Store
     @files_hash.each_key do |file_name|
       tl = @files_hash[file_name]
 
-      unless tl.text? then
+      unless tl.text?
         tl.modules_hash.clear
         tl.classes_hash.clear
 
         tl.classes_or_modules.each do |cm|
           name = cm.full_name
-          if cm.type == 'class' then
+          if cm.type == 'class'
             tl.classes_hash[name] = cm if @classes_hash[name]
           else
             tl.modules_hash[name] = cm if @modules_hash[name]
@@ -568,7 +568,7 @@ class RDoc::Store
 
       mod = find_class_or_module name
 
-      unless mod then
+      unless mod
         loaded_mod = load_class_data name
 
         file = loaded_mod.in_files.first
@@ -678,7 +678,7 @@ class RDoc::Store
 
   def friendly_path
     case type
-    when :gem    then
+    when :gem
       parent = File.expand_path '..', @path
       "gem #{File.basename parent}"
     when :home   then RDoc.home
@@ -734,9 +734,9 @@ class RDoc::Store
         descendent = find_class_or_module name
 
         case descendent
-        when RDoc::NormalClass then
+        when RDoc::NormalClass
           mod.classes_hash[name] = descendent
-        when RDoc::NormalModule then
+        when RDoc::NormalModule
           mod.modules_hash[name] = descendent
         end
       end
@@ -797,11 +797,11 @@ class RDoc::Store
     obj.store = self
 
     case obj
-    when RDoc::NormalClass then
+    when RDoc::NormalClass
       @classes_hash[klass_name] = obj
-    when RDoc::SingleClass then
+    when RDoc::SingleClass
       @classes_hash[klass_name] = obj
-    when RDoc::NormalModule then
+    when RDoc::NormalModule
       @modules_hash[klass_name] = obj
     end
   end
@@ -1021,14 +1021,14 @@ class RDoc::Store
       "#{attribute.definition} #{attribute.name}"
     end
 
-    unless attribute_definitions.empty? then
+    unless attribute_definitions.empty?
       @cache[:attributes][full_name] ||= []
       @cache[:attributes][full_name].concat attribute_definitions
     end
 
     to_delete = []
 
-    unless klass.method_list.empty? then
+    unless klass.method_list.empty?
       @cache[:class_methods][full_name]    ||= []
       @cache[:instance_methods][full_name] ||= []
 
@@ -1071,7 +1071,7 @@ class RDoc::Store
 
     FileUtils.mkdir_p class_path(full_name) unless @dry_run
 
-    cache = if method.singleton then
+    cache = if method.singleton
               @cache[:class_methods]
             else
               @cache[:instance_methods]

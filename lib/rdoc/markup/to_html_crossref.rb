@@ -89,7 +89,7 @@ class RDoc::Markup::ToHtmlCrossref < RDoc::Markup::ToHtml
 
     return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
 
-    unless @hyperlink_all then
+    unless @hyperlink_all
       # This ensures that words entirely consisting of lowercase letters will
       # not have cross-references generated (to suppress lots of erroneous
       # cross-references to "new" in text, for instance)

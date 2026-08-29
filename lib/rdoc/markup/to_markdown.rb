@@ -36,9 +36,9 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
 
   def accept_list_item_end(list_item)
     width = case @list_type.last
-            when :BULLET then
+            when :BULLET
               4
-            when :NOTE, :LABEL then
+            when :NOTE, :LABEL
               use_prefix
 
               @res << "\n"
@@ -59,7 +59,7 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     type = @list_type.last
 
     case type
-    when :NOTE, :LABEL then
+    when :NOTE, :LABEL
       bullets = Array(list_item.label).map do |label|
         attributes(label).strip
       end.join "\n"
@@ -99,7 +99,7 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
   end
 
   def handle_TIDYLINK(label_part, url)
-    if url =~ /^rdoc-label:foot/ then
+    if url =~ /^rdoc-label:foot/
       emit_inline(handle_rdoc_link(url))
     else
       emit_inline('[')
@@ -141,9 +141,9 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
 
   def accept_list_start(list)
     case list.type
-    when :BULLET, :LABEL, :NOTE then
+    when :BULLET, :LABEL, :NOTE
       @list_index << nil
-    when :LALPHA, :NUMBER, :UALPHA then
+    when :LALPHA, :NUMBER, :UALPHA
       @list_index << 1
     else
       raise RDoc::Error, "invalid list type #{list.type}"
@@ -190,17 +190,17 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
 
   def handle_rdoc_link(url)
     case url
-    when /^rdoc-ref:/ then
+    when /^rdoc-ref:/
       $'
-    when /^rdoc-label:footmark-(\d+)/ then
+    when /^rdoc-label:footmark-(\d+)/
       "[^#{$1}]:"
-    when /^rdoc-label:foottext-(\d+)/ then
+    when /^rdoc-label:foottext-(\d+)/
       "[^#{$1}]"
-    when /^rdoc-label:label-/ then
+    when /^rdoc-label:label-/
       gen_url url, $'
-    when /^rdoc-image:/ then
+    when /^rdoc-image:/
       "![](#{$'})"
-    when /^rdoc-[a-z]+:/ then
+    when /^rdoc-[a-z]+:/
       $'
     end
   end

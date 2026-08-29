@@ -91,7 +91,7 @@ class RDoc::Markup::Parser
     type, text, = get
 
     text = case type
-           when :TEXT then
+           when :TEXT
              skip :NEWLINE
              text
            else
@@ -115,8 +115,8 @@ class RDoc::Markup::Parser
       type, data, column, = get
 
       case type
-      when *LIST_TOKENS then
-        if column < margin || (list.type && list.type != type) then
+      when *LIST_TOKENS
+        if column < margin || (list.type && list.type != type)
           unget
           break
         end
@@ -125,10 +125,10 @@ class RDoc::Markup::Parser
         peek_type, _, column, = peek_token
 
         case type
-        when :NOTE, :LABEL then
+        when :NOTE, :LABEL
           label = [] unless label
 
-          if peek_type == :NEWLINE then
+          if peek_type == :NEWLINE
             # description not on the same line as LABEL/NOTE
             # skip the trailing newline & any blank lines below
             while peek_type == :NEWLINE
@@ -149,9 +149,9 @@ class RDoc::Markup::Parser
             #       [two]
             # In all cases, we have an empty description.
             # In the last case only, we continue.
-            if peek_type.nil? || column < margin then
+            if peek_type.nil? || column < margin
               empty = true
-            elsif column == margin then
+            elsif column == margin
               case peek_type
               when type
                 empty = :continue
@@ -164,7 +164,7 @@ class RDoc::Markup::Parser
               empty = false
             end
 
-            if empty then
+            if empty
               label << data
               next if empty == :continue
               break
@@ -174,7 +174,7 @@ class RDoc::Markup::Parser
           data = nil
         end
 
-        if label then
+        if label
           data = label << data
           label = nil
         end
@@ -191,7 +191,7 @@ class RDoc::Markup::Parser
 
     p :list_end => margin if @debug
 
-    if list.empty? then
+    if list.empty?
       return nil unless label
       return nil unless [:LABEL, :NOTE].include? list.type
 
@@ -213,7 +213,7 @@ class RDoc::Markup::Parser
     until @tokens.empty? do
       type, data, column, = get
 
-      if type == :TEXT and column == margin then
+      if type == :TEXT and column == margin
         paragraph << data
 
         break if peek_token.first == :BREAK
@@ -251,7 +251,7 @@ class RDoc::Markup::Parser
     until @tokens.empty? do
       type, data, column, = get
 
-      if type == :NEWLINE then
+      if type == :NEWLINE
         line << data
         verbatim << line
         line = ''.dup
@@ -264,7 +264,7 @@ class RDoc::Markup::Parser
         break
       end
 
-      if generate_leading_spaces then
+      if generate_leading_spaces
         indent = column - margin
         line << ' ' * indent
         min_indent = indent if min_indent.nil? || indent < min_indent
@@ -272,22 +272,22 @@ class RDoc::Markup::Parser
       end
 
       case type
-      when :HEADER then
+      when :HEADER
         line << '=' * data
         _, _, peek_column, = peek_token
         peek_column ||= column + data
         indent = peek_column - column - data
         line << ' ' * indent
-      when :RULE then
+      when :RULE
         width = 2 + data
         line << '-' * width
         _, _, peek_column, = peek_token
         peek_column ||= column + width
         indent = peek_column - column - width
         line << ' ' * indent
-      when :BREAK, :TEXT then
+      when :BREAK, :TEXT
         line << data
-      when :BLOCKQUOTE then
+      when :BLOCKQUOTE
         line << '>>>'
         peek_type, _, peek_column = peek_token
         if peek_type != :NEWLINE and peek_column
@@ -303,7 +303,7 @@ class RDoc::Markup::Parser
                       end
         line << list_marker
         peek_type, _, peek_column = peek_token
-        unless peek_type == :NEWLINE then
+        unless peek_type == :NEWLINE
           peek_column ||= column + list_marker.length
           indent = peek_column - column - list_marker.length
           line << ' ' * indent
@@ -346,11 +346,11 @@ class RDoc::Markup::Parser
       type, data, column, = get
 
       case type
-      when :BREAK then
+      when :BREAK
         parent << RDoc::Markup::BlankLine.new
         skip :NEWLINE, false
         next
-      when :NEWLINE then
+      when :NEWLINE
         # trailing newlines are skipped below, so this is a blank line
         parent << RDoc::Markup::BlankLine.new
         skip :NEWLINE, false
@@ -358,10 +358,10 @@ class RDoc::Markup::Parser
       end
 
       # indentation change: break or verbatim
-      if column < indent then
+      if column < indent
         unget
         break
-      elsif column > indent then
+      elsif column > indent
         unget
         parent << build_verbatim(indent)
         next
@@ -369,15 +369,15 @@ class RDoc::Markup::Parser
 
       # indentation is the same
       case type
-      when :HEADER then
+      when :HEADER
         parent << build_heading(data)
-      when :RULE then
+      when :RULE
         parent << RDoc::Markup::Rule.new(data)
         skip :NEWLINE
-      when :TEXT then
+      when :TEXT
         unget
         parse_text parent, indent
-      when :BLOCKQUOTE then
+      when :BLOCKQUOTE
         nil while (type, = get; type) and type != :NEWLINE
         _, _, column, = peek_token
         bq = RDoc::Markup::BlockQuote.new
@@ -385,7 +385,7 @@ class RDoc::Markup::Parser
         parse bq, column
         p :blockquote_end => indent if @debug
         parent << bq
-      when *LIST_TOKENS then
+      when *LIST_TOKENS
         unget
         parent << build_list(indent)
       else
@@ -500,16 +500,16 @@ class RDoc::Markup::Parser
 
       @tokens << case
                  # [CR]LF => :NEWLINE
-                 when @s.scan(/\r?\n/) then
+                 when @s.scan(/\r?\n/)
                    token = [:NEWLINE, @s.matched, *pos]
                    @s.newline!
                    token
                  # === text => :HEADER then :TEXT
-                 when @s.scan(/(=+)(\s*)/) then
+                 when @s.scan(/(=+)(\s*)/)
                    level = @s[1].length
                    header = [:HEADER, level, *pos]
 
-                   if @s[2] =~ /^\r?\n/ then
+                   if @s[2] =~ /^\r?\n/
                      @s.unscan(@s[2])
                      header
                    else
@@ -519,14 +519,14 @@ class RDoc::Markup::Parser
                      [:TEXT, @s.matched.sub(/\r$/, ''), *pos]
                    end
                  # --- (at least 3) and nothing else on the line => :RULE
-                 when @s.scan(/(-{3,}) *\r?$/) then
+                 when @s.scan(/(-{3,}) *\r?$/)
                    [:RULE, @s[1].length - 2, *pos]
                  # * or - followed by white space and text => :BULLET
-                 when @s.scan(/([*-]) +(\S)/) then
+                 when @s.scan(/([*-]) +(\S)/)
                    @s.unscan(@s[2])
                    [:BULLET, @s[1], *pos]
                  # A. text, a. text, 12. text => :UALPHA, :LALPHA, :NUMBER
-                 when @s.scan(/([a-z]|\d+)\. +(\S)/i) then
+                 when @s.scan(/([a-z]|\d+)\. +(\S)/i)
                    # FIXME if tab(s), the column will be wrong
                    # either support tabs everywhere by first expanding them to
                    # spaces, or assume that they will have been replaced
@@ -544,13 +544,13 @@ class RDoc::Markup::Parser
                      end
                    [list_type, list_label, *pos]
                  # [text] followed by spaces or end of line => :LABEL
-                 when @s.scan(/\[(.*?)\]( +|\r?$)/) then
+                 when @s.scan(/\[(.*?)\]( +|\r?$)/)
                    [:LABEL, @s[1], *pos]
                  # text:: followed by spaces or end of line => :NOTE
-                 when @s.scan(/(.*?)::( +|\r?$)/) then
+                 when @s.scan(/(.*?)::( +|\r?$)/)
                    [:NOTE, @s[1], *pos]
                  # >>> followed by end of line => :BLOCKQUOTE
-                 when @s.scan(/>>> *(\w+)?$/) then
+                 when @s.scan(/>>> *(\w+)?$/)
                    if word = @s[1]
                      @s.unscan(word)
                    end
@@ -560,7 +560,7 @@ class RDoc::Markup::Parser
                    @s.scan(/(.*?)(  )?\r?$/)
                    token = [:TEXT, @s[1], *pos]
 
-                   if @s[2] then
+                   if @s[2]
                      @tokens << token
                      [:BREAK, @s[2], pos[0] + @s[1].length, pos[1]]
                    else

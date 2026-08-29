@@ -36,7 +36,7 @@ module RDoc::TokenStream
 
       text = CGI.escapeHTML text
 
-      if style then
+      if style
         end_with_newline = text.end_with?("\n")
         text = text.chomp if end_with_newline
         "<span class=\"#{style}\">#{text}</span>#{"\n" if end_with_newline}"

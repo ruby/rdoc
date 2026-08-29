@@ -169,9 +169,9 @@ class RDoc::RubyGemsHook
     args.concat @spec.extra_rdoc_files
 
     case config_args = Gem.configuration[:rdoc]
-    when String then
+    when String
       args = args.concat config_args.split(' ')
-    when Array then
+    when Array
       args = args.concat config_args
     end
 

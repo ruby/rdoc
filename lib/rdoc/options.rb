@@ -546,8 +546,8 @@ class RDoc::Options
 
   def check_files
     @files.delete_if do |file|
-      if File.exist? file then
-        if File.readable? file then
+      if File.exist? file
+        if File.readable? file
           false
         else
           warn "file '#{file}' not readable"
@@ -566,7 +566,7 @@ class RDoc::Options
   # Ensure only one generator is loaded
 
   def check_generator
-    if @generator then
+    if @generator
       raise OptionParser::InvalidOption,
         "generator already set to #{@generator_name}"
     end
@@ -611,10 +611,10 @@ class RDoc::Options
   # Create a regexp for #exclude
 
   def exclude
-    if @exclude.nil? or Regexp === @exclude then
+    if @exclude.nil? or Regexp === @exclude
       # done, #finish is being re-run
       @exclude
-    elsif !@apply_default_exclude and @exclude.empty? then
+    elsif !@apply_default_exclude and @exclude.empty?
       nil
     else
       exclude = @exclude
@@ -629,7 +629,7 @@ class RDoc::Options
   # #template.
 
   def finish
-    if @write_options then
+    if @write_options
       write_options
       exit
     end
@@ -650,7 +650,7 @@ class RDoc::Options
     # If no template was specified, use the default template for the output
     # formatter
 
-    unless @template then
+    unless @template
       @template     = @generator_name
       @template_dir = template_dir_for @template
     end
@@ -703,7 +703,7 @@ class RDoc::Options
     longest = lengths.max
 
     generators.sort.map do |name, description|
-      if description then
+      if description
         "  %-*s - %s" % [longest, name, description]
       else
         "  #{name}"
@@ -767,7 +767,7 @@ Usage: #{opt.program_name} [options] [names...]
       opt.accept Template do |template|
         template_dir = template_dir_for template
 
-        unless template_dir then
+        unless template_dir
           $stderr.puts "could not find template #{template}"
           nil
         else
@@ -792,7 +792,7 @@ Usage: #{opt.program_name} [options] [names...]
       end
 
       opt.accept PathArray do |paths,|
-        paths = if paths then
+        paths = if paths
                   paths.split(',').map { |d| d unless d.empty? }
                 end
 
@@ -865,11 +865,11 @@ Usage: #{opt.program_name} [options] [names...]
              "cause xxx.cgi to be parsed as a Ruby file.") do |value|
         new, old = value.split(/=/, 2)
 
-        unless new and old then
+        unless new and old
           raise OptionParser::InvalidArgument, "Invalid parameter to '-E'"
         end
 
-        unless RDoc::Parser.alias_extension old, new then
+        unless RDoc::Parser.alias_extension old, new
           raise OptionParser::InvalidArgument, "Unknown extension .#{old} to -E"
         end
       end
@@ -1223,7 +1223,7 @@ Usage: #{opt.program_name} [options] [names...]
     begin
       opts.parse! argv
     rescue OptionParser::ParseError => e
-      if %w[--format --ri -r --ri-site -R].include? e.args.first then
+      if %w[--format --ri -r --ri-site -R].include? e.args.first
         raise
       else
         invalid << e.args.join(' ')
@@ -1234,21 +1234,21 @@ Usage: #{opt.program_name} [options] [names...]
 
     setup_generator unless @generator
 
-    if @pipe and not argv.empty? then
+    if @pipe and not argv.empty?
       @pipe = false
       invalid << '-p (with files)'
     end
 
-    unless invalid.empty? then
+    unless invalid.empty?
       invalid = "invalid options: #{invalid.join ', '}"
 
-      if ignore_invalid then
-        unless quiet then
+      if ignore_invalid
+        unless quiet
           $stderr.puts invalid
           $stderr.puts '(invalid options are ignored)'
         end
       else
-        unless quiet then
+        unless quiet
           $stderr.puts opts
         end
         $stderr.puts invalid
@@ -1308,7 +1308,7 @@ Usage: #{opt.program_name} [options] [names...]
   def setup_generator(generator_name = @generator_name)
     @generator = @generators[generator_name]
 
-    unless @generator then
+    unless @generator
       raise OptionParser::InvalidArgument,
             "Invalid output formatter #{generator_name}"
     end
@@ -1318,7 +1318,7 @@ Usage: #{opt.program_name} [options] [names...]
     @generator_name = generator_name
     @generator_options << @generator
 
-    if @generator.respond_to? :setup_options then
+    if @generator.respond_to? :setup_options
       @option_parser ||= OptionParser.new
       @generator.setup_options self
     end

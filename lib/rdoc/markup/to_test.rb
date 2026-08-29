@@ -40,9 +40,9 @@ class RDoc::Markup::ToTest < RDoc::Markup::Formatter
 
   def accept_list_start(list)
     @list << case list.type
-             when :BULLET then
+             when :BULLET
                '*'
-             when :NUMBER then
+             when :NUMBER
                '1'
              else
                list.type

@@ -224,11 +224,11 @@ class RDoc::Stats
   # Returns a report on which items are not documented
 
   def report
-    if @coverage_level > 0 then
+    if @coverage_level > 0
       extend RDoc::Text
     end
 
-    if @coverage_level.zero? then
+    if @coverage_level.zero?
       calculate
 
       return GREAT_JOB_MESSAGE if @num_items == @doc_items
@@ -236,7 +236,7 @@ class RDoc::Stats
 
     items, empty_classes = collect_undocumented_items
 
-    if @coverage_level > 0 then
+    if @coverage_level > 0
       calculate
 
       return GREAT_JOB_MESSAGE if @num_items == @doc_items
