@@ -1041,10 +1041,9 @@ class RDoc::Parser::C < RDoc::Parser
         if meth_obj.section_title
           class_obj.temporary_section = class_obj.add_section(meth_obj.section_title)
         end
+        meth_obj.visibility = type == 'private_method' ? :private : :public
         class_obj.add_method meth_obj
-
         @stats.add_method meth_obj
-        meth_obj.visibility = :private if 'private_method' == type
       end
     end
   end

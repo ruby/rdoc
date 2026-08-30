@@ -153,8 +153,8 @@ class RDoc::Parser::RBS < RDoc::Parser
     )
     record_object_location attribute, decl.location
     attribute.type_signature_lines = type_signature_lines
-    context.add_attribute attribute
     attribute.visibility = decl.visibility if decl.visibility
+    context.add_attribute attribute
   end
 
   def parse_class_decl(decl, context)
@@ -260,8 +260,8 @@ class RDoc::Parser::RBS < RDoc::Parser
     end
 
     method.comment = comment if comment
-    context.add_method method
     method.visibility = visibility if visibility
+    context.add_method method
   end
 
   def parse_module_decl(decl, context)
