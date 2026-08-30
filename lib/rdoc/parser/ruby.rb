@@ -451,7 +451,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
         @container,
         comment: comment,
         directives: directives,
-        dont_rename_initialize: false,
         line_no: line_no,
         visibility: visibility,
         singleton: @singleton || singleton_method,
@@ -722,7 +721,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     )
   end
 
-  private def internal_add_method(method_name, container, comment:, dont_rename_initialize: false, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature_lines: nil) # :nodoc:
+  private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature_lines: nil) # :nodoc:
     meth = RDoc::AnyMethod.new(method_name, singleton: singleton)
     meth.comment = comment
     handle_code_object_directives(meth, directives) if directives
@@ -749,7 +748,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     # An instance method `initialize` is documented as `::new` unless the
     # :notnew: directive is given
-    if !dont_rename_initialize && method_name == 'initialize' && !singleton
+    if method_name == 'initialize' && !singleton
       if meth.dont_rename_initialize
         meth.visibility = :protected
       else
