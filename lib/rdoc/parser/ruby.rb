@@ -18,7 +18,7 @@ module RDoc
     # * constants
     # * aliases
     # * private, public, protected
-    # * private_class_function, public_class_function
+    # * private_class_method, public_class_method
     # * private_constant, public_constant
     # * module_function
     # * attr, attr_reader, attr_writer, attr_accessor
