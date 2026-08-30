@@ -746,15 +746,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.calls_super = calls_super
     meth.block_params ||= block_params if block_params
     meth.type_signature_lines = type_signature_lines
-    container.add_method(meth)
-    record_location(meth)
-    meth.start_collecting_tokens(:ruby)
-    tokens.each do |token|
-      meth.token_stream << token
-    end
 
-    # Rename after add_method to register duplicated 'new' and 'initialize'
-    # defined in c and ruby.
+    # An instance method `initialize` is documented as `::new` unless the
+    # :notnew: directive is given
     if !dont_rename_initialize && method_name == 'initialize' && !singleton
       if meth.dont_rename_initialize
         meth.visibility = :protected
@@ -763,6 +757,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
         meth.singleton = true
         meth.visibility = :public
       end
+    end
+
+    record_location(meth)
+    container.add_method(meth)
+    meth.start_collecting_tokens(:ruby)
+    tokens.each do |token|
+      meth.token_stream << token
     end
   end
 
