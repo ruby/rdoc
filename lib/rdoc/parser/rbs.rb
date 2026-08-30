@@ -93,9 +93,11 @@ class RDoc::Parser::RBS < RDoc::Parser
   end
 
   def attribute_index(context)
-    @attributes_by_context[context] ||= context.attributes.each_with_object({}) do |attribute, index|
+    index = @attributes_by_context[context] ||= {}
+    context.attributes[index.length..].each do |attribute|
       index[[attribute.name, attribute.singleton]] ||= attribute
     end
+    index
   end
 
   def find_attribute(context, name, singleton)
@@ -103,9 +105,11 @@ class RDoc::Parser::RBS < RDoc::Parser
   end
 
   def method_index(context)
-    @methods_by_context[context] ||= context.method_list.each_with_object({}) do |method, index|
+    index = @methods_by_context[context] ||= {}
+    context.method_list[index.length..].each do |method|
       index[[method.name, !!method.singleton]] ||= method
     end
+    index
   end
 
   def find_method(context, name, singleton)
@@ -176,11 +180,7 @@ class RDoc::Parser::RBS < RDoc::Parser
     record_object_location attribute, decl.location
     attribute.type_signature_lines = type_signature_lines
     attribute.visibility = decl.visibility if decl.visibility
-    attribute_count = context.attributes.length
     context.add_attribute attribute
-    context.attributes[attribute_count..].each do |added_attribute|
-      attribute_index(context)[[added_attribute.name, added_attribute.singleton]] ||= added_attribute
-    end
   end
 
   def parse_class_decl(decl, context)
@@ -261,15 +261,7 @@ class RDoc::Parser::RBS < RDoc::Parser
       singleton: decl.kind == :singleton
     )
     record_object_location alias_def, decl.location
-    method_count = context.method_list.length
-    attribute_count = context.attributes.length
     context.add_alias alias_def
-    context.method_list[method_count..].each do |method|
-      method_index(context)[[method.name, !!method.singleton]] ||= method
-    end
-    context.attributes[attribute_count..].each do |attribute|
-      attribute_index(context)[[attribute.name, attribute.singleton]] ||= attribute
-    end
   end
 
   def parse_method_decl(decl, context)
@@ -295,11 +287,7 @@ class RDoc::Parser::RBS < RDoc::Parser
 
     method.comment = comment if comment
     method.visibility = visibility if visibility
-    method_count = context.method_list.length
     context.add_method method
-    context.method_list[method_count..].each do |added_method|
-      method_index(context)[[added_method.name, !!added_method.singleton]] ||= added_method
-    end
   end
 
   def parse_module_decl(decl, context)
