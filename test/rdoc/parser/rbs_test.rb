@@ -331,6 +331,20 @@ class RDocParserRBSTest < RDoc::TestCase
     assert_equal :public, private_constructor.visibility
   end
 
+  def test_scan_method_lookup_linear_performance
+    assert_linear_performance([1, 10, 100]) do |factor|
+      methods = (factor * 200).times.map { |i| "  def m#{i}: () -> void" }.join("\n")
+      util_parser("class C\n#{methods}\nend\n").scan
+    end
+  end
+
+  def test_scan_attribute_lookup_linear_performance
+    assert_linear_performance([1, 10, 100]) do |factor|
+      attributes = (factor * 200).times.map { |i| "  attr_reader a#{i}: String" }.join("\n")
+      util_parser("class C\n#{attributes}\nend\n").scan
+    end
+  end
+
   def util_parser(content)
     RDoc::Parser::RBS.new @top_level, content, @options, @stats
   end
