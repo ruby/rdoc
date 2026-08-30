@@ -15,14 +15,19 @@ module RDoc::Parser::RubyColorizer
     #: (String) -> void
     def initialize(source)
       @source = source
-      @streams = {}
+      @token_streams = {}
     end
 
     #: (Integer) -> ^() -> Array[ColoredToken]
     def token_stream_loader(node_id)
-      tokens = nil
-      (@streams[node_id] ||= []) << ->(resolved_tokens) { tokens = resolved_tokens }
-      -> { @source ? (materialize; tokens) : tokens }
+      @token_streams[node_id] = nil
+      -> { token_stream_for(node_id) }
+    end
+
+    #: (Integer) -> Array[ColoredToken]
+    def token_stream_for(node_id)
+      materialize if @source
+      @token_streams.fetch(node_id)
     end
 
     #: () -> void
@@ -35,16 +40,13 @@ module RDoc::Parser::RubyColorizer
       nodes = [program_node]
       until nodes.empty?
         node = nodes.pop
-        if @streams.key?(node.node_id)
+        if @token_streams.key?(node.node_id)
           staged_tokens[node.node_id] = RDoc::Parser::RubyColorizer.partial_colorize(@source, node, prism_tokens)
         end
         nodes.concat(node.compact_child_nodes)
       end
 
-      @streams.each do |node_id, streams|
-        streams.each { |resolve| resolve.call(staged_tokens.fetch(node_id)) }
-      end
-      @streams = nil
+      @token_streams.replace(@token_streams.to_h { |node_id,| [node_id, staged_tokens.fetch(node_id)] })
       @source = nil
     end
   end
