@@ -96,10 +96,8 @@
       <%- attributes.each do |attrib| %>
       <div id="<%= attrib.aref %>" class="method-detail anchor-link">
         <div class="method-heading attribute-method-heading">
-          <a href="#<%= attrib.aref %>" title="Link to this attribute">
-            <span class="method-name"><%= h attrib.name %></span>
-            <span class="attribute-access-type">[<%= attrib.rw %>]</span>
-          </a>
+          <a href="#<%= attrib.aref %>" title="Link to this attribute"><span class="method-name"><%= h attrib.name %></span></a>
+          <span class="attribute-access-type" title="<%= attrib.definition %>">[<%= attrib.rw %>]</span>
         </div>
 
         <div class="method-description">
