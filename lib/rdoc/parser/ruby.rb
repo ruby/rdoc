@@ -389,15 +389,23 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   def call_node_name_arguments(call_node) # :nodoc:
-    return [] unless call_node.arguments
-    call_node.arguments.arguments.map do |arg|
-      case arg
-      when Prism::SymbolNode
-        arg.value
-      when Prism::StringNode
-        arg.unescaped
-      end
-    end || []
+    return unless arguments_node = call_node.arguments
+    names = arguments_node.arguments.filter_map { |arg| argument_name(arg) }
+    names unless names.empty?
+  end
+
+  def call_node_name_argument(call_node) # :nodoc:
+    return unless call_node.arguments
+    argument_name(call_node.arguments.arguments.first)
+  end
+
+  def argument_name(argument_node) # :nodoc:
+    case argument_node
+    when Prism::SymbolNode
+      argument_node.value
+    when Prism::StringNode
+      argument_node.unescaped
+    end
   end
 
   # Handles meta method comments
@@ -413,7 +421,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       case directive
       when 'attr', 'attr_reader', 'attr_writer', 'attr_accessor'
         attributes = [param] if param
-        attributes ||= call_node_name_arguments(node).compact if is_call_node
+        attributes ||= call_node_name_arguments(node) if is_call_node
         rw = directive == 'attr_writer' ? 'W' : directive == 'attr_accessor' ? 'RW' : 'R'
       when 'method'
         method_name = param if param
@@ -439,7 +447,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         mark_container_documentable(@container)
       end
     elsif line_no || node
-      method_name ||= call_node_name_arguments(node).first if is_call_node
+      method_name ||= call_node_name_argument(node) if is_call_node
       if node
         tokens = syntax_highlighted_tokens(node)
         line_no = node.location.start_line
@@ -1233,8 +1241,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     end
 
     def call_node_name_arguments(call_node)
-      names = @scanner.call_node_name_arguments(call_node).compact
-      names unless names.empty?
+      @scanner.call_node_name_arguments(call_node)
     end
 
     def symbol_arguments(call_node)
