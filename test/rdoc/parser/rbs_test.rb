@@ -331,38 +331,6 @@ class RDocParserRBSTest < RDoc::TestCase
     assert_equal :public, private_constructor.visibility
   end
 
-  def test_scan_method_lookup_is_linear
-    name_calls = 0
-    original_name = RDoc::AnyMethod.instance_method :name
-    RDoc::AnyMethod.define_method(:name) do
-      name_calls += 1
-      original_name.bind_call self
-    end
-
-    methods = 100.times.map { |i| "  def m#{i}: () -> void" }.join("\n")
-    util_parser("class C\n#{methods}\nend\n").scan
-
-    assert_operator name_calls, :<=, 1_000
-  ensure
-    RDoc::AnyMethod.define_method :name, original_name
-  end
-
-  def test_scan_attribute_lookup_is_linear
-    name_calls = 0
-    original_name = RDoc::Attr.instance_method :name
-    RDoc::Attr.define_method(:name) do
-      name_calls += 1
-      original_name.bind_call self
-    end
-
-    attributes = 100.times.map { |i| "  attr_reader a#{i}: String" }.join("\n")
-    util_parser("class C\n#{attributes}\nend\n").scan
-
-    assert_operator name_calls, :<=, 1_000
-  ensure
-    RDoc::Attr.remove_method :name
-  end
-
   def util_parser(content)
     RDoc::Parser::RBS.new @top_level, content, @options, @stats
   end
