@@ -1755,19 +1755,19 @@ class RDocParserRubyTest < RDoc::TestCase
         ##
         # :attr:
         # attrs
-        add_my_method :attr1, :attr2
+        add_my_method :attr1, "attr2", (ignored)
         ##
         # :attr_reader:
         # readers
-        add_my_method :reader1, :reader2
+        add_my_method :reader1, ignored, "reader2"
         ##
         # :attr_writer:
         # writers
-        add_my_method :writer1, :writer2
+        add_my_method :writer1, :writer2, kwarg: ignored
         ##
         # :attr_accessor:
         # accessors
-        add_my_method :accessor1, :accessor2
+        add_my_method ignored, :accessor1, :accessor2
 
         # :stopdoc:
 
