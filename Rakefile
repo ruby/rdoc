@@ -61,7 +61,18 @@ def generate_parser_file(parser_file)
   when '.ry' # need racc
     sh "bundle", "exec", "racc", "-l", "-E", "-o", parsed_file, parser_file
     File.open(parsed_file, 'r+') do |f|
-      newtext = "# frozen_string_literal: true\n#{f.read}"
+      generated = f.read
+      runtime_begin = "###### racc/parser.rb begin\n"
+      runtime_end = "###### racc/parser.rb end\n"
+
+      unless generated.include?(runtime_begin) && generated.include?(runtime_end)
+        raise "Racc runtime markers are missing from #{parsed_file}"
+      end
+
+      generated.sub!(runtime_begin, "# :stopdoc:\n#{runtime_begin}")
+      generated.sub!(runtime_end, "#{runtime_end}# :startdoc:\n")
+
+      newtext = "# frozen_string_literal: true\n#{generated}"
       f.rewind
       f.write newtext
     end
