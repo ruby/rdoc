@@ -412,7 +412,7 @@ module RDoc
           case directive
           when 'attr', 'attr_reader', 'attr_writer', 'attr_accessor'
             attributes = [param] if param
-            attributes ||= call_node_name_arguments(node) if is_call_node
+            attributes ||= call_node_name_arguments(node).compact if is_call_node
             rw = directive == 'attr_writer' ? 'W' : directive == 'attr_accessor' ? 'RW' : 'R'
           when 'method'
             method_name = param if param
