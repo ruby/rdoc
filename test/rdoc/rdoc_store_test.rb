@@ -951,6 +951,24 @@ class RDocStoreTest < XrefTestCase
     assert_empty result.constants
   end
 
+  def test_save_class_merge_method_visibility
+    private_meth = RDoc::AnyMethod.new 'private_method'
+    private_meth.record_location @top_level
+    private_meth.visibility = :private
+    @klass.add_method private_meth
+
+    @s.save_class @klass
+    # Second save loads the class saved above and merges @klass into it
+    @s.save_class @klass
+
+    assert_equal :public, @meth.visibility
+    assert_equal :private, private_meth.visibility
+
+    loaded = @s.load_class 'Object'
+    assert_equal :public, loaded.find_method('method', false).visibility
+    assert_equal :private, loaded.find_method('private_method', false).visibility
+  end
+
   def test_save_class_methods
     @s.save_class @klass
 
