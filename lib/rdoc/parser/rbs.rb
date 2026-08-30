@@ -100,10 +100,6 @@ class RDoc::Parser::RBS < RDoc::Parser
     index
   end
 
-  def find_attribute(context, name, singleton)
-    attribute_index(context)[[name, singleton]]
-  end
-
   def method_index(context)
     index = @methods_by_context[context] ||= {}
     context.method_list[index.length..].each do |method|
@@ -112,16 +108,12 @@ class RDoc::Parser::RBS < RDoc::Parser
     index
   end
 
-  def find_method(context, name, singleton)
-    method_index(context)[[name, singleton]]
-  end
-
   def merge_attribute_methods(context, name, rw, singleton, comment, type_signature_lines)
     method_names = []
     method_names << name if rw.include?('R')
     method_names << "#{name}=" if rw.include?('W')
 
-    methods = method_names.map { |method_name| find_method(context, method_name, singleton) }
+    methods = method_names.map { |method_name| method_index(context)[[method_name, singleton]] }
     methods.compact.each do |method|
       merge_documentation method, comment, type_signature_lines
     end
@@ -161,7 +153,7 @@ class RDoc::Parser::RBS < RDoc::Parser
     type_signature_lines = [decl.type.to_s]
     name = decl.name.to_s
     singleton = decl.kind == :singleton
-    if attribute = find_attribute(context, name, singleton)
+    if attribute = attribute_index(context)[[name, singleton]]
       merge_documentation attribute, comment, type_signature_lines if
         attr_rw_matches? attribute.rw, rw
       return
@@ -271,7 +263,7 @@ class RDoc::Parser::RBS < RDoc::Parser
     singleton = rdoc_method_singleton?(decl)
     visibility = rdoc_method_visibility(decl)
 
-    if method = find_method(context, method_name, singleton)
+    if method = method_index(context)[[method_name, singleton]]
       merge_documentation method, comment, type_signature_lines
       return
     end
