@@ -108,7 +108,7 @@ class RDoc::Context < RDoc::CodeObject
   attr_reader :constants_hash
 
   ##
-  # Creates an unnamed empty context with public current visibility
+  # Creates an unnamed empty context
 
   def initialize
     super

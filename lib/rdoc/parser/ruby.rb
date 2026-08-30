@@ -629,7 +629,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     handle_code_object_directives(@container, directives) if directives
     return if document_suppressed?
 
-    visibility = @container.find_method(old_name, @singleton)&.visibility || :public
     a = RDoc::Alias.new(old_name, new_name, comment, singleton: @singleton)
     handle_modifier_directive(a, line_no)
     a.store = @store
