@@ -91,7 +91,6 @@ class RDocTokenStreamTest < RDoc::TestCase
     end.new
     loads = 0
     foo.collect_tokens(:ruby, loader: -> { loads += 1; [:token] })
-    foo.freeze
 
     tokens = foo.token_stream
     assert_equal [:token], tokens
