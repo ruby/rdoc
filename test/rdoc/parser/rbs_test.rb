@@ -195,8 +195,7 @@ class RDocParserRBSTest < RDoc::TestCase
   def test_scan_treats_legacy_nil_singleton_as_instance_method
     ruby_top_level = @store.add_file 'sample.rb'
     sample = ruby_top_level.add_class RDoc::NormalClass, 'Sample'
-    greet = RDoc::AnyMethod.new 'greet'
-    greet.singleton = nil
+    greet = RDoc::AnyMethod.new 'greet', singleton: nil
     sample.add_method greet
 
     util_parser(<<~RBS).scan
