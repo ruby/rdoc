@@ -26,13 +26,18 @@ module RDoc::Parser::RubyColorizer
 
     #: (Integer) -> Array[ColoredToken]
     def token_stream_for(node_id)
-      materialize if @source
+      materialize unless materialized?
       @token_streams.fetch(node_id)
+    end
+
+    #: () -> Boolean
+    def materialized?
+      !@source
     end
 
     #: () -> void
     def materialize
-      return unless @source
+      return if materialized?
 
       program_node, unordered_tokens = Prism.parse_lex(@source).value
       prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
