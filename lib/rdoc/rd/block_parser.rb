@@ -5,7 +5,6 @@
 # from Racc grammar file "block_parser.ry".
 #
 
-# :stopdoc:
 ###### racc/parser.rb begin
 unless $".find {|p| p.end_with?('/racc/parser.rb')}
 $".push "#{__dir__}/racc/parser.rb"
@@ -651,7 +650,6 @@ end
 
 end
 ###### racc/parser.rb end
-# :startdoc:
 
 class RDoc::RD
 
