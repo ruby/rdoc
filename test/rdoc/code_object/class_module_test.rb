@@ -291,6 +291,30 @@ class RDocClassModuleTest < XrefTestCase
     assert_empty loaded.method_list
   end
 
+  def test_marshal_load_method_visibility
+    tl = @store.add_file 'file.rb'
+    cm = tl.add_class RDoc::NormalClass, 'Klass'
+    cm.record_location tl
+
+    RDoc::VISIBILITIES.each do |visibility|
+      [false, true].each do |singleton|
+        m = RDoc::AnyMethod.new "#{visibility}_method", singleton: singleton
+        m.record_location tl
+        m.visibility = visibility
+        cm.add_method m
+      end
+    end
+
+    loaded = Marshal.load Marshal.dump cm
+    loaded.store = @store
+
+    RDoc::VISIBILITIES.each do |visibility|
+      [false, true].each do |singleton|
+        assert_equal visibility, loaded.find_method("#{visibility}_method", singleton).visibility
+      end
+    end
+  end
+
   def test_marshal_load_version_0
     tl = @store.add_file 'file.rb'
     ns = tl.add_module RDoc::NormalModule, 'Namespace'

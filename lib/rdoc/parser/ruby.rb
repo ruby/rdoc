@@ -433,10 +433,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
         a = RDoc::Attr.new(attr, rw, comment, singleton: @singleton)
         a.store = @store
         a.line = line_no
+        a.visibility = visibility
         record_location(a)
         @container.add_attribute(a)
         mark_container_documentable(@container)
-        a.visibility = visibility
       end
     elsif line_no || node
       method_name ||= call_node_name_arguments(node).first if is_call_node
@@ -576,13 +576,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     end
     new_methods.each do |method|
+      method.visibility = visibility
       case method
       when RDoc::AnyMethod
         @container.add_method(method)
       when RDoc::Attr
         @container.add_attribute(method)
       end
-      method.visibility = visibility
     end
   end
 
@@ -602,13 +602,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
       new_methods << s_m
     end
     new_methods.each do |method|
+      method.visibility = :public
       case method
       when RDoc::AnyMethod
         @container.add_method(method)
       when RDoc::Attr
         @container.add_attribute(method)
       end
-      method.visibility = :public
     end
   end
 
@@ -629,7 +629,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     handle_code_object_directives(@container, directives) if directives
     return if document_suppressed?
 
-    visibility = @container.find_method(old_name, @singleton)&.visibility || :public
     a = RDoc::Alias.new(old_name, new_name, comment, singleton: @singleton)
     handle_modifier_directive(a, line_no)
     a.store = @store
@@ -638,7 +637,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     if should_document?(a)
       mark_container_documentable(@container)
       @container.add_alias(a)
-      @container.find_method(new_name, @singleton)&.visibility = visibility
     end
   end
 
@@ -656,13 +654,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
       a.store = @store
       a.line = line_no
       a.type_signature_lines = type_signature_lines
+      a.visibility = visibility
       record_location(a)
       handle_modifier_directive(a, line_no)
       if should_document?(a)
         @container.add_attribute(a)
         mark_container_documentable(@container)
       end
-      a.visibility = visibility # should set after adding to container
     end
   end
 
@@ -743,12 +741,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.name ||= 'unknown'
     meth.store = @store
     meth.line = line_no
-    container.add_method(meth) # should add after setting singleton and before setting visibility
     meth.visibility = visibility
     meth.params ||= params || '()'
     meth.calls_super = calls_super
     meth.block_params ||= block_params if block_params
     meth.type_signature_lines = type_signature_lines
+    container.add_method(meth)
     record_location(meth)
     meth.start_collecting_tokens(:ruby)
     tokens.each do |token|

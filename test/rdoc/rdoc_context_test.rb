@@ -15,7 +15,6 @@ class RDocContextTest < XrefTestCase
     assert_equal 'unknown', @context.name
     assert_equal '', @context.comment
     assert_nil   @context.parent
-    assert_equal :public, @context.visibility
     assert_equal 1, @context.sections.length
     assert_nil   @context.temporary_section
 
@@ -194,7 +193,6 @@ class RDocContextTest < XrefTestCase
 
   def test_add_method
     meth = RDoc::AnyMethod.new 'old_name'
-    meth.visibility = nil
 
     @context.add_method meth
 
@@ -221,7 +219,6 @@ class RDocContextTest < XrefTestCase
 
     meth1 = RDoc::AnyMethod.new 'name'
     meth1.record_location @store.add_file 'first.rb'
-    meth1.visibility = nil
     meth1.comment = comment 'first'
 
     @context.add_method meth1
@@ -249,7 +246,6 @@ class RDocContextTest < XrefTestCase
 
     meth1 = RDoc::AnyMethod.new 'name'
     meth1.record_location @store.add_file 'first.rb'
-    meth1.visibility = nil
     meth1.comment = comment 'first'
 
     @context.add_method meth1

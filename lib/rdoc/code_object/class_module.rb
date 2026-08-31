@@ -84,7 +84,6 @@ class RDoc::ClassModule < RDoc::Context
     klass.sections.concat mod.sections
     klass.unmatched_alias_lists = mod.unmatched_alias_lists
     klass.current_section = mod.current_section
-    klass.visibility = mod.visibility
 
     klass.classes_hash.update mod.classes_hash
     klass.modules_hash.update mod.modules_hash
@@ -397,7 +396,6 @@ class RDoc::ClassModule < RDoc::Context
     @done_documenting  = false
     @parent            = nil
     @temporary_section = nil
-    @visibility        = nil
     @classes           = {}
     @modules           = {}
 
@@ -442,11 +440,10 @@ class RDoc::ClassModule < RDoc::Context
 
     array[8].each do |type, visibilities|
       visibilities.each do |visibility, methods|
-        @visibility = visibility
-
         methods.each do |name, file|
           method = RDoc::AnyMethod.new name, singleton: type == 'class'
           method.record_location RDoc::TopLevel.new file
+          method.visibility = visibility
           add_method method
         end
       end
@@ -972,9 +969,6 @@ class RDoc::ClassModule < RDoc::Context
     code_object.mixin_from = code_object.parent
     code_object.singleton = true if singleton
     set_current_section(code_object.section.title, code_object.section.comment)
-    # add_method and add_attribute will reassign self's visibility back to the method/attribute
-    # so we need to sync self's visibility with the object's to properly retain that information
-    self.visibility = code_object.visibility
     code_object
   end
 end

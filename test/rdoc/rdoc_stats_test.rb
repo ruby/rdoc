@@ -83,10 +83,7 @@ class RDocStatsTest < RDoc::TestCase
   end
 
   def test_report_constant_alias
-    mod = @tl.add_module RDoc::NormalModule, 'M'
-
     c = @tl.add_class RDoc::NormalClass, 'C'
-    mod.add_constant c
 
     ca = RDoc::Constant.new 'CA', nil, nil
     ca.is_alias_for = c
