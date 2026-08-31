@@ -51,7 +51,7 @@ module RDoc::Parser::RubyColorizer
         nodes.concat(node.compact_child_nodes)
       end
 
-      @token_streams.replace(@token_streams.to_h { |node_id,| [node_id, staged_tokens.fetch(node_id)] })
+      @token_streams = staged_tokens
       @source = nil
     end
   end

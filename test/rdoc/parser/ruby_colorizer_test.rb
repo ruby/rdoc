@@ -99,8 +99,8 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     loader = context.token_stream_loader(node.node_id)
     missing_loader = context.token_stream_loader(node.node_id + 1_000_000)
 
-    2.times { assert_raise(KeyError) { loader.call } }
-    assert_raise(KeyError) { missing_loader.call }
+    assert_equal "first", loader.call.map(&:text).join
+    2.times { assert_raise(KeyError) { missing_loader.call } }
   end
 
   def test_partial_colorize
