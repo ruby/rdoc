@@ -2116,24 +2116,29 @@ header.top-navbar #search-results[aria-expanded="false"] {
   }
 
   header.top-navbar .navbar-search.is-open .search-body {
+    display: flex;
     flex: 1;
-    padding: var(--space-6);
-    overflow-y: auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
   }
 
   header.top-navbar .navbar-search.is-open .search-empty {
     display: block;
+    margin: var(--space-6);
     padding: var(--space-12) 0;
     color: var(--color-text-tertiary);
     text-align: center;
   }
 
   header.top-navbar .navbar-search.is-open #search-results {
-    position: static;
+    flex: 1;
+    min-height: 0;
+    position: relative;
     max-height: none;
     margin: 0;
-    padding: 0;
-    overflow: visible;
+    padding: var(--space-6);
+    overflow-y: auto;
     border: none;
     border-radius: 0;
     box-shadow: none;
@@ -2182,8 +2187,12 @@ header.top-navbar #search-results[aria-expanded="false"] {
   }
 
   header.top-navbar .navbar-search.is-open .search-form,
-  header.top-navbar .navbar-search.is-open .search-body {
+  header.top-navbar .navbar-search.is-open #search-results {
     padding: var(--space-3);
+  }
+
+  header.top-navbar .navbar-search.is-open .search-empty {
+    margin: var(--space-3);
   }
 
   header.top-navbar .navbar-search.is-open .search-form {
