@@ -12,8 +12,7 @@ jobs:
     name: Resolve Preview
     if: >-
       github.repository == 'ruby/rdoc' &&
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success'
+      github.event.workflow_run.event == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -34,6 +33,12 @@ jobs:
             const expectedBase = 'master';
             const artifactName = 'pr-preview-site';
             const maximumArchiveBytes = 500 * 1024 * 1024;
+
+            if (!['success', 'failure'].includes(run.conclusion)) {
+              core.setOutput('current', 'false');
+              core.notice(`Skipped a preview build with conclusion: ${run.conclusion}.`);
+              return;
+            }
 
             if (!/^[0-9a-f]{40}$/.test(run.head_sha)) {
               core.setFailed('The preview build supplied an invalid head SHA.');
@@ -121,6 +126,12 @@ jobs:
             const matchingArtifacts = artifacts.filter(artifact =>
               artifact.name === artifactName && !artifact.expired
             );
+
+            if (matchingArtifacts.length === 0 && run.conclusion === 'failure') {
+              core.setOutput('current', 'false');
+              core.notice('The failed preview build did not publish an artifact.');
+              return;
+            }
 
             if (matchingArtifacts.length !== 1) {
               core.setFailed(`Expected one ${artifactName} artifact, found ${matchingArtifacts.length}.`);
