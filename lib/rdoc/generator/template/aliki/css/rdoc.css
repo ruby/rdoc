@@ -2116,9 +2116,12 @@ header.top-navbar #search-results[aria-expanded="false"] {
   }
 
   header.top-navbar .navbar-search.is-open .search-body {
+    display: flex;
     flex: 1;
+    flex-direction: column;
+    min-height: 0;
     padding: var(--space-6);
-    overflow-y: auto;
+    overflow: hidden;
   }
 
   header.top-navbar .navbar-search.is-open .search-empty {
@@ -2129,11 +2132,13 @@ header.top-navbar #search-results[aria-expanded="false"] {
   }
 
   header.top-navbar .navbar-search.is-open #search-results {
-    position: static;
+    flex: 1;
+    min-height: 0;
+    position: relative;
     max-height: none;
     margin: 0;
     padding: 0;
-    overflow: visible;
+    overflow-y: auto;
     border: none;
     border-radius: 0;
     box-shadow: none;
