@@ -8,6 +8,8 @@ exclude:
 - AGENTS.md
 - CLAUDE.md
 - lib/rdoc/markdown.kpeg
+- lib/rdoc/rd/block_parser.rb
+- lib/rdoc/rd/inline_parser.rb
 
 footer_content:
   DOCUMENTATION:
