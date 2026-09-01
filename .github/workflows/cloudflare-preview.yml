@@ -22,6 +22,7 @@ jobs:
       current: ${{ steps.resolve.outputs.current }}
       number: ${{ steps.resolve.outputs.number }}
       head_sha: ${{ steps.resolve.outputs.head_sha }}
+      base_ref: ${{ steps.resolve.outputs.base_ref }}
     steps:
       # A forked workflow_run can omit pull request details, so the artifact
       # must match the exact open pull request and commit.
@@ -32,7 +33,6 @@ jobs:
           script: |
             const run = context.payload.workflow_run;
             const expectedRepository = 'ruby/rdoc';
-            const expectedBase = 'master';
             const artifactName = 'pr-preview-site';
             const maximumArchiveBytes = 500 * 1024 * 1024;
 
@@ -66,7 +66,6 @@ jobs:
                 repo: context.repo.repo,
                 state: 'open',
                 head: `${headOwner}:${headBranch}`,
-                base: expectedBase,
                 per_page: 100,
               });
               candidateNumbers = new Set(
@@ -94,7 +93,7 @@ jobs:
 
             const matches = candidates.filter(pull =>
               pull.base.repo.full_name === expectedRepository &&
-              pull.base.ref === expectedBase &&
+              pull.base.ref &&
               pull.head.repo?.full_name === headRepository &&
               pull.head.ref === headBranch
             );
@@ -109,6 +108,7 @@ jobs:
             core.setOutput('current', current.toString());
             core.setOutput('number', pull.number.toString());
             core.setOutput('head_sha', run.head_sha);
+            core.setOutput('base_ref', pull.base.ref);
 
             if (!current) {
               core.notice('The pull request changed or closed after this preview build.');
@@ -254,18 +254,22 @@ jobs:
             core.info(`Accepted ${fileCount} static files (${totalBytes} bytes).`);
 
       # The pull request can change after artifact selection. A second head
-      # comparison blocks deployment of a stale commit.
-      - name: Confirm pull request head
+      # and base comparison blocks deployment with stale pull request data.
+      - name: Confirm pull request head and base
         id: current
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           PR_NUMBER: ${{ needs.resolve.outputs.number }}
           EXPECTED_SHA: ${{ needs.resolve.outputs.head_sha }}
+          EXPECTED_BASE_REF: ${{ needs.resolve.outputs.base_ref }}
         with:
           script: |
             const number = process.env.PR_NUMBER;
             const expectedSha = process.env.EXPECTED_SHA;
-            if (!/^[1-9][0-9]*$/.test(number) || !/^[0-9a-f]{40}$/.test(expectedSha)) {
+            const expectedBaseRef = process.env.EXPECTED_BASE_REF;
+            if (!/^[1-9][0-9]*$/.test(number) ||
+                !/^[0-9a-f]{40}$/.test(expectedSha) ||
+                !expectedBaseRef) {
               core.setFailed('The resolved pull request metadata is invalid.');
               return;
             }
@@ -278,7 +282,7 @@ jobs:
             const current =
               pull.state === 'open' &&
               pull.base.repo.full_name === 'ruby/rdoc' &&
-              pull.base.ref === 'master' &&
+              pull.base.ref === expectedBaseRef &&
               pull.head.sha === expectedSha;
 
             core.setOutput('current', current.toString());
@@ -308,14 +312,15 @@ jobs:
             --branch="${{ needs.resolve.outputs.number }}-preview"
             --commit-hash="${{ needs.resolve.outputs.head_sha }}"
 
-      # The workflow reuses one marked comment to avoid notification spam and
-      # show the exact commit for the preview.
+      # The workflow rechecks the pull request after deployment, then reuses
+      # one marked comment to avoid stale links and notification spam.
       - name: Update preview comment
         if: steps.current.outputs.current == 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           PR_NUMBER: ${{ needs.resolve.outputs.number }}
           EXPECTED_SHA: ${{ needs.resolve.outputs.head_sha }}
+          EXPECTED_BASE_REF: ${{ needs.resolve.outputs.base_ref }}
           PREVIEW_ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
           PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         with:
@@ -323,11 +328,14 @@ jobs:
             const marker = '<!-- rdoc-pr-preview -->';
             const number = process.env.PR_NUMBER;
             const expectedSha = process.env.EXPECTED_SHA;
+            const expectedBaseRef = process.env.EXPECTED_BASE_REF;
             const previewUrl = (
               process.env.PREVIEW_ALIAS_URL || process.env.PREVIEW_DEPLOYMENT_URL || ''
             ).trim();
 
-            if (!/^[1-9][0-9]*$/.test(number) || !/^[0-9a-f]{40}$/.test(expectedSha)) {
+            if (!/^[1-9][0-9]*$/.test(number) ||
+                !/^[0-9a-f]{40}$/.test(expectedSha) ||
+                !expectedBaseRef) {
               core.setFailed('The preview comment metadata is invalid.');
               return;
             }
@@ -353,7 +361,7 @@ jobs:
             const current =
               pull.state === 'open' &&
               pull.base.repo.full_name === 'ruby/rdoc' &&
-              pull.base.ref === 'master' &&
+              pull.base.ref === expectedBaseRef &&
               pull.head.sha === expectedSha;
             if (!current) {
               core.notice('Skipped the preview comment because the pull request changed.');
