@@ -1,77 +1,398 @@
-name: Build and Deploy Cloudflare Preview
+name: Deploy PR Preview
 
 on:
-  repository_dispatch:
-    types: [pr-preview-deploy]
+  workflow_run:
+    workflows: ["Build PR Preview"]
+    types: [completed]
 
-permissions:
-  pull-requests: write # To allow commenting on the PR
+permissions: {}
 
 jobs:
-  build-deploy-and-comment:
-    name: Build, Deploy, and Comment
+  resolve:
+    name: Resolve Preview
+    if: >-
+      github.repository == 'ruby/rdoc' &&
+      github.event.workflow_run.event == 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      pull-requests: read
+    outputs:
+      current: ${{ steps.resolve.outputs.current }}
+      number: ${{ steps.resolve.outputs.number }}
+      head_sha: ${{ steps.resolve.outputs.head_sha }}
     steps:
-      - name: Checkout PR Code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # A forked workflow_run can omit pull request details, so the artifact
+      # must match the exact open pull request and commit.
+      - name: Resolve current pull request and artifact
+        id: resolve
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          repository: ${{ github.event.client_payload.pr_checkout_repository }}
-          ref: ${{ github.event.client_payload.pr_head_sha }}
+          script: |
+            const run = context.payload.workflow_run;
+            const expectedRepository = 'ruby/rdoc';
+            const expectedBase = 'master';
+            const artifactName = 'pr-preview-site';
+            const maximumArchiveBytes = 500 * 1024 * 1024;
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+            if (!['success', 'failure'].includes(run.conclusion)) {
+              core.setOutput('current', 'false');
+              core.notice(`Skipped a preview build with conclusion: ${run.conclusion}.`);
+              return;
+            }
+
+            if (!/^[0-9a-f]{40}$/.test(run.head_sha)) {
+              core.setFailed('The preview build supplied an invalid head SHA.');
+              return;
+            }
+
+            const headRepository = run.head_repository?.full_name;
+            const headOwner = run.head_repository?.owner?.login;
+            const headBranch = run.head_branch;
+            if (!headRepository || !headOwner || !headBranch) {
+              core.setFailed('The preview build did not identify its head repository and branch.');
+              return;
+            }
+
+            let candidateNumbers = new Set(
+              (run.pull_requests || []).map(pull => pull.number)
+            );
+
+            // workflow_run.pull_requests can be empty for fork pull requests.
+            if (candidateNumbers.size === 0) {
+              const branchPulls = await github.paginate(github.rest.pulls.list, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                head: `${headOwner}:${headBranch}`,
+                base: expectedBase,
+                per_page: 100,
+              });
+              candidateNumbers = new Set(
+                branchPulls
+                  .filter(pull => pull.head.sha === run.head_sha)
+                  .map(pull => pull.number)
+              );
+            }
+
+            if (candidateNumbers.size === 0) {
+              core.setOutput('current', 'false');
+              core.notice('No open pull request uses this preview build.');
+              return;
+            }
+
+            const candidates = [];
+            for (const number of candidateNumbers) {
+              const { data: pull } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: number,
+              });
+              candidates.push(pull);
+            }
+
+            const matches = candidates.filter(pull =>
+              pull.base.repo.full_name === expectedRepository &&
+              pull.base.ref === expectedBase &&
+              pull.head.repo?.full_name === headRepository &&
+              pull.head.ref === headBranch
+            );
+
+            if (matches.length !== 1) {
+              core.setFailed(`Expected one pull request for this preview build, found ${matches.length}.`);
+              return;
+            }
+
+            const pull = matches[0];
+            const current = pull.state === 'open' && pull.head.sha === run.head_sha;
+            core.setOutput('current', current.toString());
+            core.setOutput('number', pull.number.toString());
+            core.setOutput('head_sha', run.head_sha);
+
+            if (!current) {
+              core.notice('The pull request changed or closed after this preview build.');
+              return;
+            }
+
+            const artifacts = await github.paginate(
+              github.rest.actions.listWorkflowRunArtifacts,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: run.id,
+                name: artifactName,
+                per_page: 100,
+              }
+            );
+            const matchingArtifacts = artifacts.filter(artifact =>
+              artifact.name === artifactName && !artifact.expired
+            );
+
+            if (matchingArtifacts.length === 0 && run.conclusion === 'failure') {
+              core.setOutput('current', 'false');
+              core.notice('The failed preview build did not publish an artifact.');
+              return;
+            }
+
+            if (matchingArtifacts.length !== 1) {
+              core.setFailed(`Expected one ${artifactName} artifact, found ${matchingArtifacts.length}.`);
+              return;
+            }
+
+            const artifact = matchingArtifacts[0];
+            if (artifact.size_in_bytes <= 0 || artifact.size_in_bytes > maximumArchiveBytes) {
+              core.setFailed(`The preview artifact archive has an invalid size: ${artifact.size_in_bytes} bytes.`);
+            }
+
+  deploy:
+    name: Deploy Preview
+    needs: resolve
+    if: needs.resolve.outputs.current == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: pr-preview-deploy-${{ needs.resolve.outputs.number }}
+      cancel-in-progress: true
+    permissions:
+      actions: read
+      pull-requests: write
+    steps:
+      # The workflow treats the artifact as untrusted and uses no source
+      # checkout, so pull request code cannot run on the trusted runner.
+      - name: Download preview site
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          ruby-version: '3.4'
-          bundler-cache: true
+          name: pr-preview-site
+          path: ${{ runner.temp }}/pr-preview-site
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Build site
-        run: bundle exec rake rdoc
+      # Pages control files can change deployment behavior. This gate blocks
+      # them and oversized artifacts before the deployment step receives
+      # Cloudflare secrets.
+      - name: Validate preview site
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          SITE_ROOT: ${{ runner.temp }}/pr-preview-site
+        with:
+          script: |
+            const fs = require('node:fs/promises');
+            const path = require('node:path');
 
+            const root = path.resolve(process.env.SITE_ROOT);
+            const maximumFiles = 20_000;
+            const maximumFileBytes = 25 * 1024 * 1024;
+            const maximumTotalBytes = 500 * 1024 * 1024;
+            const blockedRootEntries = new Set([
+              '.assetsignore',
+              '_headers',
+              '_redirects',
+              '_routes.json',
+              '_worker.bundle',
+              '_worker.js',
+              'functions',
+              'wrangler.json',
+              'wrangler.jsonc',
+              'wrangler.toml',
+            ]);
+
+            const rootMetadata = await fs.lstat(root);
+            if (!rootMetadata.isDirectory() || rootMetadata.isSymbolicLink()) {
+              throw new Error('The preview artifact root is not a regular directory.');
+            }
+
+            let fileCount = 0;
+            let totalBytes = 0;
+
+            async function inspect(directory, relativeDirectory = '') {
+              const entries = await fs.readdir(directory, { withFileTypes: true });
+              for (const entry of entries) {
+                const fullPath = path.join(directory, entry.name);
+                const relativePath = path.posix.join(relativeDirectory, entry.name);
+                const metadata = await fs.lstat(fullPath);
+
+                if (metadata.isSymbolicLink()) {
+                  throw new Error(`The preview artifact contains a symbolic link: ${relativePath}`);
+                }
+
+                if (!relativeDirectory && blockedRootEntries.has(entry.name)) {
+                  throw new Error(`The preview artifact contains a blocked Pages entry: ${relativePath}`);
+                }
+
+                if (metadata.isDirectory()) {
+                  await inspect(fullPath, relativePath);
+                  continue;
+                }
+
+                if (!metadata.isFile()) {
+                  throw new Error(`The preview artifact contains a special file: ${relativePath}`);
+                }
+
+                fileCount += 1;
+                totalBytes += metadata.size;
+                if (fileCount > maximumFiles) {
+                  throw new Error(`The preview artifact exceeds ${maximumFiles} files.`);
+                }
+                if (metadata.size > maximumFileBytes) {
+                  throw new Error(`The preview artifact contains a file larger than ${maximumFileBytes} bytes: ${relativePath}`);
+                }
+                if (totalBytes > maximumTotalBytes) {
+                  throw new Error(`The preview artifact exceeds ${maximumTotalBytes} bytes.`);
+                }
+              }
+            }
+
+            await inspect(root);
+            if (fileCount === 0) throw new Error('The preview artifact is empty.');
+
+            const indexMetadata = await fs.lstat(path.join(root, 'index.html'));
+            if (!indexMetadata.isFile() || indexMetadata.isSymbolicLink()) {
+              throw new Error('The preview artifact does not contain a regular index.html file.');
+            }
+
+            core.info(`Accepted ${fileCount} static files (${totalBytes} bytes).`);
+
+      # The pull request can change after artifact selection. A second head
+      # comparison blocks deployment of a stale commit.
+      - name: Confirm pull request head
+        id: current
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          PR_NUMBER: ${{ needs.resolve.outputs.number }}
+          EXPECTED_SHA: ${{ needs.resolve.outputs.head_sha }}
+        with:
+          script: |
+            const number = process.env.PR_NUMBER;
+            const expectedSha = process.env.EXPECTED_SHA;
+            if (!/^[1-9][0-9]*$/.test(number) || !/^[0-9a-f]{40}$/.test(expectedSha)) {
+              core.setFailed('The resolved pull request metadata is invalid.');
+              return;
+            }
+
+            const { data: pull } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: Number(number),
+            });
+            const current =
+              pull.state === 'open' &&
+              pull.base.repo.full_name === 'ruby/rdoc' &&
+              pull.base.ref === 'master' &&
+              pull.head.sha === expectedSha;
+
+            core.setOutput('current', current.toString());
+            if (!current) core.notice('Skipped a stale preview deployment.');
+
+      # Pull request packages and configuration files cannot affect Wrangler
+      # because it runs from a separate trusted directory.
+      - name: Prepare trusted Wrangler directory
+        if: steps.current.outputs.current == 'true'
+        run: mkdir -p "$RUNNER_TEMP/trusted-preview-deploy"
+
+      # Only this step receives Cloudflare secrets, after all safety checks.
+      # Each pull request uses its own preview branch.
       - name: Deploy to Cloudflare Pages
+        if: steps.current.outputs.current == 'true'
         id: deploy
-        uses: cloudflare/wrangler-action@v4
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./_site --project-name=rdoc --branch="${{ github.event.client_payload.pr_number }}-preview"
+          packageManager: npm
+          wranglerVersion: '4.81.0'
+          workingDirectory: ${{ runner.temp }}/trusted-preview-deploy
+          command: >-
+            pages deploy "${{ runner.temp }}/pr-preview-site"
+            --project-name=rdoc
+            --branch="${{ needs.resolve.outputs.number }}-preview"
+            --commit-hash="${{ needs.resolve.outputs.head_sha }}"
 
-      - name: Comment on PR with preview URL
-        uses: actions/github-script@v9
+      # The workflow reuses one marked comment to avoid notification spam and
+      # show the exact commit for the preview.
+      - name: Update preview comment
+        if: steps.current.outputs.current == 'true'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          PR_NUMBER: ${{ needs.resolve.outputs.number }}
+          EXPECTED_SHA: ${{ needs.resolve.outputs.head_sha }}
+          PREVIEW_ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         with:
-          github-token: ${{ secrets.MATZBOT_GITHUB_TOKEN }}
           script: |
-            const prNumber = ${{ github.event.client_payload.pr_number }};
-            const url = "${{ steps.deploy.outputs.deployment-url }}";
-            const commentMarker = "🚀 Preview deployment available at:";
-            const commitSha = '${{ github.event.client_payload.pr_head_sha }}';
+            const marker = '<!-- rdoc-pr-preview -->';
+            const number = process.env.PR_NUMBER;
+            const expectedSha = process.env.EXPECTED_SHA;
+            const previewUrl = (
+              process.env.PREVIEW_ALIAS_URL || process.env.PREVIEW_DEPLOYMENT_URL || ''
+            ).trim();
 
-            const comments = await github.rest.issues.listComments({
-              issue_number: prNumber,
+            if (!/^[1-9][0-9]*$/.test(number) || !/^[0-9a-f]{40}$/.test(expectedSha)) {
+              core.setFailed('The preview comment metadata is invalid.');
+              return;
+            }
+
+            let parsedUrl;
+            try {
+              parsedUrl = new URL(previewUrl);
+            } catch {
+              core.setFailed('Cloudflare did not return a valid preview URL.');
+              return;
+            }
+            if (parsedUrl.protocol !== 'https:' || !parsedUrl.hostname.endsWith('.pages.dev')) {
+              core.setFailed('Cloudflare returned an unexpected preview URL.');
+              return;
+            }
+
+            const pullNumber = Number(number);
+            const { data: pull } = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              per_page: 100
+              pull_number: pullNumber,
             });
+            const current =
+              pull.state === 'open' &&
+              pull.base.repo.full_name === 'ruby/rdoc' &&
+              pull.base.ref === 'master' &&
+              pull.head.sha === expectedSha;
+            if (!current) {
+              core.notice('Skipped the preview comment because the pull request changed.');
+              return;
+            }
 
-            const existingComment = comments.data.find(comment =>
-              comment.body.includes(commentMarker)
+            const shortSha = expectedSha.slice(0, 7);
+            const body = [
+              marker,
+              '### Documentation preview',
+              '',
+              `[View the preview](${parsedUrl.href})`,
+              '',
+              `Commit: \`${shortSha}\``,
+            ].join('\n');
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pullNumber,
+              per_page: 100,
+            });
+            const existing = comments.find(comment =>
+              comment.user?.login === 'github-actions[bot]' &&
+              comment.body?.startsWith(marker)
             );
 
-            const commentBody = `${commentMarker} [${url}](${url}) (commit: ${commitSha})`;
-
-            if (existingComment) {
+            if (existing) {
               await github.rest.issues.updateComment({
-                comment_id: existingComment.id,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: commentBody
+                comment_id: existing.id,
+                body,
               });
-              console.log("Updated existing preview comment");
             } else {
               await github.rest.issues.createComment({
-                issue_number: prNumber,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: commentBody
+                issue_number: pullNumber,
+                body,
               });
-              console.log("Created new preview comment");
             }

@@ -1,53 +1,45 @@
-name: PR Preview Check
+name: Build PR Preview
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-preview-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
-  # Deploy main repo PRs directly
-  deploy-for-main:
-    name: Trigger Preview Build and Deploy (Main Repo)
+  build:
+    name: Build Preview
+    if: github.repository == 'ruby/rdoc'
     runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.fork == false
-    permissions:
-      contents: write
+    timeout-minutes: 20
     steps:
-      - name: Trigger preview deployment
-        uses: actions/github-script@v9
+      # This job executes untrusted pull request code. It must not receive secrets
+      # or a token with write access.
+      - name: Checkout PR code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            await github.rest.repos.createDispatchEvent({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              event_type: 'pr-preview-deploy',
-              client_payload: {
-                pr_number: '${{ github.event.pull_request.number }}',
-                pr_head_sha: '${{ github.event.pull_request.head.sha }}',
-                pr_checkout_repository: '${{ github.repository }}',
-                is_fork: 'false'
-              }
-            });
-            console.log('Triggered main repo preview deployment');
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
 
-  # Approval gate for fork PRs
-  approve-for-fork:
-    name: Approve Fork PR
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.fork == true
-    environment: fork-preview-protection
-    steps:
-      - name: Save PR information
-        run: |
-          echo "Fork PR #${{ github.event.pull_request.number }} approved for preview deployment"
-          mkdir -p ./pr
-          echo "${{ github.event.pull_request.number }}" > ./pr/pr_number
-          echo "${{ github.event.pull_request.head.sha }}" > ./pr/pr_head_sha
-          echo "${{ github.event.pull_request.head.repo.full_name }}" > ./pr/pr_checkout_repository
-      
-      - name: Upload PR information
-        uses: actions/upload-artifact@v7
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
-          name: pr
-          path: pr/
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Build site
+        run: bundle exec rake rdoc
+
+      - name: Upload preview site
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pr-preview-site
+          path: _site/
+          if-no-files-found: error
           retention-days: 1
