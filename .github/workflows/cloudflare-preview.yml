@@ -291,7 +291,7 @@ jobs:
         run: mkdir -p "$RUNNER_TEMP/trusted-preview-deploy"
 
       # Only this step receives Cloudflare secrets, after all safety checks.
-      # Each pull request commit uses its own preview branch.
+      # Each pull request uses its own preview branch.
       - name: Deploy to Cloudflare Pages
         if: steps.current.outputs.current == 'true'
         id: deploy
