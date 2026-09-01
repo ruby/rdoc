@@ -16,7 +16,7 @@ require_relative '../rbs_helper'
 # * constants
 # * aliases
 # * private, public, protected
-# * private_class_function, public_class_function
+# * private_class_method, public_class_method
 # * private_constant, public_constant
 # * module_function
 # * attr, attr_reader, attr_writer, attr_accessor
@@ -389,15 +389,23 @@ class RDoc::Parser::Ruby < RDoc::Parser
   end
 
   def call_node_name_arguments(call_node) # :nodoc:
-    return [] unless call_node.arguments
-    call_node.arguments.arguments.map do |arg|
-      case arg
-      when Prism::SymbolNode
-        arg.value
-      when Prism::StringNode
-        arg.unescaped
-      end
-    end || []
+    return unless arguments_node = call_node.arguments
+    names = arguments_node.arguments.filter_map { |arg| argument_name(arg) }
+    names unless names.empty?
+  end
+
+  def call_node_name_argument(call_node) # :nodoc:
+    return unless call_node.arguments
+    argument_name(call_node.arguments.arguments.first)
+  end
+
+  def argument_name(argument_node) # :nodoc:
+    case argument_node
+    when Prism::SymbolNode
+      argument_node.value
+    when Prism::StringNode
+      argument_node.unescaped
+    end
   end
 
   # Handles meta method comments
@@ -439,7 +447,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         mark_container_documentable(@container)
       end
     elsif line_no || node
-      method_name ||= call_node_name_arguments(node).first if is_call_node
+      method_name ||= call_node_name_argument(node) if is_call_node
       if node
         tokens = syntax_highlighted_tokens(node)
         line_no = node.location.start_line
@@ -1232,6 +1240,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
       names.all? ? names : nil
     end
 
+    def call_node_name_arguments(call_node)
+      @scanner.call_node_name_arguments(call_node)
+    end
+
     def symbol_arguments(call_node)
       arguments_node = call_node.arguments
       return unless arguments_node && arguments_node.arguments.all? { |arg| arg.is_a?(Prism::SymbolNode)}
@@ -1241,10 +1253,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     def visibility_method_arguments(call_node, singleton:)
       arguments_node = call_node.arguments
       return unless arguments_node
-      symbols = symbol_arguments(call_node)
-      if symbols
+      if (names = call_node_name_arguments(call_node))
         # module_function :foo, :bar
-        return symbols.map(&:to_s)
+        return names
       else
         return unless arguments_node.arguments.size == 1
         arg = arguments_node.arguments.first
@@ -1334,20 +1345,20 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     def _visit_call_public_constant(call_node)
       return if @scanner.in_proc_block || @scanner.singleton
-      names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :public) if names
+      return unless names = call_node_name_arguments(call_node)
+      @scanner.container.set_constant_visibility_for(names, :public)
     end
 
     def _visit_call_private_constant(call_node)
       return if @scanner.in_proc_block || @scanner.singleton
-      names = symbol_arguments(call_node)
-      @scanner.container.set_constant_visibility_for(names.map(&:to_s), :private) if names
+      return unless names = call_node_name_arguments(call_node)
+      @scanner.container.set_constant_visibility_for(names, :private)
     end
 
     def _visit_call_attr_reader_writer_accessor(call_node, rw)
       return if @scanner.in_proc_block
-      names = symbol_arguments(call_node)
-      @scanner.add_attributes(names.map(&:to_s), rw, call_node.location.start_line) if names
+      return unless names = call_node_name_arguments(call_node)
+      @scanner.add_attributes(names, rw, call_node.location.start_line)
     end
 
     class MethodSignatureVisitor < Prism::Visitor # :nodoc:
