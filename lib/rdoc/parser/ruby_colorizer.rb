@@ -30,6 +30,8 @@ module RDoc::Parser::RubyColorizer
       @token_streams.fetch(node_id)
     end
 
+    private
+
     #: () -> Boolean
     def materialized?
       !@source
@@ -37,8 +39,6 @@ module RDoc::Parser::RubyColorizer
 
     #: () -> void
     def materialize
-      return if materialized?
-
       program_node, unordered_tokens = Prism.parse_lex(@source).value
       prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
       staged_tokens = {}
