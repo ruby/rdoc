@@ -541,6 +541,16 @@ class RDocContextTest < XrefTestCase
     assert_equal 'RW', @c1.find_attribute_named('attr_accessor').rw
   end
 
+  def test_find_attribute_from_hash
+    singleton = RDoc::Attr.new 'singleton', 'R', nil, singleton: true
+    @context.add_attribute singleton
+
+    assert_same @c1.find_attribute_named('attr_reader'), @c1.find_attribute_from_hash('attr_reader', false)
+    assert_same @c1.find_attribute_named('attr_writer'), @c1.find_attribute_from_hash('attr_writer=', false)
+    assert_same singleton, @context.find_attribute_from_hash('singleton', true)
+    assert_nil @c1.find_attribute_from_hash('attr_reader', true)
+  end
+
   def test_find_class_method_named
     assert_nil @c1.find_class_method_named('none')
 
@@ -582,6 +592,16 @@ class RDocContextTest < XrefTestCase
     assert_equal @c2_b, loaded_c2.find_method('b', false)
     assert_equal @c2_a, loaded_c2.find_method('a', nil)
     assert_equal @c2_b, loaded_c2.find_method('b', nil)
+  end
+
+  def test_find_method_from_hash
+    instance = RDoc::AnyMethod.new 'instance', singleton: nil
+    @context.add_method instance
+
+    assert_same instance, @context.find_method_from_hash('instance', false)
+    assert_same instance, @context.find_method_from_hash('instance', nil)
+    assert_same @c1__m, @c1.find_method_from_hash('m', true)
+    assert_nil @c1.find_method_from_hash('attr', false)
   end
 
   def test_find_method_named

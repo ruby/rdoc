@@ -2722,6 +2722,13 @@ end
     end
   end
 
+  def test_alias_lookup_linear_performance
+    assert_linear_performance([1, 10, 100]) do |factor|
+      methods = Array.new(factor * 100) { |i| "  def m#{i}; end\n  alias a#{i} m#{i}" }.join("\n")
+      util_parser "class C#{factor}\n#{methods}\nend\n"
+    end
+  end
+
   def test_code_object_token_stream
     util_parser <<~RUBY
       class Foo

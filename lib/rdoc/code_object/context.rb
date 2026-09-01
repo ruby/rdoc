@@ -186,8 +186,8 @@ class RDoc::Context < RDoc::CodeObject
   def add_alias(an_alias)
     return an_alias unless @document_self
 
-    method_attr = find_method(an_alias.old_name, an_alias.singleton) ||
-                  find_attribute(an_alias.old_name, an_alias.singleton)
+    method_attr = find_method_from_hash(an_alias.old_name, an_alias.singleton) ||
+                  find_attribute_from_hash(an_alias.old_name, an_alias.singleton)
 
     if method_attr
       method_attr.add_alias an_alias, self
@@ -749,6 +749,14 @@ class RDoc::Context < RDoc::CodeObject
     @attributes.find { |a| a.name == name && a.singleton == singleton }
   end
 
+  def find_attribute_from_hash(name, singleton) # :nodoc:
+    name = name.delete_suffix('=')
+    key = "#{singleton ? '::' : '#'}#{name}"
+    attribute = @methods_hash[key]
+    attribute = @methods_hash["#{key}="] unless RDoc::Attr === attribute
+    attribute if RDoc::Attr === attribute && attribute.singleton == singleton
+  end
+
   ##
   # Finds an attribute with +name+ in this context
 
@@ -841,6 +849,12 @@ class RDoc::Context < RDoc::CodeObject
         m.name == name && !m.singleton && !singleton
       end
     }
+  end
+
+  def find_method_from_hash(name, singleton) # :nodoc:
+    method = @methods_hash["#{singleton ? '::' : '#'}#{name}"]
+    # ponytail: keep the fallback until incremental rebuilds make this hash canonical.
+    RDoc::Attr === method ? find_method(name, singleton) : method
   end
 
   ##
