@@ -700,6 +700,31 @@ class RDocParserRubyTest < RDoc::TestCase
     assert_equal expected, arglists
   end
 
+def test_class_new_and_initialize_are_registered_once
+  util_parser <<~RUBY
+    class A
+      # new doc
+      def self.new(x); super; end
+      # initialize doc
+      def initialize(x); end
+    end
+
+    class B
+      # initialize doc
+      def initialize(x); end
+      # new doc
+      def self.new(x); super; end
+    end
+  RUBY
+
+  a, b = @top_level.classes
+  assert_equal ['A::new'], a.method_list.map(&:full_name)
+  assert_equal 'new doc', a.method_list.first.comment.text
+  assert_equal ['::new'], a.methods_hash.keys
+  assert_equal ['B::new'], b.method_list.map(&:full_name)
+  assert_equal 'initialize doc', b.method_list.first.comment.text
+end
+
   def test_class_mistaken_for_module
     util_parser <<~RUBY
       class A::Foo; end

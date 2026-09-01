@@ -451,7 +451,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
         @container,
         comment: comment,
         directives: directives,
-        dont_rename_initialize: false,
         line_no: line_no,
         visibility: visibility,
         singleton: @singleton || singleton_method,
@@ -722,7 +721,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     )
   end
 
-  private def internal_add_method(method_name, container, comment:, dont_rename_initialize: false, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature_lines: nil) # :nodoc:
+  private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature_lines: nil) # :nodoc:
     meth = RDoc::AnyMethod.new(method_name, singleton: singleton)
     meth.comment = comment
     handle_code_object_directives(meth, directives) if directives
@@ -746,16 +745,10 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.calls_super = calls_super
     meth.block_params ||= block_params if block_params
     meth.type_signature_lines = type_signature_lines
-    container.add_method(meth)
-    record_location(meth)
-    meth.start_collecting_tokens(:ruby)
-    tokens.each do |token|
-      meth.token_stream << token
-    end
 
-    # Rename after add_method to register duplicated 'new' and 'initialize'
-    # defined in c and ruby.
-    if !dont_rename_initialize && method_name == 'initialize' && !singleton
+    # An instance method `initialize` is documented as `::new` unless the
+    # :notnew: directive is given
+    if method_name == 'initialize' && !singleton
       if meth.dont_rename_initialize
         meth.visibility = :protected
       else
@@ -763,6 +756,13 @@ class RDoc::Parser::Ruby < RDoc::Parser
         meth.singleton = true
         meth.visibility = :public
       end
+    end
+
+    record_location(meth)
+    container.add_method(meth)
+    meth.start_collecting_tokens(:ruby)
+    tokens.each do |token|
+      meth.token_stream << token
     end
   end
 
