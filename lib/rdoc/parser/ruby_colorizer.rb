@@ -11,7 +11,7 @@ module RDoc::Parser::RubyColorizer
   ColoredToken = Struct.new(:kind, :text)
 
   # Defers colorization for all nodes in one source file until first access.
-  class DeferredContext
+  class DeferredContext # :nodoc:
     #: (String) -> void
     def initialize(source)
       @source = source
