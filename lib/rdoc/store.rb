@@ -1,263 +1,297 @@
 # frozen_string_literal: true
 require 'fileutils'
 
-##
-# A set of rdoc data for a single project (gem, path, etc.).
-#
-# The store manages reading and writing ri data for a project and maintains a
-# cache of methods, classes and ancestors in the store.
-#
-# The store maintains a #cache of its contents for faster lookup.  After
-# adding items to the store it must be flushed using #save_cache.  The cache
-# contains the following structures:
-#
-#    @cache = {
-#      :ancestors        => {}, # class name => ancestor names
-#      :attributes       => {}, # class name => attributes
-#      :class_methods    => {}, # class name => class methods
-#      :instance_methods => {}, # class name => instance methods
-#      :modules          => [], # classes and modules in this store
-#      :pages            => [], # page names
-#    }
-#--
-# TODO need to prune classes
-
-class RDoc::Store
-
+module RDoc
   ##
-  # Errors raised from loading or saving the store
-
-  class Error < RDoc::Error
-  end
-
-  ##
-  # Raised when a stored file for a class, module, page or method is missing.
-
-  class MissingFileError < Error
-
-    ##
-    # The store the file should exist in
-
-    attr_reader :store
-
-    ##
-    # The file the #name should be saved as
-
-    attr_reader :file
-
-    ##
-    # The name of the object the #file would be loaded from
-
-    attr_reader :name
-
-    ##
-    # Creates a new MissingFileError for the missing +file+ for the given
-    # +name+ that should have been in the +store+.
-
-    def initialize(store, file, name)
-      @store = store
-      @file  = file
-      @name  = name
-    end
-
-    def message # :nodoc:
-      "store at #{@store.path} missing file #{@file} for #{@name}"
-    end
-
-  end
-
-  ##
-  # Stores the name of the C variable a class belongs to.  This helps wire up
-  # classes defined from C across files.
-
-  attr_reader :c_enclosure_classes # :nodoc:
-
-  attr_reader :c_enclosure_names # :nodoc:
-
-  ##
-  # Maps C variables to class or module names for each parsed C file.
-
-  attr_reader :c_class_variables
-
-  ##
-  # Maps C variables to singleton class names for each parsed C file.
-
-  attr_reader :c_singleton_class_variables
-
-  ##
-  # If true this Store will not write any files
-
-  attr_accessor :dry_run
-
-  ##
-  # Path this store reads or writes
-
-  attr_accessor :path
-
-  attr_reader :options
-
-  ##
-  # Type of ri datastore this was loaded from.  See RDoc::RI::Driver,
-  # RDoc::RI::Paths.
-
-  attr_accessor :type
-
-  ##
-  # The contents of the Store
-
-  attr_reader :cache
-
-  ##
-  # The encoding of the contents in the Store
-
-  attr_accessor :encoding
-
-  ##
-  # Creates a new Store of +type+ that will load or save to +path+
-
-  def initialize(options, path: nil, type: nil)
-    @options  = options
-    @dry_run  = options.dry_run
-    @encoding = options.encoding
-    @path     = path || options.op_dir
-    @type     = type
-
-    @cache = {
-      :ancestors                   => {},
-      :attributes                  => {},
-      :class_methods               => {},
-      :c_class_variables           => {},
-      :c_singleton_class_variables => {},
-      :encoding                    => @encoding,
-      :instance_methods            => {},
-      :main                        => options.main_page,
-      :modules                     => [],
-      :pages                       => [],
-      :title                       => options.title,
-    }
-
-    @classes_hash = {}
-    @modules_hash = {}
-    @files_hash   = {}
-    @text_files_hash = {}
-
-    @c_enclosure_classes = {}
-    @c_enclosure_names   = {}
-
-    @c_class_variables           = {}
-    @c_singleton_class_variables = {}
-
-    @unique_classes = nil
-    @unique_modules = nil
-  end
-
-  ##
-  # Adds +module+ as an enclosure (namespace) for the given +variable+ for C
-  # files.
-
-  def add_c_enclosure(variable, namespace)
-    @c_enclosure_classes[variable] = namespace
-  end
-
-  ##
-  # Adds C variables from an RDoc::Parser::C
-
-  def add_c_variables(c_parser)
-    filename = c_parser.top_level.relative_name
-
-    @c_class_variables[filename] = make_variable_map c_parser.classes
-
-    @c_singleton_class_variables[filename] = c_parser.singleton_classes
-  end
-
-  ##
-  # Adds the file with +name+ as an RDoc::TopLevel to the store.  Returns the
-  # created RDoc::TopLevel.
-
-  def add_file(absolute_name, relative_name: absolute_name, parser: nil)
-    unless top_level = @files_hash[relative_name]
-      top_level = RDoc::TopLevel.new absolute_name, relative_name
-      top_level.parser = parser if parser
-      top_level.store = self
-      @files_hash[relative_name] = top_level
-      @text_files_hash[relative_name] = top_level if top_level.text?
-    end
-
-    top_level
-  end
-
-  ##
-  # Removes a file and its classes/modules from the store.  Used by the
-  # live-reloading server when a source file is deleted.
+  # A set of rdoc data for a single project (gem, path, etc.).
   #
-  # Note: this does not handle reopened classes correctly.  If a class is
-  # defined across multiple files (e.g. +Foo+ in both +a.rb+ and +b.rb+),
-  # deleting one file removes the entire class from the store — including
-  # the parts contributed by the other file.  Saving the remaining file
-  # triggers a re-parse that restores it.
+  # The store manages reading and writing ri data for a project and maintains a
+  # cache of methods, classes and ancestors in the store.
+  #
+  # The store maintains a #cache of its contents for faster lookup.  After
+  # adding items to the store it must be flushed using #save_cache.  The cache
+  # contains the following structures:
+  #
+  #    @cache = {
+  #      :ancestors        => {}, # class name => ancestor names
+  #      :attributes       => {}, # class name => attributes
+  #      :class_methods    => {}, # class name => class methods
+  #      :instance_methods => {}, # class name => instance methods
+  #      :modules          => [], # classes and modules in this store
+  #      :pages            => [], # page names
+  #    }
+  #--
+  # TODO need to prune classes
 
-  def remove_file(relative_name)
-    top_level = @files_hash.delete(relative_name)
-    @text_files_hash.delete(relative_name)
-    @c_class_variables.delete(relative_name)
-    @c_singleton_class_variables.delete(relative_name)
-    return unless top_level
+  class Store
 
-    remove_classes_and_modules(top_level.classes_or_modules)
-  end
+    ##
+    # Errors raised from loading or saving the store
 
-  ##
-  # Removes a file's contributions (methods, constants, comments, etc.)
-  # from its classes and modules.  If no other files contribute to a
-  # class or module, it is removed from the store entirely.  This
-  # prevents duplication when the file is re-parsed while preserving
-  # shared namespaces like +RDoc+ that span many files.
+    class Error < ::RDoc::Error
+    end
 
-  def clear_file_contributions(relative_name, keep_position: false)
-    top_level = @files_hash[relative_name]
-    return unless top_level
+    ##
+    # Raised when a stored file for a class, module, page or method is missing.
 
-    top_level.classes_or_modules.each do |cm|
-      # Remove methods and attributes contributed by this file
-      cm.method_list.reject! { |m| m.file == top_level }
-      cm.attributes.reject! { |a| a.file == top_level }
+    class MissingFileError < Error
 
-      # Rebuild methods_hash from remaining methods and attributes
-      cm.methods_hash.clear
-      cm.method_list.each { |m| cm.methods_hash[m.pretty_name] = m }
-      cm.attributes.each { |a| cm.methods_hash[a.pretty_name] = a }
+      ##
+      # The store the file should exist in
 
-      # Remove constants contributed by this file
-      cm.constants.reject! { |c| c.file == top_level }
-      cm.constants_hash.clear
-      cm.constants.each { |c| cm.constants_hash[c.name] = c }
+      attr_reader :store
 
-      # Remove includes, extends, and aliases from this file
-      cm.includes.reject! { |i| i.file == top_level }
-      cm.extends.reject! { |e| e.file == top_level }
-      cm.aliases.reject! { |a| a.file == top_level }
-      cm.external_aliases.reject! { |a| a.file == top_level }
+      ##
+      # The file the #name should be saved as
 
-      # Clear or remove comment entries from this file
-      if cm.is_a?(RDoc::ClassModule)
-        if keep_position
-          cm.comment_location[top_level] = [] if cm.comment_location.key?(top_level)
-        else
-          cm.comment_location.delete(top_level)
-        end
-        cm.rebuild_comment_from_location
+      attr_reader :file
+
+      ##
+      # The name of the object the #file would be loaded from
+
+      attr_reader :name
+
+      ##
+      # Creates a new MissingFileError for the missing +file+ for the given
+      # +name+ that should have been in the +store+.
+
+      def initialize(store, file, name)
+        @store = store
+        @file  = file
+        @name  = name
       end
 
-      unless keep_position
-        # Remove this file from the class/module's file list
-        cm.in_files.delete(top_level)
+      def message # :nodoc:
+        "store at #{@store.path} missing file #{@file} for #{@name}"
+      end
 
-        # If no files contribute to this class/module anymore, remove it
-        # from the store entirely.  This handles file deletion correctly
-        # for classes that are only defined in the deleted file, while
-        # preserving classes that span multiple files.
+    end
+
+    ##
+    # Stores the name of the C variable a class belongs to.  This helps wire up
+    # classes defined from C across files.
+
+    attr_reader :c_enclosure_classes # :nodoc:
+
+    attr_reader :c_enclosure_names # :nodoc:
+
+    ##
+    # Maps C variables to class or module names for each parsed C file.
+
+    attr_reader :c_class_variables
+
+    ##
+    # Maps C variables to singleton class names for each parsed C file.
+
+    attr_reader :c_singleton_class_variables
+
+    ##
+    # If true this Store will not write any files
+
+    attr_accessor :dry_run
+
+    ##
+    # Path this store reads or writes
+
+    attr_accessor :path
+
+    attr_reader :options
+
+    ##
+    # Type of ri datastore this was loaded from.  See RDoc::RI::Driver,
+    # RDoc::RI::Paths.
+
+    attr_accessor :type
+
+    ##
+    # The contents of the Store
+
+    attr_reader :cache
+
+    ##
+    # The encoding of the contents in the Store
+
+    attr_accessor :encoding
+
+    ##
+    # Creates a new Store of +type+ that will load or save to +path+
+
+    def initialize(options, path: nil, type: nil)
+      @options  = options
+      @dry_run  = options.dry_run
+      @encoding = options.encoding
+      @path     = path || options.op_dir
+      @type     = type
+
+      @cache = {
+        :ancestors                   => {},
+        :attributes                  => {},
+        :class_methods               => {},
+        :c_class_variables           => {},
+        :c_singleton_class_variables => {},
+        :encoding                    => @encoding,
+        :instance_methods            => {},
+        :main                        => options.main_page,
+        :modules                     => [],
+        :pages                       => [],
+        :title                       => options.title,
+      }
+
+      @classes_hash = {}
+      @modules_hash = {}
+      @files_hash   = {}
+      @text_files_hash = {}
+
+      @c_enclosure_classes = {}
+      @c_enclosure_names   = {}
+
+      @c_class_variables           = {}
+      @c_singleton_class_variables = {}
+
+      @unique_classes = nil
+      @unique_modules = nil
+    end
+
+    ##
+    # Adds +module+ as an enclosure (namespace) for the given +variable+ for C
+    # files.
+
+    def add_c_enclosure(variable, namespace)
+      @c_enclosure_classes[variable] = namespace
+    end
+
+    ##
+    # Adds C variables from an RDoc::Parser::C
+
+    def add_c_variables(c_parser)
+      filename = c_parser.top_level.relative_name
+
+      @c_class_variables[filename] = make_variable_map c_parser.classes
+
+      @c_singleton_class_variables[filename] = c_parser.singleton_classes
+    end
+
+    ##
+    # Adds the file with +name+ as an RDoc::TopLevel to the store.  Returns the
+    # created RDoc::TopLevel.
+
+    def add_file(absolute_name, relative_name: absolute_name, parser: nil)
+      unless top_level = @files_hash[relative_name]
+        top_level = TopLevel.new absolute_name, relative_name
+        top_level.parser = parser if parser
+        top_level.store = self
+        @files_hash[relative_name] = top_level
+        @text_files_hash[relative_name] = top_level if top_level.text?
+      end
+
+      top_level
+    end
+
+    ##
+    # Removes a file and its classes/modules from the store.  Used by the
+    # live-reloading server when a source file is deleted.
+    #
+    # Note: this does not handle reopened classes correctly.  If a class is
+    # defined across multiple files (e.g. +Foo+ in both +a.rb+ and +b.rb+),
+    # deleting one file removes the entire class from the store — including
+    # the parts contributed by the other file.  Saving the remaining file
+    # triggers a re-parse that restores it.
+
+    def remove_file(relative_name)
+      top_level = @files_hash.delete(relative_name)
+      @text_files_hash.delete(relative_name)
+      @c_class_variables.delete(relative_name)
+      @c_singleton_class_variables.delete(relative_name)
+      return unless top_level
+
+      remove_classes_and_modules(top_level.classes_or_modules)
+    end
+
+    ##
+    # Removes a file's contributions (methods, constants, comments, etc.)
+    # from its classes and modules.  If no other files contribute to a
+    # class or module, it is removed from the store entirely.  This
+    # prevents duplication when the file is re-parsed while preserving
+    # shared namespaces like +RDoc+ that span many files.
+
+    def clear_file_contributions(relative_name, keep_position: false)
+      top_level = @files_hash[relative_name]
+      return unless top_level
+
+      top_level.classes_or_modules.each do |cm|
+        # Remove methods and attributes contributed by this file
+        cm.method_list.reject! { |m| m.file == top_level }
+        cm.attributes.reject! { |a| a.file == top_level }
+
+        # Rebuild methods_hash from remaining methods and attributes
+        cm.methods_hash.clear
+        cm.method_list.each { |m| cm.methods_hash[m.pretty_name] = m }
+        cm.attributes.each { |a| cm.methods_hash[a.pretty_name] = a }
+
+        # Remove constants contributed by this file
+        cm.constants.reject! { |c| c.file == top_level }
+        cm.constants_hash.clear
+        cm.constants.each { |c| cm.constants_hash[c.name] = c }
+
+        # Remove includes, extends, and aliases from this file
+        cm.includes.reject! { |i| i.file == top_level }
+        cm.extends.reject! { |e| e.file == top_level }
+        cm.aliases.reject! { |a| a.file == top_level }
+        cm.external_aliases.reject! { |a| a.file == top_level }
+
+        # Clear or remove comment entries from this file
+        if cm.is_a?(ClassModule)
+          if keep_position
+            cm.comment_location[top_level] = [] if cm.comment_location.key?(top_level)
+          else
+            cm.comment_location.delete(top_level)
+          end
+          cm.rebuild_comment_from_location
+        end
+
+        unless keep_position
+          # Remove this file from the class/module's file list
+          cm.in_files.delete(top_level)
+
+          # If no files contribute to this class/module anymore, remove it
+          # from the store entirely.  This handles file deletion correctly
+          # for classes that are only defined in the deleted file, while
+          # preserving classes that span multiple files.
+          if cm.in_files.empty?
+            if cm.is_a?(NormalModule)
+              @modules_hash.delete(cm.full_name)
+            else
+              @classes_hash.delete(cm.full_name)
+            end
+            cm.parent&.classes_hash&.delete(cm.name)
+            cm.parent&.modules_hash&.delete(cm.name)
+          end
+        end
+      end
+
+      # Clear the TopLevel's class/module list to prevent duplicates
+      top_level.classes_or_modules.clear
+    end
+
+    ##
+    # Removes stale empty placeholders left by +clear_file_contributions+ with
+    # <tt>keep_position: true</tt>.  After re-parsing, a file may no longer
+    # define a class it previously contributed to, leaving an empty entry in
+    # +comment_location+ and a stale +in_files+ reference.  Call this after
+    # all re-parsing is complete.
+
+    def cleanup_stale_contributions
+      all_classes_and_modules.each do |cm|
+        cm.comment_location.delete_if { |_, comments| comments.empty? }
+        cm.rebuild_comment_from_location
+
+        cm.in_files.select! { |tl| cm.comment_location.key?(tl) ||
+          cm.method_list.any? { |m| m.file == tl } ||
+          cm.attributes.any? { |a| a.file == tl } ||
+          cm.constants.any? { |c| c.file == tl } }
+
         if cm.in_files.empty?
-          if cm.is_a?(RDoc::NormalModule)
+          if cm.is_a?(NormalModule)
             @modules_hash.delete(cm.full_name)
           else
             @classes_hash.delete(cm.full_name)
@@ -268,931 +302,899 @@ class RDoc::Store
       end
     end
 
-    # Clear the TopLevel's class/module list to prevent duplicates
-    top_level.classes_or_modules.clear
-  end
+    ##
+    # Make sure any references to C variable names are resolved to the corresponding class.
+    #
 
-  ##
-  # Removes stale empty placeholders left by +clear_file_contributions+ with
-  # <tt>keep_position: true</tt>.  After re-parsing, a file may no longer
-  # define a class it previously contributed to, leaving an empty entry in
-  # +comment_location+ and a stale +in_files+ reference.  Call this after
-  # all re-parsing is complete.
-
-  def cleanup_stale_contributions
-    all_classes_and_modules.each do |cm|
-      cm.comment_location.delete_if { |_, comments| comments.empty? }
-      cm.rebuild_comment_from_location
-
-      cm.in_files.select! { |tl| cm.comment_location.key?(tl) ||
-        cm.method_list.any? { |m| m.file == tl } ||
-        cm.attributes.any? { |a| a.file == tl } ||
-        cm.constants.any? { |c| c.file == tl } }
-
-      if cm.in_files.empty?
-        if cm.is_a?(RDoc::NormalModule)
-          @modules_hash.delete(cm.full_name)
-        else
-          @classes_hash.delete(cm.full_name)
-        end
-        cm.parent&.classes_hash&.delete(cm.name)
-        cm.parent&.modules_hash&.delete(cm.name)
-      end
-    end
-  end
-
-  ##
-  # Make sure any references to C variable names are resolved to the corresponding class.
-  #
-
-  def resolve_c_superclasses
-    @classes_hash.each_value do |klass|
-      if klass.superclass.is_a?(String) && (candidate = find_c_enclosure(klass.superclass))
-        klass.superclass = candidate
-      end
-    end
-  end
-
-  ##
-  # Caches +relative_name+ in the text files hash, if it is a text file.
-
-  def cache_text_file(relative_name)
-    if top_level = @files_hash[relative_name]
-      @text_files_hash[relative_name] = top_level if top_level.text?
-    end
-  end
-
-  ##
-  # Returns all classes discovered by RDoc
-
-  def all_classes
-    @classes_hash.values
-  end
-
-  ##
-  # Returns all classes and modules discovered by RDoc
-
-  def all_classes_and_modules
-    @classes_hash.values + @modules_hash.values
-  end
-
-  ##
-  # Returns a hash mapping class/module names to their paths, for use
-  # by type signature linking. Maps both qualified names (Foo::Bar) and
-  # unambiguous unqualified names (Bar). Ambiguous unqualified names
-  # (where multiple classes share the same name) are excluded to avoid
-  # wrong links. Cached after first call.
-
-  ##
-  # Invalidates the cached type name lookup.  Server mode calls this after
-  # re-parsing changes the set of classes and modules.
-
-  def invalidate_type_name_lookup # :nodoc:
-    @type_name_lookup = nil
-  end
-
-  def type_name_lookup
-    @type_name_lookup ||= begin
-      lookup = {}
-      unqualified_names = {}
-      ambiguous_names = {}
-      all_classes_and_modules.each do |cm|
-        lookup[cm.full_name] = cm.path
-        unqualified_name = cm.name
-
-        if ambiguous_names[unqualified_name]
-          # already known ambiguous, skip
-        elsif unqualified_names.key?(unqualified_name)
-          unqualified_names.delete(unqualified_name)
-          ambiguous_names[unqualified_name] = true
-        else
-          unqualified_names[unqualified_name] = cm.path
+    def resolve_c_superclasses
+      @classes_hash.each_value do |klass|
+        if klass.superclass.is_a?(String) && (candidate = find_c_enclosure(klass.superclass))
+          klass.superclass = candidate
         end
       end
-      lookup.merge!(unqualified_names)
-    end
-  end
-
-  ##
-  # Stores RBS type signatures loaded from sidecar .rbs files, keyed by
-  # "ClassName#method" or "ClassName.method".  Replaces any previously
-  # stored set, so passing +{}+ clears it.  Inline +#:+ annotations on
-  # method objects are NOT touched — those are owned by the source file.
-
-  def merge_rbs_signatures(signatures)
-    @rbs_signatures = signatures
-  end
-
-  ##
-  # Returns the RBS type signature lines for +method_attr+ from loaded
-  # sidecar +.rbs+ files, or +nil+ if none.  Falls through to the
-  # canonical method for aliases, and handles +initialize+ -> +.new+
-  # singleton mapping.
-
-  def rbs_signature_for(method_attr)
-    return nil unless @rbs_signatures
-    cm = method_attr.parent
-    return nil unless cm.respond_to?(:full_name)
-
-    key = method_attr.singleton ? "#{cm.full_name}.#{method_attr.name}" : "#{cm.full_name}##{method_attr.name}"
-    sig = @rbs_signatures[key]
-
-    # RBS keys constructors as #initialize, but RDoc renames them to .new
-    if !sig && method_attr.name == 'new' && method_attr.singleton
-      sig = @rbs_signatures["#{cm.full_name}#initialize"]
     end
 
-    # For aliases, fall through to the canonical method (its inline #:
-    # takes precedence over any sidecar signature on the alias's name).
-    if !sig && method_attr.is_alias_for
-      canonical = method_attr.is_alias_for
-      sig = canonical.type_signature_lines || rbs_signature_for(canonical)
-    end
+    ##
+    # Caches +relative_name+ in the text files hash, if it is a text file.
 
-    sig
-  end
-
-  def clear_rbs_signatures # :nodoc:
-    @rbs_signatures = nil
-  end
-
-  ##
-  # All TopLevels known to RDoc
-
-  def all_files
-    @files_hash.values
-  end
-
-  ##
-  # Returns all modules discovered by RDoc
-
-  def all_modules
-    modules_hash.values
-  end
-
-  ##
-  # Ancestors cache accessor.  Maps a klass name to an Array of its ancestors
-  # in this store.  If Foo in this store inherits from Object, Kernel won't be
-  # listed (it will be included from ruby's ri store).
-
-  def ancestors
-    @cache[:ancestors]
-  end
-
-  ##
-  # Attributes cache accessor.  Maps a class to an Array of its attributes.
-
-  def attributes
-    @cache[:attributes]
-  end
-
-  ##
-  # Path to the cache file
-
-  def cache_path
-    File.join @path, 'cache.ri'
-  end
-
-  ##
-  # Path to the ri data for +klass_name+
-
-  def class_file(klass_name)
-    name = klass_name.split('::').last
-    File.join class_path(klass_name), "cdesc-#{name}.ri"
-  end
-
-  ##
-  # Class methods cache accessor.  Maps a class to an Array of its class
-  # methods (not full name).
-
-  def class_methods
-    @cache[:class_methods]
-  end
-
-  ##
-  # Path where data for +klass_name+ will be stored (methods or class data)
-
-  def class_path(klass_name)
-    File.join @path, *klass_name.split('::')
-  end
-
-  ##
-  # Hash of all classes known to RDoc
-
-  def classes_hash
-    @classes_hash
-  end
-
-  ##
-  # Removes empty items and ensures item in each collection are unique and
-  # sorted
-
-  def clean_cache_collection(collection) # :nodoc:
-    collection.each do |name, item|
-      if item.empty?
-        collection.delete name
-      else
-        # HACK mongrel-1.1.5 documents its files twice
-        item.uniq!
-        item.sort!
+    def cache_text_file(relative_name)
+      if top_level = @files_hash[relative_name]
+        @text_files_hash[relative_name] = top_level if top_level.text?
       end
     end
-  end
 
-  ##
-  # Prepares the RDoc code object tree for use by a generator.
-  #
-  # It finds unique classes/modules defined, and replaces classes/modules that
-  # are aliases for another one by a copy with RDoc::ClassModule#is_alias_for
-  # set.
-  #
-  # It updates the RDoc::ClassModule#constant_aliases attribute of "real"
-  # classes or modules.
-  #
-  # It also completely removes the classes and modules that should be removed
-  # from the documentation and the methods that have a visibility below
-  # +min_visibility+, which is the <tt>--visibility</tt> option.
-  #
-  # See also RDoc::Context#remove_from_documentation?
+    ##
+    # Returns all classes discovered by RDoc
 
-  def complete(min_visibility)
-    fix_basic_object_inheritance
-
-    # cache included modules before they are removed from the documentation
-    all_classes_and_modules.each { |cm| cm.ancestors }
-
-    unless min_visibility == :nodoc
-      remove_nodoc @classes_hash
-      remove_nodoc @modules_hash
+    def all_classes
+      @classes_hash.values
     end
 
-    @unique_classes = find_unique @classes_hash
-    @unique_modules = find_unique @modules_hash
+    ##
+    # Returns all classes and modules discovered by RDoc
 
-    unique_classes_and_modules.each do |cm|
-      cm.complete min_visibility
+    def all_classes_and_modules
+      @classes_hash.values + @modules_hash.values
     end
 
-    @files_hash.each_key do |file_name|
-      tl = @files_hash[file_name]
+    ##
+    # Returns a hash mapping class/module names to their paths, for use
+    # by type signature linking. Maps both qualified names (Foo::Bar) and
+    # unambiguous unqualified names (Bar). Ambiguous unqualified names
+    # (where multiple classes share the same name) are excluded to avoid
+    # wrong links. Cached after first call.
 
-      unless tl.text?
-        tl.modules_hash.clear
-        tl.classes_hash.clear
+    ##
+    # Invalidates the cached type name lookup.  Server mode calls this after
+    # re-parsing changes the set of classes and modules.
 
-        tl.classes_or_modules.each do |cm|
-          name = cm.full_name
-          if cm.type == 'class'
-            tl.classes_hash[name] = cm if @classes_hash[name]
+    def invalidate_type_name_lookup # :nodoc:
+      @type_name_lookup = nil
+    end
+
+    def type_name_lookup
+      @type_name_lookup ||= begin
+        lookup = {}
+        unqualified_names = {}
+        ambiguous_names = {}
+        all_classes_and_modules.each do |cm|
+          lookup[cm.full_name] = cm.path
+          unqualified_name = cm.name
+
+          if ambiguous_names[unqualified_name]
+            # already known ambiguous, skip
+          elsif unqualified_names.key?(unqualified_name)
+            unqualified_names.delete(unqualified_name)
+            ambiguous_names[unqualified_name] = true
           else
-            tl.modules_hash[name] = cm if @modules_hash[name]
+            unqualified_names[unqualified_name] = cm.path
+          end
+        end
+        lookup.merge!(unqualified_names)
+      end
+    end
+
+    ##
+    # Stores RBS type signatures loaded from sidecar .rbs files, keyed by
+    # "ClassName#method" or "ClassName.method".  Replaces any previously
+    # stored set, so passing +{}+ clears it.  Inline +#:+ annotations on
+    # method objects are NOT touched — those are owned by the source file.
+
+    def merge_rbs_signatures(signatures)
+      @rbs_signatures = signatures
+    end
+
+    ##
+    # Returns the RBS type signature lines for +method_attr+ from loaded
+    # sidecar +.rbs+ files, or +nil+ if none.  Falls through to the
+    # canonical method for aliases, and handles +initialize+ -> +.new+
+    # singleton mapping.
+
+    def rbs_signature_for(method_attr)
+      return nil unless @rbs_signatures
+      cm = method_attr.parent
+      return nil unless cm.respond_to?(:full_name)
+
+      key = method_attr.singleton ? "#{cm.full_name}.#{method_attr.name}" : "#{cm.full_name}##{method_attr.name}"
+      sig = @rbs_signatures[key]
+
+      # RBS keys constructors as #initialize, but RDoc renames them to .new
+      if !sig && method_attr.name == 'new' && method_attr.singleton
+        sig = @rbs_signatures["#{cm.full_name}#initialize"]
+      end
+
+      # For aliases, fall through to the canonical method (its inline #:
+      # takes precedence over any sidecar signature on the alias's name).
+      if !sig && method_attr.is_alias_for
+        canonical = method_attr.is_alias_for
+        sig = canonical.type_signature_lines || rbs_signature_for(canonical)
+      end
+
+      sig
+    end
+
+    def clear_rbs_signatures # :nodoc:
+      @rbs_signatures = nil
+    end
+
+    ##
+    # All TopLevels known to RDoc
+
+    def all_files
+      @files_hash.values
+    end
+
+    ##
+    # Returns all modules discovered by RDoc
+
+    def all_modules
+      modules_hash.values
+    end
+
+    ##
+    # Ancestors cache accessor.  Maps a klass name to an Array of its ancestors
+    # in this store.  If Foo in this store inherits from Object, Kernel won't be
+    # listed (it will be included from ruby's ri store).
+
+    def ancestors
+      @cache[:ancestors]
+    end
+
+    ##
+    # Attributes cache accessor.  Maps a class to an Array of its attributes.
+
+    def attributes
+      @cache[:attributes]
+    end
+
+    ##
+    # Path to the cache file
+
+    def cache_path
+      File.join @path, 'cache.ri'
+    end
+
+    ##
+    # Path to the ri data for +klass_name+
+
+    def class_file(klass_name)
+      name = klass_name.split('::').last
+      File.join class_path(klass_name), "cdesc-#{name}.ri"
+    end
+
+    ##
+    # Class methods cache accessor.  Maps a class to an Array of its class
+    # methods (not full name).
+
+    def class_methods
+      @cache[:class_methods]
+    end
+
+    ##
+    # Path where data for +klass_name+ will be stored (methods or class data)
+
+    def class_path(klass_name)
+      File.join @path, *klass_name.split('::')
+    end
+
+    ##
+    # Hash of all classes known to RDoc
+
+    def classes_hash
+      @classes_hash
+    end
+
+    ##
+    # Removes empty items and ensures item in each collection are unique and
+    # sorted
+
+    def clean_cache_collection(collection) # :nodoc:
+      collection.each do |name, item|
+        if item.empty?
+          collection.delete name
+        else
+          # HACK mongrel-1.1.5 documents its files twice
+          item.uniq!
+          item.sort!
+        end
+      end
+    end
+
+    ##
+    # Prepares the RDoc code object tree for use by a generator.
+    #
+    # It finds unique classes/modules defined, and replaces classes/modules that
+    # are aliases for another one by a copy with RDoc::ClassModule#is_alias_for
+    # set.
+    #
+    # It updates the RDoc::ClassModule#constant_aliases attribute of "real"
+    # classes or modules.
+    #
+    # It also completely removes the classes and modules that should be removed
+    # from the documentation and the methods that have a visibility below
+    # +min_visibility+, which is the <tt>--visibility</tt> option.
+    #
+    # See also RDoc::Context#remove_from_documentation?
+
+    def complete(min_visibility)
+      fix_basic_object_inheritance
+
+      # cache included modules before they are removed from the documentation
+      all_classes_and_modules.each { |cm| cm.ancestors }
+
+      unless min_visibility == :nodoc
+        remove_nodoc @classes_hash
+        remove_nodoc @modules_hash
+      end
+
+      @unique_classes = find_unique @classes_hash
+      @unique_modules = find_unique @modules_hash
+
+      unique_classes_and_modules.each do |cm|
+        cm.complete min_visibility
+      end
+
+      @files_hash.each_key do |file_name|
+        tl = @files_hash[file_name]
+
+        unless tl.text?
+          tl.modules_hash.clear
+          tl.classes_hash.clear
+
+          tl.classes_or_modules.each do |cm|
+            name = cm.full_name
+            if cm.type == 'class'
+              tl.classes_hash[name] = cm if @classes_hash[name]
+            else
+              tl.modules_hash[name] = cm if @modules_hash[name]
+            end
           end
         end
       end
     end
-  end
 
-  ##
-  # Hash of all files known to RDoc
+    ##
+    # Hash of all files known to RDoc
 
-  def files_hash
-    @files_hash
-  end
+    def files_hash
+      @files_hash
+    end
 
-  ##
-  # Finds the enclosure (namespace) for the given C +variable+.
+    ##
+    # Finds the enclosure (namespace) for the given C +variable+.
 
-  def find_c_enclosure(variable)
-    @c_enclosure_classes.fetch variable do
-      break unless name = @c_enclosure_names[variable]
+    def find_c_enclosure(variable)
+      @c_enclosure_classes.fetch variable do
+        break unless name = @c_enclosure_names[variable]
 
-      mod = find_class_or_module name
+        mod = find_class_or_module name
 
-      unless mod
-        loaded_mod = load_class_data name
+        unless mod
+          loaded_mod = load_class_data name
 
-        file = loaded_mod.in_files.first
+          file = loaded_mod.in_files.first
 
-        return unless file # legacy data source
+          return unless file # legacy data source
 
-        file.store = self
+          file.store = self
 
-        mod = file.add_module RDoc::NormalModule, name
+          mod = file.add_module NormalModule, name
+        end
+
+        @c_enclosure_classes[variable] = mod
+      end
+    end
+
+    ##
+    # Finds the class with +name+ in all discovered classes
+
+    def find_class_named(name)
+      @classes_hash[name]
+    end
+
+    ##
+    # Finds the class with +name+ starting in namespace +from+
+
+    def find_class_named_from(name, from)
+      from = find_class_named from unless Context === from
+
+      until TopLevel === from do
+        return nil unless from
+
+        klass = from.find_class_named name
+        return klass if klass
+
+        from = from.parent
       end
 
-      @c_enclosure_classes[variable] = mod
-    end
-  end
-
-  ##
-  # Finds the class with +name+ in all discovered classes
-
-  def find_class_named(name)
-    @classes_hash[name]
-  end
-
-  ##
-  # Finds the class with +name+ starting in namespace +from+
-
-  def find_class_named_from(name, from)
-    from = find_class_named from unless RDoc::Context === from
-
-    until RDoc::TopLevel === from do
-      return nil unless from
-
-      klass = from.find_class_named name
-      return klass if klass
-
-      from = from.parent
+      find_class_named name
     end
 
-    find_class_named name
-  end
+    ##
+    # Finds the class or module with +name+
 
-  ##
-  # Finds the class or module with +name+
-
-  def find_class_or_module(name)
-    name = $' if name =~ /^::/
-    @classes_hash[name] || @modules_hash[name]
-  end
-
-  ##
-  # Finds the file with +name+ in all discovered files
-
-  def find_file_named(name)
-    @files_hash[name]
-  end
-
-  ##
-  # Finds the module with +name+ in all discovered modules
-
-  def find_module_named(name)
-    @modules_hash[name]
-  end
-
-  ##
-  # Returns the RDoc::TopLevel that is a text file and has the given
-  # +file_name+
-
-  def find_text_page(file_name)
-    @text_files_hash.each_value.find do |file|
-      file.full_name == file_name
-    end
-  end
-
-  ##
-  # Finds unique classes/modules defined in +all_hash+,
-  # and returns them as an array. Performs the alias
-  # updates in +all_hash+: see ::complete.
-  #--
-  # TODO  aliases should be registered by Context#add_module_alias
-
-  def find_unique(all_hash)
-    unique = []
-
-    all_hash.each_pair do |full_name, cm|
-      unique << cm if full_name == cm.full_name
+    def find_class_or_module(name)
+      name = $' if name =~ /^::/
+      @classes_hash[name] || @modules_hash[name]
     end
 
-    unique
-  end
+    ##
+    # Finds the file with +name+ in all discovered files
 
-  ##
-  # Fixes the erroneous <tt>BasicObject < Object</tt> in 1.9.
-  #
-  # Because we assumed all classes without a stated superclass
-  # inherit from Object, we have the above wrong inheritance.
-  #
-  # We fix BasicObject right away if we are running in a Ruby
-  # version >= 1.9.
-
-  def fix_basic_object_inheritance
-    basic = classes_hash['BasicObject']
-    return unless basic
-    basic.superclass = nil
-  end
-
-  ##
-  # Friendly rendition of #path
-
-  def friendly_path
-    case type
-    when :gem
-      parent = File.expand_path '..', @path
-      "gem #{File.basename parent}"
-    when :home   then RDoc.home
-    when :site   then 'ruby site'
-    when :system then 'ruby core'
-    else @path
+    def find_file_named(name)
+      @files_hash[name]
     end
-  end
 
-  def inspect # :nodoc:
-    "#<%s:0x%x %s %p>" % [self.class, object_id, @path, module_names.sort]
-  end
+    ##
+    # Finds the module with +name+ in all discovered modules
 
-  ##
-  # Instance methods cache accessor.  Maps a class to an Array of its
-  # instance methods (not full name).
+    def find_module_named(name)
+      @modules_hash[name]
+    end
 
-  def instance_methods
-    @cache[:instance_methods]
-  end
+    ##
+    # Returns the RDoc::TopLevel that is a text file and has the given
+    # +file_name+
 
-  ##
-  # Loads all items from this store into memory.  This recreates a
-  # documentation tree for use by a generator
+    def find_text_page(file_name)
+      @text_files_hash.each_value.find do |file|
+        file.full_name == file_name
+      end
+    end
 
-  def load_all
-    load_cache
+    ##
+    # Finds unique classes/modules defined in +all_hash+,
+    # and returns them as an array. Performs the alias
+    # updates in +all_hash+: see ::complete.
+    #--
+    # TODO  aliases should be registered by Context#add_module_alias
 
-    module_names.each do |module_name|
-      mod = find_class_or_module(module_name) || load_class(module_name)
+    def find_unique(all_hash)
+      unique = []
 
-      # load method documentation since the loaded class/module does not have
-      # it
-      loaded_methods = mod.method_list.map do |method|
-        load_method module_name, method.full_name
+      all_hash.each_pair do |full_name, cm|
+        unique << cm if full_name == cm.full_name
       end
 
-      mod.method_list.replace loaded_methods
-
-      loaded_attributes = mod.attributes.map do |attribute|
-        load_method module_name, attribute.full_name
-      end
-
-      mod.attributes.replace loaded_attributes
+      unique
     end
 
-    all_classes_and_modules.each do |mod|
-      descendent_re = /^#{mod.full_name}::[^:]+$/
+    ##
+    # Fixes the erroneous <tt>BasicObject < Object</tt> in 1.9.
+    #
+    # Because we assumed all classes without a stated superclass
+    # inherit from Object, we have the above wrong inheritance.
+    #
+    # We fix BasicObject right away if we are running in a Ruby
+    # version >= 1.9.
 
-      module_names.each do |name|
-        next unless name =~ descendent_re
+    def fix_basic_object_inheritance
+      basic = classes_hash['BasicObject']
+      return unless basic
+      basic.superclass = nil
+    end
 
-        descendent = find_class_or_module name
+    ##
+    # Friendly rendition of #path
 
-        case descendent
-        when RDoc::NormalClass
-          mod.classes_hash[name] = descendent
-        when RDoc::NormalModule
-          mod.modules_hash[name] = descendent
+    def friendly_path
+      case type
+      when :gem
+        parent = File.expand_path '..', @path
+        "gem #{File.basename parent}"
+      when :home   then ::RDoc.home
+      when :site   then 'ruby site'
+      when :system then 'ruby core'
+      else @path
+      end
+    end
+
+    def inspect # :nodoc:
+      "#<%s:0x%x %s %p>" % [self.class, object_id, @path, module_names.sort]
+    end
+
+    ##
+    # Instance methods cache accessor.  Maps a class to an Array of its
+    # instance methods (not full name).
+
+    def instance_methods
+      @cache[:instance_methods]
+    end
+
+    ##
+    # Loads all items from this store into memory.  This recreates a
+    # documentation tree for use by a generator
+
+    def load_all
+      load_cache
+
+      module_names.each do |module_name|
+        mod = find_class_or_module(module_name) || load_class(module_name)
+
+        # load method documentation since the loaded class/module does not have
+        # it
+        loaded_methods = mod.method_list.map do |method|
+          load_method module_name, method.full_name
+        end
+
+        mod.method_list.replace loaded_methods
+
+        loaded_attributes = mod.attributes.map do |attribute|
+          load_method module_name, attribute.full_name
+        end
+
+        mod.attributes.replace loaded_attributes
+      end
+
+      all_classes_and_modules.each do |mod|
+        descendent_re = /^#{mod.full_name}::[^:]+$/
+
+        module_names.each do |name|
+          next unless name =~ descendent_re
+
+          descendent = find_class_or_module name
+
+          case descendent
+          when NormalClass
+            mod.classes_hash[name] = descendent
+          when NormalModule
+            mod.modules_hash[name] = descendent
+          end
+        end
+      end
+
+      @cache[:pages].each do |page_name|
+        page = load_page page_name
+        @files_hash[page_name] = page
+        @text_files_hash[page_name] = page if page.text?
+      end
+    end
+
+    ##
+    # Loads cache file for this store
+
+    def load_cache
+      #orig_enc = @encoding
+
+      @cache = marshal_load(cache_path)
+
+      load_enc = @cache[:encoding]
+
+      # TODO this feature will be time-consuming to add:
+      # a) Encodings may be incompatible but transcodeable
+      # b) Need to warn in the appropriate spots, wherever they may be
+      # c) Need to handle cross-cache differences in encodings
+      # d) Need to warn when generating into a cache with different encodings
+      #
+      #if orig_enc and load_enc != orig_enc then
+      #  warn "Cached encoding #{load_enc} is incompatible with #{orig_enc}\n" \
+      #       "from #{path}/cache.ri" unless
+      #    Encoding.compatible? orig_enc, load_enc
+      #end
+
+      @encoding = load_enc unless @encoding
+
+      @cache[:pages]                       ||= []
+      @cache[:main]                        ||= nil
+      @cache[:c_class_variables]           ||= {}
+      @cache[:c_singleton_class_variables] ||= {}
+
+      @cache[:c_class_variables].each do |_, map|
+        map.each do |variable, name|
+          @c_enclosure_names[variable] = name
+        end
+      end
+
+      @cache
+    rescue Errno::ENOENT
+    end
+
+    ##
+    # Loads ri data for +klass_name+ and hooks it up to this store.
+
+    def load_class(klass_name)
+      obj = load_class_data klass_name
+
+      obj.store = self
+
+      case obj
+      when NormalClass
+        @classes_hash[klass_name] = obj
+      when SingleClass
+        @classes_hash[klass_name] = obj
+      when NormalModule
+        @modules_hash[klass_name] = obj
+      end
+    end
+
+    ##
+    # Loads ri data for +klass_name+
+
+    def load_class_data(klass_name)
+      file = class_file klass_name
+
+      marshal_load(file)
+    rescue Errno::ENOENT => e
+      error = MissingFileError.new(self, file, klass_name)
+      error.set_backtrace e.backtrace
+      raise error
+    end
+
+    ##
+    # Loads ri data for +method_name+ in +klass_name+
+
+    def load_method(klass_name, method_name)
+      file = method_file klass_name, method_name
+
+      obj = marshal_load(file)
+      obj.store = self
+      obj.parent ||= find_class_or_module(klass_name) || load_class(klass_name)
+      obj
+    rescue Errno::ENOENT => e
+      error = MissingFileError.new(self, file, klass_name + method_name)
+      error.set_backtrace e.backtrace
+      raise error
+    end
+
+    ##
+    # Loads ri data for +page_name+
+
+    def load_page(page_name)
+      file = page_file page_name
+
+      obj = marshal_load(file)
+      obj.store = self
+      obj
+    rescue Errno::ENOENT => e
+      error = MissingFileError.new(self, file, page_name)
+      error.set_backtrace e.backtrace
+      raise error
+    end
+
+    ##
+    # Gets the main page for this RDoc store.  This page is used as the root of
+    # the RDoc server.
+
+    def main
+      @cache[:main]
+    end
+
+    ##
+    # Sets the main page for this RDoc store.
+
+    def main=(page)
+      @cache[:main] = page
+    end
+
+    ##
+    # Converts the variable => ClassModule map +variables+ from a C parser into
+    # a variable => class name map.
+
+    def make_variable_map(variables)
+      map = {}
+
+      variables.each { |variable, class_module|
+        map[variable] = class_module.full_name
+      }
+
+      map
+    end
+
+    ##
+    # Path to the ri data for +method_name+ in +klass_name+
+
+    def method_file(klass_name, method_name)
+      method_name = method_name.split('::').last
+      method_name =~ /#(.*)/
+      method_type = $1 ? 'i' : 'c'
+      method_name = $1 if $1
+      method_name = method_name.gsub(/\W/) { "%%%02x" % $&[0].ord }
+
+      File.join class_path(klass_name), "#{method_name}-#{method_type}.ri"
+    end
+
+    ##
+    # Modules cache accessor.  An Array of all the module (and class) names in
+    # the store.
+
+    def module_names
+      @cache[:modules]
+    end
+
+    ##
+    # Hash of all modules known to RDoc
+
+    def modules_hash
+      @modules_hash
+    end
+
+    ##
+    # Returns the RDoc::TopLevel that is a file and has the given +name+
+
+    def page(name)
+      @files_hash.each_value.find do |file|
+        file.page_name == name or file.base_name == name
+      end
+    end
+
+    ##
+    # Path to the ri data for +page_name+
+
+    def page_file(page_name)
+      file_name = File.basename(page_name).gsub('.', '_')
+
+      File.join @path, File.dirname(page_name), "page-#{file_name}.ri"
+    end
+
+    ##
+    # Removes from +all_hash+ the contexts that are nodoc or have no content.
+    #
+    # See RDoc::Context#remove_from_documentation?
+
+    def remove_nodoc(all_hash)
+      all_hash.keys.each do |name|
+        context = all_hash[name]
+        all_hash.delete(name) if context.remove_from_documentation?
+      end
+    end
+
+    ##
+    # Saves all entries in the store
+
+    def save
+      load_cache
+
+      all_classes_and_modules.each do |klass|
+        save_class klass
+
+        klass.each_method do |method|
+          save_method klass, method
+        end
+
+        klass.attributes.each do |attribute|
+          save_method klass, attribute
+        end
+      end
+
+      all_files.each do |file|
+        save_page file
+      end
+
+      save_cache
+    end
+
+    ##
+    # Writes the cache file for this store
+
+    def save_cache
+      clean_cache_collection @cache[:ancestors]
+      clean_cache_collection @cache[:attributes]
+      clean_cache_collection @cache[:class_methods]
+      clean_cache_collection @cache[:instance_methods]
+
+      @cache[:modules].uniq!
+      @cache[:modules].sort!
+
+      @cache[:pages].uniq!
+      @cache[:pages].sort!
+
+      @cache[:encoding] = @encoding # this gets set twice due to assert_cache
+
+      @cache[:c_class_variables].merge!           @c_class_variables
+      @cache[:c_singleton_class_variables].merge! @c_singleton_class_variables
+
+      return if @dry_run
+
+      File.open cache_path, 'wb' do |io|
+        Marshal.dump @cache, io
+      end
+    end
+
+    ##
+    # Writes the ri data for +klass+ (or module)
+
+    def save_class(klass)
+      full_name = klass.full_name
+
+      FileUtils.mkdir_p class_path(full_name) unless @dry_run
+
+      @cache[:modules] << full_name
+
+      path = class_file full_name
+
+      begin
+        disk_klass = load_class full_name
+
+        klass = disk_klass.merge klass
+      rescue MissingFileError
+      end
+
+      # BasicObject has no ancestors
+      ancestors = klass.direct_ancestors.compact.map do |ancestor|
+        # HACK for classes we don't know about (class X < RuntimeError)
+        String === ancestor ? ancestor : ancestor.full_name
+      end
+
+      @cache[:ancestors][full_name] ||= []
+      @cache[:ancestors][full_name].concat ancestors
+
+      attribute_definitions = klass.attributes.map do |attribute|
+        "#{attribute.definition} #{attribute.name}"
+      end
+
+      unless attribute_definitions.empty?
+        @cache[:attributes][full_name] ||= []
+        @cache[:attributes][full_name].concat attribute_definitions
+      end
+
+      to_delete = []
+
+      unless klass.method_list.empty?
+        @cache[:class_methods][full_name]    ||= []
+        @cache[:instance_methods][full_name] ||= []
+
+        class_methods, instance_methods =
+          klass.method_list.partition { |meth| meth.singleton }
+
+        class_methods    = class_methods.   map { |method| method.name }
+        instance_methods = instance_methods.map { |method| method.name }
+        attribute_names  = klass.attributes.map { |attr|   attr.name }
+
+        old = @cache[:class_methods][full_name] - class_methods
+        to_delete.concat old.map { |method|
+          method_file full_name, "#{full_name}::#{method}"
+        }
+
+        old = @cache[:instance_methods][full_name] -
+          instance_methods - attribute_names
+        to_delete.concat old.map { |method|
+          method_file full_name, "#{full_name}##{method}"
+        }
+
+        @cache[:class_methods][full_name]    = class_methods
+        @cache[:instance_methods][full_name] = instance_methods
+      end
+
+      return if @dry_run
+
+      FileUtils.rm_f to_delete
+
+      File.open path, 'wb' do |io|
+        Marshal.dump klass, io
+      end
+    end
+
+    ##
+    # Writes the ri data for +method+ on +klass+
+
+    def save_method(klass, method)
+      full_name = klass.full_name
+
+      FileUtils.mkdir_p class_path(full_name) unless @dry_run
+
+      cache = if method.singleton
+                @cache[:class_methods]
+              else
+                @cache[:instance_methods]
+              end
+      cache[full_name] ||= []
+      cache[full_name] << method.name
+
+      return if @dry_run
+
+      File.open method_file(full_name, method.full_name), 'wb' do |io|
+        Marshal.dump method, io
+      end
+    end
+
+    ##
+    # Writes the ri data for +page+
+
+    def save_page(page)
+      return unless page.text?
+
+      path = page_file page.full_name
+
+      FileUtils.mkdir_p File.dirname(path) unless @dry_run
+
+      cache[:pages] ||= []
+      cache[:pages] << page.full_name
+
+      return if @dry_run
+
+      File.open path, 'wb' do |io|
+        Marshal.dump page, io
+      end
+    end
+
+    ##
+    # Source of the contents of this store.
+    #
+    # For a store from a gem the source is the gem name.  For a store from the
+    # home directory the source is "home".  For system ri store (the standard
+    # library documentation) the source is"ruby".  For a store from the site
+    # ri directory the store is "site".  For other stores the source is the
+    # #path.
+
+    def source
+      case type
+      when :gem    then File.basename File.expand_path '..', @path
+      when :home   then 'home'
+      when :site   then 'site'
+      when :system then 'ruby'
+      else @path
+      end
+    end
+
+    ##
+    # Gets the title for this RDoc store.  This is used as the title in each
+    # page on the RDoc server
+
+    def title
+      @cache[:title]
+    end
+
+    ##
+    # Sets the title page for this RDoc store.
+
+    def title=(title)
+      @cache[:title] = title
+    end
+
+    ##
+    # Returns the unique classes discovered by RDoc.
+    #
+    # ::complete must have been called prior to using this method.
+
+    def unique_classes
+      @unique_classes
+    end
+
+    ##
+    # Returns the unique classes and modules discovered by RDoc.
+    # ::complete must have been called prior to using this method.
+
+    def unique_classes_and_modules
+      @unique_classes + @unique_modules
+    end
+
+    ##
+    # Returns the unique modules discovered by RDoc.
+    # ::complete must have been called prior to using this method.
+
+    def unique_modules
+      @unique_modules
+    end
+
+  private
+
+    def remove_classes_and_modules(cms)
+      cms.each do |cm|
+        remove_classes_and_modules(cm.classes_and_modules)
+
+        if cm.is_a?(NormalModule)
+          @modules_hash.delete(cm.full_name)
+        else
+          @classes_hash.delete(cm.full_name)
         end
       end
     end
 
-    @cache[:pages].each do |page_name|
-      page = load_page page_name
-      @files_hash[page_name] = page
-      @text_files_hash[page_name] = page if page.text?
-    end
-  end
-
-  ##
-  # Loads cache file for this store
-
-  def load_cache
-    #orig_enc = @encoding
-
-    @cache = marshal_load(cache_path)
-
-    load_enc = @cache[:encoding]
-
-    # TODO this feature will be time-consuming to add:
-    # a) Encodings may be incompatible but transcodeable
-    # b) Need to warn in the appropriate spots, wherever they may be
-    # c) Need to handle cross-cache differences in encodings
-    # d) Need to warn when generating into a cache with different encodings
-    #
-    #if orig_enc and load_enc != orig_enc then
-    #  warn "Cached encoding #{load_enc} is incompatible with #{orig_enc}\n" \
-    #       "from #{path}/cache.ri" unless
-    #    Encoding.compatible? orig_enc, load_enc
-    #end
-
-    @encoding = load_enc unless @encoding
-
-    @cache[:pages]                       ||= []
-    @cache[:main]                        ||= nil
-    @cache[:c_class_variables]           ||= {}
-    @cache[:c_singleton_class_variables] ||= {}
-
-    @cache[:c_class_variables].each do |_, map|
-      map.each do |variable, name|
-        @c_enclosure_names[variable] = name
-      end
+    def marshal_load(file)
+      File.open(file, 'rb') {|io| Marshal.load(io, MarshalFilter)}
     end
 
-    @cache
-  rescue Errno::ENOENT
-  end
-
-  ##
-  # Loads ri data for +klass_name+ and hooks it up to this store.
-
-  def load_class(klass_name)
-    obj = load_class_data klass_name
-
-    obj.store = self
-
-    case obj
-    when RDoc::NormalClass
-      @classes_hash[klass_name] = obj
-    when RDoc::SingleClass
-      @classes_hash[klass_name] = obj
-    when RDoc::NormalModule
-      @modules_hash[klass_name] = obj
-    end
-  end
-
-  ##
-  # Loads ri data for +klass_name+
-
-  def load_class_data(klass_name)
-    file = class_file klass_name
-
-    marshal_load(file)
-  rescue Errno::ENOENT => e
-    error = MissingFileError.new(self, file, klass_name)
-    error.set_backtrace e.backtrace
-    raise error
-  end
-
-  ##
-  # Loads ri data for +method_name+ in +klass_name+
-
-  def load_method(klass_name, method_name)
-    file = method_file klass_name, method_name
-
-    obj = marshal_load(file)
-    obj.store = self
-    obj.parent ||= find_class_or_module(klass_name) || load_class(klass_name)
-    obj
-  rescue Errno::ENOENT => e
-    error = MissingFileError.new(self, file, klass_name + method_name)
-    error.set_backtrace e.backtrace
-    raise error
-  end
-
-  ##
-  # Loads ri data for +page_name+
-
-  def load_page(page_name)
-    file = page_file page_name
-
-    obj = marshal_load(file)
-    obj.store = self
-    obj
-  rescue Errno::ENOENT => e
-    error = MissingFileError.new(self, file, page_name)
-    error.set_backtrace e.backtrace
-    raise error
-  end
-
-  ##
-  # Gets the main page for this RDoc store.  This page is used as the root of
-  # the RDoc server.
-
-  def main
-    @cache[:main]
-  end
-
-  ##
-  # Sets the main page for this RDoc store.
-
-  def main=(page)
-    @cache[:main] = page
-  end
-
-  ##
-  # Converts the variable => ClassModule map +variables+ from a C parser into
-  # a variable => class name map.
-
-  def make_variable_map(variables)
-    map = {}
-
-    variables.each { |variable, class_module|
-      map[variable] = class_module.full_name
-    }
-
-    map
-  end
-
-  ##
-  # Path to the ri data for +method_name+ in +klass_name+
-
-  def method_file(klass_name, method_name)
-    method_name = method_name.split('::').last
-    method_name =~ /#(.*)/
-    method_type = $1 ? 'i' : 'c'
-    method_name = $1 if $1
-    method_name = method_name.gsub(/\W/) { "%%%02x" % $&[0].ord }
-
-    File.join class_path(klass_name), "#{method_name}-#{method_type}.ri"
-  end
-
-  ##
-  # Modules cache accessor.  An Array of all the module (and class) names in
-  # the store.
-
-  def module_names
-    @cache[:modules]
-  end
-
-  ##
-  # Hash of all modules known to RDoc
-
-  def modules_hash
-    @modules_hash
-  end
-
-  ##
-  # Returns the RDoc::TopLevel that is a file and has the given +name+
-
-  def page(name)
-    @files_hash.each_value.find do |file|
-      file.page_name == name or file.base_name == name
-    end
-  end
-
-  ##
-  # Path to the ri data for +page_name+
-
-  def page_file(page_name)
-    file_name = File.basename(page_name).gsub('.', '_')
-
-    File.join @path, File.dirname(page_name), "page-#{file_name}.ri"
-  end
-
-  ##
-  # Removes from +all_hash+ the contexts that are nodoc or have no content.
-  #
-  # See RDoc::Context#remove_from_documentation?
-
-  def remove_nodoc(all_hash)
-    all_hash.keys.each do |name|
-      context = all_hash[name]
-      all_hash.delete(name) if context.remove_from_documentation?
-    end
-  end
-
-  ##
-  # Saves all entries in the store
-
-  def save
-    load_cache
-
-    all_classes_and_modules.each do |klass|
-      save_class klass
-
-      klass.each_method do |method|
-        save_method klass, method
-      end
-
-      klass.attributes.each do |attribute|
-        save_method klass, attribute
-      end
-    end
-
-    all_files.each do |file|
-      save_page file
-    end
-
-    save_cache
-  end
-
-  ##
-  # Writes the cache file for this store
-
-  def save_cache
-    clean_cache_collection @cache[:ancestors]
-    clean_cache_collection @cache[:attributes]
-    clean_cache_collection @cache[:class_methods]
-    clean_cache_collection @cache[:instance_methods]
-
-    @cache[:modules].uniq!
-    @cache[:modules].sort!
-
-    @cache[:pages].uniq!
-    @cache[:pages].sort!
-
-    @cache[:encoding] = @encoding # this gets set twice due to assert_cache
-
-    @cache[:c_class_variables].merge!           @c_class_variables
-    @cache[:c_singleton_class_variables].merge! @c_singleton_class_variables
-
-    return if @dry_run
-
-    File.open cache_path, 'wb' do |io|
-      Marshal.dump @cache, io
-    end
-  end
-
-  ##
-  # Writes the ri data for +klass+ (or module)
-
-  def save_class(klass)
-    full_name = klass.full_name
-
-    FileUtils.mkdir_p class_path(full_name) unless @dry_run
-
-    @cache[:modules] << full_name
-
-    path = class_file full_name
-
-    begin
-      disk_klass = load_class full_name
-
-      klass = disk_klass.merge klass
-    rescue MissingFileError
-    end
-
-    # BasicObject has no ancestors
-    ancestors = klass.direct_ancestors.compact.map do |ancestor|
-      # HACK for classes we don't know about (class X < RuntimeError)
-      String === ancestor ? ancestor : ancestor.full_name
-    end
-
-    @cache[:ancestors][full_name] ||= []
-    @cache[:ancestors][full_name].concat ancestors
-
-    attribute_definitions = klass.attributes.map do |attribute|
-      "#{attribute.definition} #{attribute.name}"
-    end
-
-    unless attribute_definitions.empty?
-      @cache[:attributes][full_name] ||= []
-      @cache[:attributes][full_name].concat attribute_definitions
-    end
-
-    to_delete = []
-
-    unless klass.method_list.empty?
-      @cache[:class_methods][full_name]    ||= []
-      @cache[:instance_methods][full_name] ||= []
-
-      class_methods, instance_methods =
-        klass.method_list.partition { |meth| meth.singleton }
-
-      class_methods    = class_methods.   map { |method| method.name }
-      instance_methods = instance_methods.map { |method| method.name }
-      attribute_names  = klass.attributes.map { |attr|   attr.name }
-
-      old = @cache[:class_methods][full_name] - class_methods
-      to_delete.concat old.map { |method|
-        method_file full_name, "#{full_name}::#{method}"
-      }
-
-      old = @cache[:instance_methods][full_name] -
-        instance_methods - attribute_names
-      to_delete.concat old.map { |method|
-        method_file full_name, "#{full_name}##{method}"
-      }
-
-      @cache[:class_methods][full_name]    = class_methods
-      @cache[:instance_methods][full_name] = instance_methods
-    end
-
-    return if @dry_run
-
-    FileUtils.rm_f to_delete
-
-    File.open path, 'wb' do |io|
-      Marshal.dump klass, io
-    end
-  end
-
-  ##
-  # Writes the ri data for +method+ on +klass+
-
-  def save_method(klass, method)
-    full_name = klass.full_name
-
-    FileUtils.mkdir_p class_path(full_name) unless @dry_run
-
-    cache = if method.singleton
-              @cache[:class_methods]
-            else
-              @cache[:instance_methods]
-            end
-    cache[full_name] ||= []
-    cache[full_name] << method.name
-
-    return if @dry_run
-
-    File.open method_file(full_name, method.full_name), 'wb' do |io|
-      Marshal.dump method, io
-    end
-  end
-
-  ##
-  # Writes the ri data for +page+
-
-  def save_page(page)
-    return unless page.text?
-
-    path = page_file page.full_name
-
-    FileUtils.mkdir_p File.dirname(path) unless @dry_run
-
-    cache[:pages] ||= []
-    cache[:pages] << page.full_name
-
-    return if @dry_run
-
-    File.open path, 'wb' do |io|
-      Marshal.dump page, io
-    end
-  end
-
-  ##
-  # Source of the contents of this store.
-  #
-  # For a store from a gem the source is the gem name.  For a store from the
-  # home directory the source is "home".  For system ri store (the standard
-  # library documentation) the source is"ruby".  For a store from the site
-  # ri directory the store is "site".  For other stores the source is the
-  # #path.
-
-  def source
-    case type
-    when :gem    then File.basename File.expand_path '..', @path
-    when :home   then 'home'
-    when :site   then 'site'
-    when :system then 'ruby'
-    else @path
-    end
-  end
-
-  ##
-  # Gets the title for this RDoc store.  This is used as the title in each
-  # page on the RDoc server
-
-  def title
-    @cache[:title]
-  end
-
-  ##
-  # Sets the title page for this RDoc store.
-
-  def title=(title)
-    @cache[:title] = title
-  end
-
-  ##
-  # Returns the unique classes discovered by RDoc.
-  #
-  # ::complete must have been called prior to using this method.
-
-  def unique_classes
-    @unique_classes
-  end
-
-  ##
-  # Returns the unique classes and modules discovered by RDoc.
-  # ::complete must have been called prior to using this method.
-
-  def unique_classes_and_modules
-    @unique_classes + @unique_modules
-  end
-
-  ##
-  # Returns the unique modules discovered by RDoc.
-  # ::complete must have been called prior to using this method.
-
-  def unique_modules
-    @unique_modules
-  end
-
-  private
-
-  def remove_classes_and_modules(cms)
-    cms.each do |cm|
-      remove_classes_and_modules(cm.classes_and_modules)
-
-      if cm.is_a?(RDoc::NormalModule)
-        @modules_hash.delete(cm.full_name)
+    MarshalFilter = proc do |obj|
+      case obj
+      when true, false, nil, Array, Class, ::Encoding, Hash, Integer, String, Symbol, Text
       else
-        @classes_hash.delete(cm.full_name)
+        unless obj.class.name.start_with?("RDoc::")
+          raise TypeError, "not permitted class: #{obj.class.name}"
+        end
       end
+      obj
     end
-  end
+    private_constant :MarshalFilter
 
-  def marshal_load(file)
-    File.open(file, 'rb') {|io| Marshal.load(io, MarshalFilter)}
   end
-
-  MarshalFilter = proc do |obj|
-    case obj
-    when true, false, nil, Array, Class, Encoding, Hash, Integer, String, Symbol, RDoc::Text
-    else
-      unless obj.class.name.start_with?("RDoc::")
-        raise TypeError, "not permitted class: #{obj.class.name}"
-      end
-    end
-    obj
-  end
-  private_constant :MarshalFilter
-
 end

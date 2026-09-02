@@ -1,6 +1,8 @@
 # frozen_string_literal: true
-module RDoc::RI
+module RDoc
+  module RI
 
-  Store = RDoc::Store # :nodoc:
+    Store = ::RDoc::Store # :nodoc:
 
+  end
 end

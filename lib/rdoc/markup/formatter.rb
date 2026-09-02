@@ -12,274 +12,278 @@
 
 require 'rdoc/markup/inline_parser'
 
-class RDoc::Markup::Formatter
+module RDoc
+  class Markup
+    class Formatter
 
-  ##
-  # Converts a target url to one that is relative to a given path
+      ##
+      # Converts a target url to one that is relative to a given path
 
-  def self.gen_relative_url(path, target)
-    from        = File.dirname path
-    to, to_file = File.split target
+      def self.gen_relative_url(path, target)
+        from        = File.dirname path
+        to, to_file = File.split target
 
-    from = from.split "/"
-    to   = to.split "/"
+        from = from.split "/"
+        to   = to.split "/"
 
-    from.delete '.'
-    to.delete '.'
+        from.delete '.'
+        to.delete '.'
 
-    while from.size > 0 and to.size > 0 and from[0] == to[0] do
-      from.shift
-      to.shift
-    end
+        while from.size > 0 and to.size > 0 and from[0] == to[0] do
+          from.shift
+          to.shift
+        end
 
-    from.fill ".."
-    from.concat to
-    from << to_file
-    File.join(*from)
-  end
-
-  ##
-  # Creates a new Formatter
-
-  def initialize
-    @markup = RDoc::Markup.new
-
-    @from_path = '.'
-  end
-
-  ##
-  # Adds +document+ to the output
-
-  def accept_document(document)
-    document.parts.each do |item|
-      case item
-      when RDoc::Markup::Document # HACK
-        accept_document item
-      else
-        item.accept self
+        from.fill ".."
+        from.concat to
+        from << to_file
+        File.join(*from)
       end
-    end
-  end
 
-  ##
-  # Adds a regexp handling for links of the form rdoc-...:
+      ##
+      # Creates a new Formatter
 
-  def add_regexp_handling_RDOCLINK
-    @markup.add_regexp_handling(/rdoc-[a-z]+:[^\s\]]+/, :RDOCLINK)
-  end
+      def initialize
+        @markup = Markup.new
 
-  ##
-  # Allows +tag+ to be decorated with additional information.
-
-  def annotate(tag)
-    tag
-  end
-
-  ##
-  # Marks up +content+
-
-  def convert(content)
-    @markup.convert content, self
-  end
-
-  # Applies regexp handling to +text+ and returns an array of [text, converted?] pairs.
-
-  def apply_regexp_handling(text)
-    matched = []
-    @markup.regexp_handlings.each_with_index do |(pattern, name), priority|
-      text.scan(pattern) do
-        m = Regexp.last_match
-        idx = m[1] ? 1 : 0
-        matched << [m.begin(idx), m.end(idx), m[idx], name, priority]
+        @from_path = '.'
       end
-    end
-    # If the start positions are the same, prefer the earlier-registered one
-    # (lower numeric priority from each_with_index).
-    matched.sort_by! {|beg_pos, _, _, _, priority| [beg_pos, priority] }
 
-    pos = 0
-    output = []
-    matched.each do |beg_pos, end_pos, s, name|
-      next if beg_pos < pos
+      ##
+      # Adds +document+ to the output
 
-      output << [text[pos...beg_pos], false] if beg_pos != pos
-      handled = public_send(:"handle_regexp_#{name}", s)
-      output << [handled, true]
-      pos = end_pos
-    end
-
-    output << [text[pos..], false] if pos < text.size
-    output
-  end
-
-  # Called when processing plain text while traversing inline nodes from handle_inline.
-  # +text+ may need proper escaping.
-
-  def handle_PLAIN_TEXT(text)
-  end
-
-  # Called when processing regexp-handling-processed text while traversing inline nodes from handle_inline.
-  # +text+ may contain markup tags.
-
-  def handle_REGEXP_HANDLING_TEXT(text)
-  end
-
-  # Called when processing text node while traversing inline nodes from handle_inline.
-  # Apply regexp handling and dispatch to the appropriate handler: handle_REGEXP_HANDLING_TEXT or handle_PLAIN_TEXT.
-
-  def handle_TEXT(text)
-    apply_regexp_handling(text).each do |part, converted|
-      if converted
-        handle_REGEXP_HANDLING_TEXT(part)
-      else
-        handle_PLAIN_TEXT(part)
+      def accept_document(document)
+        document.parts.each do |item|
+          case item
+          when Markup::Document # HACK
+            accept_document item
+          else
+            item.accept self
+          end
+        end
       end
-    end
-  end
 
-  # Called when processing a hard break while traversing inline nodes from handle_inline.
+      ##
+      # Adds a regexp handling for links of the form rdoc-...:
 
-  def handle_HARD_BREAK
-  end
-
-  # Called when processing bold nodes while traversing inline nodes from handle_inline.
-  # Traverse the children nodes and dispatch to the appropriate handlers.
-
-  def handle_BOLD(nodes)
-    traverse_inline_nodes(nodes)
-  end
-
-  # Called when processing emphasis nodes while traversing inline nodes from handle_inline.
-  # Traverse the children nodes and dispatch to the appropriate handlers.
-
-  def handle_EM(nodes)
-    traverse_inline_nodes(nodes)
-  end
-
-  # Called when processing bold word nodes while traversing inline nodes from handle_inline.
-  # +word+ may need proper escaping.
-
-  def handle_BOLD_WORD(word)
-    handle_PLAIN_TEXT(word)
-  end
-
-  # Called when processing emphasis word nodes while traversing inline nodes from handle_inline.
-  # +word+ may need proper escaping.
-
-  def handle_EM_WORD(word)
-    handle_PLAIN_TEXT(word)
-  end
-
-  # Called when processing tt nodes while traversing inline nodes from handle_inline.
-  # +code+ may need proper escaping.
-
-  def handle_TT(code)
-    handle_PLAIN_TEXT(code)
-  end
-
-  # Called when processing strike nodes while traversing inline nodes from handle_inline.
-  # Traverse the children nodes and dispatch to the appropriate handlers.
-
-  def handle_STRIKE(nodes)
-    traverse_inline_nodes(nodes)
-  end
-
-  # Called when processing tidylink nodes while traversing inline nodes from handle_inline.
-  # +label_part+ is an array of strings or nodes representing the link label.
-  # +url+ is the link URL.
-  # Traverse the label_part nodes and dispatch to the appropriate handlers.
-
-  def handle_TIDYLINK(label_part, url)
-    traverse_inline_nodes(label_part)
-  end
-
-  # Parses inline +text+, traverse the resulting nodes, and calls the appropriate handler methods.
-
-  def handle_inline(text)
-    nodes = RDoc::Markup::InlineParser.new(text).parse
-    traverse_inline_nodes(nodes)
-  end
-
-  # Traverses +nodes+ and calls the appropriate handler methods
-  # Nodes formats are described in RDoc::Markup::InlineParser#parse
-
-  def traverse_inline_nodes(nodes)
-    nodes.each do |node|
-      next handle_TEXT(node) if String === node
-      case node[:type]
-      when :TIDYLINK
-        handle_TIDYLINK(node[:children], node[:url])
-      when :HARD_BREAK
-        handle_HARD_BREAK
-      when :BOLD
-        handle_BOLD(node[:children])
-      when :BOLD_WORD
-        handle_BOLD_WORD(node[:children][0] || '')
-      when :EM
-        handle_EM(node[:children])
-      when :EM_WORD
-        handle_EM_WORD(node[:children][0] || '')
-      when :TT
-        handle_TT(node[:children][0] || '')
-      when :STRIKE
-        handle_STRIKE(node[:children])
+      def add_regexp_handling_RDOCLINK
+        @markup.add_regexp_handling(/rdoc-[a-z]+:[^\s\]]+/, :RDOCLINK)
       end
+
+      ##
+      # Allows +tag+ to be decorated with additional information.
+
+      def annotate(tag)
+        tag
+      end
+
+      ##
+      # Marks up +content+
+
+      def convert(content)
+        @markup.convert content, self
+      end
+
+      # Applies regexp handling to +text+ and returns an array of [text, converted?] pairs.
+
+      def apply_regexp_handling(text)
+        matched = []
+        @markup.regexp_handlings.each_with_index do |(pattern, name), priority|
+          text.scan(pattern) do
+            m = Regexp.last_match
+            idx = m[1] ? 1 : 0
+            matched << [m.begin(idx), m.end(idx), m[idx], name, priority]
+          end
+        end
+        # If the start positions are the same, prefer the earlier-registered one
+        # (lower numeric priority from each_with_index).
+        matched.sort_by! {|beg_pos, _, _, _, priority| [beg_pos, priority] }
+
+        pos = 0
+        output = []
+        matched.each do |beg_pos, end_pos, s, name|
+          next if beg_pos < pos
+
+          output << [text[pos...beg_pos], false] if beg_pos != pos
+          handled = public_send(:"handle_regexp_#{name}", s)
+          output << [handled, true]
+          pos = end_pos
+        end
+
+        output << [text[pos..], false] if pos < text.size
+        output
+      end
+
+      # Called when processing plain text while traversing inline nodes from handle_inline.
+      # +text+ may need proper escaping.
+
+      def handle_PLAIN_TEXT(text)
+      end
+
+      # Called when processing regexp-handling-processed text while traversing inline nodes from handle_inline.
+      # +text+ may contain markup tags.
+
+      def handle_REGEXP_HANDLING_TEXT(text)
+      end
+
+      # Called when processing text node while traversing inline nodes from handle_inline.
+      # Apply regexp handling and dispatch to the appropriate handler: handle_REGEXP_HANDLING_TEXT or handle_PLAIN_TEXT.
+
+      def handle_TEXT(text)
+        apply_regexp_handling(text).each do |part, converted|
+          if converted
+            handle_REGEXP_HANDLING_TEXT(part)
+          else
+            handle_PLAIN_TEXT(part)
+          end
+        end
+      end
+
+      # Called when processing a hard break while traversing inline nodes from handle_inline.
+
+      def handle_HARD_BREAK
+      end
+
+      # Called when processing bold nodes while traversing inline nodes from handle_inline.
+      # Traverse the children nodes and dispatch to the appropriate handlers.
+
+      def handle_BOLD(nodes)
+        traverse_inline_nodes(nodes)
+      end
+
+      # Called when processing emphasis nodes while traversing inline nodes from handle_inline.
+      # Traverse the children nodes and dispatch to the appropriate handlers.
+
+      def handle_EM(nodes)
+        traverse_inline_nodes(nodes)
+      end
+
+      # Called when processing bold word nodes while traversing inline nodes from handle_inline.
+      # +word+ may need proper escaping.
+
+      def handle_BOLD_WORD(word)
+        handle_PLAIN_TEXT(word)
+      end
+
+      # Called when processing emphasis word nodes while traversing inline nodes from handle_inline.
+      # +word+ may need proper escaping.
+
+      def handle_EM_WORD(word)
+        handle_PLAIN_TEXT(word)
+      end
+
+      # Called when processing tt nodes while traversing inline nodes from handle_inline.
+      # +code+ may need proper escaping.
+
+      def handle_TT(code)
+        handle_PLAIN_TEXT(code)
+      end
+
+      # Called when processing strike nodes while traversing inline nodes from handle_inline.
+      # Traverse the children nodes and dispatch to the appropriate handlers.
+
+      def handle_STRIKE(nodes)
+        traverse_inline_nodes(nodes)
+      end
+
+      # Called when processing tidylink nodes while traversing inline nodes from handle_inline.
+      # +label_part+ is an array of strings or nodes representing the link label.
+      # +url+ is the link URL.
+      # Traverse the label_part nodes and dispatch to the appropriate handlers.
+
+      def handle_TIDYLINK(label_part, url)
+        traverse_inline_nodes(label_part)
+      end
+
+      # Parses inline +text+, traverse the resulting nodes, and calls the appropriate handler methods.
+
+      def handle_inline(text)
+        nodes = Markup::InlineParser.new(text).parse
+        traverse_inline_nodes(nodes)
+      end
+
+      # Traverses +nodes+ and calls the appropriate handler methods
+      # Nodes formats are described in RDoc::Markup::InlineParser#parse
+
+      def traverse_inline_nodes(nodes)
+        nodes.each do |node|
+          next handle_TEXT(node) if String === node
+          case node[:type]
+          when :TIDYLINK
+            handle_TIDYLINK(node[:children], node[:url])
+          when :HARD_BREAK
+            handle_HARD_BREAK
+          when :BOLD
+            handle_BOLD(node[:children])
+          when :BOLD_WORD
+            handle_BOLD_WORD(node[:children][0] || '')
+          when :EM
+            handle_EM(node[:children])
+          when :EM_WORD
+            handle_EM_WORD(node[:children][0] || '')
+          when :TT
+            handle_TT(node[:children][0] || '')
+          when :STRIKE
+            handle_STRIKE(node[:children])
+          end
+        end
+      end
+
+      ##
+      # Converts a string to be fancier if desired
+
+      def convert_string(string)
+        string
+      end
+
+      ##
+      # Use ignore in your subclass to ignore the content of a node.
+      #
+      #   ##
+      #   # We don't support raw nodes in ToNoRaw
+      #
+      #   alias accept_raw ignore
+
+      def ignore(*node)
+      end
+
+      ##
+      # Extracts and a scheme, url and an anchor id from +url+ and returns them.
+
+      def parse_url(url)
+        case url
+        when /^rdoc-label:([^:]*)(?::(.*))?/
+          scheme = 'link'
+          path   = "##{$1}"
+          id     = " id=\"#{$2}\"" if $2
+        when /([A-Za-z]+):(.*)/
+          scheme = $1.downcase
+          path   = $2
+        when /^#/
+        else
+          scheme = 'http'
+          path   = url
+          url    = url
+        end
+
+        if scheme == 'link'
+          url = if path[0, 1] == '#' # is this meaningful?
+                  path
+                else
+                  self.class.gen_relative_url @from_path, path
+                end
+        end
+
+        [scheme, url, id]
+      end
+
+      ##
+      # Is +tag+ a tt tag?
+
+      def tt?(tag)
+        tag.bit == @tt_bit
+      end
+
     end
   end
-
-  ##
-  # Converts a string to be fancier if desired
-
-  def convert_string(string)
-    string
-  end
-
-  ##
-  # Use ignore in your subclass to ignore the content of a node.
-  #
-  #   ##
-  #   # We don't support raw nodes in ToNoRaw
-  #
-  #   alias accept_raw ignore
-
-  def ignore(*node)
-  end
-
-  ##
-  # Extracts and a scheme, url and an anchor id from +url+ and returns them.
-
-  def parse_url(url)
-    case url
-    when /^rdoc-label:([^:]*)(?::(.*))?/
-      scheme = 'link'
-      path   = "##{$1}"
-      id     = " id=\"#{$2}\"" if $2
-    when /([A-Za-z]+):(.*)/
-      scheme = $1.downcase
-      path   = $2
-    when /^#/
-    else
-      scheme = 'http'
-      path   = url
-      url    = url
-    end
-
-    if scheme == 'link'
-      url = if path[0, 1] == '#' # is this meaningful?
-              path
-            else
-              self.class.gen_relative_url @from_path, path
-            end
-    end
-
-    [scheme, url, id]
-  end
-
-  ##
-  # Is +tag+ a tt tag?
-
-  def tt?(tag)
-    tag.bit == @tt_bit
-  end
-
 end

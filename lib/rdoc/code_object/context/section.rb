@@ -2,181 +2,185 @@
 require 'cgi/escape'
 require 'cgi/util' unless defined?(CGI::EscapeExt)
 
-##
-# A section of documentation like:
-#
-#   # :section: The title
-#   # The body
-#
-# Sections can be referenced multiple times and will be collapsed into a
-# single section.
+module RDoc
+  class Context
+    ##
+    # A section of documentation like:
+    #
+    #   # :section: The title
+    #   # The body
+    #
+    # Sections can be referenced multiple times and will be collapsed into a
+    # single section.
 
-class RDoc::Context::Section
+    class Section
 
-  include RDoc::Text
+      include Text
 
-  MARSHAL_VERSION = 0 # :nodoc:
+      MARSHAL_VERSION = 0 # :nodoc:
 
-  ##
-  # Section comments
+      ##
+      # Section comments
 
-  attr_reader :comments
+      attr_reader :comments
 
-  ##
-  # Context this Section lives in
+      ##
+      # Context this Section lives in
 
-  attr_reader :parent
+      attr_reader :parent
 
-  ##
-  # Section title
+      ##
+      # Section title
 
-  attr_reader :title
+      attr_reader :title
 
-  ##
-  # The RDoc::Store for this object.
+      ##
+      # The RDoc::Store for this object.
 
-  attr_reader :store
+      attr_reader :store
 
-  ##
-  # Creates a new section with +title+ and +comment+
+      ##
+      # Creates a new section with +title+ and +comment+
 
-  def initialize(parent, title, comment, store = nil)
-    @parent = parent
-    @title = title ? title.strip : title
-    @store = store
+      def initialize(parent, title, comment, store = nil)
+        @parent = parent
+        @title = title ? title.strip : title
+        @store = store
 
-    @comments = []
+        @comments = []
 
-    add_comment comment
-  end
+        add_comment comment
+      end
 
-  ##
-  # Sections are equal when they have the same #title
+      ##
+      # Sections are equal when they have the same #title
 
-  def ==(other)
-    self.class === other and @title == other.title
-  end
+      def ==(other)
+        self.class === other and @title == other.title
+      end
 
-  alias eql? ==
+      alias eql? ==
 
-  ##
-  # Adds +comment+ to this section
+      ##
+      # Adds +comment+ to this section
 
-  def add_comment(comment)
-    Array(comment).each do |c|
-      next if c.nil?
-      raise TypeError, "unknown comment #{c.inspect}" unless RDoc::Comment === c
-      @comments << c unless c.empty?
+      def add_comment(comment)
+        Array(comment).each do |c|
+          next if c.nil?
+          raise TypeError, "unknown comment #{c.inspect}" unless Comment === c
+          @comments << c unless c.empty?
+        end
+      end
+
+      ##
+      # Anchor reference for linking to this section using GitHub-style format.
+      #
+      # Examples:
+      #   "Section"     -> "section"
+      #   "One Two"     -> "one-two"
+      #   "[untitled]"  -> "untitled"
+
+      def aref
+        title = @title || '[untitled]'
+
+        Text.to_anchor(title)
+      end
+
+      ##
+      # Legacy anchor reference for backward compatibility.
+      #
+      # Examples:
+      #   "Section"     -> "section"
+      #   "One Two"     -> "one+two"
+      #   "[untitled]"  -> "5Buntitled-5D"
+
+      def legacy_aref
+        title = @title || '[untitled]'
+
+        CGI.escape(title).gsub('%', '-').sub(/^-/, '')
+      end
+
+      def inspect # :nodoc:
+        "#<%s:0x%x %p>" % [self.class, object_id, title]
+      end
+
+      def hash # :nodoc:
+        @title.hash
+      end
+
+      ##
+      # The files comments in this section come from
+
+      def in_files
+        @comments.map(&:file)
+      end
+
+      ##
+      # Serializes this Section.  The title and parsed comment are saved, but not
+      # the section parent which must be restored manually.
+
+      def marshal_dump
+        [
+          MARSHAL_VERSION,
+          @title,
+          to_document,
+        ]
+      end
+
+      ##
+      # De-serializes this Section.  The section parent must be restored manually.
+
+      def marshal_load(array)
+        @parent  = nil
+
+        @title    = array[1]
+        @comments = array[2].parts.map { |doc| Comment.from_document(doc) }
+      end
+
+      ##
+      # Parses +comment_location+ into an RDoc::Markup::Document composed of
+      # multiple RDoc::Markup::Documents with their file set.
+
+      def to_document
+        Markup::Document.new(*@comments.map(&:parse))
+      end
+
+      ##
+      # The section's title, or 'Top Section' if the title is nil.
+      #
+      # This is used by the table of contents template so the name is silly.
+
+      def plain_html
+        @title || 'Top Section'
+      end
+
+      ##
+      # Section comment
+
+      def comment
+        return nil if @comments.empty?
+        Comment.from_document(to_document)
+      end
+
+      def description
+        return '' if @comments.empty?
+        markup comment
+      end
+
+      def language
+        @comments.first&.language
+      end
+
+      ##
+      # Removes a comment from this section if it is from the same file as
+      # +comment+
+
+      def remove_comment(target_comment)
+        @comments.delete_if do |stored_comment|
+          stored_comment.file == target_comment.file
+        end
+      end
+
     end
   end
-
-  ##
-  # Anchor reference for linking to this section using GitHub-style format.
-  #
-  # Examples:
-  #   "Section"     -> "section"
-  #   "One Two"     -> "one-two"
-  #   "[untitled]"  -> "untitled"
-
-  def aref
-    title = @title || '[untitled]'
-
-    RDoc::Text.to_anchor(title)
-  end
-
-  ##
-  # Legacy anchor reference for backward compatibility.
-  #
-  # Examples:
-  #   "Section"     -> "section"
-  #   "One Two"     -> "one+two"
-  #   "[untitled]"  -> "5Buntitled-5D"
-
-  def legacy_aref
-    title = @title || '[untitled]'
-
-    CGI.escape(title).gsub('%', '-').sub(/^-/, '')
-  end
-
-  def inspect # :nodoc:
-    "#<%s:0x%x %p>" % [self.class, object_id, title]
-  end
-
-  def hash # :nodoc:
-    @title.hash
-  end
-
-  ##
-  # The files comments in this section come from
-
-  def in_files
-    @comments.map(&:file)
-  end
-
-  ##
-  # Serializes this Section.  The title and parsed comment are saved, but not
-  # the section parent which must be restored manually.
-
-  def marshal_dump
-    [
-      MARSHAL_VERSION,
-      @title,
-      to_document,
-    ]
-  end
-
-  ##
-  # De-serializes this Section.  The section parent must be restored manually.
-
-  def marshal_load(array)
-    @parent  = nil
-
-    @title    = array[1]
-    @comments = array[2].parts.map { |doc| RDoc::Comment.from_document(doc) }
-  end
-
-  ##
-  # Parses +comment_location+ into an RDoc::Markup::Document composed of
-  # multiple RDoc::Markup::Documents with their file set.
-
-  def to_document
-    RDoc::Markup::Document.new(*@comments.map(&:parse))
-  end
-
-  ##
-  # The section's title, or 'Top Section' if the title is nil.
-  #
-  # This is used by the table of contents template so the name is silly.
-
-  def plain_html
-    @title || 'Top Section'
-  end
-
-  ##
-  # Section comment
-
-  def comment
-    return nil if @comments.empty?
-    RDoc::Comment.from_document(to_document)
-  end
-
-  def description
-    return '' if @comments.empty?
-    markup comment
-  end
-
-  def language
-    @comments.first&.language
-  end
-
-  ##
-  # Removes a comment from this section if it is from the same file as
-  # +comment+
-
-  def remove_comment(target_comment)
-    @comments.delete_if do |stored_comment|
-      stored_comment.file == target_comment.file
-    end
-  end
-
 end

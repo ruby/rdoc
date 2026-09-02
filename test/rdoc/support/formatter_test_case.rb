@@ -1,764 +1,768 @@
 # frozen_string_literal: true
 require 'test/unit'
 
-##
-# Test case for creating new RDoc::Markup formatters.  See
-# test/test_rdoc_markup_to_*.rb for examples.
-#
-# This test case adds a variety of tests to your subclass when
-# #add_visitor_tests is called.  Most tests set up a scenario then call a
-# method you will provide to perform the assertion on the output.
-#
-# Your subclass must instantiate a visitor and assign it to <tt>@to</tt>.
-#
-# For example, test_accept_blank_line sets up a RDoc::Markup::BlockLine then
-# calls accept_blank_line on your visitor.  You are responsible for asserting
-# that the output is correct.
-#
-# Example:
-#
-#  class RDocMarkupToNewFormatTest < RDoc::Markup::FormatterTestCase
-#
-#    add_visitor_tests
-#
-#    def setup
-#      super
-#
-#      @to = RDoc::Markup::ToNewFormat.new
-#    end
-#
-#    def accept_blank_line
-#      assert_equal :junk, @to.res.join
-#    end
-#
-#    # ...
-#
-#  end
+module RDoc
+  class Markup
+    ##
+    # Test case for creating new RDoc::Markup formatters.  See
+    # test/test_rdoc_markup_to_*.rb for examples.
+    #
+    # This test case adds a variety of tests to your subclass when
+    # #add_visitor_tests is called.  Most tests set up a scenario then call a
+    # method you will provide to perform the assertion on the output.
+    #
+    # Your subclass must instantiate a visitor and assign it to <tt>@to</tt>.
+    #
+    # For example, test_accept_blank_line sets up a RDoc::Markup::BlockLine then
+    # calls accept_blank_line on your visitor.  You are responsible for asserting
+    # that the output is correct.
+    #
+    # Example:
+    #
+    #  class RDocMarkupToNewFormatTest < RDoc::Markup::FormatterTestCase
+    #
+    #    add_visitor_tests
+    #
+    #    def setup
+    #      super
+    #
+    #      @to = RDoc::Markup::ToNewFormat.new
+    #    end
+    #
+    #    def accept_blank_line
+    #      assert_equal :junk, @to.res.join
+    #    end
+    #
+    #    # ...
+    #
+    #  end
 
-class RDoc::Markup::FormatterTestCase < RDoc::TestCase
-
-  ##
-  # Call #setup when inheriting from this test case.
-  #
-  # Provides the following instance variables:
-  #
-  # +@m+::           RDoc::Markup.new
-  # +@RM+::          RDoc::Markup # to reduce typing
-  # +@bullet_list+:: @RM::List.new :BULLET, # ...
-  # +@label_list+::  @RM::List.new :LABEL, # ...
-  # +@lalpha_list+:: @RM::List.new :LALPHA, # ...
-  # +@note_list+::   @RM::List.new :NOTE, # ...
-  # +@number_list+:: @RM::List.new :NUMBER, # ...
-  # +@ualpha_list+:: @RM::List.new :UALPHA, # ...
-
-  def setup
-    super
-
-    @options = RDoc::Options.new
-
-    @m = @RM.new
-
-    @bullet_list = @RM::List.new(:BULLET,
-      @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
-      @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
-
-    @label_list = @RM::List.new(:LABEL,
-      @RM::ListItem.new('cat', @RM::Paragraph.new('cats are cool')),
-      @RM::ListItem.new('dog', @RM::Paragraph.new('dogs are cool too')))
-
-    @lalpha_list = @RM::List.new(:LALPHA,
-      @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
-      @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
-
-    @note_list = @RM::List.new(:NOTE,
-      @RM::ListItem.new('cat', @RM::Paragraph.new('cats are cool')),
-      @RM::ListItem.new('dog', @RM::Paragraph.new('dogs are cool too')))
-
-    @number_list = @RM::List.new(:NUMBER,
-      @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
-      @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
-
-    @ualpha_list = @RM::List.new(:UALPHA,
-      @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
-      @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
-  end
-
-  ##
-  # Call to add the visitor tests to your test case
-
-  def self.add_visitor_tests
-    class_eval do
+    class FormatterTestCase < TestCase
 
       ##
-      # Calls start_accepting which needs to verify startup state
+      # Call #setup when inheriting from this test case.
+      #
+      # Provides the following instance variables:
+      #
+      # +@m+::           RDoc::Markup.new
+      # +@RM+::          RDoc::Markup # to reduce typing
+      # +@bullet_list+:: @RM::List.new :BULLET, # ...
+      # +@label_list+::  @RM::List.new :LABEL, # ...
+      # +@lalpha_list+:: @RM::List.new :LALPHA, # ...
+      # +@note_list+::   @RM::List.new :NOTE, # ...
+      # +@number_list+:: @RM::List.new :NUMBER, # ...
+      # +@ualpha_list+:: @RM::List.new :UALPHA, # ...
 
-      def test_start_accepting
-        @to.start_accepting
+      def setup
+        super
 
-        start_accepting
+        @options = Options.new
+
+        @m = @RM.new
+
+        @bullet_list = @RM::List.new(:BULLET,
+          @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
+          @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
+
+        @label_list = @RM::List.new(:LABEL,
+          @RM::ListItem.new('cat', @RM::Paragraph.new('cats are cool')),
+          @RM::ListItem.new('dog', @RM::Paragraph.new('dogs are cool too')))
+
+        @lalpha_list = @RM::List.new(:LALPHA,
+          @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
+          @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
+
+        @note_list = @RM::List.new(:NOTE,
+          @RM::ListItem.new('cat', @RM::Paragraph.new('cats are cool')),
+          @RM::ListItem.new('dog', @RM::Paragraph.new('dogs are cool too')))
+
+        @number_list = @RM::List.new(:NUMBER,
+          @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
+          @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
+
+        @ualpha_list = @RM::List.new(:UALPHA,
+          @RM::ListItem.new(nil, @RM::Paragraph.new('l1')),
+          @RM::ListItem.new(nil, @RM::Paragraph.new('l2')))
       end
 
       ##
-      # Calls end_accepting on your test case which needs to call
-      # <tt>@to.end_accepting</tt> and verify document generation
+      # Call to add the visitor tests to your test case
 
-      def test_end_accepting
-        @to.start_accepting
-        @to.res << 'hi'
+      def self.add_visitor_tests
+        class_eval do
 
-        end_accepting
-      end
+          ##
+          # Calls start_accepting which needs to verify startup state
 
-      ##
-      # Calls accept_blank_line
+          def test_start_accepting
+            @to.start_accepting
 
-      def test_accept_blank_line
-        @to.start_accepting
+            start_accepting
+          end
 
-        @to.accept_blank_line @RM::BlankLine.new
+          ##
+          # Calls end_accepting on your test case which needs to call
+          # <tt>@to.end_accepting</tt> and verify document generation
 
-        accept_blank_line
-      end
+          def test_end_accepting
+            @to.start_accepting
+            @to.res << 'hi'
 
-      ##
-      # Calls accept_block_quote
+            end_accepting
+          end
 
-      def test_accept_block_quote
-        @to.start_accepting
+          ##
+          # Calls accept_blank_line
 
-        @to.accept_block_quote block para 'quote'
+          def test_accept_blank_line
+            @to.start_accepting
 
-        accept_block_quote
-      end
-      ##
-      # Test case that calls <tt>@to.accept_document</tt>
+            @to.accept_blank_line @RM::BlankLine.new
 
-      def test_accept_document
-        @to.start_accepting
-        @to.accept_document @RM::Document.new @RM::Paragraph.new 'hello'
+            accept_blank_line
+          end
 
-        accept_document
-      end
+          ##
+          # Calls accept_block_quote
 
-      ##
-      # Calls accept_heading with a level 5 RDoc::Markup::Heading
+          def test_accept_block_quote
+            @to.start_accepting
 
-      def test_accept_heading
-        @to.start_accepting
+            @to.accept_block_quote block para 'quote'
 
-        @to.accept_heading @RM::Heading.new(5, 'Hello')
+            accept_block_quote
+          end
+          ##
+          # Test case that calls <tt>@to.accept_document</tt>
 
-        accept_heading
-      end
+          def test_accept_document
+            @to.start_accepting
+            @to.accept_document @RM::Document.new @RM::Paragraph.new 'hello'
 
-      ##
-      # Calls accept_heading_1 with a level 1 RDoc::Markup::Heading
+            accept_document
+          end
 
-      def test_accept_heading_1
-        @to.start_accepting
+          ##
+          # Calls accept_heading with a level 5 RDoc::Markup::Heading
 
-        @to.accept_heading @RM::Heading.new(1, 'Hello')
+          def test_accept_heading
+            @to.start_accepting
 
-        accept_heading_1
-      end
+            @to.accept_heading @RM::Heading.new(5, 'Hello')
 
-      ##
-      # Calls accept_heading_2 with a level 2 RDoc::Markup::Heading
+            accept_heading
+          end
 
-      def test_accept_heading_2
-        @to.start_accepting
+          ##
+          # Calls accept_heading_1 with a level 1 RDoc::Markup::Heading
 
-        @to.accept_heading @RM::Heading.new(2, 'Hello')
+          def test_accept_heading_1
+            @to.start_accepting
 
-        accept_heading_2
-      end
+            @to.accept_heading @RM::Heading.new(1, 'Hello')
 
-      ##
-      # Calls accept_heading_3 with a level 3 RDoc::Markup::Heading
+            accept_heading_1
+          end
 
-      def test_accept_heading_3
-        @to.start_accepting
+          ##
+          # Calls accept_heading_2 with a level 2 RDoc::Markup::Heading
 
-        @to.accept_heading @RM::Heading.new(3, 'Hello')
+          def test_accept_heading_2
+            @to.start_accepting
 
-        accept_heading_3
-      end
+            @to.accept_heading @RM::Heading.new(2, 'Hello')
 
-      ##
-      # Calls accept_heading_4 with a level 4 RDoc::Markup::Heading
+            accept_heading_2
+          end
 
-      def test_accept_heading_4
-        @to.start_accepting
+          ##
+          # Calls accept_heading_3 with a level 3 RDoc::Markup::Heading
 
-        @to.accept_heading @RM::Heading.new(4, 'Hello')
+          def test_accept_heading_3
+            @to.start_accepting
 
-        accept_heading_4
-      end
+            @to.accept_heading @RM::Heading.new(3, 'Hello')
 
-      ##
-      # Calls accept_heading_b with a bold level 1 RDoc::Markup::Heading
+            accept_heading_3
+          end
 
-      def test_accept_heading_b
-        @to.start_accepting
+          ##
+          # Calls accept_heading_4 with a level 4 RDoc::Markup::Heading
 
-        @to.accept_heading @RM::Heading.new(1, '*Hello*')
+          def test_accept_heading_4
+            @to.start_accepting
 
-        accept_heading_b
-      end
+            @to.accept_heading @RM::Heading.new(4, 'Hello')
 
-      ##
-      # Calls accept_heading_suppressed_crossref with a level 1
-      # RDoc::Markup::Heading containing a suppressed crossref
+            accept_heading_4
+          end
 
-      def test_accept_heading_suppressed_crossref # HACK to_html_crossref test
-        @to.start_accepting
+          ##
+          # Calls accept_heading_b with a bold level 1 RDoc::Markup::Heading
 
-        @to.accept_heading @RM::Heading.new(1, '\\Hello')
+          def test_accept_heading_b
+            @to.start_accepting
 
-        accept_heading_suppressed_crossref
-      end
+            @to.accept_heading @RM::Heading.new(1, '*Hello*')
 
-      ##
-      # Calls accept_paragraph
+            accept_heading_b
+          end
 
-      def test_accept_paragraph
-        @to.start_accepting
+          ##
+          # Calls accept_heading_suppressed_crossref with a level 1
+          # RDoc::Markup::Heading containing a suppressed crossref
 
-        @to.accept_paragraph @RM::Paragraph.new('hi')
+          def test_accept_heading_suppressed_crossref # HACK to_html_crossref test
+            @to.start_accepting
 
-        accept_paragraph
-      end
+            @to.accept_heading @RM::Heading.new(1, '\\Hello')
 
-      ##
-      # Calls accept_paragraph_b with a RDoc::Markup::Paragraph containing
-      # bold words
+            accept_heading_suppressed_crossref
+          end
 
-      def test_accept_paragraph_b
-        @to.start_accepting
+          ##
+          # Calls accept_paragraph
 
-        @to.accept_paragraph @RM::Paragraph.new('reg <b>bold words</b> reg')
+          def test_accept_paragraph
+            @to.start_accepting
 
-        accept_paragraph_b
-      end
+            @to.accept_paragraph @RM::Paragraph.new('hi')
 
-      ##
-      # Calls accept_paragraph_br with a RDoc::Markup::Paragraph containing
-      # a \<br>
+            accept_paragraph
+          end
 
-      def test_accept_paragraph_br
-        @to.start_accepting
+          ##
+          # Calls accept_paragraph_b with a RDoc::Markup::Paragraph containing
+          # bold words
 
-        @to.accept_paragraph para 'one<br>two'
+          def test_accept_paragraph_b
+            @to.start_accepting
 
-        accept_paragraph_br
-      end
+            @to.accept_paragraph @RM::Paragraph.new('reg <b>bold words</b> reg')
 
-      ##
-      # Calls accept_paragraph with a Paragraph containing a hard break
+            accept_paragraph_b
+          end
 
-      def test_accept_paragraph_break
-        @to.start_accepting
+          ##
+          # Calls accept_paragraph_br with a RDoc::Markup::Paragraph containing
+          # a \<br>
 
-        @to.accept_paragraph para('hello', hard_break, 'world')
+          def test_accept_paragraph_br
+            @to.start_accepting
 
-        accept_paragraph_break
-      end
+            @to.accept_paragraph para 'one<br>two'
 
-      ##
-      # Calls accept_paragraph_i with a RDoc::Markup::Paragraph containing
-      # emphasized words
+            accept_paragraph_br
+          end
 
-      def test_accept_paragraph_i
-        @to.start_accepting
+          ##
+          # Calls accept_paragraph with a Paragraph containing a hard break
 
-        @to.accept_paragraph @RM::Paragraph.new('reg <em>italic words</em> reg')
+          def test_accept_paragraph_break
+            @to.start_accepting
 
-        accept_paragraph_i
-      end
+            @to.accept_paragraph para('hello', hard_break, 'world')
 
-      ##
-      # Calls accept_paragraph_plus with a RDoc::Markup::Paragraph containing
-      # teletype words
+            accept_paragraph_break
+          end
 
-      def test_accept_paragraph_plus
-        @to.start_accepting
+          ##
+          # Calls accept_paragraph_i with a RDoc::Markup::Paragraph containing
+          # emphasized words
 
-        @to.accept_paragraph @RM::Paragraph.new('reg +teletype+ reg')
+          def test_accept_paragraph_i
+            @to.start_accepting
 
-        accept_paragraph_plus
-      end
+            @to.accept_paragraph @RM::Paragraph.new('reg <em>italic words</em> reg')
 
-      ##
-      # Calls accept_paragraph_star with a RDoc::Markup::Paragraph containing
-      # bold words
+            accept_paragraph_i
+          end
 
-      def test_accept_paragraph_star
-        @to.start_accepting
+          ##
+          # Calls accept_paragraph_plus with a RDoc::Markup::Paragraph containing
+          # teletype words
 
-        @to.accept_paragraph @RM::Paragraph.new('reg *bold* reg')
+          def test_accept_paragraph_plus
+            @to.start_accepting
 
-        accept_paragraph_star
-      end
+            @to.accept_paragraph @RM::Paragraph.new('reg +teletype+ reg')
 
-      ##
-      # Calls accept_paragraph_underscore with a RDoc::Markup::Paragraph
-      # containing emphasized words
+            accept_paragraph_plus
+          end
 
-      def test_accept_paragraph_underscore
-        @to.start_accepting
+          ##
+          # Calls accept_paragraph_star with a RDoc::Markup::Paragraph containing
+          # bold words
 
-        @to.accept_paragraph @RM::Paragraph.new('reg _italic_ reg')
+          def test_accept_paragraph_star
+            @to.start_accepting
 
-        accept_paragraph_underscore
-      end
+            @to.accept_paragraph @RM::Paragraph.new('reg *bold* reg')
 
-      ##
-      # Calls accept_verbatim with a RDoc::Markup::Verbatim
+            accept_paragraph_star
+          end
 
-      def test_accept_verbatim
-        @to.start_accepting
+          ##
+          # Calls accept_paragraph_underscore with a RDoc::Markup::Paragraph
+          # containing emphasized words
 
-        @to.accept_verbatim @RM::Verbatim.new("hi\n", "  world\n")
+          def test_accept_paragraph_underscore
+            @to.start_accepting
 
-        accept_verbatim
-      end
+            @to.accept_paragraph @RM::Paragraph.new('reg _italic_ reg')
 
-      ##
-      # Calls accept_raw with a RDoc::Markup::Raw
+            accept_paragraph_underscore
+          end
 
-      def test_accept_raw
-        @to.start_accepting
+          ##
+          # Calls accept_verbatim with a RDoc::Markup::Verbatim
 
-        @to.accept_raw @RM::Raw.new("<table>",
-                                    "<tr><th>Name<th>Count",
-                                    "<tr><td>a<td>1",
-                                    "<tr><td>b<td>2",
-                                    "</table>")
+          def test_accept_verbatim
+            @to.start_accepting
 
-        accept_raw
-      end
+            @to.accept_verbatim @RM::Verbatim.new("hi\n", "  world\n")
 
-      ##
-      # Calls accept_rule with a RDoc::Markup::Rule
+            accept_verbatim
+          end
 
-      def test_accept_rule
-        @to.start_accepting
+          ##
+          # Calls accept_raw with a RDoc::Markup::Raw
 
-        @to.accept_rule @RM::Rule.new(4)
+          def test_accept_raw
+            @to.start_accepting
 
-        accept_rule
-      end
+            @to.accept_raw @RM::Raw.new("<table>",
+                                        "<tr><th>Name<th>Count",
+                                        "<tr><td>a<td>1",
+                                        "<tr><td>b<td>2",
+                                        "</table>")
 
-      ##
-      # Calls accept_list_item_start_bullet
+            accept_raw
+          end
 
-      def test_accept_list_item_start_bullet
-        @to.start_accepting
+          ##
+          # Calls accept_rule with a RDoc::Markup::Rule
 
-        @to.accept_list_start @bullet_list
+          def test_accept_rule
+            @to.start_accepting
 
-        @to.accept_list_item_start @bullet_list.items.first
+            @to.accept_rule @RM::Rule.new(4)
 
-        accept_list_item_start_bullet
-      end
+            accept_rule
+          end
 
-      ##
-      # Calls accept_list_item_start_label
+          ##
+          # Calls accept_list_item_start_bullet
 
-      def test_accept_list_item_start_label
-        @to.start_accepting
+          def test_accept_list_item_start_bullet
+            @to.start_accepting
 
-        @to.accept_list_start @label_list
+            @to.accept_list_start @bullet_list
 
-        @to.accept_list_item_start @label_list.items.first
+            @to.accept_list_item_start @bullet_list.items.first
 
-        accept_list_item_start_label
-      end
+            accept_list_item_start_bullet
+          end
 
-      ##
-      # Calls accept_list_item_start_lalpha
+          ##
+          # Calls accept_list_item_start_label
 
-      def test_accept_list_item_start_lalpha
-        @to.start_accepting
+          def test_accept_list_item_start_label
+            @to.start_accepting
 
-        @to.accept_list_start @lalpha_list
+            @to.accept_list_start @label_list
 
-        @to.accept_list_item_start @lalpha_list.items.first
+            @to.accept_list_item_start @label_list.items.first
 
-        accept_list_item_start_lalpha
-      end
+            accept_list_item_start_label
+          end
 
-      ##
-      # Calls accept_list_item_start_note
+          ##
+          # Calls accept_list_item_start_lalpha
 
-      def test_accept_list_item_start_note
-        @to.start_accepting
+          def test_accept_list_item_start_lalpha
+            @to.start_accepting
 
-        @to.accept_list_start @note_list
+            @to.accept_list_start @lalpha_list
 
-        @to.accept_list_item_start @note_list.items.first
+            @to.accept_list_item_start @lalpha_list.items.first
 
-        accept_list_item_start_note
-      end
+            accept_list_item_start_lalpha
+          end
 
-      ##
-      # Calls accept_list_item_start_note_2
+          ##
+          # Calls accept_list_item_start_note
 
-      def test_accept_list_item_start_note_2
-        list = list(:NOTE,
-                 item('<tt>teletype</tt>',
-                   para('teletype description')))
+          def test_accept_list_item_start_note
+            @to.start_accepting
 
-        @to.start_accepting
+            @to.accept_list_start @note_list
 
-        list.accept @to
+            @to.accept_list_item_start @note_list.items.first
 
-        @to.end_accepting
+            accept_list_item_start_note
+          end
 
-        accept_list_item_start_note_2
-      end
+          ##
+          # Calls accept_list_item_start_note_2
 
-      ##
-      # Calls accept_list_item_start_note_multi_description
+          def test_accept_list_item_start_note_2
+            list = list(:NOTE,
+                     item('<tt>teletype</tt>',
+                       para('teletype description')))
 
-      def test_accept_list_item_start_note_multi_description
-        list = list(:NOTE,
-                 item(%w[label],
-                   para('description one')),
-                 item(nil, para('description two')))
+            @to.start_accepting
 
-        @to.start_accepting
+            list.accept @to
 
-        list.accept @to
+            @to.end_accepting
 
-        @to.end_accepting
+            accept_list_item_start_note_2
+          end
 
-        accept_list_item_start_note_multi_description
-      end
+          ##
+          # Calls accept_list_item_start_note_multi_description
 
-      ##
-      # Calls accept_list_item_start_note_multi_label
+          def test_accept_list_item_start_note_multi_description
+            list = list(:NOTE,
+                     item(%w[label],
+                       para('description one')),
+                     item(nil, para('description two')))
 
-      def test_accept_list_item_start_note_multi_label
-        list = list(:NOTE,
-                 item(%w[one two],
-                   para('two headers')))
+            @to.start_accepting
 
-        @to.start_accepting
+            list.accept @to
 
-        list.accept @to
+            @to.end_accepting
 
-        @to.end_accepting
+            accept_list_item_start_note_multi_description
+          end
 
-        accept_list_item_start_note_multi_label
-      end
+          ##
+          # Calls accept_list_item_start_note_multi_label
 
-      ##
-      # Calls accept_list_item_start_number
+          def test_accept_list_item_start_note_multi_label
+            list = list(:NOTE,
+                     item(%w[one two],
+                       para('two headers')))
 
-      def test_accept_list_item_start_number
-        @to.start_accepting
+            @to.start_accepting
 
-        @to.accept_list_start @number_list
+            list.accept @to
 
-        @to.accept_list_item_start @number_list.items.first
+            @to.end_accepting
 
-        accept_list_item_start_number
-      end
+            accept_list_item_start_note_multi_label
+          end
 
-      ##
-      # Calls accept_list_item_start_ualpha
+          ##
+          # Calls accept_list_item_start_number
 
-      def test_accept_list_item_start_ualpha
-        @to.start_accepting
+          def test_accept_list_item_start_number
+            @to.start_accepting
 
-        @to.accept_list_start @ualpha_list
+            @to.accept_list_start @number_list
 
-        @to.accept_list_item_start @ualpha_list.items.first
+            @to.accept_list_item_start @number_list.items.first
 
-        accept_list_item_start_ualpha
-      end
+            accept_list_item_start_number
+          end
 
-      ##
-      # Calls accept_list_item_end_bullet
+          ##
+          # Calls accept_list_item_start_ualpha
 
-      def test_accept_list_item_end_bullet
-        @to.start_accepting
+          def test_accept_list_item_start_ualpha
+            @to.start_accepting
 
-        @to.accept_list_start @bullet_list
+            @to.accept_list_start @ualpha_list
 
-        @to.accept_list_item_start @bullet_list.items.first
+            @to.accept_list_item_start @ualpha_list.items.first
 
-        @to.accept_list_item_end @bullet_list.items.first
+            accept_list_item_start_ualpha
+          end
 
-        accept_list_item_end_bullet
-      end
+          ##
+          # Calls accept_list_item_end_bullet
 
-      ##
-      # Calls accept_list_item_end_label
+          def test_accept_list_item_end_bullet
+            @to.start_accepting
 
-      def test_accept_list_item_end_label
-        @to.start_accepting
+            @to.accept_list_start @bullet_list
 
-        @to.accept_list_start @label_list
+            @to.accept_list_item_start @bullet_list.items.first
 
-        @to.accept_list_item_start @label_list.items.first
+            @to.accept_list_item_end @bullet_list.items.first
 
-        @to.accept_list_item_end @label_list.items.first
+            accept_list_item_end_bullet
+          end
 
-        accept_list_item_end_label
-      end
+          ##
+          # Calls accept_list_item_end_label
 
-      ##
-      # Calls accept_list_item_end_lalpha
+          def test_accept_list_item_end_label
+            @to.start_accepting
 
-      def test_accept_list_item_end_lalpha
-        @to.start_accepting
+            @to.accept_list_start @label_list
 
-        @to.accept_list_start @lalpha_list
+            @to.accept_list_item_start @label_list.items.first
 
-        @to.accept_list_item_start @lalpha_list.items.first
+            @to.accept_list_item_end @label_list.items.first
 
-        @to.accept_list_item_end @lalpha_list.items.first
+            accept_list_item_end_label
+          end
 
-        accept_list_item_end_lalpha
-      end
+          ##
+          # Calls accept_list_item_end_lalpha
 
-      ##
-      # Calls accept_list_item_end_note
+          def test_accept_list_item_end_lalpha
+            @to.start_accepting
 
-      def test_accept_list_item_end_note
-        @to.start_accepting
+            @to.accept_list_start @lalpha_list
 
-        @to.accept_list_start @note_list
+            @to.accept_list_item_start @lalpha_list.items.first
 
-        @to.accept_list_item_start @note_list.items.first
+            @to.accept_list_item_end @lalpha_list.items.first
 
-        @to.accept_list_item_end @note_list.items.first
+            accept_list_item_end_lalpha
+          end
 
-        accept_list_item_end_note
-      end
+          ##
+          # Calls accept_list_item_end_note
 
-      ##
-      # Calls accept_list_item_end_number
+          def test_accept_list_item_end_note
+            @to.start_accepting
 
-      def test_accept_list_item_end_number
-        @to.start_accepting
+            @to.accept_list_start @note_list
 
-        @to.accept_list_start @number_list
+            @to.accept_list_item_start @note_list.items.first
 
-        @to.accept_list_item_start @number_list.items.first
+            @to.accept_list_item_end @note_list.items.first
 
-        @to.accept_list_item_end @number_list.items.first
+            accept_list_item_end_note
+          end
 
-        accept_list_item_end_number
-      end
+          ##
+          # Calls accept_list_item_end_number
 
-      ##
-      # Calls accept_list_item_end_ualpha
+          def test_accept_list_item_end_number
+            @to.start_accepting
 
-      def test_accept_list_item_end_ualpha
-        @to.start_accepting
+            @to.accept_list_start @number_list
 
-        @to.accept_list_start @ualpha_list
+            @to.accept_list_item_start @number_list.items.first
 
-        @to.accept_list_item_start @ualpha_list.items.first
+            @to.accept_list_item_end @number_list.items.first
 
-        @to.accept_list_item_end @ualpha_list.items.first
+            accept_list_item_end_number
+          end
 
-        accept_list_item_end_ualpha
-      end
+          ##
+          # Calls accept_list_item_end_ualpha
 
-      ##
-      # Calls accept_list_start_bullet
+          def test_accept_list_item_end_ualpha
+            @to.start_accepting
 
-      def test_accept_list_start_bullet
-        @to.start_accepting
+            @to.accept_list_start @ualpha_list
 
-        @to.accept_list_start @bullet_list
+            @to.accept_list_item_start @ualpha_list.items.first
 
-        accept_list_start_bullet
-      end
+            @to.accept_list_item_end @ualpha_list.items.first
 
-      ##
-      # Calls accept_list_start_label
+            accept_list_item_end_ualpha
+          end
 
-      def test_accept_list_start_label
-        @to.start_accepting
+          ##
+          # Calls accept_list_start_bullet
 
-        @to.accept_list_start @label_list
+          def test_accept_list_start_bullet
+            @to.start_accepting
 
-        accept_list_start_label
-      end
+            @to.accept_list_start @bullet_list
 
-      ##
-      # Calls accept_list_start_lalpha
+            accept_list_start_bullet
+          end
 
-      def test_accept_list_start_lalpha
-        @to.start_accepting
+          ##
+          # Calls accept_list_start_label
 
-        @to.accept_list_start @lalpha_list
+          def test_accept_list_start_label
+            @to.start_accepting
 
-        accept_list_start_lalpha
-      end
+            @to.accept_list_start @label_list
 
-      ##
-      # Calls accept_list_start_note
+            accept_list_start_label
+          end
 
-      def test_accept_list_start_note
-        @to.start_accepting
+          ##
+          # Calls accept_list_start_lalpha
 
-        @to.accept_list_start @note_list
+          def test_accept_list_start_lalpha
+            @to.start_accepting
 
-        accept_list_start_note
-      end
+            @to.accept_list_start @lalpha_list
 
-      ##
-      # Calls accept_list_start_number
+            accept_list_start_lalpha
+          end
 
-      def test_accept_list_start_number
-        @to.start_accepting
+          ##
+          # Calls accept_list_start_note
 
-        @to.accept_list_start @number_list
+          def test_accept_list_start_note
+            @to.start_accepting
 
-        accept_list_start_number
-      end
+            @to.accept_list_start @note_list
 
-      ##
-      # Calls accept_list_start_ualpha
+            accept_list_start_note
+          end
 
-      def test_accept_list_start_ualpha
-        @to.start_accepting
+          ##
+          # Calls accept_list_start_number
 
-        @to.accept_list_start @ualpha_list
+          def test_accept_list_start_number
+            @to.start_accepting
 
-        accept_list_start_ualpha
-      end
+            @to.accept_list_start @number_list
 
-      ##
-      # Calls accept_list_end_bullet
+            accept_list_start_number
+          end
 
-      def test_accept_list_end_bullet
-        @to.start_accepting
+          ##
+          # Calls accept_list_start_ualpha
 
-        @to.accept_list_start @bullet_list
+          def test_accept_list_start_ualpha
+            @to.start_accepting
 
-        @to.accept_list_end @bullet_list
+            @to.accept_list_start @ualpha_list
 
-        accept_list_end_bullet
-      end
+            accept_list_start_ualpha
+          end
 
-      ##
-      # Calls accept_list_end_label
+          ##
+          # Calls accept_list_end_bullet
 
-      def test_accept_list_end_label
-        @to.start_accepting
+          def test_accept_list_end_bullet
+            @to.start_accepting
 
-        @to.accept_list_start @label_list
+            @to.accept_list_start @bullet_list
 
-        @to.accept_list_end @label_list
+            @to.accept_list_end @bullet_list
 
-        accept_list_end_label
-      end
+            accept_list_end_bullet
+          end
 
-      ##
-      # Calls accept_list_end_lalpha
+          ##
+          # Calls accept_list_end_label
 
-      def test_accept_list_end_lalpha
-        @to.start_accepting
+          def test_accept_list_end_label
+            @to.start_accepting
 
-        @to.accept_list_start @lalpha_list
+            @to.accept_list_start @label_list
 
-        @to.accept_list_end @lalpha_list
+            @to.accept_list_end @label_list
 
-        accept_list_end_lalpha
-      end
+            accept_list_end_label
+          end
 
-      ##
-      # Calls accept_list_end_number
+          ##
+          # Calls accept_list_end_lalpha
 
-      def test_accept_list_end_number
-        @to.start_accepting
+          def test_accept_list_end_lalpha
+            @to.start_accepting
 
-        @to.accept_list_start @number_list
+            @to.accept_list_start @lalpha_list
 
-        @to.accept_list_end @number_list
+            @to.accept_list_end @lalpha_list
 
-        accept_list_end_number
-      end
+            accept_list_end_lalpha
+          end
 
-      ##
-      # Calls accept_list_end_note
+          ##
+          # Calls accept_list_end_number
 
-      def test_accept_list_end_note
-        @to.start_accepting
+          def test_accept_list_end_number
+            @to.start_accepting
 
-        @to.accept_list_start @note_list
+            @to.accept_list_start @number_list
 
-        @to.accept_list_end @note_list
+            @to.accept_list_end @number_list
 
-        accept_list_end_note
-      end
+            accept_list_end_number
+          end
 
-      ##
-      # Calls accept_list_end_ualpha
+          ##
+          # Calls accept_list_end_note
 
-      def test_accept_list_end_ualpha
-        @to.start_accepting
+          def test_accept_list_end_note
+            @to.start_accepting
 
-        @to.accept_list_start @ualpha_list
+            @to.accept_list_start @note_list
 
-        @to.accept_list_end @ualpha_list
+            @to.accept_list_end @note_list
 
-        accept_list_end_ualpha
-      end
+            accept_list_end_note
+          end
 
-      ##
-      # Calls list_nested with a two-level list
+          ##
+          # Calls accept_list_end_ualpha
 
-      def test_list_nested
-        doc = @RM::Document.new(
-                @RM::List.new(:BULLET,
-                  @RM::ListItem.new(nil,
-                    @RM::Paragraph.new('l1'),
+          def test_accept_list_end_ualpha
+            @to.start_accepting
+
+            @to.accept_list_start @ualpha_list
+
+            @to.accept_list_end @ualpha_list
+
+            accept_list_end_ualpha
+          end
+
+          ##
+          # Calls list_nested with a two-level list
+
+          def test_list_nested
+            doc = @RM::Document.new(
                     @RM::List.new(:BULLET,
                       @RM::ListItem.new(nil,
-                        @RM::Paragraph.new('l1.1')))),
-                  @RM::ListItem.new(nil,
-                    @RM::Paragraph.new('l2'))))
+                        @RM::Paragraph.new('l1'),
+                        @RM::List.new(:BULLET,
+                          @RM::ListItem.new(nil,
+                            @RM::Paragraph.new('l1.1')))),
+                      @RM::ListItem.new(nil,
+                        @RM::Paragraph.new('l2'))))
 
-        doc.accept @to
+            doc.accept @to
 
-        list_nested
+            list_nested
+          end
+
+          ##
+          # Calls list_verbatim with a list containing a verbatim block
+
+          def test_list_verbatim # HACK overblown
+            doc =
+              doc(
+                list(:BULLET,
+                  item(nil,
+                    para('list stuff'),
+                    blank_line,
+                    verb("* list\n",
+                         "  with\n",
+                         "\n",
+                         "  second\n",
+                         "\n",
+                         "  1. indented\n",
+                         "  2. numbered\n",
+                         "\n",
+                         "  third\n",
+                         "\n",
+                         "* second\n"))))
+
+            doc.accept @to
+
+            list_verbatim
+          end
+        end
       end
 
-      ##
-      # Calls list_verbatim with a list containing a verbatim block
-
-      def test_list_verbatim # HACK overblown
-        doc =
-          doc(
-            list(:BULLET,
-              item(nil,
-                para('list stuff'),
-                blank_line,
-                verb("* list\n",
-                     "  with\n",
-                     "\n",
-                     "  second\n",
-                     "\n",
-                     "  1. indented\n",
-                     "  2. numbered\n",
-                     "\n",
-                     "  third\n",
-                     "\n",
-                     "* second\n"))))
-
-        doc.accept @to
-
-        list_verbatim
-      end
     end
   end
-
 end

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
-##
-# For RubyGems backwards compatibility
+module RDoc
+  module RI
+    ##
+    # For RubyGems backwards compatibility
 
-module RDoc::RI::Formatter # :nodoc:
+    module Formatter # :nodoc:
+    end
+  end
 end

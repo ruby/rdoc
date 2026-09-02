@@ -1,422 +1,424 @@
 # frozen_string_literal: true
-##
-# Abstract class representing either a method or an attribute.
-
-class RDoc::MethodAttr < RDoc::CodeObject
-
-  include Comparable
-
+module RDoc
   ##
-  # Name of this method/attribute.
+  # Abstract class representing either a method or an attribute.
 
-  attr_accessor :name
+  class MethodAttr < CodeObject
 
-  ##
-  # public, protected, private
+    include Comparable
 
-  attr_accessor :visibility
+    ##
+    # Name of this method/attribute.
 
-  ##
-  # Is this a singleton method/attribute?
+    attr_accessor :name
 
-  attr_accessor :singleton
+    ##
+    # public, protected, private
 
-  ##
-  # Array of other names for this method/attribute
+    attr_accessor :visibility
 
-  attr_reader :aliases
+    ##
+    # Is this a singleton method/attribute?
 
-  ##
-  # The method/attribute we're aliasing
+    attr_accessor :singleton
 
-  attr_accessor :is_alias_for
+    ##
+    # Array of other names for this method/attribute
 
-  #--
-  # The attributes below are for AnyMethod only.
-  # They are left here for the time being to
-  # allow ri to operate.
-  # TODO modify ri to avoid calling these on attributes.
-  #++
+    attr_reader :aliases
 
-  ##
-  # Parameters yielded by the called block
+    ##
+    # The method/attribute we're aliasing
 
-  attr_reader :block_params
+    attr_accessor :is_alias_for
 
-  ##
-  # Parameters for this method
+    #--
+    # The attributes below are for AnyMethod only.
+    # They are left here for the time being to
+    # allow ri to operate.
+    # TODO modify ri to avoid calling these on attributes.
+    #++
 
-  attr_accessor :params
+    ##
+    # Parameters yielded by the called block
 
-  ##
-  # Different ways to call this method
+    attr_reader :block_params
 
-  attr_accessor :call_seq
+    ##
+    # Parameters for this method
 
-  ##
-  # RBS type signature lines from inline annotations or loaded .rbs files.
-  # Each entry is one overload or type expression.
+    attr_accessor :params
 
-  attr_accessor :type_signature_lines
+    ##
+    # Different ways to call this method
 
-  ##
-  # The call_seq or the param_seq with method name, if there is no call_seq.
+    attr_accessor :call_seq
 
-  attr_reader :arglists
+    ##
+    # RBS type signature lines from inline annotations or loaded .rbs files.
+    # Each entry is one overload or type expression.
 
-  ##
-  # Creates a new MethodAttr with method or attribute
-  # name +name+.
-  #
-  # Usually this is called by super from a subclass.
+    attr_accessor :type_signature_lines
 
-  def initialize(name, singleton: false)
-    super()
+    ##
+    # The call_seq or the param_seq with method name, if there is no call_seq.
 
-    @name = name
+    attr_reader :arglists
 
-    @aliases      = []
-    @is_alias_for = nil
-    @parent_name  = nil
-    @singleton    = singleton
-    @visibility   = :public
-    @see = false
+    ##
+    # Creates a new MethodAttr with method or attribute
+    # name +name+.
+    #
+    # Usually this is called by super from a subclass.
 
-    @arglists     = nil
-    @block_params = nil
-    @call_seq     = nil
-    @params       = nil
-    @type_signature_lines = nil
-  end
+    def initialize(name, singleton: false)
+      super()
 
-  ##
-  # Resets cached data for the object so it can be rebuilt by accessor methods
+      @name = name
 
-  def initialize_copy(other) # :nodoc:
-    @full_name = nil
-  end
+      @aliases      = []
+      @is_alias_for = nil
+      @parent_name  = nil
+      @singleton    = singleton
+      @visibility   = :public
+      @see = false
 
-  def initialize_visibility # :nodoc:
-    super
-    @see = nil
-  end
+      @arglists     = nil
+      @block_params = nil
+      @call_seq     = nil
+      @params       = nil
+      @type_signature_lines = nil
+    end
 
-  ##
-  # Order by #singleton then #name
+    ##
+    # Resets cached data for the object so it can be rebuilt by accessor methods
 
-  def <=>(other)
-    return unless other.respond_to?(:singleton) &&
-                  other.respond_to?(:name)
+    def initialize_copy(other) # :nodoc:
+      @full_name = nil
+    end
 
-    [@singleton      ? 0 : 1, name_ord_range,       name] <=>
-    [other.singleton ? 0 : 1, other.name_ord_range, other.name]
-  end
+    def initialize_visibility # :nodoc:
+      super
+      @see = nil
+    end
 
-  def ==(other) # :nodoc:
-    equal?(other) or self.class == other.class and full_name == other.full_name
-  end
+    ##
+    # Order by #singleton then #name
 
-  ##
-  # A method/attribute is documented if any of the following is true:
-  # - it was marked with :nodoc:;
-  # - it has a comment;
-  # - it is an alias for a documented method;
-  # - it has a +#see+ method that is documented.
+    def <=>(other)
+      return unless other.respond_to?(:singleton) &&
+                    other.respond_to?(:name)
 
-  def documented?
-    super or
-      (is_alias_for and is_alias_for.documented?) or
-      (see and see.documented?)
-  end
+      [@singleton      ? 0 : 1, name_ord_range,       name] <=>
+      [other.singleton ? 0 : 1, other.name_ord_range, other.name]
+    end
 
-  ##
-  # A method/attribute to look at,
-  # in particular if this method/attribute has no documentation.
-  #
-  # It can be a method/attribute of the superclass or of an included module,
-  # including the Kernel module, which is always appended to the included
-  # modules.
-  #
-  # Returns +nil+ if there is no such method/attribute.
-  # The +#is_alias_for+ method/attribute, if any, is not included.
-  #
-  # Templates may generate a "see also ..." if this method/attribute
-  # has documentation, and "see ..." if it does not.
+    def ==(other) # :nodoc:
+      equal?(other) or self.class == other.class and full_name == other.full_name
+    end
 
-  def see
-    @see = find_see if @see == false
-    @see
-  end
+    ##
+    # A method/attribute is documented if any of the following is true:
+    # - it was marked with :nodoc:;
+    # - it has a comment;
+    # - it is an alias for a documented method;
+    # - it has a +#see+ method that is documented.
 
-  ##
-  # Sets the store for this class or module and its contained code objects.
+    def documented?
+      super or
+        (is_alias_for and is_alias_for.documented?) or
+        (see and see.documented?)
+    end
 
-  def store=(store)
-    super
+    ##
+    # A method/attribute to look at,
+    # in particular if this method/attribute has no documentation.
+    #
+    # It can be a method/attribute of the superclass or of an included module,
+    # including the Kernel module, which is always appended to the included
+    # modules.
+    #
+    # Returns +nil+ if there is no such method/attribute.
+    # The +#is_alias_for+ method/attribute, if any, is not included.
+    #
+    # Templates may generate a "see also ..." if this method/attribute
+    # has documentation, and "see ..." if it does not.
 
-    @file = @store.add_file @file.full_name if @file
-  end
+    def see
+      @see = find_see if @see == false
+      @see
+    end
 
-  def find_see # :nodoc:
-    return nil if singleton || is_alias_for
+    ##
+    # Sets the store for this class or module and its contained code objects.
 
-    # look for the method
-    other = find_method_or_attribute name
-    return other if other
+    def store=(store)
+      super
 
-    # if it is a setter, look for a getter
-    return nil unless name =~ /[a-z_]=$/i   # avoid == or ===
-    return find_method_or_attribute name[0..-2]
-  end
+      @file = @store.add_file @file.full_name if @file
+    end
 
-  def find_method_or_attribute(name) # :nodoc:
-    return nil unless parent.respond_to? :ancestors
+    def find_see # :nodoc:
+      return nil if singleton || is_alias_for
 
-    searched = parent.ancestors
-    kernel = @store.modules_hash['Kernel']
-
-    searched << kernel if kernel &&
-      parent != kernel && !searched.include?(kernel)
-
-    searched.each do |ancestor|
-      next if String === ancestor
-      next if parent == ancestor
-
-      other = ancestor.find_method_named('#' + name) ||
-              ancestor.find_attribute_named(name)
-
+      # look for the method
+      other = find_method_or_attribute name
       return other if other
+
+      # if it is a setter, look for a getter
+      return nil unless name =~ /[a-z_]=$/i   # avoid == or ===
+      return find_method_or_attribute name[0..-2]
     end
 
-    nil
-  end
+    def find_method_or_attribute(name) # :nodoc:
+      return nil unless parent.respond_to? :ancestors
 
-  ##
-  # Abstract method. Contexts in their building phase call this
-  # to register a new alias for this known method/attribute.
-  #
-  # - creates a new AnyMethod/Attribute named <tt>an_alias.new_name</tt>;
-  # - adds +self+ as an alias for the new method or attribute
-  # - adds the method or attribute to #aliases
-  # - adds the method or attribute to +context+.
+      searched = parent.ancestors
+      kernel = @store.modules_hash['Kernel']
 
-  def add_alias(an_alias, context)
-    raise NotImplementedError
-  end
+      searched << kernel if kernel &&
+        parent != kernel && !searched.include?(kernel)
 
-  ##
-  # HTML fragment reference for this method
+      searched.each do |ancestor|
+        next if String === ancestor
+        next if parent == ancestor
 
-  def aref
-    type = singleton ? 'c' : 'i'
-    # % characters are not allowed in html names => dash instead
-    "#{aref_prefix}-#{type}-#{html_name}"
-  end
+        other = ancestor.find_method_named('#' + name) ||
+                ancestor.find_attribute_named(name)
 
-  ##
-  # Prefix for +aref+, defined by subclasses.
+        return other if other
+      end
 
-  def aref_prefix
-    raise NotImplementedError
-  end
+      nil
+    end
 
-  ##
-  # Attempts to sanitize the content passed by the Ruby parser:
-  # remove outer parentheses, etc.
+    ##
+    # Abstract method. Contexts in their building phase call this
+    # to register a new alias for this known method/attribute.
+    #
+    # - creates a new AnyMethod/Attribute named <tt>an_alias.new_name</tt>;
+    # - adds +self+ as an alias for the new method or attribute
+    # - adds the method or attribute to #aliases
+    # - adds the method or attribute to +context+.
 
-  def block_params=(value)
-    # 'yield.to_s' or 'assert yield, msg'
-    return @block_params = '' if value =~ /^[\.,]/
+    def add_alias(an_alias, context)
+      raise NotImplementedError
+    end
 
-    # remove trailing 'if/unless ...'
-    return @block_params = '' if value =~ /^(if|unless)\s/
+    ##
+    # HTML fragment reference for this method
 
-    value = $1.strip if value =~ /^(.+)\s(if|unless)\s/
+    def aref
+      type = singleton ? 'c' : 'i'
+      # % characters are not allowed in html names => dash instead
+      "#{aref_prefix}-#{type}-#{html_name}"
+    end
 
-    # outer parentheses
-    value = $1 if value =~ /^\s*\((.*)\)\s*$/
-    value = value.strip
+    ##
+    # Prefix for +aref+, defined by subclasses.
 
-    # proc/lambda
-    return @block_params = $1 if value =~ /^(proc|lambda)(\s*\{|\sdo)/
+    def aref_prefix
+      raise NotImplementedError
+    end
 
-    # surrounding +...+ or [...]
-    value = $1.strip if value =~ /^\+(.*)\+$/
-    value = $1.strip if value =~ /^\[(.*)\]$/
+    ##
+    # Attempts to sanitize the content passed by the Ruby parser:
+    # remove outer parentheses, etc.
 
-    return @block_params = '' if value.empty?
+    def block_params=(value)
+      # 'yield.to_s' or 'assert yield, msg'
+      return @block_params = '' if value =~ /^[\.,]/
 
-    # global variable
-    return @block_params = 'str' if value =~ /^\$[&0-9]$/
+      # remove trailing 'if/unless ...'
+      return @block_params = '' if value =~ /^(if|unless)\s/
 
-    # wipe out array/hash indices
-    value.gsub!(/(\w)\[[^\[]+\]/, '\1')
+      value = $1.strip if value =~ /^(.+)\s(if|unless)\s/
 
-    # remove @ from class/instance variables
-    value.gsub!(/@@?([a-z0-9_]+)/, '\1')
+      # outer parentheses
+      value = $1 if value =~ /^\s*\((.*)\)\s*$/
+      value = value.strip
 
-    # method calls => method name
-    value.gsub!(/([A-Z:a-z0-9_]+)\.([a-z0-9_]+)(\s*\(\s*[a-z0-9_.,\s]*\s*\)\s*)?/) do
-      case $2
-      when 'to_s'      then $1
-      when 'const_get' then 'const'
-      when 'new'
-        $1.split('::').last.  # ClassName => class_name
-          gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
-          gsub(/([a-z\d])([A-Z])/, '\1_\2').
-          downcase
+      # proc/lambda
+      return @block_params = $1 if value =~ /^(proc|lambda)(\s*\{|\sdo)/
+
+      # surrounding +...+ or [...]
+      value = $1.strip if value =~ /^\+(.*)\+$/
+      value = $1.strip if value =~ /^\[(.*)\]$/
+
+      return @block_params = '' if value.empty?
+
+      # global variable
+      return @block_params = 'str' if value =~ /^\$[&0-9]$/
+
+      # wipe out array/hash indices
+      value.gsub!(/(\w)\[[^\[]+\]/, '\1')
+
+      # remove @ from class/instance variables
+      value.gsub!(/@@?([a-z0-9_]+)/, '\1')
+
+      # method calls => method name
+      value.gsub!(/([A-Z:a-z0-9_]+)\.([a-z0-9_]+)(\s*\(\s*[a-z0-9_.,\s]*\s*\)\s*)?/) do
+        case $2
+        when 'to_s'      then $1
+        when 'const_get' then 'const'
+        when 'new'
+          $1.split('::').last.  # ClassName => class_name
+            gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
+            gsub(/([a-z\d])([A-Z])/, '\1_\2').
+            downcase
+        else
+          $2
+        end
+      end
+
+      # class prefixes
+      value.gsub!(/[A-Za-z0-9_:]+::/, '')
+
+      # simple expressions
+      value = $1 if value =~ /^([a-z0-9_]+)\s*[-*+\/]/
+
+      @block_params = value.strip
+    end
+
+    ##
+    # HTML id-friendly method/attribute name
+
+    def html_name
+      require 'cgi/escape'
+      require 'cgi/util' unless defined?(CGI::EscapeExt)
+
+      CGI.escape(@name.gsub('-', '-2D')).gsub('%', '-').sub(/^-/, '')
+    end
+
+    ##
+    # Full method/attribute name including namespace
+
+    def full_name
+      @full_name ||= "#{parent_name}#{pretty_name}"
+    end
+
+    def inspect # :nodoc:
+      alias_for =
+        if @is_alias_for.respond_to? :name
+          " (alias for #{@is_alias_for.name})"
+        elsif Array === @is_alias_for
+          " (alias for #{@is_alias_for.last})"
+        end
+      visibility = self.visibility
+      visibility = "forced #{visibility}" if force_documentation
+      "#<%s:0x%x %s (%s)%s>" % [
+        self.class, object_id,
+        full_name,
+        visibility,
+        alias_for,
+      ]
+    end
+
+    ##
+    # '::' for a class method/attribute, '#' for an instance method.
+
+    def name_prefix
+      @singleton ? '::' : '#'
+    end
+
+    ##
+    # Method/attribute name with class/instance indicator
+
+    def pretty_name
+      "#{name_prefix}#{@name}"
+    end
+
+    ##
+    # Type of method/attribute (class or instance)
+
+    def type
+      singleton ? 'class' : 'instance'
+    end
+
+    ##
+    # Path to this method for use with HTML generator output.
+
+    def path
+      "#{@parent.path}##{aref}"
+    end
+
+    ##
+    # Name of our parent with special handling for un-marshaled methods
+
+    def parent_name
+      @parent_name || super
+    end
+
+    def pretty_print(q) # :nodoc:
+      alias_for =
+        if @is_alias_for.respond_to? :name
+          "alias for #{@is_alias_for.name}"
+        elsif Array === @is_alias_for
+          "alias for #{@is_alias_for.last}"
+        end
+
+      q.group 2, "[#{self.class.name} #{full_name} #{visibility}", "]" do
+        if alias_for
+          q.breakable
+          q.text alias_for
+        end
+
+        unless comment.empty?
+          q.breakable
+          q.text "comment:"
+          q.breakable
+          q.pp @comment
+        end
+      end
+    end
+
+    ##
+    # Used by RDoc::Generator::JsonIndex to create a record for the search
+    # engine.
+    #
+    # TODO: Remove this method after dropping the darkfish theme and JsonIndex generator.
+    # Use #search_snippet instead for getting documentation snippets.
+
+    def search_record
+      [
+        @name,
+        full_name,
+        @name,
+        @parent.full_name,
+        path,
+        params,
+        search_snippet,
+      ]
+    end
+
+    ##
+    # Returns an HTML snippet of the comment for search results.
+
+    def search_snippet
+      return '' if @comment.empty?
+
+      snippet(@comment)
+    end
+
+    def to_s # :nodoc:
+      if @is_alias_for
+        "#{self.class.name}: #{full_name} -> #{is_alias_for}"
       else
-        $2
+        "#{self.class.name}: #{full_name}"
       end
     end
 
-    # class prefixes
-    value.gsub!(/[A-Za-z0-9_:]+::/, '')
-
-    # simple expressions
-    value = $1 if value =~ /^([a-z0-9_]+)\s*[-*+\/]/
-
-    @block_params = value.strip
-  end
-
-  ##
-  # HTML id-friendly method/attribute name
-
-  def html_name
-    require 'cgi/escape'
-    require 'cgi/util' unless defined?(CGI::EscapeExt)
-
-    CGI.escape(@name.gsub('-', '-2D')).gsub('%', '-').sub(/^-/, '')
-  end
-
-  ##
-  # Full method/attribute name including namespace
-
-  def full_name
-    @full_name ||= "#{parent_name}#{pretty_name}"
-  end
-
-  def inspect # :nodoc:
-    alias_for =
-      if @is_alias_for.respond_to? :name
-        " (alias for #{@is_alias_for.name})"
-      elsif Array === @is_alias_for
-        " (alias for #{@is_alias_for.last})"
+    def name_ord_range # :nodoc:
+      case name.ord
+      when 0..64 # anything below "A"
+        1
+      when 91..96 # the symbols between "Z" and "a"
+        2
+      when 123..126 # 7-bit symbols above "z": "{", "|", "}", "~"
+        3
+      else # everythig else can be sorted as normal
+        4
       end
-    visibility = self.visibility
-    visibility = "forced #{visibility}" if force_documentation
-    "#<%s:0x%x %s (%s)%s>" % [
-      self.class, object_id,
-      full_name,
-      visibility,
-      alias_for,
-    ]
-  end
-
-  ##
-  # '::' for a class method/attribute, '#' for an instance method.
-
-  def name_prefix
-    @singleton ? '::' : '#'
-  end
-
-  ##
-  # Method/attribute name with class/instance indicator
-
-  def pretty_name
-    "#{name_prefix}#{@name}"
-  end
-
-  ##
-  # Type of method/attribute (class or instance)
-
-  def type
-    singleton ? 'class' : 'instance'
-  end
-
-  ##
-  # Path to this method for use with HTML generator output.
-
-  def path
-    "#{@parent.path}##{aref}"
-  end
-
-  ##
-  # Name of our parent with special handling for un-marshaled methods
-
-  def parent_name
-    @parent_name || super
-  end
-
-  def pretty_print(q) # :nodoc:
-    alias_for =
-      if @is_alias_for.respond_to? :name
-        "alias for #{@is_alias_for.name}"
-      elsif Array === @is_alias_for
-        "alias for #{@is_alias_for.last}"
-      end
-
-    q.group 2, "[#{self.class.name} #{full_name} #{visibility}", "]" do
-      if alias_for
-        q.breakable
-        q.text alias_for
-      end
-
-      unless comment.empty?
-        q.breakable
-        q.text "comment:"
-        q.breakable
-        q.pp @comment
-      end
-    end
-  end
-
-  ##
-  # Used by RDoc::Generator::JsonIndex to create a record for the search
-  # engine.
-  #
-  # TODO: Remove this method after dropping the darkfish theme and JsonIndex generator.
-  # Use #search_snippet instead for getting documentation snippets.
-
-  def search_record
-    [
-      @name,
-      full_name,
-      @name,
-      @parent.full_name,
-      path,
-      params,
-      search_snippet,
-    ]
-  end
-
-  ##
-  # Returns an HTML snippet of the comment for search results.
-
-  def search_snippet
-    return '' if @comment.empty?
-
-    snippet(@comment)
-  end
-
-  def to_s # :nodoc:
-    if @is_alias_for
-      "#{self.class.name}: #{full_name} -> #{is_alias_for}"
-    else
-      "#{self.class.name}: #{full_name}"
-    end
-  end
-
-  def name_ord_range # :nodoc:
-    case name.ord
-    when 0..64 # anything below "A"
-      1
-    when 91..96 # the symbols between "Z" and "a"
-      2
-    when 123..126 # 7-bit symbols above "z": "{", "|", "}", "~"
-      3
-    else # everythig else can be sorted as normal
-      4
     end
   end
 end
