@@ -10,6 +10,52 @@ module RDoc::Parser::RubyColorizer
 
   ColoredToken = Struct.new(:kind, :text)
 
+  # Defers colorization for all nodes in one source file until first access.
+  class DeferredContext # :nodoc:
+    #: (String) -> void
+    def initialize(source)
+      @source = source
+      @token_streams = {}
+    end
+
+    #: (Integer) -> ^() -> Array[ColoredToken]
+    def token_stream_loader(node_id)
+      @token_streams[node_id] = nil
+      -> { token_stream_for(node_id) }
+    end
+
+    #: (Integer) -> Array[ColoredToken]
+    def token_stream_for(node_id)
+      materialize unless materialized?
+      @token_streams.fetch(node_id)
+    end
+
+    private
+
+    #: () -> Boolean
+    def materialized?
+      !@source
+    end
+
+    #: () -> void
+    def materialize
+      program_node, unordered_tokens = Prism.parse_lex(@source).value
+      prism_tokens = unordered_tokens.map(&:first).sort_by! { |token| token.location.start_offset }
+      staged_tokens = {}
+      nodes = [program_node]
+      until nodes.empty?
+        node = nodes.pop
+        if @token_streams.key?(node.node_id)
+          staged_tokens[node.node_id] = RDoc::Parser::RubyColorizer.partial_colorize(@source, node, prism_tokens)
+        end
+        nodes.concat(node.compact_child_nodes)
+      end
+
+      @token_streams = staged_tokens
+      @source = nil
+    end
+  end
+
   # Prism operator token types except assignment '='
   OP_TOKENS = %i[
     AMPERSAND AMPERSAND_AMPERSAND

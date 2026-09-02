@@ -85,6 +85,19 @@ class RDocTokenStreamTest < RDoc::TestCase
     assert_equal [], foo.token_stream
   end
 
+  def test_collect_tokens_with_loader
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+    loads = 0
+    foo.collect_tokens(:ruby, loader: -> { loads += 1; [:token] })
+
+    tokens = foo.token_stream
+    assert_equal [:token], tokens
+    assert_same tokens, foo.token_stream
+    assert_equal 1, loads
+  end
+
   def test_pop_token
     foo = Class.new do
       include RDoc::TokenStream
@@ -93,6 +106,20 @@ class RDocTokenStreamTest < RDoc::TestCase
     foo.add_token(:token)
     foo.pop_token
     assert_equal [], foo.token_stream
+  end
+
+  def test_mutating_deferred_tokens
+    foo = Class.new do
+      include RDoc::TokenStream
+    end.new
+    tokens = [:first]
+    foo.collect_tokens(:ruby, loader: -> { tokens })
+
+    foo.add_token(:second)
+    foo.add_tokens([:third])
+
+    assert_equal :third, foo.pop_token
+    assert_equal [:first, :second], foo.token_stream
   end
 
   def test_token_stream

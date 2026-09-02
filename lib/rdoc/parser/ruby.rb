@@ -143,6 +143,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     @token_listeners = nil
     content = RDoc::Encoding.remove_magic_comment content
     @content = content
+    @colorizer_context = RDoc::Parser::RubyColorizer::DeferredContext.new(content)
     @markup = @options.markup
     @track_visibility = :nodoc != @options.visibility
     @encoding = @options.encoding
@@ -251,11 +252,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   def scan
     @lines = @content.lines
-    result = Prism.parse_lex(@content)
-    @program_node, unordered_tokens = result.value
-    # Heredoc tokens are not in start_offset order.
-    # Need to sort them to use bsearch for finding tokens from location.
-    @prism_tokens = unordered_tokens.map(&:first).sort_by { |t| t.location.start_offset }
+    result = Prism.parse(@content)
+    @program_node = result.value
     @line_nodes = {}
     prepare_line_nodes(@program_node)
     prepare_comments(result.comments)
@@ -367,10 +365,9 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.call_seq = signature
     return unless meth.name
 
-    meth.start_collecting_tokens(:ruby)
     node = @line_nodes[line_no]
-    tokens = node ? syntax_highlighted_tokens(node) : []
-    tokens.each { |token| meth.token_stream << token }
+    token_stream_loader = @colorizer_context.token_stream_loader(node.node_id) if node
+    meth.start_collecting_tokens(:ruby, loader: token_stream_loader)
 
     container.add_method meth
     meth.comment = comment
@@ -440,12 +437,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
     elsif line_no || node
       method_name ||= call_node_name_arguments(node).first if is_call_node
-      if node
-        tokens = syntax_highlighted_tokens(node)
-        line_no = node.location.start_line
-      else
-        tokens = []
-      end
+      line_no = node.location.start_line if node
       internal_add_method(
         method_name,
         @container,
@@ -457,7 +449,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         params: nil,
         calls_super: false,
         block_params: nil,
-        tokens: tokens,
+        node_id: node&.node_id,
       )
     end
   end
@@ -550,12 +542,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     # Comment is already normalized and doesn't end with a newline
     comment_text.delete_suffix!(prefix.chomp)
     comment_text
-  end
-
-  # Returns syntax highlighted tokens of the given node
-
-  def syntax_highlighted_tokens(node)
-    RDoc::Parser::RubyColorizer.partial_colorize(@content, node, @prism_tokens)
   end
 
   # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
@@ -696,7 +682,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
   # Adds a method defined by `def` syntax
 
-  def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, start_line:, args_end_line:, end_line:)
+  def add_method(method_name, receiver_name:, receiver_fallback_type:, visibility:, singleton:, params:, calls_super:, block_params:, node_id:, start_line:, args_end_line:, end_line:)
     comment, directives, type_signature_lines = consecutive_comment(start_line)
     apply_document_control_directive(directives) if directives
     handle_code_object_directives(@container, directives) if directives
@@ -716,12 +702,12 @@ class RDoc::Parser::Ruby < RDoc::Parser
       params: params,
       calls_super: calls_super,
       block_params: block_params,
-      tokens: tokens,
+      node_id: node_id,
       type_signature_lines: type_signature_lines
     )
   end
 
-  private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, tokens:, type_signature_lines: nil) # :nodoc:
+  private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, node_id:, type_signature_lines: nil) # :nodoc:
     meth = RDoc::AnyMethod.new(method_name, singleton: singleton)
     meth.comment = comment
     handle_code_object_directives(meth, directives) if directives
@@ -745,7 +731,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
     meth.calls_super = calls_super
     meth.block_params ||= block_params if block_params
     meth.type_signature_lines = type_signature_lines
-
     # An instance method `initialize` is documented as `::new` unless the
     # :notnew: directive is given
     if method_name == 'initialize' && !singleton
@@ -760,10 +745,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     record_location(meth)
     container.add_method(meth)
-    meth.start_collecting_tokens(:ruby)
-    tokens.each do |token|
-      meth.token_stream << token
-    end
+    token_stream_loader = @colorizer_context.token_stream_loader(node_id) if node_id
+    meth.start_collecting_tokens(:ruby, loader: token_stream_loader)
   end
 
   # Find or create module or class from a given module name using Ruby lexical
@@ -1173,8 +1156,6 @@ class RDoc::Parser::Ruby < RDoc::Parser
       end
       name = node.name.to_s
       params, block_params, calls_super = MethodSignatureVisitor.scan_signature(node)
-      tokens = @scanner.syntax_highlighted_tokens(node)
-
       @scanner.add_method(
         name,
         receiver_name: receiver_name,
@@ -1184,7 +1165,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
         params: params,
         block_params: block_params,
         calls_super: calls_super,
-        tokens: tokens,
+        node_id: node.node_id,
         start_line: start_line,
         args_end_line: args_end_line,
         end_line: end_line
