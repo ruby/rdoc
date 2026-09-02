@@ -410,7 +410,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
       case directive
       when 'attr', 'attr_reader', 'attr_writer', 'attr_accessor'
         attributes = [param] if param
-        attributes ||= call_node_name_arguments(node) if is_call_node
+        attributes ||= call_node_name_arguments(node).compact if is_call_node
         rw = directive == 'attr_writer' ? 'W' : directive == 'attr_accessor' ? 'RW' : 'R'
       when 'method'
         method_name = param if param
@@ -1213,6 +1213,11 @@ class RDoc::Parser::Ruby < RDoc::Parser
       names.all? ? names : nil
     end
 
+    def call_node_name_arguments(call_node)
+      names = @scanner.call_node_name_arguments(call_node).compact
+      names unless names.empty?
+    end
+
     def symbol_arguments(call_node)
       arguments_node = call_node.arguments
       return unless arguments_node && arguments_node.arguments.all? { |arg| arg.is_a?(Prism::SymbolNode)}
@@ -1327,8 +1332,8 @@ class RDoc::Parser::Ruby < RDoc::Parser
 
     def _visit_call_attr_reader_writer_accessor(call_node, rw)
       return if @scanner.in_proc_block
-      names = symbol_arguments(call_node)
-      @scanner.add_attributes(names.map(&:to_s), rw, call_node.location.start_line) if names
+      return unless names = call_node_name_arguments(call_node)
+      @scanner.add_attributes(names, rw, call_node.location.start_line)
     end
 
     class MethodSignatureVisitor < Prism::Visitor # :nodoc:
