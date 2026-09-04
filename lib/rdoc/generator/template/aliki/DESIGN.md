@@ -289,12 +289,14 @@ horizontally.
 
 ### Search
 
+One search form and one result list serve both header layouts. CSS changes the presentation at `1023px`.
+
 | Element                          | Value                                                       |
 |----------------------------------|-------------------------------------------------------------|
-| Desktop field (`#search-field`)  | full-width border-box, `space-2 space-4` pad, 1px border, `radius-md`, `base`; focus → accent border + `0 0 0 3px accent-subtle` |
-| Desktop dropdown (`#search-results-desktop`) | absolute inside the search form, full-width border-box to match the field, `max-height: 60vh`, `radius-lg`, `shadow-lg`, `z-popover` (500) |
-| Mobile modal (`.search-modal-content`) | centered card, `max-width: 600px`, `max-height: 80vh`, `radius-lg`, `shadow-xl` |
-| Modal result item                | `space-3 space-4` pad, `radius-md`, hover `background-secondary` |
+| Shared field (`#search-field`)   | full-width border-box, `space-2 space-4` pad, 1px border, `radius-md`, `base`. Focus uses an accent border + `0 0 0 3px accent-subtle` |
+| Desktop results (`#search-results`) | absolute inside the search surface, full-width border-box, `max-height: 60vh`, `radius-lg`, `shadow-lg`, `z-popover` (500) |
+| Compact surface (`.navbar-search.is-open .search-surface`) | centered overlay, `max-width: 600px`, `max-height: 80vh`, `radius-lg`, `shadow-xl` |
+| Compact result item              | `space-3 space-4` pad, `radius-md`, hover `background-secondary` |
 | Servlet field                    | pill `border-radius: 1.25rem`, leading 🔍 (`\1F50D`) glyph   |
 | Result lines                     | `.search-match` `base` · `.search-namespace` `sm` secondary · `.search-snippet` `sm` tertiary |
 | Type badge (`.search-type-*`)    | inline-block, `space-0 space-2` pad, `xs`, weight 500, `radius-sm`, colors per §2 |
