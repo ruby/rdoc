@@ -650,27 +650,16 @@ class RDocStoreTest < XrefTestCase
     assert_equal page, @store.page('PAGE.txt')
   end
 
-  def test_page_index
-    page = @store.add_file 'PAGE.txt', parser: RDoc::Parser::Simple
-    page_name = page.page_name
-    base_name = page.base_name
-    name_calls = 0
-    page.define_singleton_method(:page_name) do
-      name_calls += 1
-      page_name
-    end
-    page.define_singleton_method(:base_name) do
-      name_calls += 1
-      base_name
-    end
+  def test_page_index_linear_performance
+    assert_linear_performance((1..4).map { |i| 10**i }) do |count|
+      store = RDoc::Store.new RDoc::Options.new
+      count.times { |i| store.add_file "page_#{i}.txt" }
 
-    2.times do
-      assert_same page, @store.page('PAGE')
-      assert_same page, @store.page('PAGE.txt')
-      assert_nil @store.page('missing')
+      count.times do
+        store.page 'page_0'
+        store.page 'missing'
+      end
     end
-
-    assert_equal 2, name_calls
   end
 
   def test_page_index_invalidated_when_files_change

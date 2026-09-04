@@ -141,7 +141,6 @@ module RDoc
       @modules_hash = {}
       @files_hash   = {}
       @text_files_hash = {}
-      @page_index = nil
 
       @c_enclosure_classes = {}
       @c_enclosure_names   = {}
