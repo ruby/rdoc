@@ -182,6 +182,7 @@ module RDoc
         top_level.store = self
         @files_hash[relative_name] = top_level
         @text_files_hash[relative_name] = top_level if top_level.text?
+        @page_index = nil
       end
 
       top_level
@@ -204,6 +205,7 @@ module RDoc
       @c_singleton_class_variables.delete(relative_name)
       return unless top_level
 
+      @page_index = nil
       remove_classes_and_modules(top_level.classes_or_modules)
     end
 
@@ -743,6 +745,7 @@ module RDoc
         end
       end
 
+      @page_index = nil
       @cache[:pages].each do |page_name|
         page = load_page page_name
         @files_hash[page_name] = page
@@ -912,9 +915,12 @@ module RDoc
     # Returns the RDoc::TopLevel that is a file and has the given +name+
 
     def page(name)
-      @files_hash.each_value.find do |file|
-        file.page_name == name or file.base_name == name
+      @page_index ||= @files_hash.each_value.each_with_object({}) do |file, index|
+        index[file.page_name] ||= file
+        index[file.base_name] ||= file
       end
+
+      @page_index[name]
     end
 
     ##
