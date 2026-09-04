@@ -650,6 +650,56 @@ class RDocStoreTest < XrefTestCase
     assert_equal page, @store.page('PAGE.txt')
   end
 
+  def test_page_index
+    page = @store.add_file 'PAGE.txt', parser: RDoc::Parser::Simple
+    page_name = page.page_name
+    base_name = page.base_name
+    name_calls = 0
+    page.define_singleton_method(:page_name) do
+      name_calls += 1
+      page_name
+    end
+    page.define_singleton_method(:base_name) do
+      name_calls += 1
+      base_name
+    end
+
+    2.times do
+      assert_same page, @store.page('PAGE')
+      assert_same page, @store.page('PAGE.txt')
+      assert_nil @store.page('missing')
+    end
+
+    assert_equal 2, name_calls
+  end
+
+  def test_page_index_invalidated_when_files_change
+    assert_nil @store.page('PAGE')
+
+    first_page = @store.add_file 'PAGE.txt', parser: RDoc::Parser::Simple
+    assert_same first_page, @store.page('PAGE')
+
+    second_page = @store.add_file 'doc/PAGE.md', parser: RDoc::Parser::Simple
+    assert_same first_page, @store.page('PAGE')
+
+    @store.remove_file 'PAGE.txt'
+    assert_same second_page, @store.page('PAGE')
+  end
+
+  def test_page_index_invalidated_by_load_all
+    FileUtils.mkdir_p @tmpdir
+    source = RDoc::Store.new RDoc::Options.new, path: @tmpdir
+    source.add_file 'README.txt', parser: RDoc::Parser::Simple
+    source.save
+
+    loaded = RDoc::Store.new RDoc::Options.new, path: @tmpdir
+    assert_nil loaded.page('README')
+
+    loaded.load_all
+
+    assert_equal 'README.txt', loaded.page('README').relative_name
+  end
+
   def test_save
     FileUtils.mkdir_p @tmpdir
 
