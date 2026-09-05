@@ -7,16 +7,19 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: pr-preview-build-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
 jobs:
   build:
     name: Build Preview
-    if: github.repository == 'ruby/rdoc'
+    # Base retargets need a preview, but title and body edits do not change the site.
+    if: >-
+      github.repository == 'ruby/rdoc' &&
+      (github.event.action != 'edited' || github.event.changes.base)
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # A skipped edit must not cancel an active build for the same PR.
+    concurrency:
+      group: pr-preview-build-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
     steps:
       # This job executes untrusted pull request code. It must not receive secrets
       # or a token with write access.

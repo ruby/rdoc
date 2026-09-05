@@ -19,14 +19,11 @@ jobs:
       actions: read
       pull-requests: read
     outputs:
-      current: ${{ steps.resolve.outputs.current }}
-      number: ${{ steps.resolve.outputs.number }}
-      head_sha: ${{ steps.resolve.outputs.head_sha }}
-      base_ref: ${{ steps.resolve.outputs.base_ref }}
+      pull_requests: ${{ steps.resolve.outputs.pull_requests }}
     steps:
       # A forked workflow_run can omit pull request details, so the artifact
-      # must match the exact open pull request and commit.
-      - name: Resolve current pull request and artifact
+      # must match the source repository, branch, and commit of each open PR.
+      - name: Resolve current pull requests and artifact
         id: resolve
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
@@ -35,9 +32,9 @@ jobs:
             const expectedRepository = 'ruby/rdoc';
             const artifactName = 'pr-preview-site';
             const maximumArchiveBytes = 500 * 1024 * 1024;
+            core.setOutput('pull_requests', '[]');
 
             if (!['success', 'failure'].includes(run.conclusion)) {
-              core.setOutput('current', 'false');
               core.notice(`Skipped a preview build with conclusion: ${run.conclusion}.`);
               return;
             }
@@ -76,7 +73,6 @@ jobs:
             }
 
             if (candidateNumbers.size === 0) {
-              core.setOutput('current', 'false');
               core.notice('No open pull request uses this preview build.');
               return;
             }
@@ -92,26 +88,15 @@ jobs:
             }
 
             const matches = candidates.filter(pull =>
+              pull.state === 'open' &&
               pull.base.repo.full_name === expectedRepository &&
-              pull.base.ref &&
               pull.head.repo?.full_name === headRepository &&
-              pull.head.ref === headBranch
+              pull.head.ref === headBranch &&
+              pull.head.sha === run.head_sha
             );
 
-            if (matches.length !== 1) {
-              core.setFailed(`Expected one pull request for this preview build, found ${matches.length}.`);
-              return;
-            }
-
-            const pull = matches[0];
-            const current = pull.state === 'open' && pull.head.sha === run.head_sha;
-            core.setOutput('current', current.toString());
-            core.setOutput('number', pull.number.toString());
-            core.setOutput('head_sha', run.head_sha);
-            core.setOutput('base_ref', pull.base.ref);
-
-            if (!current) {
-              core.notice('The pull request changed or closed after this preview build.');
+            if (matches.length === 0) {
+              core.notice('No current open pull request uses this preview build.');
               return;
             }
 
@@ -130,9 +115,24 @@ jobs:
             );
 
             if (matchingArtifacts.length === 0 && run.conclusion === 'failure') {
-              core.setOutput('current', 'false');
               core.notice('The failed preview build did not publish an artifact.');
               return;
+            }
+
+            // Title and body edits skip the build job but can still complete successfully.
+            // Keep missing uploads an error when a build actually ran.
+            if (matchingArtifacts.length === 0) {
+              const jobs = await github.paginate(github.rest.actions.listJobsForWorkflowRun, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: run.id,
+                filter: 'latest',
+                per_page: 100,
+              });
+              if (jobs.length > 0 && jobs.every(job => job.conclusion === 'skipped')) {
+                core.notice('The preview build was skipped.');
+                return;
+              }
             }
 
             if (matchingArtifacts.length !== 1) {
@@ -143,16 +143,30 @@ jobs:
             const artifact = matchingArtifacts[0];
             if (artifact.size_in_bytes <= 0 || artifact.size_in_bytes > maximumArchiveBytes) {
               core.setFailed(`The preview artifact archive has an invalid size: ${artifact.size_in_bytes} bytes.`);
+              return;
             }
 
+            // The site comes from the head commit, not a merge with the base branch.
+            // PRs with the same source repository, branch, and commit can share it.
+            core.setOutput('pull_requests', JSON.stringify(matches.map(pull => ({
+              number: pull.number,
+              head_sha: run.head_sha,
+              base_ref: pull.base.ref,
+            }))));
+
   deploy:
-    name: Deploy Preview
+    name: Deploy Preview for PR ${{ matrix.pull_request.number }}
     needs: resolve
-    if: needs.resolve.outputs.current == 'true'
+    if: needs.resolve.outputs.pull_requests != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Each PR keeps its own preview and stale-data checks, even when the source is shared.
+    strategy:
+      fail-fast: false
+      matrix:
+        pull_request: ${{ fromJSON(needs.resolve.outputs.pull_requests) }}
     concurrency:
-      group: pr-preview-deploy-${{ needs.resolve.outputs.number }}
+      group: pr-preview-deploy-${{ matrix.pull_request.number }}
       cancel-in-progress: true
     permissions:
       actions: read
@@ -259,9 +273,9 @@ jobs:
         id: current
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          PR_NUMBER: ${{ needs.resolve.outputs.number }}
-          EXPECTED_SHA: ${{ needs.resolve.outputs.head_sha }}
-          EXPECTED_BASE_REF: ${{ needs.resolve.outputs.base_ref }}
+          PR_NUMBER: ${{ matrix.pull_request.number }}
+          EXPECTED_SHA: ${{ matrix.pull_request.head_sha }}
+          EXPECTED_BASE_REF: ${{ matrix.pull_request.base_ref }}
         with:
           script: |
             const number = process.env.PR_NUMBER;
@@ -309,8 +323,8 @@ jobs:
           command: >-
             pages deploy "${{ runner.temp }}/pr-preview-site"
             --project-name=rdoc
-            --branch="${{ needs.resolve.outputs.number }}-preview"
-            --commit-hash="${{ needs.resolve.outputs.head_sha }}"
+            --branch="${{ matrix.pull_request.number }}-preview"
+            --commit-hash="${{ matrix.pull_request.head_sha }}"
 
       # The workflow rechecks the pull request after deployment, then reuses
       # one marked comment to avoid stale links and notification spam.
@@ -318,9 +332,9 @@ jobs:
         if: steps.current.outputs.current == 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          PR_NUMBER: ${{ needs.resolve.outputs.number }}
-          EXPECTED_SHA: ${{ needs.resolve.outputs.head_sha }}
-          EXPECTED_BASE_REF: ${{ needs.resolve.outputs.base_ref }}
+          PR_NUMBER: ${{ matrix.pull_request.number }}
+          EXPECTED_SHA: ${{ matrix.pull_request.head_sha }}
+          EXPECTED_BASE_REF: ${{ matrix.pull_request.base_ref }}
           PREVIEW_ALIAS_URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
           PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         with:

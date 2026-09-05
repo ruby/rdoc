@@ -27,6 +27,8 @@ jobs:
         bundler-cache: true
     - name: Run rubocop
       run: bundle exec rubocop
+    - name: Test preview workflows
+      run: node --test .github/tests/pr-preview.test.cjs
     - name: Run herb linter
       # npx should be available by default so we don't need `setup-node` action
       # Don't lint erb files outside of lib as the current directory also includes vendor/bundle
