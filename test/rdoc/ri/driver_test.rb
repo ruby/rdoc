@@ -725,6 +725,17 @@ class RDocRIDriverTest < RDoc::TestCase
     assert_empty out
   end
 
+  def test_display_class_case_variant
+    util_store
+
+    # "Foo::bar" must not be resolved as the "Foo::Bar" class.
+    out, = capture_output do
+      assert_nil @driver.display_class('Foo::bar')
+    end
+
+    assert_empty out
+  end
+
   def test_display_method
     util_store
 
