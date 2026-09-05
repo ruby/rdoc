@@ -822,6 +822,8 @@ or the PAGER environment variable.
       def display_class(name)
         return if name =~ /#|\./
 
+        return unless classes.key? name
+
         found, klasses, includes, extends =
           classes_and_includes_and_extends_for name
 
