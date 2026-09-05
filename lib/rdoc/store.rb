@@ -140,7 +140,6 @@ module RDoc
       @classes_hash = {}
       @modules_hash = {}
       @files_hash   = {}
-      @text_files_hash = {}
 
       @c_enclosure_classes = {}
       @c_enclosure_names   = {}
@@ -181,7 +180,6 @@ module RDoc
         top_level.parser = parser if parser
         top_level.store = self
         @files_hash[relative_name] = top_level
-        @text_files_hash[relative_name] = top_level if top_level.text?
         @page_index = nil
       end
 
@@ -200,7 +198,6 @@ module RDoc
 
     def remove_file(relative_name)
       top_level = @files_hash.delete(relative_name)
-      @text_files_hash.delete(relative_name)
       @c_class_variables.delete(relative_name)
       @c_singleton_class_variables.delete(relative_name)
       return unless top_level
@@ -313,15 +310,6 @@ module RDoc
         if klass.superclass.is_a?(String) && (candidate = find_c_enclosure(klass.superclass))
           klass.superclass = candidate
         end
-      end
-    end
-
-    ##
-    # Caches +relative_name+ in the text files hash, if it is a text file.
-
-    def cache_text_file(relative_name)
-      if top_level = @files_hash[relative_name]
-        @text_files_hash[relative_name] = top_level if top_level.text?
       end
     end
 
@@ -639,9 +627,8 @@ module RDoc
     # +file_name+
 
     def find_text_page(file_name)
-      @text_files_hash.each_value.find do |file|
-        file.full_name == file_name
-      end
+      page = @files_hash[file_name]
+      page if page&.text?
     end
 
     ##
@@ -749,7 +736,6 @@ module RDoc
       @cache[:pages].each do |page_name|
         page = load_page page_name
         @files_hash[page_name] = page
-        @text_files_hash[page_name] = page if page.text?
       end
     end
 

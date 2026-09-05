@@ -37,7 +37,7 @@ module RDoc
     ##
     # The parser class that processed this file
 
-    attr_reader :parser
+    attr_accessor :parser
 
     ##
     # Creates a new TopLevel for the file at +absolute_name+.  If documentation
@@ -60,15 +60,6 @@ module RDoc
       end
 
       @classes_or_modules = []
-    end
-
-    ##
-    # Sets the parser for this toplevel context, also the store.
-
-    def parser=(val)
-      @parser = val
-      @store&.cache_text_file(relative_name)
-      @parser
     end
 
     ##
