@@ -15,8 +15,7 @@ module RDoc
 
     def initialize(name, comment)
       super()
-      @name = name.gsub(/'|"/, "") #'
-      @top_level = nil
+      @name = name.gsub(/'|"/, "")
       self.comment = comment
     end
 
@@ -32,22 +31,5 @@ module RDoc
     def to_s # :nodoc:
       "require #{name} in: #{parent}"
     end
-
-    ##
-    # The RDoc::TopLevel corresponding to this require, or +nil+ if not found.
-
-    def top_level
-      @top_level ||= begin
-        tl = TopLevel.all_files_hash[name + '.rb']
-
-        if tl.nil? and TopLevel.all_files.first.full_name =~ %r(^lib/)
-          # second chance
-          tl = TopLevel.all_files_hash['lib/' + name + '.rb']
-        end
-
-        tl
-      end
-    end
-
   end
 end
