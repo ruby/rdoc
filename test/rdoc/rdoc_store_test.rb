@@ -562,6 +562,40 @@ class RDocStoreTest < XrefTestCase
     assert_includes @s.classes_hash, 'Object'
   end
 
+  def test_load_class_data
+    @s.save_class @klass
+
+    assert_equal @klass, @s.load_class_data('Object')
+  end
+
+  def test_load_class_data_missing
+    assert_raise RDoc::Store::MissingFileError do
+      @s.load_class_data 'Missing'
+    end
+  end
+
+  def test_load_class_data_name_mismatch
+    @s.save_class @klass
+
+    # The file found for "Other" holds the "Object" class.
+    FileUtils.mkdir_p @s.class_path('Other')
+    FileUtils.cp @s.class_file('Object'), @s.class_file('Other')
+
+    assert_raise RDoc::Store::MissingFileError do
+      @s.load_class_data 'Other'
+    end
+  end
+
+  def test_load_class_data_case_variant
+    @s.save_class @klass
+
+    # A case-insensitive filesystem finds the data of "Object" for the
+    # "object" name, which must not be loaded as the "Object" class.
+    assert_raise RDoc::Store::MissingFileError do
+      @s.load_class_data 'object'
+    end
+  end
+
   def test_load_single_class
     # Class defined inside singleton class is not documentable.
     # @c8_s1 should be nil because C8::S1 does not exist.
