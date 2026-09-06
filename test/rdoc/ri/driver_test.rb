@@ -725,15 +725,21 @@ class RDocRIDriverTest < RDoc::TestCase
     assert_empty out
   end
 
-  def test_display_class_case_variant
+  def test_display_class_method_name
     util_store
 
-    # "Foo::bar" must not be resolved as the "Foo::Bar" class.
-    out, = capture_output do
-      assert_nil @driver.display_class('Foo::bar')
-    end
+    # Emulate a case-insensitive filesystem finding "Foo::Bar" for "Foo::bar".
+    data = File.binread @store1.class_file('Foo::Bar')
+    FileUtils.mkdir_p @store1.class_path('Foo::bar')
+    File.binwrite @store1.class_file('Foo::bar'), data
 
-    assert_empty out
+    ['Foo#bar', 'Foo.bar', 'Foo::bar'].each do |name|
+      out, = capture_output do
+        assert_nil @driver.display_class(name)
+      end
+
+      assert_empty out, name
+    end
   end
 
   def test_display_method
