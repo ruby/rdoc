@@ -813,15 +813,7 @@ module RDoc
     def load_class_data(klass_name)
       file = class_file klass_name
 
-      obj = marshal_load(file)
-
-      # A case-insensitive filesystem finds the data of a class whose name
-      # differs only in case, so reject the class we did not ask for.
-      if obj.full_name == klass_name
-        obj
-      else
-        raise MissingFileError.new(self, file, klass_name)
-      end
+      marshal_load(file)
     rescue Errno::ENOENT => e
       error = MissingFileError.new(self, file, klass_name)
       error.set_backtrace e.backtrace
