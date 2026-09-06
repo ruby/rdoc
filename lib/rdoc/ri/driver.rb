@@ -820,7 +820,8 @@ or the PAGER environment variable.
       # Outputs formatted RI data for class +name+.  Groups undocumented classes
 
       def display_class(name)
-        return if name =~ /#|\./
+        _klass, selector, _method = parse_name name
+        return if selector
 
         found, klasses, includes, extends =
           classes_and_includes_and_extends_for name
