@@ -650,6 +650,45 @@ class RDocStoreTest < XrefTestCase
     assert_equal page, @store.page('PAGE.txt')
   end
 
+  def test_page_index_linear_performance
+    assert_linear_performance((1..4).map { |i| 10**i }) do |count|
+      store = RDoc::Store.new RDoc::Options.new
+      count.times { |i| store.add_file "page_#{i}.txt" }
+
+      count.times do
+        store.page 'page_0'
+        store.page 'missing'
+      end
+    end
+  end
+
+  def test_page_index_invalidated_when_files_change
+    assert_nil @store.page('PAGE')
+
+    first_page = @store.add_file 'PAGE.txt', parser: RDoc::Parser::Simple
+    assert_same first_page, @store.page('PAGE')
+
+    second_page = @store.add_file 'doc/PAGE.md', parser: RDoc::Parser::Simple
+    assert_same first_page, @store.page('PAGE')
+
+    @store.remove_file 'PAGE.txt'
+    assert_same second_page, @store.page('PAGE')
+  end
+
+  def test_page_index_invalidated_by_load_all
+    FileUtils.mkdir_p @tmpdir
+    source = RDoc::Store.new RDoc::Options.new, path: @tmpdir
+    source.add_file 'README.txt', parser: RDoc::Parser::Simple
+    source.save
+
+    loaded = RDoc::Store.new RDoc::Options.new, path: @tmpdir
+    assert_nil loaded.page('README')
+
+    loaded.load_all
+
+    assert_equal 'README.txt', loaded.page('README').relative_name
+  end
+
   def test_save
     FileUtils.mkdir_p @tmpdir
 

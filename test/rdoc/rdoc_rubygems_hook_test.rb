@@ -146,6 +146,19 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
     assert_equal 'MyTitle', rdoc.store.main
   end
 
+  def test_generate_rdoc_with_page_cross_reference
+    @hook.generate_rdoc = true
+    @hook.generate_ri = false
+    @a.extra_rdoc_files << 'GUIDE.md'
+
+    File.write File.join(@a.gem_dir, 'GUIDE.md'), '# Guide'
+    File.write File.join(@a.gem_dir, 'lib', 'a.rb'), "# See rdoc-ref:GUIDE\nclass A; end\n"
+
+    @hook.generate
+
+    assert @hook.rdoc_installed?
+  end
+
   def test_generate_configuration_rdoc_array
     Gem.configuration[:rdoc] = %w[-A]
 
