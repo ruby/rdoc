@@ -734,8 +734,7 @@ module RDoc
 
       @page_index = nil
       @cache[:pages].each do |page_name|
-        page = load_page page_name
-        @files_hash[page_name] = page
+        @files_hash[page_name] = load_page(page_name)
       end
     end
 
