@@ -1178,7 +1178,6 @@ SpecialChar =   /[~*_`&\[\]()<!#\\'"]/ | @ExtendedSpecialChar
 NormalChar =    !( @SpecialChar | @Spacechar | @Newline ) .
 Digit = [0-9]
 
-# Keep these rules local to avoid resetting scanner state for every match.
 Alphanumeric      = /\p{Word}/
 AlphanumericAscii = /[A-Za-z0-9]/
 BOM               = "\uFEFF"
