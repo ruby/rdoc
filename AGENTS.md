@@ -153,7 +153,6 @@ bundle exec rake clean
 - `lib/rdoc/rd/block_parser.rb` (from `.ry` via racc)
 - `lib/rdoc/rd/inline_parser.rb` (from `.ry` via racc)
 - `lib/rdoc/markdown.rb` (from `.kpeg` via kpeg)
-- `lib/rdoc/markdown/literals.rb` (from `.kpeg` via kpeg)
 
 **Note:** These files are auto-generated and should not be edited manually. Always regenerate after modifying source `.ry` or `.kpeg` files.
 

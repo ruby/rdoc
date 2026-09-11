@@ -115,7 +115,6 @@ bundle exec rake verify_generated
 - `lib/rdoc/rd/block_parser.ry` → generates `block_parser.rb` via racc
 - `lib/rdoc/rd/inline_parser.ry` → generates `inline_parser.rb` via racc
 - `lib/rdoc/markdown.kpeg` → generates `markdown.rb` via kpeg
-- `lib/rdoc/markdown/literals.kpeg` → generates `literals.rb` via kpeg
 
 **Important:**
 
@@ -176,8 +175,7 @@ lib/rdoc/
 ├── markdown.kpeg              # Parser source (edit this)
 ├── markdown.rb                # Generated parser (do not edit)
 ├── markdown/                  # Markdown parsing
-│   ├── literals.kpeg          # Parser source (edit this)
-│   └── literals.rb            # Generated parser (do not edit)
+│   └── byte_runtime.rb        # Byte-offset parser runtime
 ├── rd/                        # RD format parsing
 │   ├── block_parser.ry        # Parser source (edit this)
 │   ├── block_parser.rb        # Generated parser (do not edit)

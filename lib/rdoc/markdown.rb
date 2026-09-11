@@ -576,11 +576,9 @@ class RDoc::Markdown
   require_relative 'markup/to_joined_paragraph'
   require_relative 'markdown/entities'
 
-  require_relative 'markdown/literals'
   require_relative 'markdown/byte_runtime'
 
   prepend ByteRuntime
-  Literals.prepend ByteRuntime
 
   ##
   # Supported extensions
@@ -955,9 +953,7 @@ class RDoc::Markdown
 
 
   # :stopdoc:
-  def setup_foreign_grammar
-    @_grammar_literals = RDoc::Markdown::Literals.new(nil)
-  end
+  def setup_foreign_grammar; end
 
   # root = Doc
   def _root
@@ -14767,37 +14763,37 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Alphanumeric = %literals.Alphanumeric
+  # Alphanumeric = /\p{Word}/
   def _Alphanumeric
-    _tmp = @_grammar_literals.external_invoke(self, :_Alphanumeric)
+    _tmp = scan(/\G(?-mix:\p{Word})/)
     set_failed_rule :_Alphanumeric unless _tmp
     return _tmp
   end
 
-  # AlphanumericAscii = %literals.AlphanumericAscii
+  # AlphanumericAscii = /[A-Za-z0-9]/
   def _AlphanumericAscii
-    _tmp = @_grammar_literals.external_invoke(self, :_AlphanumericAscii)
+    _tmp = scan(/\G(?-mix:[A-Za-z0-9])/)
     set_failed_rule :_AlphanumericAscii unless _tmp
     return _tmp
   end
 
-  # BOM = %literals.BOM
+  # BOM = "uFEFF"
   def _BOM
-    _tmp = @_grammar_literals.external_invoke(self, :_BOM)
+    _tmp = match_string("uFEFF")
     set_failed_rule :_BOM unless _tmp
     return _tmp
   end
 
-  # Newline = %literals.Newline
+  # Newline = /\n|\r\n?|\p{Zl}|\p{Zp}/
   def _Newline
-    _tmp = @_grammar_literals.external_invoke(self, :_Newline)
+    _tmp = scan(/\G(?-mix:\n|\r\n?|\p{Zl}|\p{Zp})/)
     set_failed_rule :_Newline unless _tmp
     return _tmp
   end
 
-  # Spacechar = %literals.Spacechar
+  # Spacechar = /\t|\p{Zs}/
   def _Spacechar
-    _tmp = @_grammar_literals.external_invoke(self, :_Spacechar)
+    _tmp = scan(/\G(?-mix:\t|\p{Zs})/)
     set_failed_rule :_Spacechar unless _tmp
     return _tmp
   end
@@ -16840,11 +16836,11 @@ class RDoc::Markdown
   Rules[:_SpecialChar] = rule_info("SpecialChar", "(/[~*_`&\\[\\]()<!\#\\\\'\"]/ | @ExtendedSpecialChar)")
   Rules[:_NormalChar] = rule_info("NormalChar", "!(@SpecialChar | @Spacechar | @Newline) .")
   Rules[:_Digit] = rule_info("Digit", "[0-9]")
-  Rules[:_Alphanumeric] = rule_info("Alphanumeric", "%literals.Alphanumeric")
-  Rules[:_AlphanumericAscii] = rule_info("AlphanumericAscii", "%literals.AlphanumericAscii")
-  Rules[:_BOM] = rule_info("BOM", "%literals.BOM")
-  Rules[:_Newline] = rule_info("Newline", "%literals.Newline")
-  Rules[:_Spacechar] = rule_info("Spacechar", "%literals.Spacechar")
+  Rules[:_Alphanumeric] = rule_info("Alphanumeric", "/\\p{Word}/")
+  Rules[:_AlphanumericAscii] = rule_info("AlphanumericAscii", "/[A-Za-z0-9]/")
+  Rules[:_BOM] = rule_info("BOM", "\"uFEFF\"")
+  Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?|\\p{Zl}|\\p{Zp}/")
+  Rules[:_Spacechar] = rule_info("Spacechar", "/\\t|\\p{Zs}/")
   Rules[:_HexEntity] = rule_info("HexEntity", "/&\#x/i < /[0-9a-fA-F]+/ > \";\" { rdoc_escape([text.to_i(16)].pack('U')) }")
   Rules[:_DecEntity] = rule_info("DecEntity", "\"&\#\" < /[0-9]+/ > \";\" { rdoc_escape([text.to_i].pack('U')) }")
   Rules[:_CharEntity] = rule_info("CharEntity", "\"&\" < /[A-Za-z0-9]+/ > \";\" { if entity = HTML_ENTITIES[text] then                  rdoc_escape(entity.pack('U*'))                else                  \"&\#{text};\"                end              }")
