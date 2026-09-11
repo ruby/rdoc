@@ -865,6 +865,24 @@ end
 
         # :attr-accessor: arw3
         add_my_attribute_arw3
+
+        # Unparsable attributes should not parse as "unknown" methods
+
+        ##
+        # :attr:
+        add_my_attribute_a4("foo" + "bar")
+
+        ##
+        # :attr_reader:
+        add_my_attribute_ar4("foo" + "bar")
+
+        ##
+        # :attr_writer:
+        add_my_attribute_aw4("foo" + "bar")
+
+        ##
+        # :attr_accessor:
+        add_my_attribute_arw4("foo" + "bar")
       end
     RUBY
 
