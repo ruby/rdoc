@@ -962,21 +962,11 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Doc = BOM? Block*:a { RDoc::Markup::Document.new(*a.compact) }
+  # Doc = Block*:a { RDoc::Markup::Document.new(*a.compact) }
   def _Doc
 
     _save = self.pos
     while true # sequence
-      _save1 = self.pos
-      _tmp = apply(:_BOM)
-      unless _tmp
-        _tmp = true
-        self.pos = _save1
-      end
-      unless _tmp
-        self.pos = _save
-        break
-      end
       _ary = []
       while true
         _tmp = apply(:_Block)
@@ -14777,13 +14767,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # BOM = "uFEFF"
-  def _BOM
-    _tmp = match_string("uFEFF")
-    set_failed_rule :_BOM unless _tmp
-    return _tmp
-  end
-
   # Newline = /\n|\r\n?|\p{Zl}|\p{Zp}/
   def _Newline
     _tmp = scan(/\G(?-mix:\n|\r\n?|\p{Zl}|\p{Zp})/)
@@ -16624,7 +16607,7 @@ class RDoc::Markdown
 
   Rules = {}
   Rules[:_root] = rule_info("root", "Doc")
-  Rules[:_Doc] = rule_info("Doc", "BOM? Block*:a { RDoc::Markup::Document.new(*a.compact) }")
+  Rules[:_Doc] = rule_info("Doc", "Block*:a { RDoc::Markup::Document.new(*a.compact) }")
   Rules[:_Block] = rule_info("Block", "@BlankLine* (BlockQuote | Verbatim | CodeFence | Table | Note | Reference | HorizontalRule | Heading | OrderedList | BulletList | DefinitionList | HtmlBlock | StyleBlock | Para | Plain)")
   Rules[:_Para] = rule_info("Para", "@NonindentSpace Inlines:a @BlankLine+ { paragraph a }")
   Rules[:_Plain] = rule_info("Plain", "Inlines:a { paragraph a }")
@@ -16838,7 +16821,6 @@ class RDoc::Markdown
   Rules[:_Digit] = rule_info("Digit", "[0-9]")
   Rules[:_Alphanumeric] = rule_info("Alphanumeric", "/\\p{Word}/")
   Rules[:_AlphanumericAscii] = rule_info("AlphanumericAscii", "/[A-Za-z0-9]/")
-  Rules[:_BOM] = rule_info("BOM", "\"uFEFF\"")
   Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?|\\p{Zl}|\\p{Zp}/")
   Rules[:_Spacechar] = rule_info("Spacechar", "/\\t|\\p{Zs}/")
   Rules[:_HexEntity] = rule_info("HexEntity", "/&\#x/i < /[0-9a-fA-F]+/ > \";\" { rdoc_escape([text.to_i(16)].pack('U')) }")
