@@ -569,7 +569,7 @@
 
 root = Doc
 
-Doc =       BOM? Block*:a { RDoc::Markup::Document.new(*a.compact) }
+Doc =       Block*:a { RDoc::Markup::Document.new(*a.compact) }
 
 Block =     @BlankLine*
             ( BlockQuote
@@ -1180,7 +1180,6 @@ Digit = [0-9]
 
 Alphanumeric      = /\p{Word}/
 AlphanumericAscii = /[A-Za-z0-9]/
-BOM               = "\uFEFF"
 Newline           = /\n|\r\n?|\p{Zl}|\p{Zp}/
 Spacechar         = /\t|\p{Zs}/
 

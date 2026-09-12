@@ -26,7 +26,7 @@ module RDoc
     # +current_column+, ...) are left as-is and would misreport locations when
     # given byte offsets.  They are unreachable: markdown is deliberately
     # designed to parse any input somehow rather than fail (the root rule
-    # `Doc = BOM? Block*` cannot fail), so a parse failure means a bug in the
+    # `Doc = Block*` cannot fail), so a parse failure means a bug in the
     # grammar itself, and nothing in RDoc invokes +raise_error+ or
     # +show_error+.  Make these helpers byte-aware before using them for
     # anything.
