@@ -865,6 +865,24 @@ end
 
         # :attr-accessor: arw3
         add_my_attribute_arw3
+
+        # Unparsable attributes should not parse as "unknown" methods
+
+        ##
+        # :attr:
+        add_my_attribute_a4("foo" + "bar")
+
+        ##
+        # :attr_reader:
+        add_my_attribute_ar4("foo" + "bar")
+
+        ##
+        # :attr_writer:
+        add_my_attribute_aw4("foo" + "bar")
+
+        ##
+        # :attr_accessor:
+        add_my_attribute_arw4("foo" + "bar")
       end
     RUBY
 
@@ -1372,7 +1390,7 @@ end
         def m1; end
         def m2; end
         def m3; end
-        module_function :m1, :m3
+        module_function :m1, "m3", kwarg: ignored
         module_function def m4; end
       end
     RUBY
@@ -1391,8 +1409,8 @@ end
         def self.m1; end
         def self.m2; end
         def self.m3; end
-        private_class_method :m1, :m2
-        public_class_method :m1, :m3
+        private_class_method ignored, :m1, "m2"
+        public_class_method :m1, ignored, :m3
         private_class_method def self.m4; end
         public_class_method def self.m5; end
       end
@@ -1410,8 +1428,8 @@ end
         def m3; end
         def m4; end
         def m5; end
-        private :m2, :m3, :m4
-        public :m1, :m3
+        private :m2, :m3, "m4", kwarg: :ignored
+        public :m1, ignored, :m3
       end
       class << A
         def m1; end
@@ -1419,8 +1437,8 @@ end
         def m3; end
         def m4; end
         def m5; end
-        private :m1, :m2, :m3
-        public :m2, :m4
+        private :m1, :m2, "m3"
+        public ignored, :m2, :m4
       end
     RUBY
     klass = @store.find_class_named 'A'
@@ -1435,7 +1453,8 @@ end
       class A
         def m1; end
         def self.m2; end
-        private 42, :m # maybe not Module#private
+        def m3; end
+        private 42, "m3"
         # ignore all non-standard `private def` and `private_class_method def`
         private def self.m1; end
         private_class_method def m2; end
@@ -1444,7 +1463,10 @@ end
       end
     RUBY
     klass = @store.find_class_named 'A'
-    assert_equal [:public] * 4, klass.method_list.map(&:visibility)
+    singleton_methods, instance_methods = klass.method_list.partition(&:singleton)
+      .map { |methods| methods.to_h { |m| [m.name, m.visibility] } }
+    assert_equal({'m1' => :public, 'm3' => :private, 'm2' => :public}, instance_methods)
+    assert_equal({'m2' => :public, 'm1' => :public}, singleton_methods)
   end
 
   def test_singleton_class_def_with_visibility
@@ -1490,10 +1512,11 @@ end
       class A
         def self.m1; end
         def self.m2; end
-        private_class_method :m2
+        ignored = :m1
+        private_class_method ignored, "m2"
       end
       class B < A
-        private_class_method :m1
+        private_class_method :m1, ignored
         public_class_method :m2
       end
     RUBY
@@ -1943,8 +1966,8 @@ end
         private_constant
         private_constant foo
         private_constant :A
-        private_constant :B, :C
-        public_constant :B
+        private_constant :B, bar, :C
+        public_constant baz, "B"
       end
     RUBY
     klass = @store.find_class_named 'C'
@@ -2706,6 +2729,7 @@ end
           tap do end
           def foo; end
           module_function :foo
+          def foo; end
         end
         def bar; end
         module_function :bar
