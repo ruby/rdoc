@@ -2096,7 +2096,8 @@ header.top-navbar #search-results[aria-expanded="false"] {
 }
 
 .search-shortcuts-toggle:hover,
-.search-shortcuts-close:hover {
+.search-shortcuts-close:hover,
+.search-shortcuts-toggle[aria-expanded="true"] {
   border-color: var(--color-border-default);
   color: var(--color-text-primary);
 }
@@ -2105,11 +2106,6 @@ header.top-navbar #search-results[aria-expanded="false"] {
 .search-shortcuts-close:focus-visible {
   outline: 2px solid var(--color-accent-primary);
   outline-offset: 2px;
-}
-
-.search-shortcuts-toggle[aria-expanded="true"] {
-  border-color: var(--color-border-default);
-  color: var(--color-text-primary);
 }
 
 .search-shortcuts-footer {
@@ -2212,12 +2208,16 @@ header.top-navbar #search-results[aria-expanded="false"] {
     background: transparent;
   }
 
-  .search-shortcuts {
+  .search-shortcuts,
+  header.top-navbar .navbar-search.is-open .search-surface {
     inset: var(--space-16) auto auto 50%;
     width: calc(100% - var(--space-8));
     max-width: 600px;
-    max-height: 80dvh;
     transform: translateX(-50%);
+  }
+
+  .search-shortcuts {
+    max-height: 80dvh;
   }
 
   .search-shortcuts::backdrop {
@@ -2247,20 +2247,15 @@ header.top-navbar #search-results[aria-expanded="false"] {
 
   header.top-navbar .navbar-search.is-open .search-surface {
     position: fixed;
-    top: var(--space-16);
-    left: 50%;
     z-index: 2;
     display: flex;
     flex-direction: column;
-    width: calc(100% - var(--space-8));
-    max-width: 600px;
     max-height: 80vh;
     margin: 0;
     overflow: hidden;
     background: var(--color-background-primary);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
-    transform: translateX(-50%);
   }
 
   header.top-navbar .navbar-search.is-open .search-form {
@@ -2367,15 +2362,17 @@ header.top-navbar #search-results[aria-expanded="false"] {
 }
 
 @media (width <= 420px) {
-  .search-shortcuts {
+  .search-shortcuts,
+  header.top-navbar .navbar-search.is-open .search-surface {
     top: var(--space-4);
     width: calc(100% - var(--space-6));
+  }
+
+  .search-shortcuts {
     padding: var(--space-4);
   }
 
   header.top-navbar .navbar-search.is-open .search-surface {
-    top: var(--space-4);
-    width: calc(100% - var(--space-6));
     border-radius: var(--radius-md);
   }
 
