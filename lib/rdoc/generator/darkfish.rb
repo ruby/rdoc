@@ -214,6 +214,8 @@ module RDoc
       # objects containing the extracted information.
 
       def generate
+        warn "The Darkfish template is deprecated and will be removed in version 9.0."
+
         setup
 
         write_style_sheet
