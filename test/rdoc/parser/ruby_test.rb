@@ -1403,6 +1403,32 @@ end
     assert_equal [:public, :public, :public], singleton_methods.map(&:visibility)
   end
 
+  def test_module_function_no_arg
+    util_parser <<~RUBY
+      module A
+        attr_reader :a1
+        module_function
+        attr_reader :a2
+        def m1; end
+        def m2; end
+        private
+        def m3; end
+        public
+        def m4; end
+      end
+    RUBY
+    mod = @store.find_module_named 'A'
+    attributes = mod.attributes
+    instance_methods = mod.method_list.reject(&:singleton)
+    singleton_methods = mod.method_list.select(&:singleton)
+    assert_equal ['a1', 'a2'], attributes.map(&:name)
+    assert_equal [:public, :private], attributes.map(&:visibility)
+    assert_equal ['m1', 'm2', 'm3', 'm4'], instance_methods.map(&:name)
+    assert_equal [:private, :private, :private, :public], instance_methods.map(&:visibility)
+    assert_equal ['m1', 'm2'], singleton_methods.map(&:name)
+    assert_equal [:public, :public], singleton_methods.map(&:visibility)
+  end
+
   def test_class_method_visibility
     util_parser <<~RUBY
       class A
