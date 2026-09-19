@@ -1411,9 +1411,9 @@ end
         attr_reader :a2
         def m1; end
         def m2; end
-        private
-        def m3; end
         public
+        def m3; end
+        private
         def m4; end
       end
     RUBY
@@ -1424,7 +1424,7 @@ end
     assert_equal ['a1', 'a2'], attributes.map(&:name)
     assert_equal [:public, :private], attributes.map(&:visibility)
     assert_equal ['m1', 'm2', 'm3', 'm4'], instance_methods.map(&:name)
-    assert_equal [:private, :private, :private, :public], instance_methods.map(&:visibility)
+    assert_equal [:private, :private, :public, :private], instance_methods.map(&:visibility)
     assert_equal ['m1', 'm2'], singleton_methods.map(&:name)
     assert_equal [:public, :public], singleton_methods.map(&:visibility)
   end
