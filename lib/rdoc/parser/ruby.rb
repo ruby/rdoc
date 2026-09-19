@@ -133,7 +133,7 @@ module RDoc
       # Matches an RBS inline type annotation line: #: followed by whitespace
       RBS_SIG_LINE = /\A#:\s/ # :nodoc:
 
-      attr_accessor :visibility
+      attr_accessor :visibility, :module_function_mode
       attr_reader :container, :singleton, :in_proc_block
 
       def initialize(top_level, content, options, stats)
@@ -153,6 +153,7 @@ module RDoc
         @module_nesting = [[top_level, false]]
         @container = top_level
         @visibility = :public
+        @module_function_mode = false
         @singleton = false
         @in_proc_block = false
         @doc_state = :startdoc
@@ -220,10 +221,12 @@ module RDoc
       def with_container(container, singleton: false)
         old_container = @container
         old_visibility = @visibility
+        old_module_function_mode = @module_function_mode
         old_singleton = @singleton
         old_in_proc_block = @in_proc_block
         old_doc_state = @doc_state
         @visibility = :public
+        @module_function_mode = false
         @container = container
         @singleton = singleton
         @in_proc_block = false
@@ -232,6 +235,7 @@ module RDoc
       ensure
         @container = old_container
         @visibility = old_visibility
+        @module_function_mode = old_module_function_mode
         @singleton = old_singleton
         @in_proc_block = old_in_proc_block
         @doc_state = old_doc_state
@@ -1159,6 +1163,7 @@ module RDoc
             return unless receiver_name
           when nil
             visibility = @scanner.visibility
+            mod_function = @scanner.module_function_mode && !singleton
             singleton = @scanner.singleton
           else
             # `def (unknown expression).method_name` is not documentable
@@ -1180,6 +1185,7 @@ module RDoc
             args_end_line: args_end_line,
             end_line: end_line
           )
+          @scanner.change_method_to_module_function([name]) if mod_function
         ensure
           @scanner.skip_comments_until(end_line)
         end
@@ -1276,6 +1282,11 @@ module RDoc
         end
 
         def _visit_call_module_function(call_node)
+          if !call_node.arguments || call_node.arguments.arguments.empty?
+            @scanner.visibility = :private
+            @scanner.module_function_mode = true
+            return
+          end
           return if @scanner.in_proc_block || @scanner.singleton
           names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
           @scanner.change_method_to_module_function(names) if names
@@ -1292,6 +1303,7 @@ module RDoc
           arguments_node = call_node.arguments
           if arguments_node.nil? # `public` `private`
             @scanner.visibility = visibility
+            @scanner.module_function_mode = false
           else # `public :foo, :bar`, `private def foo; end`
             names = visibility_method_arguments(call_node, singleton: false)
             @scanner.change_method_visibility(names, visibility) if names
