@@ -75,6 +75,7 @@ module RDoc
         '``' => :open_dquote,
         "''" => :close_dquote,
       }
+      HTML_CHARACTERS_REGEXP = Regexp.union(HTML_CHARACTER_ALIASES.keys)
 
       # Transcodes +character+ to +encoding+ with a +fallback+ character.
 
@@ -155,13 +156,13 @@ module RDoc
 
       def init_regexp_handlings
         # external links
-        @markup.add_regexp_handling(/(?:link:|https?:|mailto:|ftp:|irc:|www\.)#{URL_CHARACTERS_REGEXP_STR}+\w/,
+        @markup.add_regexp_handling(/(?:link:|https?:|mailto:|ftp:|irc:|www\.)#{URL_CHARACTERS_REGEXP_STR}+\w/o,
                                     :HYPERLINK)
 
         # suppress crossref: \#method \::method \ClassName \method_with_underscores
         @markup.add_regexp_handling(/\\(?:[#:A-Z]|[a-z]+_[a-z0-9])/, :SUPPRESSED_CROSSREF)
 
-        @markup.add_regexp_handling(Regexp.union(HTML_CHARACTER_ALIASES.keys), :HTML_CHARACTERS)
+        @markup.add_regexp_handling(HTML_CHARACTERS_REGEXP, :HTML_CHARACTERS)
 
         @markup.add_regexp_handling(/\b['"`]/, :QUOTE_AFTER_WORD)
         @markup.add_regexp_handling(/\B['"`]/, :QUOTE_NOT_AFTER_WORD)
