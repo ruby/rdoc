@@ -1403,6 +1403,48 @@ end
     assert_equal [:public, :public, :public], singleton_methods.map(&:visibility)
   end
 
+  def test_module_function_inherited_method_visibility
+    util_parser <<~RUBY
+      module Parent
+        def same(arg); end
+      end
+      module Child
+        include Parent
+        module_function :same
+      end
+    RUBY
+
+    parent = @store.find_module_named 'Parent'
+    assert_equal :public, parent.method_list.first.visibility
+
+    child = @store.find_module_named 'Child'
+    methods = child.method_list.map { |method| [method.name, method.singleton, method.visibility, method.params] }
+    assert_equal [
+      ['same', false, :private, '(arg)'],
+      ['same', true, :public, '(arg)'],
+    ], methods
+  end
+
+  def test_module_function_overridden_method_visibility
+    util_parser <<~RUBY
+      module Parent
+        def same(arg); end
+      end
+      module Child
+        include Parent
+        def same; end
+        module_function :same
+      end
+    RUBY
+
+    parent = @store.find_module_named 'Parent'
+    assert_equal :public, parent.method_list.first.visibility
+
+    child = @store.find_module_named 'Child'
+    methods = child.method_list.map { |method| [method.name, method.singleton, method.visibility, method.params] }
+    assert_equal [['same', false, :private, '()'], ['same', true, :public, '()']], methods
+  end
+
   def test_class_method_visibility
     util_parser <<~RUBY
       class A

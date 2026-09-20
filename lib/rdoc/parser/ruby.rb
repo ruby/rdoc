@@ -584,7 +584,7 @@ module RDoc
       # Handles `module_function :foo, :bar`
 
       def change_method_to_module_function(names)
-        @container.set_visibility_for(names, :private, false)
+        change_method_visibility(names, :private, singleton: false)
         # In a :stopdoc:/:enddoc: region, the visibility of instance methods still
         # changes but the singleton method copies must not be documented
         return if document_suppressed?
