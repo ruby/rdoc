@@ -2,151 +2,47 @@
 
 ## Project Overview
 
-**RDoc** is Ruby's default documentation generation tool that produces HTML and command-line documentation for Ruby projects. It parses Ruby source code, C extensions, RBS signature files, and markup files to generate documentation.
+**RDoc** produces HTML and command-line documentation for Ruby projects. It parses Ruby source code, C extensions, RBS signature files, and markup files.
 
 - **Repository:** https://github.com/ruby/rdoc
 - **Homepage:** https://ruby.github.io/rdoc
-- **Required Ruby:** See the version specified in gemspec
+- **Required Ruby:** See `required_ruby_version` in `rdoc.gemspec`
 - **Main Executables:** `rdoc` and `ri`
 
-## Key Development Commands
+## Repository Instructions
 
-### Testing
+This file is the canonical entrypoint for repository guidance. See [CONTRIBUTING.md](CONTRIBUTING.md) for contributor setup and project conventions.
 
-```bash
-# Run all tests (default task)
-bundle exec rake
+These repository guides cover specific tasks:
 
-# Run unit tests only (excludes RubyGems integration)
-bundle exec rake normal_test
+- [Server testing](.claude/skills/test-server/SKILL.md): endpoint checks, live reload, file changes, and server shutdown.
+- [Release checks](.claude/skills/release-check/SKILL.md): merged PRs, release labels, and version recommendations.
 
-# Run RubyGems integration tests only
-bundle exec rake rubygems_test
+Read the relevant guide directly. Slash-command availability depends on the agent tool.
 
-# Verify generated parser files are current (CI check)
-bundle exec rake verify_generated
-```
+## Development References
 
-**Test Framework:** Test::Unit with `test-unit` gem
-**Test Location:** `test/` directory
-**Test Helper:** `test/lib/helper.rb`
+Use the contributor guide for [test commands](CONTRIBUTING.md#running-tests), [documentation commands](CONTRIBUTING.md#documentation-generation), and [parser generation](CONTRIBUTING.md#parser-generation).
 
 ### Linting
 
-#### RuboCop (Ruby Linting)
-
-```bash
-# Check Ruby code style
-bundle exec rubocop
-
-# Auto-fix style issues
-bundle exec rubocop -A
-```
-
-**Configuration:** `.rubocop.yml`
-
-- Target Ruby: 3.0
-- Minimal cop set (opt-in approach)
-- Excludes generated parser files
-
-#### Herb Linter (ERB/RHTML Files)
-
-```bash
-# Lint ERB template files
-npx @herb-tools/linter "**/*.rhtml"
-
-# Lint specific directory
-npx @herb-tools/linter "lib/**/*.rhtml"
-```
-
-**Template Location:** `lib/rdoc/generator/template/**/*.rhtml`
-**CI Workflow:** `.github/workflows/lint.yml`
-
-#### Stylelint (CSS Files)
-
-```bash
-# Lint CSS files
-npm run lint:css
-
-# Auto-fix style issues
-npm run lint:css -- --fix
-
-# Lint specific file
-npx stylelint "lib/rdoc/generator/template/aliki/css/rdoc.css"
-```
-
-**Configuration:** `.stylelintrc.json`
-**Features:**
-- Detects undefined CSS custom properties (variables)
-- Detects missing `var()` function for custom properties
-- Style and formatting checks
-- Many issues auto-fixable with `--fix`
+See [lint commands](CONTRIBUTING.md#linting) for Ruby, templates, and CSS.
+For templates, use `npx @herb-tools/linter "lib/**/*.rhtml"` to avoid scanning installed dependencies.
 
 ### Type annotations
 
 Annotate method types using [Sorbet flavored RBS](https://sorbet.org/docs/rbs-support) in inline comments.
 For more information about RBS syntax, see the [documentation](https://github.com/ruby/rbs/blob/master/docs/syntax.md).
 
-A few examples:
+For example:
 
 ```ruby
 # Method that receives an integer and doesn't return anything
 #: (Integer) -> void
 def foo(something); end
-
-# Method that receives a string and returns an integer
-#: (String) -> Integer
-def bar(something)
-   123
-end
-
-# Method that doesn't accept arguments and returns a hash of symbol to string
-#: () -> Hash[Symbol, String]
-def bar
-   { key: "value" }
-end
-
-# Method that accepts a block, which yields a single integer argument and returns whatever the block returns
-#: [T] () { (Integer) -> T } -> T
-def bar
-   yield(5)
-end
 ```
-
-### Documentation Generation
-
-```bash
-# Generate documentation (creates _site directory)
-bundle exec rake rdoc
-
-# Force regenerate documentation
-bundle exec rake rerdoc
-
-# Show documentation coverage
-bundle exec rake rdoc:coverage
-bundle exec rake coverage
-
-# Start live-reloading preview server (port 4000)
-bundle exec rake rdoc:server
-
-# Or via CLI with custom port
-bundle exec rdoc --server=8080
-```
-
-**Output Directory:** `_site/` (GitHub Pages compatible)
-**Configuration:** `.rdoc_options`
 
 ### Parser Generation
-
-RDoc uses generated parsers for Markdown and RD formats:
-
-```bash
-# Generate all parser files from sources
-bundle exec rake generate
-
-# Remove generated parser files
-bundle exec rake clean
-```
 
 **Generated Files:**
 
@@ -154,7 +50,7 @@ bundle exec rake clean
 - `lib/rdoc/rd/inline_parser.rb` (from `.ry` via racc)
 - `lib/rdoc/markdown.rb` (from `.kpeg` via kpeg)
 
-**Note:** These files are auto-generated and should not be edited manually. Always regenerate after modifying source `.ry` or `.kpeg` files.
+Do not edit these generated files directly. If you change `.ry` or `.kpeg` sources, use the [parser workflow](#modifying-parsers).
 
 ### Building and Releasing
 
@@ -169,146 +65,68 @@ bundle exec rake install
 bundle exec rake release
 ```
 
-## Project Structure
+## Project Navigation
 
-```sh
-lib/rdoc/
-├── rdoc.rb                    # Main entry point (RDoc::RDoc class)
-├── version.rb                 # Version constant
-├── task.rb                    # Rake task integration
-├── parser/                    # Source code parsers (Ruby, C, RBS, Markdown, RD)
-│   ├── ruby.rb                # Prism-based Ruby parser
-│   ├── c.rb                   # C extension parser
-│   ├── rbs.rb                 # RBS signature parser
-│   └── ...
-├── server.rb                  # Live-reloading preview server (rdoc --server)
-├── generator/                 # Documentation generators
-│   ├── aliki.rb               # HTML generator (default theme)
-│   ├── darkfish.rb            # HTML generator (deprecated, will be removed in v9.0)
-│   ├── markup.rb              # Markup format generator
-│   ├── ri.rb                  # RI command generator
-│   └── template/              # ERB templates (.rhtml files)
-│       ├── aliki/             # Aliki theme (default)
-│       └── darkfish/          # Darkfish theme (deprecated)
-├── markup/                    # Markup parsing and formatting
-├── code_object/               # AST objects for documented items
-├── markdown/                  # Markdown parsing
-├── rd/                        # RD format parsing
-└── ri/                        # RI (Ruby Info) tool
+See [project structure](CONTRIBUTING.md#project-structure) for the directory map and [themes](CONTRIBUTING.md#themes) for generator guidance.
 
-test/                          # 79 test files
-├── lib/helper.rb              # Test helpers
-└── rdoc/                      # Main test directory
-
-exe/
-├── rdoc                       # rdoc command executable
-└── ri                         # ri command executable
-```
-
-## Important Files
-
-### Configuration
-
-- `.rubocop.yml` - RuboCop configuration (main)
-- `.generated_files_rubocop.yml` - RuboCop config for generated files
-- `.rdoc_options` - RDoc generation options
-- `.document` - File list for documentation
-- `Rakefile` - Task definitions
-- `lib/rdoc/task.rb` - Task definitions provided by RDoc
-- `rdoc.gemspec` - Gem specification
-- `Gemfile` - Development dependencies
-
-### CI/CD
-
-- `.github/workflows/test.yml` - Test execution across Ruby versions/platforms
-- `.github/workflows/lint.yml` - Linting (RuboCop + Herb)
-- `.github/workflows/push_gem.yml` - Gem publishing
-
-### Documentation
-
-- `README.md` - Basic usage guide and markup format reference
-- `markup_reference/rdoc.rdoc` - Comprehensive RDoc markup syntax reference
-- `markup_reference/markdown.md` - Markdown syntax reference
-- `doc/rdoc/example.rb` - Ruby code examples for cross-references and directives
+- [RDoc orchestration](lib/rdoc/rdoc.rb), [repository tasks](Rakefile), and [public Rake integration](lib/rdoc/task.rb).
+- [Configuration](doc/configuration.md), [RDoc markup](doc/markup_reference/rdoc.rdoc), [Markdown](doc/markup_reference/markdown.md), and [directive examples](doc/rdoc/example.rb).
+- Parser tests: `test/rdoc/parser/ruby_test.rb` (`RDocParserRubyTest`) and `test/rdoc/parser/rbs_test.rb` (`RDocParserRBSTest`).
 
 ## Architecture Notes
 
-### Parsers and Generators
-
-- **Parsers:** Prism-based Ruby (`RDoc::Parser::Ruby`), C, RBS (`RDoc::Parser::RBS`), Markdown, RD
-- **Generators:** HTML/Aliki (default), HTML/Darkfish (deprecated), RI, POT (gettext), JSON, Markup
-
-Parser tests live under `test/rdoc/parser/`, including `RDocParserRubyTest` (`test/rdoc/parser/ruby_test.rb`) and `RDocParserRBSTest` (`test/rdoc/parser/rbs_test.rb`).
+Ruby parsing uses Prism.
 
 ### RBS Documentation Input and Signature Merging
 
-Selected `.rbs` files are first-class documentation input through `RDoc::Parser::RBS`. RBS declarations can create documentation for classes, modules, methods, attributes, and constants, or extend objects already documented from Ruby source.
+`RDoc::Parser::RBS` parses selected `.rbs` files as documentation input. RBS declarations can document classes, modules, methods, attributes, and constants. They can also extend objects already documented from Ruby source.
 
-RBS files under the project's `sig/` directory are also auto-discovered by `RDoc::RDoc` for type signature merging and live preview bookkeeping. Keep this distinction clear: `.rbs` parsing builds documentation objects, while `sig/**/*.rbs` auto-discovery feeds the existing RBS type-signature merge path.
+`RDoc::RDoc` also discovers `sig/**/*.rbs` files for type signature merging and live preview tracking. Keep these paths distinct. Selected `.rbs` inputs build documentation objects, while auto-discovered signatures feed the RBS type-signature merge path.
 
 ### Code Object Model and Constant Aliases
 
-The code-object tree (`lib/rdoc/code_object/`) is built in two phases. Parse-time work happens in the parsers and `RDoc::Context` (`add_constant`, `add_module_alias`). Finalization happens in `Store#complete`, which calls `ClassModule#update_aliases` on each container — this is where forward-reference aliases (`Foo = Bar` parsed before `class Bar` in another file) get resolved via `Constant#resolved_alias_target`.
+The code-object tree (`lib/rdoc/code_object/`) has two phases. Parsers and `RDoc::Context` (`add_constant`, `add_module_alias`) handle parse-time work. `Store#complete` finalizes each container through `ClassModule#update_aliases`. This step resolves forward-reference aliases through `Constant#resolved_alias_target`.
 
-If you add an invariant to one of these paths — for example the `Context#add_module_alias` collision guard that refuses to clobber an existing class — mirror it on the other. The two paths are not interchangeable: `add_module_alias` runs against partial store state and does extra bookkeeping (`unmatched_constant_alias`); `update_aliases` runs against the finalized store and writes the alias copies into `classes_hash` / `modules_hash`.
+If you add an invariant to one alias path, apply it to the other path too. For example, both paths must preserve an existing class at the alias name. `add_module_alias` handles partial store state and registers the alias constant. `update_aliases` resolves targets during finalization and writes alias copies into `classes_hash` or `modules_hash`.
 
-**Known limitation: lexical scope.** `Context#find_enclosing_module_named` walks the syntactic parent chain as a stand-in for Ruby's lexical constant lookup. The prism parser doesn't represent module nesting via the parent chain at all (see the docstring on `Context#find_enclosing_module_named`), so alias resolution in deeply nested or re-opened classes can pick the wrong target. Fixing this properly requires capturing lexical scope at parse time — a feature change rather than an incremental fix.
+**Known limitation: lexical scope.** `Context#find_enclosing_module_named` uses the parent chain as an approximation of Ruby's lexical constant lookup. The Prism parser does not represent module nesting through that chain. Aliases in nested or reopened classes can resolve to the wrong target. Accurate lexical scope requires parse-time information and a separate feature change.
 
 ### Marshal / ri Data Compatibility
 
-`RDoc::Constant`, `RDoc::ClassModule`, and other code objects implement `marshal_dump` / `marshal_load` to persist ri data on disk, gated by a per-class `MARSHAL_VERSION` constant. The `ri` CLI (`lib/rdoc/ri/driver.rb`) and the `ri --server` servlet (`lib/rdoc/ri/servlet.rb`) read this format. Any change that alters the dumped array — adding/removing slots, reinterpreting an existing slot's meaning — needs `MARSHAL_VERSION` bumped and the loader taught to handle older payloads, otherwise locally-cached `.ri` data from an earlier rdoc version stops loading after an upgrade.
+Code objects such as `RDoc::Constant` and `RDoc::ClassModule` persist ri data through `marshal_dump` and `marshal_load`. Each class has a `MARSHAL_VERSION` constant. The `ri` CLI (`lib/rdoc/ri/driver.rb`) and the `ri --server` servlet (`lib/rdoc/ri/servlet.rb`) read this format.
+
+If you change the dumped array or a slot's meaning, bump `MARSHAL_VERSION`. Preserve support for older payloads in the loader. This compatibility keeps cached `.ri` data readable after an upgrade.
 
 ### Live Preview Server (`RDoc::Server`)
 
-The server (`lib/rdoc/server.rb`) provides `rdoc --server` for live documentation preview.
-
-**Architecture:**
-- Uses Ruby's built-in `TCPServer` (`socket` stdlib) — no WEBrick or external dependencies
-- Creates a persistent `RDoc::Generator::Aliki` instance with `file_output = false` (renders to strings)
-- Thread-per-connection HTTP handling with `Connection: close` (no keep-alive)
-- Background watcher thread polls file mtimes every 1 second
-- Live reload via inline JS polling `/__status` endpoint
-
-**Key files:**
-- `lib/rdoc/server.rb` — HTTP server, routing, caching, file watcher
-- `lib/rdoc/rdoc.rb` — `start_server` method, server branch in `document`
-- `lib/rdoc/options.rb` — `--server[=PORT]` option
-- `lib/rdoc/generator/darkfish.rb` — `refresh_store_data` (extracted for server reuse)
-- `lib/rdoc/store.rb` — `remove_file` (for deleted file handling)
-- `lib/rdoc/task.rb` — `rdoc:server` Rake task
-
-**Known limitations:**
-- Reopened classes: deleting a file that partially defines a class removes the entire class from the store (save the other file to restore)
-- Template/CSS changes require server restart (only source files are watched)
-- Full page cache invalidation on any change (rendering is fast, so this is acceptable)
+[RDoc::Server](lib/rdoc/server.rb) provides `rdoc --server` for live documentation preview.
+The watcher polls documentation inputs and auto-discovered `sig/**/*.rbs` files every second.
+Template and CSS changes require a server restart. Input changes clear the full page cache.
+The server calls `clear_file_contributions` before `remove_file` for a deleted file.
 
 ## Common Workflows
 
-Do NOT commit anything. Ask the developer to review the changes after tasks are finished.
+Do not commit changes. Do not push to any repository. Ask the developer to review the changes after the task.
 
-NEVER pushes code to any repositories.
+After changes, run `bundle exec rake` and `bundle exec rake verify_generated`. Run the linters from [Linting](#linting) for each changed file type. Use RuboCop and Stylelint auto-fixes where possible.
 
 ### Making Code Changes
 
 Use Red, Green, Refactor approach:
 
-1. **Ensure Ruby version**: Verify you're using Ruby 3.3.0+ (prepend `chruby <ruby version>` if needed)
+1. **Ruby version**: Use Ruby 3.3.0+. If needed, select the version with `chruby <ruby version>`
 2. **Red - Write failing tests**: Add tests that fail for the new behavior
-3. **Verify failure**: Run `bundle exec rake` to confirm tests fail as expected
+3. **Check failure**: Run `bundle exec rake` to check that tests fail as expected
 4. **Green - Make it work**: Implement the minimum code to make tests pass
 5. **Refactor - Make it right**: Improve code quality while keeping tests green
-   - Run `bundle exec rake` after each refactor to ensure tests still pass
+   - Run `bundle exec rake` after each refactor to check that tests still pass
    - Iterate on steps 4-5 as needed
-6. **Lint your changes**:
-   - Ruby code: `bundle exec rubocop -A` (auto-fix when possible)
-   - ERB templates: `npx @herb-tools/linter "**/*.rhtml"` (if modified)
-   - CSS files: `npm run lint:css -- --fix` (if modified)
 
 ### Modifying Parsers
 
 1. Edit source files (`.ry` or `.kpeg`)
 2. Regenerate: `bundle exec rake generate`
-3. Verify: `bundle exec rake verify_generated`
+3. Check generated files: `bundle exec rake verify_generated`
 4. Run tests: `bundle exec rake`
 
 ### Updating Documentation
@@ -322,15 +140,15 @@ Use Red, Green, Refactor approach:
 
 When editing markup reference documentation, such as `doc/markup_reference/markdown.md` and `doc/markup_reference/rdoc.rdoc`:
 
-1. **Always verify rendering** - After making changes, test that the content renders correctly using Ruby:
+1. **Check rendering** - After changes, check the rendered HTML with the local source:
 
    For Markdown files:
 
    ```ruby
-   ruby -r rdoc -r rdoc/markdown -e '
+   ruby -Ilib -r rdoc -r rdoc/markdown -e '
    md = RDoc::Markdown.new
    doc = md.parse("YOUR CONTENT HERE")
-   formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new)
+   formatter = RDoc::Markup::ToHtml.new
    puts formatter.convert(doc)
    '
    ```
@@ -338,10 +156,9 @@ When editing markup reference documentation, such as `doc/markup_reference/markd
    For RDoc files:
 
    ```ruby
-   ruby -r rdoc -e '
-   parser = RDoc::Markup::Parser.new
-   doc = parser.parse("YOUR CONTENT HERE")
-   formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new)
+   ruby -Ilib -r rdoc -e '
+   doc = RDoc::Markup.parse("YOUR CONTENT HERE")
+   formatter = RDoc::Markup::ToHtml.new
    puts formatter.convert(doc)
    '
    ```
@@ -357,7 +174,7 @@ When editing markup reference documentation, such as `doc/markup_reference/markd
    - Tilde fences (`~~~`) conflict with strikethrough syntax
    - Use 4-space indentation to show literal code fence examples
 
-4. **Full verification**: Generate documentation and inspect the HTML output:
+4. **Check generated documentation**: Generate documentation and inspect the HTML output:
 
    ```bash
    bundle exec rake rerdoc
@@ -367,49 +184,18 @@ When editing markup reference documentation, such as `doc/markup_reference/markd
 
 ### Modifying Themes/Styling
 
-When making changes to theme CSS or templates (e.g., Darkfish or Aliki themes):
+For theme CSS or template changes:
 
-1. **Start the live-reloading server**: Run `bundle exec rdoc --server` (or `bundle exec rake rdoc:server`)
-2. **Make changes**: Edit files in `lib/rdoc/generator/template/<theme>/` or source code
-3. **Browser auto-refreshes**: The server detects file changes and refreshes the browser automatically
-4. **Verify with `/test-server`**: Use the test-server skill for endpoint checks, live-reload verification, and optional Playwright screenshots
-5. **Lint changes** (if modified):
-   - ERB templates: `npx @herb-tools/linter "lib/rdoc/generator/template/**/*.rhtml"`
-   - CSS files: `npm run lint:css -- --fix`
+1. Start the preview server with `bundle exec rdoc --server` or `bundle exec rake rdoc:server`.
+2. Edit files in `lib/rdoc/generator/template/<theme>/` or the source code.
+3. If you change templates or CSS, restart the server.
+4. Use the [server testing guide](.claude/skills/test-server/SKILL.md) for endpoint checks, live reload, and file changes.
+5. Run the template and CSS linters from [Linting](#linting) for the file types you changed.
 
-**Note:** The server watches source files, not template files. If you modify `.rhtml` templates or CSS in the template directory, restart the server to pick up those changes.
+Watched documentation inputs trigger automatic page reloads. The preview server always uses Aliki. Darkfish output requires static documentation generation.
 
-## Visual Testing with Playwright CLI
+## Pull Requests and Forks
 
-Use `npx playwright` to take screenshots of generated documentation — works with both the live-reload server and static `_site/` output.
+Pull request descriptions must be concise. Use 2–4 short paragraphs to explain the context, correctness, and notable side effects. Do not include a "Test plan" section. Do not append a Claude Code session link or any AI attribution.
 
-```bash
-# Install browsers (one-time)
-npx playwright install chromium
-
-# Screenshot a live server page
-npx playwright screenshot http://localhost:4000/RDoc.html /tmp/rdoc-class.png
-
-# Screenshot static output (start a file server first)
-cd _site && python3 -m http.server 8000 &
-npx playwright screenshot http://localhost:8000/index.html /tmp/rdoc-index.png
-
-# Full-page screenshot
-npx playwright screenshot --full-page http://localhost:4000/RDoc.html /tmp/rdoc-full.png
-```
-
-For server-specific E2E testing (endpoint checks, live-reload verification, file change detection), use the `/test-server` skill.
-
-## Notes for AI Agents
-
-1. **Always run tests** after making changes: `bundle exec rake`
-2. **Lint your changes**:
-   - RuboCop for Ruby: `bundle exec rubocop -A`
-   - Herb for ERB templates: `npx @herb-tools/linter "**/*.rhtml"`
-   - Stylelint for CSS: `npm run lint:css -- --fix`
-3. **Regenerate parsers** if you modify `.ry` or `.kpeg` files
-4. **Use `rake rerdoc`** to regenerate documentation (not just `rdoc`)
-5. **Verify generated files** with `rake verify_generated`
-6. **Don't edit generated files** directly (in `lib/rdoc/markdown/` and `lib/rdoc/rd/`)
-7. **Pull request descriptions** must be concise. Use 2–4 short paragraphs explaining the context, why the change is correct, and any notable side effect. Do not include a "Test plan" section. Do not append a Claude Code session link or any AI attribution.
-8. **Sync the fork before branching**: when this repository is a fork of `ruby/rdoc`, fast-forward the fork's `master` to `ruby/rdoc:master` before creating a new branch. Branching from a stale master invites merge conflicts and PRs that diverge from upstream history.
+If this repository is a fork of `ruby/rdoc`, fast-forward its `master` to `ruby/rdoc:master` before you create a branch. A stale base can cause merge conflicts and divergence from upstream history.

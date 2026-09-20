@@ -93,27 +93,7 @@ echo "before=$BEFORE after=$AFTER"
 # Expected: AFTER > BEFORE
 ```
 
-### 5. (Optional) Visual testing with Playwright CLI
-
-For visual inspection of rendered pages, use Playwright CLI commands directly:
-
-```bash
-# Install browsers (one-time)
-npx playwright install chromium
-
-# Take a screenshot of the index page
-npx playwright screenshot http://localhost:4000/ /tmp/rdoc-index.png
-
-# Take a screenshot of a specific class page
-npx playwright screenshot http://localhost:4000/RDoc.html /tmp/rdoc-class.png
-
-# Full-page screenshot
-npx playwright screenshot --full-page http://localhost:4000/RDoc.html /tmp/rdoc-full.png
-```
-
-Review the screenshots to verify layout, styling, and content rendering.
-
-### 6. Stop the server
+### 5. Stop the server
 
 ```bash
 kill $SERVER_PID 2>/dev/null
