@@ -1404,15 +1404,19 @@ end
   end
 
   def test_module_function_inherited_method_visibility
-    util_parser <<~RUBY
-      module Parent
-        def same(arg); end
-      end
-      module Child
-        include Parent
-        module_function :same
-      end
-    RUBY
+    @store.options.verbosity = 2
+    _out, err = capture_output do
+      util_parser <<~RUBY
+        module Parent
+          def same(arg); end
+        end
+        module Child
+          include Parent
+          module_function :same
+        end
+      RUBY
+    end
+    assert_empty err
 
     parent = @store.find_module_named 'Parent'
     assert_equal :public, parent.method_list.first.visibility
@@ -1426,16 +1430,21 @@ end
   end
 
   def test_module_function_overridden_method_visibility
-    util_parser <<~RUBY
-      module Parent
-        def same(arg); end
-      end
-      module Child
-        include Parent
-        def same; end
-        module_function :same
-      end
-    RUBY
+    @store.options.verbosity = 2
+    _out, err = capture_output do
+      util_parser <<~RUBY
+        module Parent
+          # Requires an argument.
+          def same(arg); end
+        end
+        module Child
+          include Parent
+          def same; end
+          module_function :same
+        end
+      RUBY
+    end
+    assert_empty err
 
     parent = @store.find_module_named 'Parent'
     assert_equal :public, parent.method_list.first.visibility
@@ -1443,6 +1452,31 @@ end
     child = @store.find_module_named 'Child'
     methods = child.method_list.map { |method| [method.name, method.singleton, method.visibility, method.params] }
     assert_equal [['same', false, :private, '()'], ['same', true, :public, '()']], methods
+    assert_equal ['', ''], child.method_list.map { |method| method.comment.to_s }
+  end
+
+  def test_module_function_inherited_method_and_attribute
+    @store.options.verbosity = 2
+    _out, err = capture_output do
+      util_parser <<~RUBY
+        module Parent
+          def same; end
+          attr_accessor :same
+        end
+        module Child
+          include Parent
+          module_function :same
+        end
+      RUBY
+    end
+    assert_empty err
+
+    parent = @store.find_module_named 'Parent'
+    assert_equal [:public, :public], (parent.method_list + parent.attributes).map(&:visibility)
+
+    child = @store.find_module_named 'Child'
+    assert_equal [[false, :private], [true, :public]], child.method_list.map { |method| [method.singleton, method.visibility] }
+    assert_equal [[false, :private, 'RW'], [true, :public, 'RW']], child.attributes.map { |attr| [attr.singleton, attr.visibility, attr.rw] }
   end
 
   def test_class_method_visibility
@@ -1547,6 +1581,61 @@ end
     assert_equal ['m1', 'm2'], klass.method_list.map(&:name)
     assert_equal [:public, :private], superclass.method_list.map(&:visibility)
     assert_equal [:private, :public], klass.method_list.map(&:visibility)
+  end
+
+  def test_method_visibility_change_preserves_overrides
+    @store.options.verbosity = 2
+    _out, err = capture_output do
+      util_parser <<~RUBY
+        class Parent
+          # Requires an argument.
+          def same(arg); end
+          # Requires an argument too.
+          def self.same(arg); end
+        end
+        class Child < Parent
+          def same; end
+          def self.same; end
+          private :same
+          protected :same
+          public :same
+          private_class_method :same
+          public_class_method :same
+        end
+      RUBY
+    end
+    assert_empty err
+
+    child = @store.find_class_named 'Child'
+    assert_equal [[false, :public, '()'], [true, :public, '()']], child.method_list.map { |method| [method.singleton, method.visibility, method.params] }
+    assert_equal ['', ''], child.method_list.map { |method| method.comment.to_s }
+  end
+
+  def test_method_visibility_change_selects_nearest_ancestor
+    @store.options.verbosity = 2
+    _out, err = capture_output do
+      util_parser <<~RUBY
+        class Grandparent
+          # Requires two arguments.
+          def same(first, second); end
+        end
+        class Parent < Grandparent
+          def same(arg); end
+        end
+        class Intermediate < Parent; end
+        class Child < Intermediate
+          private :same
+          public :same
+        end
+      RUBY
+    end
+    assert_empty err
+
+    child = @store.find_class_named 'Child'
+    assert_equal [['same', :public, '(arg)']], child.method_list.map { |method| [method.name, method.visibility, method.params] }
+    assert_empty child.method_list.first.comment
+    assert_equal :public, @store.find_class_named('Parent').method_list.first.visibility
+    assert_equal :public, @store.find_class_named('Grandparent').method_list.first.visibility
   end
 
   def test_singleton_method_visibility_change_in_subclass
