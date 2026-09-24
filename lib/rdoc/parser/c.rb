@@ -227,7 +227,7 @@ module RDoc
                        \s*"(.+?)",
                        \s*"(.+?)"
                        \s*\)/xm) do |var_name, new_name, old_name|
-          class_name = @known_classes[var_name]
+          class_name = class_name_for_variable var_name
 
           unless class_name
             @options.warn "Enclosing class or module %p for alias %s %s is not known" % [
@@ -442,8 +442,8 @@ module RDoc
 
       def do_includes
         @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c, m|
-          next unless cls = @classes[c]
-          m = @known_classes[m] || m
+          next unless cls = @classes[c] || @store.find_c_enclosure(c)
+          m = class_name_for_variable(m) || m
 
           comment = new_comment '', @top_level, :c
           incl = cls.add_include Include.new(m, comment)
@@ -677,18 +677,31 @@ module RDoc
 
       def find_class(raw_name, name, base_name = nil)
         unless @classes[raw_name]
-          if raw_name =~ /^rb_m/
-            container = @top_level.add_module NormalModule, name
-          else
-            container = @top_level.add_class NormalClass, name
-          end
-          container.name = base_name if base_name
+          @classes[raw_name] = @store.find_c_enclosure(raw_name)
 
-          container.record_location @top_level
-          @top_level.add_to_classes_or_modules container
-          @classes[raw_name] = container
+          unless @classes[raw_name]
+            if raw_name =~ /^rb_m/
+              container = @top_level.add_module NormalModule, name
+            else
+              container = @top_level.add_class NormalClass, name
+            end
+            container.name = base_name if base_name
+
+            container.record_location @top_level
+            @top_level.add_to_classes_or_modules container
+            @classes[raw_name] = container
+          end
         end
         @classes[raw_name]
+      end
+
+      ##
+      # Returns the Ruby class or module name for a C variable. C files are
+      # parsed independently, so a variable discovered in an earlier file may
+      # only be available through the shared store.
+
+      def class_name_for_variable(variable)
+        @known_classes[variable] ||= @store.find_c_enclosure(variable)&.full_name
       end
 
       ##
@@ -837,7 +850,7 @@ module RDoc
         rw += 'R' if TRUE_VALUES.include?(read)
         rw += 'W' if TRUE_VALUES.include?(write)
 
-        class_name = @known_classes[var_name]
+        class_name = class_name_for_variable var_name
 
         return unless class_name
 
@@ -862,12 +875,12 @@ module RDoc
       # named +class_name+ in +parent+ which was assigned to the C +var_name+.
 
       def handle_class_module(var_name, type, class_name, parent, in_module)
-        parent_name = @known_classes[parent] || parent
+        parent_name = class_name_for_variable(parent) || parent
 
         if in_module
           enclosure = @classes[in_module] || @store.find_c_enclosure(in_module)
 
-          if enclosure.nil? and enclosure = @known_classes[in_module]
+          if enclosure.nil? and enclosure = class_name_for_variable(in_module)
             enc_type = /^rb_m/ =~ in_module ? :module : :class
             handle_class_module in_module, enc_type, enclosure, nil, nil
             enclosure = @classes[in_module]
@@ -928,7 +941,7 @@ module RDoc
       # RDoc.  Values may include quotes and escaped colons (\:).
 
       def handle_constants(type, var_name, const_name, definition)
-        class_name = @known_classes[var_name]
+        class_name = class_name_for_variable var_name
 
         return unless class_name
 
@@ -988,7 +1001,7 @@ module RDoc
 
       def handle_method(type, var_name, meth_name, function, param_count,
                         source_file = nil)
-        class_name = @known_classes[var_name]
+        class_name = class_name_for_variable var_name
         singleton  = @singleton_classes.key?(var_name) || %w[singleton_method module_function].include?(type)
 
         @methods[var_name][function] << meth_name
@@ -1054,10 +1067,10 @@ module RDoc
       # Registers a singleton class +sclass_var+ as a singleton of +class_var+
 
       def handle_singleton(sclass_var, class_var)
-        if (klass = @classes[class_var])
+        if (klass = @classes[class_var] || @store.find_c_enclosure(class_var))
           @classes[sclass_var] = klass
         end
-        if (class_name = @known_classes[class_var])
+        if (class_name = class_name_for_variable(class_var))
           @known_classes[sclass_var]     = class_name
           @singleton_classes[sclass_var] = class_name
         end
