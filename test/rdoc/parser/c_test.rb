@@ -2258,6 +2258,30 @@ class RDocParserCTest < RDoc::TestCase
                  @store.all_classes_and_modules.map { |m| m.full_name }.sort
   end
 
+  def test_scan_c_namespace_variables_across_files
+    util_parser(<<~C).scan
+      void Init_foo(void) {
+        mFoo = rb_define_module("Foo");
+      }
+    C
+
+    second_file = @store.add_file(File.join(File.dirname(@fn), 'constants.c'))
+    parser = RDoc::Parser::C.new second_file, <<~C, @options, @stats
+      VALUE foo_bar(VALUE self) { return Qnil; }
+
+      void Init_constants(void) {
+        rb_define_const(mFoo, "VERSION", rb_str_new_cstr("1.0.0"));
+        rb_define_method(mFoo, "bar", foo_bar, 0);
+      }
+    C
+    parser.scan
+
+    foo = @store.find_module_named 'Foo'
+    assert foo
+    assert_equal ['VERSION'], foo.constants.map(&:name)
+    assert_equal ['bar'], foo.method_list.map(&:name)
+  end
+
   def test_markup_format_default
     content = <<~C
       void Init_Blah(void) {
