@@ -650,6 +650,13 @@ This routine modifies its +comment+ parameter.
     assert_equal 3, @to.characters
   end
 
+  def test_convert_CROSSREF_escapes_html
+    result = @to.convert 'See [#<Encoding:ISO-8859-1>, #<Encoding:UTF-8>] and Foo::<bar>'
+
+    expected = "<p>See [#&lt;Encoding:ISO-8859-1&gt;, #&lt;Encoding:UTF-8&gt;] and Foo::&lt;bar&gt;\n"
+    assert_equal expected, result
+  end
+
   def test_handle_regexp_HYPERLINK_link
     target = 'link:README.txt'
 

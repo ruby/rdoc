@@ -128,10 +128,11 @@ module RDoc
       end
 
       ##
-      # Removes escaping from the cross-references in +target+
+      # Removes escaping from the cross-references in +target+ and escapes HTML
+      # characters, since snippets don't link cross-references.
 
       def handle_regexp_CROSSREF(text)
-        text.sub(/\A\\/, '')
+        convert_string(text.delete_prefix('\\'))
       end
 
       ##
