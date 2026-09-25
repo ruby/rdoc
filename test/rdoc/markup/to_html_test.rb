@@ -931,7 +931,8 @@ EXPECTED
   end
 
   def test_convert_TIDYLINK_escape_javascript
-    assert_not_include '{click}[javascript:alert`javascript_scheme`]', '<a href="javascript:'
+    result = @to.convert '{click}[javascript:alert`javascript_scheme`]'
+    assert_equal "\n<p>click</p>\n", result
   end
 
   def test_convert_TIDYLINK_escape_onmouseover
@@ -957,6 +958,32 @@ EXPECTED
   def test_gen_url
     assert_equal '<a href="example">example</a>',
                  @to.gen_url('link:example', 'example')
+  end
+
+  def test_gen_url_unsafe_scheme
+    [
+      'javascript:alert(1)',
+      'JavaScript:alert(1)',
+      " \x01javascript:alert(1)",
+      "java\tscript:alert(1)",
+      'vbscript:msgbox(1)',
+      'data:text/html,alert(1)',
+      'file:///etc/passwd',
+    ].each do |url|
+      assert_equal 'example', @to.gen_url(url, 'example'), url.inspect
+    end
+  end
+
+  def test_gen_url_link_unsafe_scheme
+    # The href is "javascript" on Windows because File.split treats
+    # ":alert(1)" as an NTFS alternate data stream
+    result = @to.gen_url('link:javascript:alert(1)', 'example')
+    assert_not_include result, 'href="javascript:'
+  end
+
+  def test_gen_url_scheme_like_path
+    assert_equal '<a href="foo/javascript:alert">example</a>',
+                 @to.gen_url('foo/javascript:alert', 'example')
   end
 
   def test_gen_url_rdoc_label

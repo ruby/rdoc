@@ -148,6 +148,12 @@ module RDoc
       #
       # These methods are used by regexp handling markup added by RDoc::Markup#add_regexp_handling.
 
+      ##
+      # URL schemes that are not linked because they can run scripts or open
+      # local files.  Links to them are rendered as their text only.
+
+      UNSAFE_URL_SCHEME_REGEXP = /\A(?:javascript|vbscript|data|file):/i
+
       # :nodoc:
       URL_CHARACTERS_REGEXP_STR = /[A-Za-z0-9\-._~:\/\?#\[\]@!$&'\(\)*+,;%=]/.source
 
@@ -605,9 +611,14 @@ module RDoc
       # - File references (.rb, .rdoc, .md) are converted to .html paths
       # - Anchor URLs (#foo) pass through unchanged for GitHub-style header linking
       # - Footnote links get wrapped in <sup> tags
+      # - URLs with an unsafe scheme (javascript:, vbscript:, data:, file:) are not
+      #   linked and only +text+ is returned
 
       def gen_url(url, text)
         scheme, url, id = parse_url url
+
+        # Check the parsed URL because link: URLs are used as href without it
+        return text if unsafe_url?(url)
 
         if %w[http https link].include?(scheme) && url =~ /\.(gif|png|jpg|jpeg|bmp)\z/
           "<img src=\"#{url}\" />"
@@ -627,6 +638,19 @@ module RDoc
             link
           end
         end
+      end
+
+      ##
+      # Does +url+ have a scheme in UNSAFE_URL_SCHEME_REGEXP?
+      #
+      # Browsers ignore leading C0 controls and spaces and all ASCII tabs and
+      # newlines in a URL, so they are removed before checking the scheme.
+      # See https://url.spec.whatwg.org/#concept-basic-url-parser
+      #
+      #: (String) -> bool
+      def unsafe_url?(url)
+        normalized = url.sub(/\A[\x00-\x20]+/, '').delete("\t\n\r")
+        UNSAFE_URL_SCHEME_REGEXP.match?(normalized)
       end
 
       ##
