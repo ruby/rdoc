@@ -42,6 +42,7 @@ RDoc includes the +rdoc+ and +ri+ tools for generating and displaying documentat
     "CVE-2013-0256.rdoc",
     "doc/markup_reference/markdown.md",
     "doc/markup_reference/rdoc.rdoc",
+    "doc/rdoc/example.rb",
     "History.rdoc",
     "LEGAL.rdoc",
     "LICENSE.rdoc",
