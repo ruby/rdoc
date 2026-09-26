@@ -93,6 +93,21 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para("<a href=\"C1.html\">Constant</a>"), result
   end
 
+  def test_convert_CROSSREF_escapes_excluded_html
+    @to = RDoc::Markup::ToHtmlCrossref.new 'index.html', @c1,
+      autolink_excluded_words: ['#<']
+
+    result = @to.convert '#<'
+
+    assert_equal para('#&lt;'), result
+  end
+
+  def test_convert_CROSSREF_escapes_email_like_html
+    result = @to.convert '#<@foo.bar'
+
+    assert_equal para('#&lt;@foo.bar'), result
+  end
+
   def test_convert_CROSSREF_method
     result = @to.convert 'C1#m(foo, bar, baz)'
 

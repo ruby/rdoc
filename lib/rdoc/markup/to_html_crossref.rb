@@ -87,9 +87,9 @@ module RDoc
 
       def handle_regexp_CROSSREF(name)
         return convert_string(name) if in_tidylink_label?
-        return name if @autolink_excluded_words&.include?(name)
+        return convert_string(name) if @autolink_excluded_words&.include?(name)
 
-        return name if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
+        return convert_string(name) if name =~ /@[\w-]+\.[\w-]/ # labels that look like emails
 
         unless @hyperlink_all
           # This ensures that words entirely consisting of lowercase letters will
