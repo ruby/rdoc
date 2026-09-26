@@ -1403,6 +1403,83 @@ end
     assert_equal [:public, :public, :public], singleton_methods.map(&:visibility)
   end
 
+  def test_module_function_no_arg
+    util_parser <<~RUBY
+      module A
+        attr_reader :a1
+        module_function
+        attr_reader :a2
+        def m1; end
+        def m2; end
+        public
+        def m3; end
+        private
+        def m4; end
+      end
+    RUBY
+    mod = @store.find_module_named 'A'
+    attributes = mod.attributes
+    instance_methods = mod.method_list.reject(&:singleton)
+    singleton_methods = mod.method_list.select(&:singleton)
+    assert_equal ['a1', 'a2'], attributes.map(&:name)
+    assert_equal [:public, :private], attributes.map(&:visibility)
+    assert_equal ['m1', 'm2', 'm3', 'm4'], instance_methods.map(&:name)
+    assert_equal [:private, :private, :public, :private], instance_methods.map(&:visibility)
+    assert_equal ['m1', 'm2'], singleton_methods.map(&:name)
+    assert_equal [:public, :public], singleton_methods.map(&:visibility)
+  end
+
+  def test_module_function_no_arg_does_not_leak_from_block
+    util_parser <<~RUBY
+      module M
+        Module.new do
+          module_function
+        end
+        def outer; end
+      end
+    RUBY
+
+    mod = @store.find_module_named 'M'
+    methods = mod.method_list.map { |method| [method.name, method.singleton, method.visibility] }
+    assert_equal [['outer', false, :public]], methods
+  end
+
+  def test_module_function_no_arg_does_not_convert_explicit_singleton_method
+    util_parser <<~RUBY
+      module M
+        def foo; end
+        module_function
+        def self.foo; end
+        def bar; end
+      end
+    RUBY
+
+    mod = @store.find_module_named 'M'
+    methods = mod.method_list.map { |method| [method.name, method.singleton, method.visibility] }
+    assert_equal [
+      ['foo', false, :public],
+      ['foo', true, :public],
+      ['bar', false, :private],
+      ['bar', true, :public],
+    ], methods
+  end
+
+  def test_module_function_no_arg_is_ignored_in_singleton_class
+    util_parser <<~RUBY
+      module M
+        class << self
+          module_function rescue nil
+          def foo; end
+        end
+        def bar; end
+      end
+    RUBY
+
+    mod = @store.find_module_named 'M'
+    methods = mod.method_list.map { |method| [method.name, method.singleton, method.visibility] }
+    assert_equal [['foo', true, :public], ['bar', false, :public]], methods
+  end
+
   def test_class_method_visibility
     util_parser <<~RUBY
       class A
