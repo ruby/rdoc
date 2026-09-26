@@ -133,7 +133,9 @@ module RDoc
       # Matches an RBS inline type annotation line: #: followed by whitespace
       RBS_SIG_LINE = /\A#:\s/ # :nodoc:
 
-      attr_accessor :visibility, :module_function_mode
+      # Current mode for default visibility: :private, :protected, :public, :module_function.
+      attr_accessor :visibility_mode
+
       attr_reader :container, :singleton, :in_proc_block
 
       def initialize(top_level, content, options, stats)
@@ -152,11 +154,15 @@ module RDoc
 
         @module_nesting = [[top_level, false]]
         @container = top_level
-        @visibility = :public
-        @module_function_mode = false
+        @visibility_mode = :public
         @singleton = false
         @in_proc_block = false
         @doc_state = :startdoc
+      end
+
+      # Returns the current default visibility: :private, :protected or :public.
+      def default_visibility
+        @visibility_mode == :module_function ? :private : @visibility_mode
       end
 
       # Applies document control directives (:startdoc:, :stopdoc: and :enddoc:)
@@ -220,13 +226,11 @@ module RDoc
 
       def with_container(container, singleton: false)
         old_container = @container
-        old_visibility = @visibility
-        old_module_function_mode = @module_function_mode
+        old_visibility_mode = @visibility_mode
         old_singleton = @singleton
         old_in_proc_block = @in_proc_block
         old_doc_state = @doc_state
-        @visibility = :public
-        @module_function_mode = false
+        @visibility_mode = :public
         @container = container
         @singleton = singleton
         @in_proc_block = false
@@ -234,8 +238,7 @@ module RDoc
         yield container
       ensure
         @container = old_container
-        @visibility = old_visibility
-        @module_function_mode = old_module_function_mode
+        @visibility_mode = old_visibility_mode
         @singleton = old_singleton
         @in_proc_block = old_in_proc_block
         @doc_state = old_doc_state
@@ -418,7 +421,7 @@ module RDoc
         handle_code_object_directives(@container, directives)
         is_call_node = node.is_a?(Prism::CallNode)
         singleton_method = false
-        visibility = @visibility
+        visibility = default_visibility
         attributes = rw = line_no = method_name = nil
         directives.each do |directive, (param, line)|
           case directive
@@ -653,7 +656,7 @@ module RDoc
           a.store = @store
           a.line = line_no
           a.type_signature_lines = type_signature_lines
-          a.visibility = visibility
+          a.visibility = default_visibility
           record_location(a)
           handle_modifier_directive(a, line_no)
           if should_document?(a)
@@ -1162,8 +1165,8 @@ module RDoc
             receiver_fallback_type = :module
             return unless receiver_name
           when nil
-            visibility = @scanner.visibility
-            mod_function = @scanner.module_function_mode && !singleton
+            visibility = @scanner.default_visibility
+            mod_function = @scanner.visibility_mode == :module_function
             singleton = @scanner.singleton
           else
             # `def (unknown expression).method_name` is not documentable
@@ -1282,12 +1285,11 @@ module RDoc
         end
 
         def _visit_call_module_function(call_node)
+          return if @scanner.in_proc_block || @scanner.singleton
           if !call_node.arguments || call_node.arguments.arguments.empty?
-            @scanner.visibility = :private
-            @scanner.module_function_mode = true
+            @scanner.visibility_mode = :module_function
             return
           end
-          return if @scanner.in_proc_block || @scanner.singleton
           names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
           @scanner.change_method_to_module_function(names) if names
         end
@@ -1302,8 +1304,7 @@ module RDoc
           return if @scanner.in_proc_block
           arguments_node = call_node.arguments
           if arguments_node.nil? # `public` `private`
-            @scanner.visibility = visibility
-            @scanner.module_function_mode = false
+            @scanner.visibility_mode = visibility
           else # `public :foo, :bar`, `private def foo; end`
             names = visibility_method_arguments(call_node, singleton: false)
             @scanner.change_method_visibility(names, visibility) if names
