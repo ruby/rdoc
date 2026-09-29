@@ -34,7 +34,6 @@ module RDoc
         generate_file_files
         generate_table_of_contents
         write_search_index
-        write_navigation_index
 
         copy_static
 
@@ -120,40 +119,6 @@ module RDoc
 
         data = { index: index }
         File.write search_index_path, "var search_data = #{JSON.generate(data)};"
-      end
-
-      ##
-      # Builds the shared class tree in sidebar order. Hidden namespaces retain
-      # their visible descendants, but do not receive links of their own.
-
-      def build_navigation_index
-        setup
-        grouped = @classes.group_by { |klass| klass.full_name.rpartition('::').first }
-        build_nodes = ->(classes) {
-          classes.filter_map do |klass|
-            children = build_nodes.call(grouped[klass.full_name] || [])
-            next unless klass.display? || !children.empty?
-
-            {
-              name: klass.name,
-              full_name: klass.full_name,
-              path: klass.display? ? klass.path : nil,
-              children: children
-            }
-          end
-        }
-        build_nodes.call(grouped[''] || [])
-      end
-
-      ##
-      # Like search data, navigation uses a classic script so file:// works
-      # without fetch or a web server.
-
-      def write_navigation_index
-        return if @dry_run
-
-        FileUtils.mkdir_p 'js'
-        File.write 'js/navigation_data.js', "var navigation_data = #{JSON.generate(build_navigation_index, max_nesting: false)};"
       end
 
       ##

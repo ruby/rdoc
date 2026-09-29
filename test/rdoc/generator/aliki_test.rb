@@ -246,15 +246,14 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     @klass.add_class RDoc::NormalClass, 'Inner'
     @g.generate
 
-    data = JSON.parse(File.read('js/navigation_data.js').delete_prefix('var navigation_data = ').delete_suffix(';'))
-    klass = data.find { |entry| entry['full_name'] == 'Klass' }
-    assert_equal 'Klass.html', klass['path']
-    assert_equal %w[Klass::A Klass::Inner], klass['children'].map { |entry| entry['full_name'] }
-    assert_equal 'Klass/Inner.html', klass['children'].last['path']
+    data = JSON.parse(File.read('js/search_data.js').delete_prefix('var search_data = ').delete_suffix(';'))['index']
+    assert_include data.map { |entry| entry['full_name'] }, 'Klass::Inner'
+    refute_file 'js/navigation_data.js'
 
     page = File.read('Klass/Inner.html')
     assert_include page, 'data-current-class="Klass::Inner"'
-    assert_include page, '../js/navigation_data.js?v='
+    assert_include page, '../js/search_data.js?v='
+    assert_not_include page, '../js/navigation_data.js?v='
     assert_include page, '../table_of_contents.html#classes'
     sidebar = page[/<div id="classindex-section".*?<\/nav>/m]
     assert_not_include sidebar, '<a href="../Klass.html">Klass</a>'
@@ -273,25 +272,22 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     inner.document_self = false
     @klass.document_self = false
 
-    data = @g.build_navigation_index
-    klass = data.find { |entry| entry[:full_name] == 'HiddenRoot' }
-    assert_nil klass[:path]
-    assert_not_include klass[:children].map { |entry| entry[:full_name] }, hidden.full_name
-    branch = klass[:children].find { |entry| entry[:full_name] == inner.full_name }
-    assert_nil branch[:path]
-    assert_equal [leaf.path], branch[:children].map { |entry| entry[:path] }
+    data = @g.build_search_index
+    names = data.map { |entry| entry[:full_name] }
+    assert_include names, leaf.full_name
+    assert_not_include names, @klass.full_name
+    assert_not_include names, inner.full_name
+    assert_not_include names, hidden.full_name
   end
 
-  def test_navigation_data_supports_deep_namespaces
+  def test_search_data_supports_deep_namespaces
     leaf = @klass
     55.times { |i| leaf = leaf.add_class RDoc::NormalClass, "Level#{i}" }
 
-    @g.write_navigation_index
+    @g.write_search_index
 
-    data = JSON.parse(File.read('js/navigation_data.js').delete_prefix('var navigation_data = ').delete_suffix(';'), max_nesting: false)
-    branch = data.find { |entry| entry['full_name'] == 'Klass' }
-    55.times { |i| branch = branch['children'].find { |entry| entry['name'] == "Level#{i}" } }
-    assert_equal leaf.path, branch['path']
+    data = JSON.parse(File.read('js/search_data.js').delete_prefix('var search_data = ').delete_suffix(';'))['index']
+    assert_equal leaf.path, data.find { |entry| entry['full_name'] == leaf.full_name }['path']
   end
 
   def test_canonical_url
