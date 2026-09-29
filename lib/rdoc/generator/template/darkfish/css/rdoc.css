@@ -14,7 +14,7 @@
   --highlight-color: #cc342d; /* Reddish color for accents and headings */
   --secondary-highlight-color: #c83045; /* Darker reddish color for secondary highlights */
   --text-color: #505050; /* Dark bluish-grey for text */
-  --background-color: #fefefe; /* Near white background */
+  --background-color: red; /* Near white background */
   --code-block-background-color: #f6f6f3; /* Slightly darker grey for code blocks */
   --link-color: #42405F; /* Dark bluish-grey for links */
   --link-hover-color: var(--highlight-color); /* Reddish color on hover */
