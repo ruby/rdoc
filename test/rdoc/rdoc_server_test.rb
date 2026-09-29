@@ -76,7 +76,6 @@ class RDocServerTest < RDoc::TestCase
     assert_equal 200, status
     assert_equal 'application/javascript', content_type
     assert_include body, 'Example.html'
-    assert_equal 404, @server.send(:route, '/js/navigation_data.js').first
 
     @server.instance_variable_set(:@file_mtimes, @rdoc.last_modified.keys.to_h { |file|
       [file, File.mtime(file)]

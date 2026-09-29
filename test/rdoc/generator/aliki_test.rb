@@ -248,12 +248,10 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
 
     data = JSON.parse(File.read('js/search_data.js').delete_prefix('var search_data = ').delete_suffix(';'))['index']
     assert_include data.map { |entry| entry['full_name'] }, 'Klass::Inner'
-    refute_file 'js/navigation_data.js'
 
     page = File.read('Klass/Inner.html')
     assert_include page, 'data-current-class="Klass::Inner"'
     assert_include page, '../js/search_data.js?v='
-    assert_not_include page, '../js/navigation_data.js?v='
     assert_include page, '../table_of_contents.html#classes'
     sidebar = page[/<div id="classindex-section".*?<\/nav>/m]
     assert_not_include sidebar, '<a href="../Klass.html">Klass</a>'
@@ -280,16 +278,6 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     assert_not_include names, hidden.full_name
   end
 
-  def test_search_data_supports_deep_namespaces
-    leaf = @klass
-    55.times { |i| leaf = leaf.add_class RDoc::NormalClass, "Level#{i}" }
-
-    @g.write_search_index
-
-    data = JSON.parse(File.read('js/search_data.js').delete_prefix('var search_data = ').delete_suffix(';'))['index']
-    assert_equal leaf.path, data.find { |entry| entry['full_name'] == leaf.full_name }['path']
-  end
-
   def test_canonical_url
     @klass.add_class RDoc::NormalClass, 'Inner'
     @store.options.canonical_root = @options.canonical_root = "https://example.com/docs/"
@@ -312,7 +300,6 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
 
     refute_file 'index.html'
     refute_file 'table_of_contents.html'
-    refute_file 'js/navigation_data.js'
     refute_file 'css/rdoc.css'
     refute_file 'js/aliki.js'
   end

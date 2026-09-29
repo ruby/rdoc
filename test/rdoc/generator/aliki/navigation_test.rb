@@ -21,12 +21,13 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
           this.listeners = {};
         }
         appendChild(child) { this.children.push(child); }
-        replaceChildren(child) { this.children = [child]; }
+        replaceChildren(...children) { this.children = children; }
         setAttribute(key, value) { this.attributes[key] = value; }
         addEventListener(event, callback) { this.listeners[event] = callback; }
         set innerHTML(value) { throw new Error('Navigation must use textContent'); }
       }
-      const container = new Element('div');
+      const container = new Element('ul');
+      container.className = 'link-list nav-list';
       const document = {
         createElement: tag => new Element(tag),
         listeners: {},
@@ -55,6 +56,9 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
 
   def test_unopened_branches_are_lazy_and_only_populated_once
     @context.eval "buildClassNavigation(container, nodes, '../', '')"
+    assert_equal ['ul', 'link-list nav-list'], @context.eval('[container.tag, container.className]')
+    assert_equal ['li', 'li'], @context.eval('container.children.map(child => child.tag)')
+    assert_equal ['class-navigation-branch', 'class-navigation-branch'], @context.eval('elements("details").map(branch => branch.className)')
     assert_equal ['Foo'], @context.eval('elements("a").map(link => link.textContent)')
     @context.eval 'const branch = elements("details")[0]; branch.open = true; branch.listeners.toggle()'
     assert_equal ['Foo', '<Leaf>'], @context.eval('elements("a").map(link => link.textContent)')

@@ -920,17 +920,17 @@ header.top-navbar .navbar-search form {
 }
 
 /*
-  Improve chevron styling for details under link-list, using SVG chevron that matches nav-section-chevron
-  We need to avoid adding the element in class content generation so it doesn't break darkfish styles
+  Use the same chevron for existing nested lists and class branches whose
+  child lists are only added when opened.
 */
-#sidebar-navigation li details:has(.link-list) > summary {
+#sidebar-navigation li details:is(:has(.link-list), .class-navigation-branch) > summary {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   cursor: pointer;
 }
 
-#sidebar-navigation li details:has(.link-list) > summary::after {
+#sidebar-navigation li details:is(:has(.link-list), .class-navigation-branch) > summary::after {
   content: '';
   position: static;
   display: inline-block;
@@ -950,11 +950,11 @@ header.top-navbar .navbar-search form {
   transition: transform var(--transition-base), background-color var(--transition-fast);
 }
 
-#sidebar-navigation li details:has(.link-list) > summary:hover::after {
+#sidebar-navigation li details:is(:has(.link-list), .class-navigation-branch) > summary:hover::after {
   background-color: var(--color-accent-primary);
 }
 
-#sidebar-navigation li details:has(.link-list)[open] > summary::after {
+#sidebar-navigation li details:is(:has(.link-list), .class-navigation-branch)[open] > summary::after {
   transform: rotate(90deg);
   background-color: var(--color-accent-primary);
 }
