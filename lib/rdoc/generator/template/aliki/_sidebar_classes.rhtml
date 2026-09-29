@@ -10,6 +10,7 @@
       </span>
     </summary>
 
-    <%= generate_class_index_content(@classes, rel_prefix) %>
+    <div id="class-navigation" data-current-class="<%= h(defined?(klass) ? klass.full_name : '') %>"></div>
+    <a href="<%= h rel_prefix %>/table_of_contents.html#classes">All classes and modules</a>
   </details>
 </div>

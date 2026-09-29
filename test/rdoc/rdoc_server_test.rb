@@ -71,6 +71,27 @@ class RDocServerTest < RDoc::TestCase
     assert_equal 'text/html', content_type
   end
 
+  def test_navigation_data_refreshes_after_file_changes
+    status, content_type, body = @server.send(:route, '/js/navigation_data.js')
+    assert_equal 200, status
+    assert_equal 'application/javascript', content_type
+    assert_include body, 'Example.html'
+
+    @server.instance_variable_set(:@file_mtimes, @rdoc.last_modified.keys.to_h { |file|
+      [file, File.mtime(file)]
+    })
+    File.write File.join(@dir, 'added.rb'), "# Added class\nclass Added; end\n"
+    capture_output { assert @server.send(:check_for_changes) }
+    _, _, updated = @server.send(:route, '/js/navigation_data.js')
+    assert_include updated, 'Added.html'
+
+    File.unlink File.join(@dir, 'added.rb')
+    capture_output { assert @server.send(:check_for_changes) }
+    _, _, removed = @server.send(:route, '/js/navigation_data.js')
+    assert_not_include removed, 'Added.html'
+    assert_include removed, 'Example.html'
+  end
+
   def test_route_returns_404_for_missing_page
     status, content_type, _body = @server.send(:route, '/nonexistent.html')
 

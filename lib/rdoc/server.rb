@@ -212,8 +212,8 @@ module RDoc
       when '/__status'
         t = @mutex.synchronize { @last_change_time }
         [200, 'application/json', JSON.generate(last_change: t)]
-      when '/js/search_data.js'
-        # Search data is dynamically generated, not a static asset
+      when '/js/search_data.js', '/js/navigation_data.js'
+        # Index data is dynamically generated, not a static asset
         serve_page(path)
       when %r{\A/(?:css|js)/}
         serve_asset(path)
@@ -307,6 +307,8 @@ module RDoc
         @generator.generate_table_of_contents
       when 'js/search_data.js'
         "var search_data = #{JSON.generate(index: @generator.build_search_index)};"
+      when 'js/navigation_data.js'
+        "var navigation_data = #{JSON.generate(@generator.build_navigation_index, max_nesting: false)};"
       else
         text_name = name.chomp('.html')
         class_name = text_name.gsub('/', '::')
