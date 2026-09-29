@@ -250,7 +250,7 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     assert_include data.map { |entry| entry['full_name'] }, 'Klass::Inner'
 
     page = File.read('Klass/Inner.html')
-    assert_include page, '<ul id="class-navigation" class="link-list nav-list"></ul>'
+    assert_include page, '<ul id="namespace-navigation" class="link-list nav-list"></ul>'
     assert_include page, '../js/search_data.js?v='
     sidebar = page[/<div id="classindex-section".*?<\/nav>/m]
     assert_not_include sidebar, '<a href="../Klass.html">Klass</a>'

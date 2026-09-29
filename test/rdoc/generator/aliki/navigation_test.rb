@@ -27,7 +27,7 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
         createElement: tag => new Element(tag),
         listeners: {},
         addEventListener(event, callback) { this.listeners[event] = callback; },
-        getElementById: id => id === 'class-navigation' ? container : null
+        getElementById: id => id === 'namespace-navigation' ? container : null
       };
       function elements(tag, root = container) {
         return root.children.flatMap(child =>
