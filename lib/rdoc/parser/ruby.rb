@@ -637,8 +637,9 @@ module RDoc
 
       # Handles `attr :a, :b`, `attr_reader :a, :b`, `attr_writer :a, :b` and `attr_accessor :a, :b`
 
-      def add_attributes(names, rw, line_no)
-        comment, directives, type_signature_lines = consecutive_comment(line_no)
+      def add_attributes(names, rw, line_no, line_no_end)
+        comment, directives, _ = consecutive_comment(line_no)
+        type_signature_lines = modifier_type_signatures(line_no_end)
         apply_document_control_directive(directives) if directives
         handle_code_object_directives(@container, directives) if directives
         return if document_suppressed?
@@ -953,11 +954,22 @@ module RDoc
 
         first_sig_line = start_line + lines.index(sig_lines.first)
         text.replace(doc_lines.join)
-        type_signature_lines = sig_lines.map { |l| l.sub(RBS_SIG_LINE, '').strip }.reject(&:empty?)
-        return nil if type_signature_lines.empty?
+        type_signatures_from(sig_lines, first_sig_line)
+      end
 
-        warn_invalid_type_signature(type_signature_lines, first_sig_line)
-        type_signature_lines
+      def modifier_type_signatures(line_no)
+        return nil unless (comment = @modifier_comments[line_no])
+        return nil unless comment.match?(RBS_SIG_LINE)
+
+        type_signatures_from([comment], line_no)
+      end
+
+      def type_signatures_from(sig_lines, first_sig_line)
+        sig_lines = sig_lines.map { |line| line.sub(RBS_SIG_LINE, '').strip }.reject(&:empty?)
+        return nil if sig_lines.empty?
+
+        warn_invalid_type_signature(sig_lines, first_sig_line)
+        sig_lines
       end
 
       def warn_invalid_type_signature(type_signature_lines, line_no)
@@ -1342,7 +1354,7 @@ module RDoc
         def _visit_call_attr_reader_writer_accessor(call_node, rw)
           return if @scanner.in_proc_block
           names = call_node_name_arguments(call_node)
-          @scanner.add_attributes(names, rw, call_node.location.start_line) if names
+          @scanner.add_attributes(names, rw, call_node.location.start_line, call_node.location.end_line) if names
         end
 
         class MethodSignatureVisitor < Prism::Visitor # :nodoc:
