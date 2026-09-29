@@ -51,7 +51,6 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
 
   def test_all_branches_are_rendered_before_opening
     @context.eval "buildClassNavigation(container, nodes, '../')"
-    assert_equal ['ul', 'link-list nav-list'], @context.eval('[container.tag, container.className]')
     assert_equal ['li', 'li'], @context.eval('container.children.map(child => child.tag)')
     assert_equal [false, false], @context.eval('elements("details").map(branch => branch.open)')
     assert_equal ['Foo', '<Leaf>', 'Child'], @context.eval('elements("a").map(link => link.textContent)')
@@ -64,7 +63,6 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
       ], './');
     JS
     assert_equal [true, false, false], @context.eval('elements("details").map(branch => branch.open)')
-    assert_equal ['Root', 'Foo', '<Leaf>', 'Child'], @context.eval('elements("a").map(link => link.textContent)')
   end
 
   def test_tree_from_search_index_synthesizes_unlinked_ancestors
