@@ -17,13 +17,9 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
         constructor(tag) {
           this.tag = tag;
           this.children = [];
-          this.attributes = {};
-          this.listeners = {};
         }
         appendChild(child) { this.children.push(child); }
         replaceChildren(...children) { this.children = children; }
-        setAttribute(key, value) { this.attributes[key] = value; }
-        addEventListener(event, callback) { this.listeners[event] = callback; }
         set innerHTML(value) { throw new Error('Navigation must use textContent'); }
       }
       const container = new Element('ul');
@@ -39,11 +35,11 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
           (child.tag === tag ? [child] : []).concat(elements(tag, child)));
       }
       const nodes = [
-        {name: 'Foo', full_name: 'Foo', path: 'Foo.html', children: [
-          {name: '<Leaf>', full_name: 'Foo::Leaf', path: 'Foo/Leaf.html', children: []}
+        {name: 'Foo', path: 'Foo.html', children: [
+          {name: '<Leaf>', path: 'Foo/Leaf.html', children: []}
         ]},
-        {name: 'FooBar', full_name: 'FooBar', path: null, children: [
-          {name: 'Child', full_name: 'FooBar::Child', path: 'FooBar/Child.html', children: []}
+        {name: 'FooBar', path: null, children: [
+          {name: 'Child', path: 'FooBar/Child.html', children: []}
         ]}
       ];
     JS
@@ -54,33 +50,28 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
     @context.dispose
   end
 
-  def test_unopened_branches_are_lazy_and_only_populated_once
-    @context.eval "buildClassNavigation(container, nodes, '../', '')"
+  def test_all_branches_are_rendered_before_opening
+    @context.eval "buildClassNavigation(container, nodes, '../')"
     assert_equal ['ul', 'link-list nav-list'], @context.eval('[container.tag, container.className]')
     assert_equal ['li', 'li'], @context.eval('container.children.map(child => child.tag)')
-    assert_equal ['class-navigation-branch', 'class-navigation-branch'], @context.eval('elements("details").map(branch => branch.className)')
-    assert_equal ['Foo'], @context.eval('elements("a").map(link => link.textContent)')
-    @context.eval 'const branch = elements("details")[0]; branch.open = true; branch.listeners.toggle()'
-    assert_equal ['Foo', '<Leaf>'], @context.eval('elements("a").map(link => link.textContent)')
-    @context.eval 'branch.open = false; branch.listeners.toggle(); branch.open = true; branch.listeners.toggle()'
-    assert_equal 2, @context.eval('elements("a").length')
+    assert_equal [false, false], @context.eval('elements("details").map(branch => branch.open)')
+    assert_equal ['Foo', '<Leaf>', 'Child'], @context.eval('elements("a").map(link => link.textContent)')
   end
 
-  def test_current_namespace_opens_without_matching_similar_prefixes
-    @context.eval "buildClassNavigation(container, nodes, '../../', 'FooBar::Child')"
-    assert_equal [false, true], @context.eval('elements("details").map(branch => branch.open)')
-    assert_equal ['../../Foo.html', '../../FooBar/Child.html'], @context.eval('elements("a").map(link => link.href)')
-    assert_equal ['page'], @context.eval('elements("a").map(link => link.attributes["aria-current"]).filter(Boolean)')
+  def test_rendering_again_replaces_existing_links
+    @context.eval "buildClassNavigation(container, nodes, '../')"
+    @context.eval "buildClassNavigation(container, nodes, '../../')"
+    assert_equal ['../../Foo.html', '../../Foo/Leaf.html', '../../FooBar/Child.html'], @context.eval('elements("a").map(link => link.href)')
   end
 
-  def test_single_root_expands_but_grandchildren_remain_lazy
+  def test_single_root_expands_but_descendants_remain_closed
     @context.eval <<~JS
       buildClassNavigation(container, [
-        {name: 'Root', full_name: 'Root', path: 'Root.html', children: nodes}
-      ], './', '');
+        {name: 'Root', path: 'Root.html', children: nodes}
+      ], './');
     JS
     assert_equal [true, false, false], @context.eval('elements("details").map(branch => branch.open)')
-    assert_equal ['Root', 'Foo'], @context.eval('elements("a").map(link => link.textContent)')
+    assert_equal ['Root', 'Foo', '<Leaf>', 'Child'], @context.eval('elements("a").map(link => link.textContent)')
   end
 
   def test_tree_from_search_index_synthesizes_unlinked_ancestors
@@ -93,12 +84,11 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
         {type: 'class', full_name: 'Visible::Child', path: 'Visible/Child.html'}
       ];
       const tree = buildClassTree(index);
-      buildClassNavigation(container, tree, '../', 'Hidden::Middle::Leaf');
+      buildClassNavigation(container, tree, '../');
     JS
 
     assert_equal ['Hidden', 'Middle', 'Leaf', 'Visible', 'Child'], @context.eval('tree.flatMap(node => [node.name, ...node.children.flatMap(child => [child.name, ...child.children.map(leaf => leaf.name)])])')
-    assert_equal ['../Hidden/Middle/Leaf.html', '../Visible.html'], @context.eval('elements("a").map(link => link.href)')
-    assert_equal ['page'], @context.eval('elements("a").map(link => link.attributes["aria-current"]).filter(Boolean)')
+    assert_equal ['../Hidden/Middle/Leaf.html', '../Visible.html', '../Visible/Child.html'], @context.eval('elements("a").map(link => link.href)')
   end
 
   def test_visible_parent_is_linked_even_when_child_appears_first
@@ -119,7 +109,6 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
         {type: 'class', full_name: 'Root::Child', path: 'Root/Child.html'}
       ]};
       var index_rel_prefix = '../';
-      container.dataset = {currentClass: 'Root::Child'};
       document.listeners.DOMContentLoaded();
     JS
 
