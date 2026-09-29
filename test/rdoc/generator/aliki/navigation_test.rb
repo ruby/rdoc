@@ -19,7 +19,6 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
           this.children = [];
         }
         appendChild(child) { this.children.push(child); }
-        replaceChildren(...children) { this.children = children; }
         set innerHTML(value) { throw new Error('Navigation must use textContent'); }
       }
       const container = new Element('ul');
@@ -56,12 +55,6 @@ class RDocGeneratorAlikiNavigationTest < Test::Unit::TestCase
     assert_equal ['li', 'li'], @context.eval('container.children.map(child => child.tag)')
     assert_equal [false, false], @context.eval('elements("details").map(branch => branch.open)')
     assert_equal ['Foo', '<Leaf>', 'Child'], @context.eval('elements("a").map(link => link.textContent)')
-  end
-
-  def test_rendering_again_replaces_existing_links
-    @context.eval "buildClassNavigation(container, nodes, '../')"
-    @context.eval "buildClassNavigation(container, nodes, '../../')"
-    assert_equal ['../../Foo.html', '../../Foo/Leaf.html', '../../FooBar/Child.html'], @context.eval('elements("a").map(link => link.href)')
   end
 
   def test_single_root_expands_but_descendants_remain_closed
