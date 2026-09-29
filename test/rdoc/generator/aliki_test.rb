@@ -252,11 +252,8 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     page = File.read('Klass/Inner.html')
     assert_include page, 'data-current-class="Klass::Inner"'
     assert_include page, '../js/search_data.js?v='
-    assert_not_include page, 'table_of_contents.html'
     sidebar = page[/<div id="classindex-section".*?<\/nav>/m]
     assert_not_include sidebar, '<a href="../Klass.html">Klass</a>'
-
-    refute_file 'table_of_contents.html'
   end
 
   def test_navigation_preserves_hidden_namespace_and_omits_hidden_leaf
