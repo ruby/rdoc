@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative 'support/test_case'
+require 'net/http'
 
 class RDocServerTest < RDoc::TestCase
 
@@ -72,24 +73,23 @@ class RDocServerTest < RDoc::TestCase
   end
 
   def test_search_data_refreshes_after_file_changes
-    status, content_type, body = @server.send(:route, '/js/search_data.js')
-    assert_equal 200, status
-    assert_equal 'application/javascript', content_type
-    assert_include body, 'Example.html'
+    with_running_server do |port|
+      response = get(port, '/js/search_data.js')
+      assert_equal '200', response.code
+      assert_equal 'application/javascript', response.content_type
+      assert_include response.body, 'Example.html'
 
-    @server.instance_variable_set(:@file_mtimes, @rdoc.last_modified.keys.to_h { |file|
-      [file, File.mtime(file)]
-    })
-    File.write File.join(@dir, 'added.rb'), "# Added class\nclass Added; end\n"
-    capture_output { assert @server.send(:check_for_changes) }
-    _, _, updated = @server.send(:route, '/js/search_data.js')
-    assert_include updated, 'Added.html'
+      File.write File.join(@dir, 'added.rb'), "# Added class\nclass Added; end\n"
+      wait_for('search index to include the added class') do
+        get(port, '/js/search_data.js').body.include?('Added.html')
+      end
 
-    File.unlink File.join(@dir, 'added.rb')
-    capture_output { assert @server.send(:check_for_changes) }
-    _, _, removed = @server.send(:route, '/js/search_data.js')
-    assert_not_include removed, 'Added.html'
-    assert_include removed, 'Example.html'
+      File.unlink File.join(@dir, 'added.rb')
+      wait_for('search index to remove the deleted class') do
+        !get(port, '/js/search_data.js').body.include?('Added.html')
+      end
+      assert_include get(port, '/js/search_data.js').body, 'Example.html'
+    end
   end
 
   def test_route_returns_404_for_missing_page
@@ -100,52 +100,44 @@ class RDocServerTest < RDoc::TestCase
   end
 
   def test_check_for_changes_parses_and_reloads_rbs_signatures
-    @server.instance_variable_set(:@file_mtimes, @rdoc.last_modified.keys.to_h { |file|
-      [file, File.mtime(file)]
-    })
+    with_running_server do |port|
+      sig_dir = File.join @dir, 'sig'
+      FileUtils.mkdir_p sig_dir
+      File.write File.join(sig_dir, 'example.rbs'), <<~RBS
+        class Example
+          # RBS method docs.
+          def greet: () -> String
+        end
+      RBS
 
-    sig_dir = File.join @dir, 'sig'
-    FileUtils.mkdir_p sig_dir
-    File.write File.join(sig_dir, 'example.rbs'), <<~RBS
-      class Example
-        # RBS method docs.
-        def greet: () -> String
+      wait_for('class page to include the RBS method documentation') do
+        get(port, '/Example.html').body.include?('RBS method docs.')
       end
-    RBS
 
-    _out, err = capture_output do
-      assert @server.send(:check_for_changes)
+      example = @rdoc.store.find_class_or_module 'Example'
+      greet = example.find_method 'greet', false
+      assert_equal "RBS method docs.", greet.comment.to_s.strip
+      assert_equal ['() -> String'], greet.type_signature_lines
+      assert_equal ['() -> String'], @rdoc.store.rbs_signature_for(greet)
     end
-
-    assert_not_include err, 'Error parsing'
-
-    example = @rdoc.store.find_class_or_module 'Example'
-    greet = example.find_method 'greet', false
-    assert_equal "RBS method docs.", greet.comment.to_s.strip
-    assert_equal ['() -> String'], greet.type_signature_lines
-    assert_equal ['() -> String'], @rdoc.store.rbs_signature_for(greet)
   end
 
   def test_check_for_changes_parses_rbs_sources
-    @server.instance_variable_set(:@file_mtimes, @rdoc.last_modified.keys.to_h { |file|
-      [file, File.mtime(file)]
-    })
+    with_running_server do |port|
+      File.write File.join(@dir, 'sample.rbs'), <<~RBS
+        class Sample
+          def greet: () -> String
+        end
+      RBS
 
-    File.write File.join(@dir, 'sample.rbs'), <<~RBS
-      class Sample
-        def greet: () -> String
+      wait_for('class page to include the new RBS source') do
+        get(port, '/Sample.html').code == '200'
       end
-    RBS
 
-    _out, err = capture_output do
-      assert @server.send(:check_for_changes)
+      sample = @rdoc.store.find_class_or_module 'Sample'
+      greet = sample.find_method 'greet', false
+      assert_equal ['() -> String'], greet.type_signature_lines
     end
-
-    assert_not_include err, 'Error parsing'
-
-    sample = @rdoc.store.find_class_or_module 'Sample'
-    greet = sample.find_method 'greet', false
-    assert_equal ['() -> String'], greet.type_signature_lines
   end
 
   def test_current_watch_files_deduplicates_symlinked_source_tree
@@ -160,5 +152,37 @@ class RDocServerTest < RDoc::TestCase
     assert_equal 1, @server.send(:current_watch_files).count { |file| File.identical?(source_file, file) }
   rescue NotImplementedError, Errno::EACCES, Errno::EPERM
     omit 'symlinks are not supported'
+  end
+
+  private
+
+  def with_running_server
+    port = TCPServer.open('127.0.0.1', 0) { |socket| socket.addr[1] }
+    @server = RDoc::Server.new(@rdoc, port)
+    server_thread = Thread.new { @server.start }
+
+    wait_for('server to start') do
+      get(port, '/__status').code == '200'
+    rescue Errno::ECONNREFUSED
+      false
+    end
+
+    yield port
+  ensure
+    server_thread&.raise(Interrupt) if server_thread&.alive?
+    server_thread&.join
+  end
+
+  def get(port, path)
+    Net::HTTP.start('127.0.0.1', port) { |http| http.get(path) }
+  end
+
+  def wait_for(description)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 10
+
+    until yield
+      flunk "Timed out waiting for #{description}" if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+      sleep 0.05
+    end
   end
 end
