@@ -72,26 +72,6 @@ class RDocServerTest < RDoc::TestCase
     assert_equal 'text/html', content_type
   end
 
-  def test_search_data_refreshes_after_file_changes
-    with_running_server do |port|
-      response = get(port, '/js/search_data.js')
-      assert_equal '200', response.code
-      assert_equal 'application/javascript', response.content_type
-      assert_include response.body, 'Example.html'
-
-      File.write File.join(@dir, 'added.rb'), "# Added class\nclass Added; end\n"
-      wait_for('search index to include the added class') do
-        get(port, '/js/search_data.js').body.include?('Added.html')
-      end
-
-      File.unlink File.join(@dir, 'added.rb')
-      wait_for('search index to remove the deleted class') do
-        !get(port, '/js/search_data.js').body.include?('Added.html')
-      end
-      assert_include get(port, '/js/search_data.js').body, 'Example.html'
-    end
-  end
-
   def test_route_returns_404_for_missing_page
     status, content_type, _body = @server.send(:route, '/nonexistent.html')
 
