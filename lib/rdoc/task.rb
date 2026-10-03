@@ -226,6 +226,7 @@ module RDoc
         @rdoc_files,
         Rake.application.rakefile
       ].flatten.compact
+      rdoc_target_deps << '.rdoc_options' if File.exist?('.rdoc_options')
 
       task rdoc_task_name => [rdoc_target]
       file rdoc_target => rdoc_target_deps do
