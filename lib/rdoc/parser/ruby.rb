@@ -554,23 +554,30 @@ module RDoc
         comment_text
       end
 
-      # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`
+      # Handles `public :foo, :bar` `private :foo, :bar` and `protected :foo, :bar`.
+      # Returns the local method and attribute entries with the requested visibility.
 
       def change_method_visibility(names, visibility, singleton: @singleton)
-        new_methods = []
-        @container.methods_matching(names, singleton) do |m|
-          if m.parent != @container
-            # A copy of an ancestor's method must not be documented
-            # in a :stopdoc:/:enddoc: region
-            next if document_suppressed?
-            m = m.dup
-            record_location(m)
-            new_methods << m
-          else
-            m.visibility = visibility
-          end
+        methods_by_name = {}
+        @container.methods_matching(names, singleton) do |method|
+          # A method and an attribute can share a name in the same context.
+          # Keep both, but skip shadowed ancestors and repeated visits.
+          matches = (methods_by_name[method.name] ||= [])
+          next unless matches.empty? || matches.first.parent == method.parent
+          matches << method unless matches.include?(method)
         end
-        new_methods.each do |method|
+
+        methods_by_name.values.flatten.filter_map do |method|
+          if method.parent == @container
+            method.visibility = visibility
+            next method
+          end
+
+          # A copy of an ancestor's method must not be documented
+          # in a :stopdoc:/:enddoc: region
+          next if document_suppressed?
+          method = method.dup
+          record_location(method)
           method.visibility = visibility
           case method
           when AnyMethod
@@ -578,25 +585,22 @@ module RDoc
           when Attr
             @container.add_attribute(method)
           end
+          method
         end
       end
 
       # Handles `module_function :foo, :bar`
 
       def change_method_to_module_function(names)
-        @container.set_visibility_for(names, :private, false)
+        methods = change_method_visibility(names, :private, singleton: false)
         # In a :stopdoc:/:enddoc: region, the visibility of instance methods still
         # changes but the singleton method copies must not be documented
         return if document_suppressed?
 
-        new_methods = []
-        @container.methods_matching(names) do |m|
-          s_m = m.dup
-          record_location(s_m)
-          s_m.singleton = true
-          new_methods << s_m
-        end
-        new_methods.each do |method|
+        methods.each do |method|
+          method = method.dup
+          record_location(method)
+          method.singleton = true
           method.visibility = :public
           case method
           when AnyMethod
