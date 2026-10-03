@@ -125,9 +125,18 @@ module RDoc
     # - it has a +#see+ method that is documented.
 
     def documented?
-      super or
-        (is_alias_for and is_alias_for.documented?) or
-        (see and see.documented?)
+      # Degenerate input such as cyclic includes can make the alias and +#see+
+      # chain lead back to this method/attribute, which adds no documentation.
+      return false if @checking_documented
+
+      @checking_documented = true
+      begin
+        super or
+          (is_alias_for and is_alias_for.documented?) or
+          (see and see.documented?)
+      ensure
+        @checking_documented = false
+      end
     end
 
     ##
