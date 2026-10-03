@@ -84,6 +84,7 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     # Aliki should have these assets
     assert_file 'css/rdoc.css'
     assert_file 'js/aliki.js'
+    assert_file 'js/navigation.js'
     assert_file 'js/search_controller.js'
     assert_file 'js/search_navigation.js'
     assert_file 'js/search_ranker.js'
@@ -239,6 +240,37 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     assert_match %r{<nav id="sidebar-navigation" role="navigation" hidden>}, index
     assert_match %r{<aside id="table-of-contents" class="table-of-contents"}, index
     assert_match %r{<main role="main">}, index
+  end
+
+  def test_shared_class_navigation
+    @klass.add_class RDoc::NormalClass, 'Inner'
+    @g.generate
+
+    data = JSON.parse(File.read('js/search_data.js').delete_prefix('var search_data = ').delete_suffix(';'))['index']
+    assert_include data.map { |entry| entry['full_name'] }, 'Klass::Inner'
+
+    page = File.read('Klass/Inner.html')
+    assert_include page, '<ul id="namespace-navigation" class="link-list nav-list"></ul>'
+    assert_include page, '../js/search_data.js?v='
+    sidebar = page[/<div id="classindex-section".*?<\/nav>/m]
+    assert_not_include sidebar, '<a href="../Klass.html">Klass</a>'
+  end
+
+  def test_navigation_preserves_hidden_namespace_and_omits_hidden_leaf
+    @klass = @top_level.add_class RDoc::NormalClass, 'HiddenRoot'
+    inner = @klass.add_class RDoc::NormalClass, 'Inner'
+    leaf = inner.add_class RDoc::NormalClass, 'Leaf'
+    hidden = @klass.add_class RDoc::NormalClass, 'Hidden'
+    hidden.document_self = false
+    inner.document_self = false
+    @klass.document_self = false
+
+    data = @g.build_search_index
+    names = data.map { |entry| entry[:full_name] }
+    assert_include names, leaf.full_name
+    assert_not_include names, @klass.full_name
+    assert_not_include names, inner.full_name
+    assert_not_include names, hidden.full_name
   end
 
   def test_canonical_url
