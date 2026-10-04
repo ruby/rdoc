@@ -2,27 +2,16 @@
 
 module RDoc
   module Generator
-    # Caches executable renderers for the bundled HTML templates.  Extended onto
-    # ERB objects so the renderer cache has the same lifetime as the template.
+    # Caches an executable renderer with declared inputs for a bundled HTML
+    # template.  ERB#result remains available for binding-based evaluation.
     module CompiledTemplate # :nodoc:
 
-      attr_writer :generator
+      attr_writer :generator, :render_inputs
 
-      #: (?Binding?) -> untyped
-      def result(context = nil)
-        return super unless context && context.receiver.equal?(@generator) && @generator.compiled_template_context?(context)
-
-        variables = context.local_variables.sort
-        @compiled_renderers ||= {}
-        renderer = @compiled_renderers[variables] ||= compile_renderer(variables)
-        renderer.call(*variables.map { |name| context.local_variable_get(name) })
-      end
-
-      private
-
-      #: (Array[Symbol]) -> Method
-      def compile_renderer(variables)
-        def_module("render(#{variables.join(', ')})").instance_method(:render).bind(@generator)
+      #: (Hash[Symbol, untyped]) -> untyped
+      def render(inputs)
+        @compiled_renderer ||= def_module("render(#{@render_inputs.join(', ')})").instance_method(:render).bind(@generator)
+        @compiled_renderer.call(*@render_inputs.map { |name| inputs.fetch(name) })
       end
     end
   end

@@ -3,7 +3,7 @@
 
 <title><%= h @title %></title>
 
-<%- if defined?(klass) %>
+<%- if defined?(klass) && klass %>
   <meta
     name="keywords"
     content="ruby,<%= h "#{klass.type},#{klass.full_name}" %>"
@@ -19,7 +19,7 @@
       content="<%= h "#{klass.type} #{klass.full_name}: #{excerpt(klass.comment)}" %>"
     >
   <%- end %>
-<%- elsif defined?(file) %>
+<%- elsif defined?(file) && file %>
   <meta name="keywords" content="ruby,documentation,<%= h file.page_name %>">
   <meta
     name="description"
@@ -39,7 +39,7 @@
 <%- end %>
 
 <%- if canonical_url = @options.canonical_root %>
-  <% canonical_url = current.canonical_url if defined?(current) %>
+  <% canonical_url = current.canonical_url if defined?(current) && current %>
   <link rel="canonical" href="<%= canonical_url %>">
 <%- end %>
 
@@ -47,7 +47,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="<%= h @title %>">
 
-<%- if defined?(klass) %>
+<%- if defined?(klass) && klass %>
   <%- if klass.comment.empty? %>
     <meta
       property="og:description"
@@ -56,7 +56,7 @@
   <%- else %>
     <meta property="og:description" content="<%= h excerpt(klass.comment) %>">
   <%- end %>
-<%- elsif defined?(file) %>
+<%- elsif defined?(file) && file %>
   <%- if file.comment.empty? %>
     <meta
       property="og:description"
@@ -73,7 +73,7 @@
 <%- end %>
 
 <%- if canonical_url = @options.canonical_root %>
-  <% canonical_url = current.canonical_url if defined?(current) %>
+  <% canonical_url = current.canonical_url if defined?(current) && current %>
   <meta property="og:url" content="<%= canonical_url %>">
 <%- end %>
 
@@ -81,7 +81,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="<%= h @title %>">
 
-<%- if defined?(klass) %>
+<%- if defined?(klass) && klass %>
   <%- if klass.comment.empty? %>
     <meta
       name="twitter:description"
@@ -90,7 +90,7 @@
   <%- else %>
     <meta name="twitter:description" content="<%= h excerpt(klass.comment) %>">
   <%- end %>
-<%- elsif defined?(file) %>
+<%- elsif defined?(file) && file %>
   <%- if file.comment.empty? %>
     <meta
       name="twitter:description"

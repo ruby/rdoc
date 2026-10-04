@@ -33,14 +33,49 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
     generator.generate_class @alpha
 
     templates = generator.instance_variable_get(:@template_cache).values
-    renderers = templates.flat_map do |template|
-      (template.instance_variable_get(:@compiled_renderers) || {}).values
-    end
+    renderers = templates.filter_map { |template| template.instance_variable_get(:@compiled_renderer) }
 
     assert_not_empty renderers
     renderers.each do |renderer|
       assert_kind_of Method, renderer
       assert_same generator, renderer.receiver
+    end
+  end
+
+  def test_compiled_renderers_only_accept_declared_inputs
+    %w[aliki darkfish].each do |theme|
+      generator = generator_for theme
+      generator.generate_class @alpha
+
+      page = generator.template_for generator.template_dir + 'class.rhtml'
+      renderer = page.instance_variable_get :@compiled_renderer
+      assert_kind_of Method, renderer, theme
+      assert_equal %i[io rel_prefix asset_rel_prefix current klass file breadcrumb],
+                   renderer.parameters.map(&:last), theme
+
+      partial = generator.template_for generator.template_dir + '_sidebar_sections.rhtml', false, RDoc::ERBPartial
+      renderer = partial.instance_variable_get :@compiled_renderer
+      assert_kind_of Method, renderer, theme
+      assert_equal [:klass], renderer.parameters.map(&:last), theme
+    end
+  end
+
+  def test_builtin_rendering_does_not_inspect_bindings
+    %w[aliki darkfish].each do |theme|
+      generator = generator_for theme
+      binding_reads = []
+      trace = TracePoint.new(:call, :c_call) do |event|
+        if event.self.is_a?(Binding) && %i[local_variables local_variable_get].include?(event.method_id)
+          binding_reads << event.method_id
+        end
+      end
+
+      trace.enable do
+        generator.generate_class @alpha
+        generator.generate_class @beta
+      end
+
+      assert_empty binding_reads, theme
     end
   end
 
@@ -70,7 +105,7 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
     template = generator.template_for generator.template_dir + '_sidebar_toggle.rhtml', false, RDoc::ERBPartial
 
     assert_include template.result(binding), 'sidebar-navigation-toggle'
-    assert_nil template.instance_variable_get(:@compiled_renderers)
+    assert_nil template.instance_variable_get(:@compiled_renderer)
   end
 
   def test_cached_templates_use_current_class_and_path
@@ -101,19 +136,59 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
     assert_not_include beta_html, 'First page documentation: café.'
   end
 
-  def test_index_handles_a_new_local_variable_without_reusing_the_old_renderer
-    generator = generator_for 'darkfish'
-    generator.generate_index
+  def test_index_reuses_its_renderer_when_the_main_page_changes
+    %w[aliki darkfish].each do |theme|
+      @options.main_page = nil
+      generator = generator_for theme
+      html = generator.generate_index
+      assert_include html, 'This is the API documentation'
+      assert_not_include html, '<h3>Table of Contents</h3>'
 
-    readme = @store.add_file 'README.rdoc', parser: RDoc::Parser::Simple
-    readme.comment = '= Main page heading'
-    @options.main_page = 'README.rdoc'
-    generator.refresh_store_data
+      template = generator.template_for generator.template_dir + 'index.rhtml'
+      renderer = template.instance_variable_get :@compiled_renderer
+      assert_kind_of Method, renderer, theme
 
-    html = generator.generate_index
-    assert_include html, 'Main page heading'
-    template = generator.template_for generator.template_dir + 'index.rhtml'
-    assert_equal 2, template.instance_variable_get(:@compiled_renderers).size
+      readme = @store.add_file "README_#{theme}.rdoc", parser: RDoc::Parser::Simple
+      readme.comment = "= Main page heading\n\n== Second heading"
+      @options.main_page = readme.full_name
+      generator.refresh_store_data
+      html = generator.generate_index
+      assert_include html, 'Main page heading'
+      assert_include html, '<h3>Table of Contents</h3>' if theme == 'darkfish'
+      assert_same renderer, template.instance_variable_get(:@compiled_renderer), theme
+
+      @options.main_page = nil
+      html = generator.generate_index
+      assert_include html, 'This is the API documentation'
+      assert_not_include html, '<h3>Table of Contents</h3>'
+      assert_same renderer, template.instance_variable_get(:@compiled_renderer), theme
+    end
+  end
+
+  def test_partials_reuse_their_renderer_across_page_types
+    page = @store.add_file 'guides/USAGE.rdoc', parser: RDoc::Parser::Simple
+    page.comment = '= Nested page documentation'
+
+    %w[aliki darkfish].each do |theme|
+      generator = generator_for theme
+      generator.generate_index
+      partial = generator.template_for generator.template_dir + '_sidebar_pages.rhtml', false, RDoc::ERBPartial
+      renderer = partial.instance_variable_get :@compiled_renderer
+      assert_kind_of Method, renderer, theme
+
+      generator.generate_class @alpha
+      assert_same renderer, partial.instance_variable_get(:@compiled_renderer), theme
+
+      html = generator.generate_page page
+      assert_include html, 'Nested page documentation'
+      assert_include html, '../css/rdoc.css'
+      assert_same renderer, partial.instance_variable_get(:@compiled_renderer), theme
+
+      html = generator.generate_servlet_not_found 'Missing page'
+      assert_include html, 'Missing page'
+      assert_same renderer, partial.instance_variable_get(:@compiled_renderer), theme
+      assert_equal 0, count_evaluations { generator.generate_class @beta }, theme
+    end
   end
 
   def test_cached_templates_work_in_dry_run_mode
@@ -147,6 +222,36 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
     end
   end
 
+  def test_custom_class_templates_can_access_incidental_caller_locals
+    generator = generator_for 'darkfish'
+    page = Pathname.new(@test_home) + 'custom.rhtml'
+    File.write page, <<~ERB
+      <html><%= [klass.equal?(current), out_file.basename.to_s,
+                 template_file.basename.to_s, here.is_a?(Binding),
+                 search_index_rel_prefix == rel_prefix].join('|') %></html>
+    ERB
+
+    assert_equal "<html>true|Alpha.html|custom.rhtml|true|true</html>\n",
+                 generator.generate_class(@alpha, page)
+  end
+
+  def test_builtin_templates_preserve_explicit_binding_evaluation_without_inputs
+    generator = generator_for 'darkfish'
+    generator.generate_index
+    template_file = generator.template_dir + 'index.rhtml'
+    template = generator.template_for template_file
+    renderer = template.instance_variable_get :@compiled_renderer
+    context = generator.instance_eval { binding }
+    context.local_variable_set :rel_prefix, '.'
+    context.local_variable_set :asset_rel_prefix, '.'
+
+    html = generator.render_template(template_file) { context }
+
+    assert_include html, 'This is the API documentation'
+    assert_equal html, context.local_variable_get(:io)
+    assert_same renderer, template.instance_variable_get(:@compiled_renderer)
+  end
+
   def test_custom_page_using_builtin_partials_keeps_shared_binding_behavior
     generator = generator_for 'darkfish'
     generator.generate_class @beta
@@ -158,8 +263,8 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
     assert_include html, 'Generated by'
     assert_include html, RDoc::VERSION
     partial = generator.template_for generator.template_dir + '_footer.rhtml', false, RDoc::ERBPartial
-    assert_equal 1, partial.instance_variable_get(:@compiled_renderers).size
-    assert_nil generator.instance_variable_get(:@compiled_template_context)
+    assert_kind_of Method, partial.instance_variable_get(:@compiled_renderer)
+    assert_kind_of Binding, generator.instance_variable_get(:@context)
   end
 
   def test_custom_erb_classes_keep_their_result_implementation

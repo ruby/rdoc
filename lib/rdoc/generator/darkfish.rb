@@ -81,6 +81,32 @@ module RDoc
 
       DESCRIPTION = 'HTML generator, written by Michael Granger'
 
+      # Page inputs include the assembled head's contract.  Absent page objects
+      # are nil, not missing locals.  Partials only receive their own inputs.
+      PAGE_INPUTS = %i[io rel_prefix asset_rel_prefix current klass file].freeze # :nodoc:
+      TEMPLATE_INPUTS = { # :nodoc:
+        'class.rhtml' => PAGE_INPUTS + [:breadcrumb],
+        'index.rhtml' => PAGE_INPUTS,
+        'page.rhtml' => PAGE_INPUTS,
+        'servlet_not_found.rhtml' => PAGE_INPUTS + [:message],
+        'servlet_root.rhtml' => PAGE_INPUTS + [:installed],
+        'table_of_contents.rhtml' => PAGE_INPUTS,
+        '_head.rhtml' => %i[rel_prefix asset_rel_prefix current klass file],
+        '_footer.rhtml' => [],
+        '_sidebar_classes.rhtml' => [:rel_prefix],
+        '_sidebar_extends.rhtml' => [:klass],
+        '_sidebar_includes.rhtml' => [:klass],
+        '_sidebar_installed.rhtml' => [:installed],
+        '_sidebar_methods.rhtml' => [:klass],
+        '_sidebar_navigation.rhtml' => [:rel_prefix],
+        '_sidebar_pages.rhtml' => %i[rel_prefix current],
+        '_sidebar_parent.rhtml' => [:klass],
+        '_sidebar_search.rhtml' => [],
+        '_sidebar_sections.rhtml' => [:klass],
+        '_sidebar_table_of_contents.rhtml' => [:current],
+        '_sidebar_toggle.rhtml' => [],
+      }.transform_values(&:freeze).freeze
+
       ##
       # The relative path to style sheets and javascript.  By default this is set
       # the same as the rel_prefix.
@@ -161,7 +187,6 @@ module RDoc
 
         @classes = nil
         @context = nil
-        @compiled_template_context = nil
         @files   = nil
         @methods = nil
         @modsort = nil
@@ -295,7 +320,8 @@ module RDoc
         @title = @options.title
         @main_page = @files.find { |f| f.full_name == @options.main_page }
 
-        render_template template_file, out_file do |io|
+        inputs = { rel_prefix: rel_prefix, asset_rel_prefix: asset_rel_prefix, current: @main_page }
+        render_template template_file, out_file, inputs: inputs do |io|
           here = binding
           # suppress 1.9.3 warning
           here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
@@ -335,7 +361,11 @@ module RDoc
         @title = "#{klass.type} #{klass.full_name} - #{@options.title}"
 
         debug_msg "  rendering #{out_file}"
-        render_template template_file, out_file do |io|
+        inputs = {
+          rel_prefix: rel_prefix, asset_rel_prefix: asset_rel_prefix,
+          current: current, klass: klass, breadcrumb: breadcrumb,
+        }
+        render_template template_file, out_file, inputs: inputs do |io|
           here = binding
           # suppress 1.9.3 warning
           here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
@@ -459,7 +489,11 @@ module RDoc
         @title = "#{file.page_name} - #{@options.title}"
 
         debug_msg "  rendering #{out_file}"
-        render_template template_file, out_file do |io|
+        inputs = {
+          rel_prefix: rel_prefix, asset_rel_prefix: asset_rel_prefix,
+          current: current, file: file,
+        }
+        render_template template_file, out_file, inputs: inputs do |io|
           here = binding
           # suppress 1.9.3 warning
           here.local_variable_set(:current, current)
@@ -485,7 +519,8 @@ module RDoc
 
         @title = 'Not Found'
 
-        render_template template_file do |io|
+        inputs = { rel_prefix: rel_prefix, asset_rel_prefix: asset_rel_prefix, message: message }
+        render_template template_file, inputs: inputs do |io|
           here = binding
           # suppress 1.9.3 warning
           here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
@@ -515,7 +550,8 @@ module RDoc
 
         @title = 'Local RDoc Documentation'
 
-        render_template template_file do |io| binding end
+        inputs = { rel_prefix: rel_prefix, asset_rel_prefix: asset_rel_prefix, installed: installed }
+        render_template template_file, inputs: inputs do |io| binding end
       rescue => e
         error = Error.new \
           "error generating servlet_root: #{e.message} (#{e.class})"
@@ -542,7 +578,8 @@ module RDoc
 
         @title = "Table of Contents - #{@options.title}"
 
-        render_template template_file, out_file do |io|
+        inputs = { rel_prefix: rel_prefix, asset_rel_prefix: asset_rel_prefix }
+        render_template template_file, out_file, inputs: inputs do |io|
           here = binding
           # suppress 1.9.3 warning
           here.local_variable_set(:asset_rel_prefix, asset_rel_prefix)
@@ -630,9 +667,7 @@ module RDoc
 
         template = template_for template_file, false, ERBPartial
 
-        template.filename = template_file.to_s
-
-        template.result @context
+        template_result template, @context, template_file
       end
 
       ##
@@ -641,15 +676,17 @@ module RDoc
       #
       # Both +template_file+ and +out_file+ should be Pathname-like objects.
       #
-      # An io will be yielded which must be captured by binding in the caller.
+      # Bundled templates render with explicit +inputs+.  For legacy/custom
+      # templates an io is yielded and must be captured by binding in the caller.
 
-      def render_template(template_file, out_file = nil) # :yield: io
-        previous_compiled_context = @compiled_template_context
-        @compiled_template_context = nil
+      def render_template(template_file, out_file = nil, inputs: nil) # :yield: io
         io_output = out_file && !@dry_run && @file_output
         erb_klass = io_output ? ERBIO : ERB
 
         template = template_for template_file, true, erb_klass
+        inputs = if inputs && template.is_a?(CompiledTemplate)
+          { current: nil, klass: nil, file: nil }.merge(inputs)
+        end
 
         if io_output
           debug_msg "Outputting to %s" % [out_file.expand_path]
@@ -658,14 +695,12 @@ module RDoc
           out_file.open 'w', 0644 do |io|
             io.set_encoding @options.encoding
 
-            @context = yield io
-            @compiled_template_context = @context if template.is_a?(CompiledTemplate)
+            @context = inputs ? inputs.merge(io: io) : yield(io)
 
             template_result template, @context, template_file
           end
         else
-          @context = yield nil
-          @compiled_template_context = @context if template.is_a?(CompiledTemplate)
+          @context = inputs ? inputs.merge(io: nil) : yield(nil)
 
           output = template_result template, @context, template_file
 
@@ -675,15 +710,6 @@ module RDoc
 
           output
         end
-      ensure
-        @compiled_template_context = previous_compiled_context
-      end
-
-      # Only bundled pages may use compiled partials.  Custom pages can depend
-      # on the original shared-binding behavior even when using bundled partials.
-      #: (Binding) -> bool
-      def compiled_template_context?(context) # :nodoc:
-        @compiled_template_context.equal?(context)
       end
 
       ##
@@ -692,7 +718,11 @@ module RDoc
 
       def template_result(template, context, template_file)
         template.filename = template_file.to_s
-        template.result context
+        if template.is_a?(CompiledTemplate) && context.is_a?(Hash)
+          template.render context
+        else
+          template.result context
+        end
       rescue NoMethodError => e
         raise Error, "Error while evaluating %s: %s" % [
           template_file.expand_path,
@@ -721,9 +751,10 @@ module RDoc
         end
 
         template = klass.new template, trim_mode: '-', eoutvar: erbout
-        if [ERB, ERBIO, ERBPartial].include?(klass) && builtin_template?(file)
+        if [ERB, ERBIO, ERBPartial].include?(klass) && (inputs = builtin_template_inputs(file))
           template.extend CompiledTemplate
           template.generator = self
+          template.render_inputs = inputs
         end
         @template_cache[file] = template
         template
@@ -828,15 +859,19 @@ module RDoc
 
     private
 
-      #: (Pathname) -> bool
-      def builtin_template?(file)
+      #: (Pathname) -> Array[Symbol]?
+      def builtin_template_inputs(file)
         # Custom generators and templates may depend on shared-binding mutation
         # or a different lexical scope, so keep their original ERB evaluation.
-        return false unless self.class == Darkfish || self.class == Aliki
+        return unless self.class == Darkfish || self.class == Aliki
 
         directory = @template_dir.expand_path
-        file.dirname.expand_path == directory &&
-          %w[aliki darkfish].any? { |name| directory == Pathname.new(__dir__) + 'template' + name }
+        return unless file.dirname.expand_path == directory
+        theme = directory.basename.to_s
+        return unless %w[aliki darkfish].include?(theme) && directory == Pathname.new(__dir__) + 'template' + theme
+
+        contracts = theme == 'aliki' ? Aliki::TEMPLATE_INPUTS : TEMPLATE_INPUTS
+        contracts[file.basename.to_s]
       end
 
       def template_encoding

@@ -13,6 +13,14 @@ module RDoc
     class Aliki < Generator::Darkfish
       DESCRIPTION = 'HTML generator, written by Stan Lo'
 
+      TEMPLATE_INPUTS = Darkfish::TEMPLATE_INPUTS.merge( # :nodoc:
+        '_aside_toc.rhtml' => [],
+        '_footer.rhtml' => [:rel_prefix],
+        '_header.rhtml' => [:rel_prefix],
+        '_icons.rhtml' => [],
+        '_sidebar_ancestors.rhtml' => [:klass],
+      ).transform_values(&:freeze).freeze
+
       RDoc.add_generator self
 
       def initialize(store, options)

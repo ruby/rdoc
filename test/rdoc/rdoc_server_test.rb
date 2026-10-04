@@ -87,7 +87,8 @@ class RDocServerTest < RDoc::TestCase
 
       generator = @server.instance_variable_get :@generator
       template = generator.template_for generator.template_dir + 'class.rhtml'
-      renderer = template.instance_variable_get(:@compiled_renderers).values.first
+      renderer = template.instance_variable_get :@compiled_renderer
+      assert_kind_of Method, renderer
 
       File.write File.join(@dir, 'example.rb'), <<~RUBY
         # Updated documentation from reparsed source.
@@ -113,7 +114,7 @@ class RDocServerTest < RDoc::TestCase
       assert_equal '200', added.code
       assert_include added.body, 'Documentation for a newly added class.'
       assert_not_include added.body, 'Updated documentation from reparsed source.'
-      assert_same renderer, template.instance_variable_get(:@compiled_renderers).values.first
+      assert_same renderer, template.instance_variable_get(:@compiled_renderer)
     end
   end
 
