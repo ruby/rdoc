@@ -209,8 +209,9 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
 
   def count_evaluations
     count = 0
-    trace = TracePoint.new(:c_call) do |event|
-      count += 1 if event.method_id == :eval
+    erb_file = ERB.instance_method(:result).source_location.first
+    trace = TracePoint.new(:line) do |event|
+      count += 1 if event.path == erb_file && %i[def_method result].include?(event.method_id)
     end
     trace.enable { yield }
     count
