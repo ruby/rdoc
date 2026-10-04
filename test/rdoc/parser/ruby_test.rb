@@ -3032,11 +3032,15 @@ end
   def test_attribute_type_signature
     util_parser <<~RUBY
       class Foo
-        #: String
-        attr_reader :name
+        attr_reader :name #: String
 
-        #: Integer
-        attr_accessor :count
+        # This is an accessor
+        attr_accessor :count #: Integer
+
+        attr_writer :x1,
+          :x2 #: Multiline
+
+        attr_writer :without_type
       end
     RUBY
 
@@ -3044,8 +3048,15 @@ end
     attrs = klass.attributes.sort_by(&:name)
     assert_equal 'count', attrs[0].name
     assert_equal ['Integer'], attrs[0].type_signature_lines
+    assert_equal 'This is an accessor', attrs[0].comment.text
     assert_equal 'name', attrs[1].name
     assert_equal ['String'], attrs[1].type_signature_lines
+    assert_equal 'without_type', attrs[2].name
+    assert_equal nil, attrs[2].type_signature_lines
+    assert_equal 'x1', attrs[3].name
+    assert_equal ['Multiline'], attrs[3].type_signature_lines
+    assert_equal 'x2', attrs[4].name
+    assert_equal ['Multiline'], attrs[4].type_signature_lines
   end
 
   def test_method_type_signature_multiple_overloads
