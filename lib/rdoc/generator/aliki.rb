@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'uri'
+require_relative 'compiled_template'
 
 module RDoc
   module Generator
@@ -13,20 +14,37 @@ module RDoc
     class Aliki < Generator::Darkfish
       DESCRIPTION = 'HTML generator, written by Stan Lo'
 
-      TEMPLATE_INPUTS = Darkfish::TEMPLATE_INPUTS.merge( # :nodoc:
+      TEMPLATE_DIR = (Pathname.new(__dir__) + 'template' + 'aliki').freeze # :nodoc:
+      # Pages include the assembled head's inputs; absent page objects are nil.
+      PAGE_INPUTS = %i[io rel_prefix asset_rel_prefix current klass file].freeze # :nodoc:
+      TEMPLATE_INPUTS = { # :nodoc:
+        'class.rhtml' => PAGE_INPUTS + [:breadcrumb],
+        'index.rhtml' => PAGE_INPUTS,
+        'page.rhtml' => PAGE_INPUTS,
+        'servlet_not_found.rhtml' => PAGE_INPUTS + [:message],
+        'servlet_root.rhtml' => PAGE_INPUTS + [:installed],
+        '_head.rhtml' => %i[rel_prefix asset_rel_prefix current klass file],
         '_aside_toc.rhtml' => [],
         '_footer.rhtml' => [:rel_prefix],
         '_header.rhtml' => [:rel_prefix],
         '_icons.rhtml' => [],
         '_sidebar_ancestors.rhtml' => [:klass],
-      ).transform_values(&:freeze).freeze
+        '_sidebar_classes.rhtml' => [:rel_prefix],
+        '_sidebar_extends.rhtml' => [:klass],
+        '_sidebar_includes.rhtml' => [:klass],
+        '_sidebar_installed.rhtml' => [:installed],
+        '_sidebar_methods.rhtml' => [:klass],
+        '_sidebar_pages.rhtml' => %i[rel_prefix current],
+        '_sidebar_search.rhtml' => [],
+        '_sidebar_sections.rhtml' => [:klass],
+        '_sidebar_toggle.rhtml' => [],
+      }.transform_values(&:freeze).freeze
 
       RDoc.add_generator self
 
       def initialize(store, options)
         super
-        aliki_template_dir = File.expand_path(File.join(__dir__, 'template', 'aliki'))
-        @template_dir = Pathname.new(aliki_template_dir)
+        @template_dir = TEMPLATE_DIR
       end
 
       ##
@@ -159,7 +177,50 @@ module RDoc
         "#{rel_prefix}/#{url}"
       end
 
+      #: (Pathname, ?bool, ?Class[ERB]) -> ERB
+      def template_for(file, page = true, klass = ERB)
+        cached = @template_cache[file]
+        # String and streaming ERB compile different output operations.  Replace
+        # only owned compiled templates; custom ERB caches keep legacy behavior.
+        if cached.is_a?(CompiledTemplate) && cached.class != klass
+          @template_cache.delete(file)
+        end
+
+        template = super
+        return template if template.is_a?(CompiledTemplate)
+        return template unless [ERB, ERBIO, ERBPartial].include?(template.class)
+
+        if inputs = builtin_template_inputs(file)
+          template.extend CompiledTemplate
+          template.generator = self
+          template.render_inputs = inputs
+        end
+        template
+      end
+
     private
+
+      #: (Pathname, ?Pathname?, **untyped) -> untyped
+      def render_page_template(template_file, out_file = nil, **inputs, &block)
+        return super unless builtin_template_inputs(template_file)
+
+        erb_class = erb_class_for out_file
+        template = template_for template_file, true, erb_class
+        return super unless template.is_a?(CompiledTemplate)
+
+        render_template template_file, out_file do |io|
+          CompiledTemplate::Inputs.new(io: io, **inputs)
+        end
+      end
+
+      #: (Pathname) -> Array[Symbol]?
+      def builtin_template_inputs(file)
+        # Custom generators and templates retain their shared-binding behavior.
+        return unless self.class == Aliki && @template_dir.expand_path == TEMPLATE_DIR
+        return unless file.dirname.expand_path == TEMPLATE_DIR
+
+        TEMPLATE_INPUTS[file.basename.to_s]
+      end
 
       def template_encoding
         ::Encoding::UTF_8

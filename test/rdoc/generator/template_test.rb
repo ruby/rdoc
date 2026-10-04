@@ -17,14 +17,23 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
   end
 
   def test_builtin_pages_and_partials_are_evaluated_only_once
-    %w[aliki darkfish].each do |theme|
-      generator = generator_for theme
+    generator = generator_for 'aliki'
 
-      first_evaluations = count_evaluations { generator.generate_class @alpha }
-      second_evaluations = count_evaluations { generator.generate_class @beta }
+    first_evaluations = count_evaluations { generator.generate_class @alpha }
+    second_evaluations = count_evaluations { generator.generate_class @beta }
 
-      assert_operator first_evaluations, :>, 0, theme
-      assert_equal 0, second_evaluations, theme
+    assert_operator first_evaluations, :>, 0
+    assert_equal 0, second_evaluations
+  end
+
+  def test_darkfish_keeps_binding_based_rendering
+    generator = generator_for 'darkfish'
+    generator.generate_class @alpha
+
+    assert_operator count_evaluations { generator.generate_class @beta }, :>, 0
+    assert_kind_of Binding, generator.instance_variable_get(:@context)
+    generator.instance_variable_get(:@template_cache).each_value do |template|
+      assert_not_kind_of RDoc::Generator::CompiledTemplate, template
     end
   end
 
@@ -43,40 +52,43 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
   end
 
   def test_compiled_renderers_only_accept_declared_inputs
-    %w[aliki darkfish].each do |theme|
-      generator = generator_for theme
-      generator.generate_class @alpha
+    generator = generator_for 'aliki'
+    generator.generate_class @alpha
 
-      page = generator.template_for generator.template_dir + 'class.rhtml'
-      renderer = page.instance_variable_get :@compiled_renderer
-      assert_kind_of Method, renderer, theme
-      assert_equal %i[io rel_prefix asset_rel_prefix current klass file breadcrumb],
-                   renderer.parameters.map(&:last), theme
+    page = generator.template_for generator.template_dir + 'class.rhtml'
+    renderer = page.instance_variable_get :@compiled_renderer
+    assert_kind_of Method, renderer
+    assert_equal %i[io rel_prefix asset_rel_prefix current klass file breadcrumb],
+                 renderer.parameters.map(&:last)
 
-      partial = generator.template_for generator.template_dir + '_sidebar_sections.rhtml', false, RDoc::ERBPartial
-      renderer = partial.instance_variable_get :@compiled_renderer
-      assert_kind_of Method, renderer, theme
-      assert_equal [:klass], renderer.parameters.map(&:last), theme
-    end
+    partial = generator.template_for generator.template_dir + '_sidebar_sections.rhtml', false, RDoc::ERBPartial
+    renderer = partial.instance_variable_get :@compiled_renderer
+    assert_kind_of Method, renderer
+    assert_equal [:klass], renderer.parameters.map(&:last)
+  end
+
+  def test_aliki_contracts_match_its_owned_templates
+    generator = generator_for 'aliki'
+    templates = generator.template_dir.children.select { |file| file.extname == '.rhtml' }.map { |file| file.basename.to_s }
+
+    assert_equal templates.sort, RDoc::Generator::Aliki::TEMPLATE_INPUTS.keys.sort
   end
 
   def test_builtin_rendering_does_not_inspect_bindings
-    %w[aliki darkfish].each do |theme|
-      generator = generator_for theme
-      binding_reads = []
-      trace = TracePoint.new(:call, :c_call) do |event|
-        if event.self.is_a?(Binding) && %i[local_variables local_variable_get].include?(event.method_id)
-          binding_reads << event.method_id
-        end
+    generator = generator_for 'aliki'
+    binding_reads = []
+    trace = TracePoint.new(:call, :c_call) do |event|
+      if event.self.is_a?(Binding) && %i[local_variables local_variable_get].include?(event.method_id)
+        binding_reads << event.method_id
       end
-
-      trace.enable do
-        generator.generate_class @alpha
-        generator.generate_class @beta
-      end
-
-      assert_empty binding_reads, theme
     end
+
+    trace.enable do
+      generator.generate_class @alpha
+      generator.generate_class @beta
+    end
+
+    assert_empty binding_reads
   end
 
   def test_clearing_the_template_cache_discards_its_compiled_renderers
@@ -136,59 +148,79 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
     assert_not_include beta_html, 'First page documentation: café.'
   end
 
+  def test_cached_templates_follow_output_mode_changes
+    generator = generator_for 'aliki'
+    generator.generate_class @alpha
+
+    generator.file_output = true
+    generator.generate_class @beta
+    beta_html = File.read File.join(@test_home, 'Beta.html')
+    assert_include beta_html, 'Second page documentation.'
+
+    generator.file_output = false
+    assert_include generator.generate_class(@alpha), 'First page documentation: café.'
+    assert_equal 0, count_evaluations { generator.generate_class @beta }
+  end
+
+  def test_cached_streaming_templates_can_switch_to_dry_run
+    generator = generator_for 'aliki'
+    generator.file_output = true
+    generator.generate_class @alpha
+
+    generator.dry_run = true
+    html = generator.generate_class @beta
+
+    assert_include html, 'Second page documentation.'
+    refute_file File.join(@test_home, 'Beta.html')
+    assert_equal 0, count_evaluations { generator.generate_class @alpha }
+  end
+
   def test_index_reuses_its_renderer_when_the_main_page_changes
-    %w[aliki darkfish].each do |theme|
-      @options.main_page = nil
-      generator = generator_for theme
-      html = generator.generate_index
-      assert_include html, 'This is the API documentation'
-      assert_not_include html, '<h3>Table of Contents</h3>'
+    generator = generator_for 'aliki'
+    html = generator.generate_index
+    assert_include html, 'This is the API documentation'
 
-      template = generator.template_for generator.template_dir + 'index.rhtml'
-      renderer = template.instance_variable_get :@compiled_renderer
-      assert_kind_of Method, renderer, theme
+    template = generator.template_for generator.template_dir + 'index.rhtml'
+    renderer = template.instance_variable_get :@compiled_renderer
+    assert_kind_of Method, renderer
 
-      readme = @store.add_file "README_#{theme}.rdoc", parser: RDoc::Parser::Simple
-      readme.comment = "= Main page heading\n\n== Second heading"
-      @options.main_page = readme.full_name
-      generator.refresh_store_data
-      html = generator.generate_index
-      assert_include html, 'Main page heading'
-      assert_include html, '<h3>Table of Contents</h3>' if theme == 'darkfish'
-      assert_same renderer, template.instance_variable_get(:@compiled_renderer), theme
+    readme = @store.add_file 'README.rdoc', parser: RDoc::Parser::Simple
+    readme.comment = "= Main page heading\n\n== Second heading"
+    @options.main_page = readme.full_name
+    generator.refresh_store_data
+    html = generator.generate_index
+    assert_include html, 'Main page heading'
+    assert_same renderer, template.instance_variable_get(:@compiled_renderer)
 
-      @options.main_page = nil
-      html = generator.generate_index
-      assert_include html, 'This is the API documentation'
-      assert_not_include html, '<h3>Table of Contents</h3>'
-      assert_same renderer, template.instance_variable_get(:@compiled_renderer), theme
-    end
+    @options.main_page = nil
+    html = generator.generate_index
+    assert_include html, 'This is the API documentation'
+    assert_not_include html, '<h1 id="main-page-heading"'
+    assert_same renderer, template.instance_variable_get(:@compiled_renderer)
   end
 
   def test_partials_reuse_their_renderer_across_page_types
     page = @store.add_file 'guides/USAGE.rdoc', parser: RDoc::Parser::Simple
     page.comment = '= Nested page documentation'
 
-    %w[aliki darkfish].each do |theme|
-      generator = generator_for theme
-      generator.generate_index
-      partial = generator.template_for generator.template_dir + '_sidebar_pages.rhtml', false, RDoc::ERBPartial
-      renderer = partial.instance_variable_get :@compiled_renderer
-      assert_kind_of Method, renderer, theme
+    generator = generator_for 'aliki'
+    generator.generate_index
+    partial = generator.template_for generator.template_dir + '_sidebar_pages.rhtml', false, RDoc::ERBPartial
+    renderer = partial.instance_variable_get :@compiled_renderer
+    assert_kind_of Method, renderer
 
-      generator.generate_class @alpha
-      assert_same renderer, partial.instance_variable_get(:@compiled_renderer), theme
+    generator.generate_class @alpha
+    assert_same renderer, partial.instance_variable_get(:@compiled_renderer)
 
-      html = generator.generate_page page
-      assert_include html, 'Nested page documentation'
-      assert_include html, '../css/rdoc.css'
-      assert_same renderer, partial.instance_variable_get(:@compiled_renderer), theme
+    html = generator.generate_page page
+    assert_include html, 'Nested page documentation'
+    assert_include html, '../css/rdoc.css'
+    assert_same renderer, partial.instance_variable_get(:@compiled_renderer)
 
-      html = generator.generate_servlet_not_found 'Missing page'
-      assert_include html, 'Missing page'
-      assert_same renderer, partial.instance_variable_get(:@compiled_renderer), theme
-      assert_equal 0, count_evaluations { generator.generate_class @beta }, theme
-    end
+    html = generator.generate_servlet_not_found 'Missing page'
+    assert_include html, 'Missing page'
+    assert_same renderer, partial.instance_variable_get(:@compiled_renderer)
+    assert_equal 0, count_evaluations { generator.generate_class @beta }
   end
 
   def test_cached_templates_work_in_dry_run_mode
@@ -223,7 +255,7 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
   end
 
   def test_custom_class_templates_can_access_incidental_caller_locals
-    generator = generator_for 'darkfish'
+    generator = generator_for 'aliki'
     page = Pathname.new(@test_home) + 'custom.rhtml'
     File.write page, <<~ERB
       <html><%= [klass.equal?(current), out_file.basename.to_s,
@@ -236,7 +268,7 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
   end
 
   def test_builtin_templates_preserve_explicit_binding_evaluation_without_inputs
-    generator = generator_for 'darkfish'
+    generator = generator_for 'aliki'
     generator.generate_index
     template_file = generator.template_dir + 'index.rhtml'
     template = generator.template_for template_file
@@ -253,7 +285,7 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
   end
 
   def test_custom_page_using_builtin_partials_keeps_shared_binding_behavior
-    generator = generator_for 'darkfish'
+    generator = generator_for 'aliki'
     generator.generate_class @beta
     page = Pathname.new(@test_home) + 'custom.rhtml'
     File.write page, '<html><% render "_footer.rhtml" %><%= @context.local_variable_get(:_erbout__footer) %></html>'
@@ -279,13 +311,43 @@ class RDocGeneratorTemplateTest < RDoc::TestCase
     assert_equal 'custom result', template.result(generator.instance_eval { binding })
   end
 
+  def test_cached_custom_erb_classes_receive_the_original_page_binding
+    generator = generator_for 'aliki'
+    erb_class = Class.new(ERB) do
+      def result(context = nil)
+        "custom #{context.local_variable_get(:current).full_name}"
+      end
+    end
+    generator.template_for generator.template_dir + 'class.rhtml', true, erb_class
+
+    assert_equal 'custom Alpha', generator.generate_class(@alpha)
+    assert_equal 'custom Beta', generator.generate_class(@beta)
+  end
+
+  def test_render_inputs_reject_unknown_fields
+    assert_raise(ArgumentError) do
+      RDoc::Generator::CompiledTemplate::Inputs.new(incidental_local: true)
+    end
+  end
+
   def test_generator_subclasses_keep_binding_based_rendering
-    generator = generator_for 'darkfish', Class.new(RDoc::Generator::Darkfish)
+    generator = generator_for 'aliki', Class.new(RDoc::Generator::Aliki)
     generator.generate_class @alpha
 
     evaluations = count_evaluations { generator.generate_class @beta }
 
     assert_operator evaluations, :>, 0
+  end
+
+  def test_generator_subclasses_can_override_the_legacy_render_template_signature
+    generator_class = Class.new(RDoc::Generator::Aliki) do
+      def render_template(template_file, out_file = nil, &block)
+        super
+      end
+    end
+    generator = generator_for 'aliki', generator_class
+
+    assert_include generator.generate_class(@alpha), 'First page documentation: café.'
   end
 
   def test_template_errors_keep_the_template_filename

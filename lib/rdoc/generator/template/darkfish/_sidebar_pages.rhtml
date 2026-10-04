@@ -1,5 +1,5 @@
 <%- simple_files = @files.select { |f| f.text? } %>
-<%- if defined?(current) && current %>
+<%- if defined?(current) %>
   <%- dir = current.full_name[%r{\A[^/]+(?=/)}] || current.page_name %>
 <%- end %>
 <%- unless simple_files.empty? %>
