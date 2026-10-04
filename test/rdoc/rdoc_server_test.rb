@@ -79,6 +79,44 @@ class RDocServerTest < RDoc::TestCase
     assert_equal 'text/html', content_type
   end
 
+  def test_cached_templates_render_updated_and_new_classes_after_reparse
+    with_running_server do |port|
+      original = get port, '/Example.html'
+      assert_equal '200', original.code
+      assert_include original.body, 'method-i-greet'
+
+      generator = @server.instance_variable_get :@generator
+      template = generator.template_for generator.template_dir + 'class.rhtml'
+      renderer = template.instance_variable_get(:@compiled_renderers).values.first
+
+      File.write File.join(@dir, 'example.rb'), <<~RUBY
+        # Updated documentation from reparsed source.
+        class Example
+          def changed
+          end
+        end
+
+        # Documentation for a newly added class.
+        class Another
+        end
+      RUBY
+
+      wait_for('cached class page to reflect reparsed source') do
+        get(port, '/Example.html').body.include?('Updated documentation from reparsed source.')
+      end
+
+      updated = get port, '/Example.html'
+      assert_include updated.body, 'method-i-changed'
+      assert_not_include updated.body, 'method-i-greet'
+
+      added = get port, '/Another.html'
+      assert_equal '200', added.code
+      assert_include added.body, 'Documentation for a newly added class.'
+      assert_not_include added.body, 'Updated documentation from reparsed source.'
+      assert_same renderer, template.instance_variable_get(:@compiled_renderers).values.first
+    end
+  end
+
   def test_check_for_changes_parses_and_reloads_rbs_signatures
     with_running_server do |port|
       sig_dir = File.join @dir, 'sig'

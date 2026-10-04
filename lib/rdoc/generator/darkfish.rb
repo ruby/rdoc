@@ -5,6 +5,7 @@ require 'erb'
 require 'fileutils'
 require 'pathname'
 require_relative 'markup'
+require_relative 'compiled_template'
 
 module RDoc
   module Generator
@@ -160,6 +161,7 @@ module RDoc
 
         @classes = nil
         @context = nil
+        @compiled_template_context = nil
         @files   = nil
         @methods = nil
         @modsort = nil
@@ -642,6 +644,8 @@ module RDoc
       # An io will be yielded which must be captured by binding in the caller.
 
       def render_template(template_file, out_file = nil) # :yield: io
+        previous_compiled_context = @compiled_template_context
+        @compiled_template_context = nil
         io_output = out_file && !@dry_run && @file_output
         erb_klass = io_output ? ERBIO : ERB
 
@@ -655,11 +659,13 @@ module RDoc
             io.set_encoding @options.encoding
 
             @context = yield io
+            @compiled_template_context = @context if template.is_a?(CompiledTemplate)
 
             template_result template, @context, template_file
           end
         else
           @context = yield nil
+          @compiled_template_context = @context if template.is_a?(CompiledTemplate)
 
           output = template_result template, @context, template_file
 
@@ -669,6 +675,15 @@ module RDoc
 
           output
         end
+      ensure
+        @compiled_template_context = previous_compiled_context
+      end
+
+      # Only bundled pages may use compiled partials.  Custom pages can depend
+      # on the original shared-binding behavior even when using bundled partials.
+      #: (Binding) -> bool
+      def compiled_template_context?(context) # :nodoc:
+        @compiled_template_context.equal?(context)
       end
 
       ##
@@ -706,6 +721,10 @@ module RDoc
         end
 
         template = klass.new template, trim_mode: '-', eoutvar: erbout
+        if [ERB, ERBIO, ERBPartial].include?(klass) && builtin_template?(file)
+          template.extend CompiledTemplate
+          template.generator = self
+        end
         @template_cache[file] = template
         template
       end
@@ -808,6 +827,17 @@ module RDoc
       end
 
     private
+
+      #: (Pathname) -> bool
+      def builtin_template?(file)
+        # Custom generators and templates may depend on shared-binding mutation
+        # or a different lexical scope, so keep their original ERB evaluation.
+        return false unless self.class == Darkfish || self.class == Aliki
+
+        directory = @template_dir.expand_path
+        file.dirname.expand_path == directory &&
+          %w[aliki darkfish].any? { |name| directory == Pathname.new(__dir__) + 'template' + name }
+      end
 
       def template_encoding
         nil
