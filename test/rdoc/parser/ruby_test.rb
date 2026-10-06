@@ -967,6 +967,110 @@ end
     assert_equal 'my method two', two.comment.text.strip
   end
 
+  def test_method_names_are_frozen
+    util_parser <<~RUBY
+      module Foo
+        def one; end
+        def self.two; end
+        class << self
+          def three; end
+        end
+        alias four one
+        alias_method :five, :one
+        alias six later
+        def later; end
+        module_function :one
+        attr_accessor :attribute
+      end
+    RUBY
+
+    mod = @store.find_module_named 'Foo'
+    assert_equal %w[one two three four five later six one], mod.method_list.map(&:name)
+    (mod.method_list + mod.attributes).each do |method|
+      assert_predicate method.name, :frozen?, method.full_name
+    end
+    assert_same mod.method_list.first.name, mod.method_list.last.name
+
+    # Parser-owned immutable names must not change the public mutable-name API.
+    assert_same mod.method_list.first, mod.find_method_named('one')
+    name = +'external'
+    method = mod.add_method RDoc::AnyMethod.new(name)
+    assert_same name, method.name
+    assert_same method, mod.find_method_named('external')
+    name.replace('renamed')
+    assert_nil mod.find_method_named('external')
+    assert_same method, mod.find_method_named('renamed')
+  end
+
+  def test_method_name_lookups_use_index
+    util_parser <<~RUBY
+      class Foo
+        def one; end
+        def self.one; end
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    instance, singleton = klass.method_list
+    assert_same instance, klass.find_method_named('one')
+
+    klass.method_list.each do |method|
+      def method.name
+        raise 'parsed method names were scanned again'
+      end
+    end
+
+    assert_same instance, klass.find_method('one', false)
+    assert_same singleton, klass.find_method('one', true)
+    assert_same instance, klass.find_method_named('#one')
+    assert_same singleton, klass.find_method_named('::one')
+    assert_same instance, klass.find_instance_method_named('one')
+    assert_same singleton, klass.find_class_method_named('one')
+    assert_nil klass.find_method_named('missing')
+
+    added = klass.add_method RDoc::AnyMethod.new('added')
+    assert_same added, klass.find_method_named('added')
+    assert_same instance, klass.find_method_named('one')
+  end
+
+  def test_meta_method_names_are_frozen
+    util_parser <<~RUBY
+      class Foo
+        ##
+        # Symbol argument.
+        define_method :one do end
+
+        ##
+        # String argument.
+        define_method "two" do end
+
+        ##
+        # :method: three
+
+        ##
+        # :singleton-method: four
+
+        ##
+        # :method:
+        # :call-seq:
+        #   five(name)
+
+        ##
+        # Unknown name.
+        define_method(name) do end
+
+        ##
+        # :attr_reader: attribute
+      end
+    RUBY
+
+    klass = @store.find_class_named 'Foo'
+    assert_equal %w[one two three four five unknown], klass.method_list.map(&:name)
+    (klass.method_list + klass.attributes).each do |method|
+      assert_predicate method.name, :frozen?, method.full_name
+    end
+  end
+
   def test_method_toplevel
     util_parser <<~RUBY
       # comment
@@ -2849,6 +2953,7 @@ end
     m = c.method_list.first
 
     assert_equal "find_by_<field>[_and_<field>...]", m.name
+    assert_predicate m.name, :frozen?
     assert_equal "find_by_<field>[_and_<field>...](args)\n", m.call_seq
 
     expected =

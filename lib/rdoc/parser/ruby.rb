@@ -361,7 +361,7 @@ module RDoc
 
         name, = signature.split %r%[ \(]%, 2
 
-        meth = AnyMethod.new name
+        meth = AnyMethod.new(-name)
         record_location(meth)
         meth.line = start_line
         meth.call_seq = signature
@@ -437,7 +437,7 @@ module RDoc
 
         if attributes
           attributes.each do |attr|
-            a = Attr.new(attr, rw, comment, singleton: @singleton)
+            a = Attr.new(-attr, rw, comment, singleton: @singleton)
             a.store = @store
             a.line = line_no
             a.visibility = visibility
@@ -624,7 +624,7 @@ module RDoc
         handle_code_object_directives(@container, directives) if directives
         return if document_suppressed?
 
-        a = Alias.new(old_name, new_name, comment, singleton: @singleton)
+        a = Alias.new(-old_name, -new_name, comment, singleton: @singleton)
         handle_modifier_directive(a, line_no)
         a.store = @store
         a.line = line_no
@@ -645,7 +645,7 @@ module RDoc
         return unless @container.document_children
 
         names.each do |symbol|
-          a = Attr.new(symbol.to_s, rw, comment, singleton: @singleton)
+          a = Attr.new(-symbol.to_s, rw, comment, singleton: @singleton)
           a.store = @store
           a.line = line_no
           a.type_signature_lines = type_signature_lines
@@ -753,6 +753,9 @@ module RDoc
         end
       end
 
+      # Keep parser-owned names immutable and deduplicated without freezing
+      # strings supplied to the code-object API.
+      meth.name = -meth.name
       record_location(meth)
       container.add_method(meth)
       token_stream_loader = @colorizer_context.token_stream_loader(node_id) if node_id
@@ -1164,7 +1167,7 @@ module RDoc
             # `def (unknown expression).method_name` is not documentable
             return
           end
-          name = node.name.to_s
+          name = node.name.name
           params, block_params, calls_super = MethodSignatureVisitor.scan_signature(node)
           @scanner.add_method(
             name,

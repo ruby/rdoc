@@ -79,6 +79,27 @@ class RDocParserRBSTest < RDoc::TestCase
     assert_same baz, foo.classes_hash['Baz']
   end
 
+  def test_scan_freezes_method_and_attribute_names
+    util_parser(<<~RBS).scan
+      class Sample
+        def initialize: () -> void
+        def greet: () -> String
+        def self.greet: () -> String
+        alias salutation greet
+        alias later_alias later
+        def later: () -> void
+        attr_reader name: String
+      end
+    RBS
+
+    sample = @store.find_class_named 'Sample'
+    assert_equal %w[new greet greet salutation later later_alias], sample.method_list.map(&:name)
+    (sample.method_list + sample.attributes).each do |method|
+      assert_predicate method.name, :frozen?, method.full_name
+    end
+    assert_same sample.find_method('greet', false).name, sample.find_method('greet', true).name
+  end
+
   def test_scan_qualifies_nested_mixins
     util_parser(<<~RBS).scan
       module Sample

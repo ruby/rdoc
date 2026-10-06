@@ -250,7 +250,7 @@ module RDoc
       # method that reference the same function.
 
       def add_alias(var_name, class_obj, old_name, new_name, comment, singleton:)
-        al = Alias.new old_name, new_name, comment, singleton: singleton
+        al = Alias.new(-old_name, -new_name, comment, singleton: singleton)
         al.record_location @top_level
         class_obj.add_alias al
         @stats.add_alias al
@@ -850,7 +850,7 @@ module RDoc
 
         name = attr_name.gsub(/rb_intern(?:_const)?\("([^"]+)"\)/, '\1')
 
-        attr = Attr.new name, rw, comment
+        attr = Attr.new(-name, rw, comment)
 
         attr.record_location @top_level
         class_obj.add_attribute attr
@@ -1008,7 +1008,7 @@ module RDoc
             type = 'method' # force public
           end
 
-          meth_obj = AnyMethod.new meth_name, singleton: singleton
+          meth_obj = AnyMethod.new(-meth_name, singleton: singleton)
           meth_obj.c_function = function
 
           p_count = Integer(param_count) rescue -1

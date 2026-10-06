@@ -106,7 +106,7 @@ module RDoc
       end
 
       def rdoc_method_name(decl)
-        rbs_constructor_decl?(decl) ? 'new' : decl.name.to_s
+        rbs_constructor_decl?(decl) ? 'new' : decl.name.name
       end
 
       def rdoc_method_singleton?(decl)
@@ -135,7 +135,7 @@ module RDoc
 
         comment = rdoc_comment_for decl
         type_signature_lines = [decl.type.to_s]
-        name = decl.name.to_s
+        name = decl.name.name
         singleton = decl.kind == :singleton
         if attribute = context.find_attribute(name, singleton)
           merge_documentation attribute, comment, type_signature_lines if
@@ -231,8 +231,8 @@ module RDoc
 
       def parse_method_alias_decl(decl, context)
         alias_def = Alias.new(
-          decl.old_name.to_s,
-          decl.new_name.to_s,
+          decl.old_name.name,
+          decl.new_name.name,
           rdoc_comment_for(decl),
           singleton: decl.kind == :singleton
         )

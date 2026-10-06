@@ -273,6 +273,29 @@ class RDocParserCTest < RDoc::TestCase
     assert_equal @top_level, methods.last.file
   end
 
+  def test_scan_freezes_method_and_attribute_names
+    content = <<~C
+      VALUE greet(VALUE self) {
+      }
+
+      void Init_Sample(void) {
+        cSample = rb_define_class("Sample", rb_cObject);
+        rb_define_method(cSample, "greet", greet, 0);
+        rb_define_method(cSample, "salutation", greet, 0);
+        rb_define_singleton_method(cSample, "greet", greet, 0);
+        rb_define_alias(cSample, "hello", "greet");
+        rb_define_attr(cSample, "name", 1, 0);
+      }
+    C
+
+    klass = util_get_class content, 'cSample'
+    assert_equal %w[greet salutation greet hello], klass.method_list.map(&:name)
+    (klass.method_list + klass.attributes).each do |method|
+      assert_predicate method.name, :frozen?, method.full_name
+    end
+    assert_same klass.find_method('greet', false).name, klass.find_method('greet', true).name
+  end
+
   def test_do_singleton_define_alias
     content = <<~C
       /*
