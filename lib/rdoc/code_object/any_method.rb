@@ -111,6 +111,7 @@ module RDoc
     def call_seq=(call_seq)
       return if call_seq.nil? || call_seq.empty?
 
+      invalidate_name_indexes unless @name
       @call_seq = call_seq
     end
 

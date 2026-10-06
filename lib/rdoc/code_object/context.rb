@@ -9,6 +9,8 @@ module RDoc
 
     include Comparable
 
+    require_relative 'context/method_list'
+
     ##
     # Types of methods
 

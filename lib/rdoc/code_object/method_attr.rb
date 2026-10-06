@@ -9,8 +9,32 @@ module RDoc
 
     ##
     # Name of this method/attribute.
+    # The supplied string is retained by reference and may be mutated in place.
 
-    attr_accessor :name
+    attr_reader :name
+
+    #: (String?) -> String?
+    def name=(name)
+      invalidate_name_indexes
+      @name = name
+    end
+
+    # Track only validity tokens, not the indexes or lists themselves. A method
+    # can appear in more than one list after module promotion or a public Array
+    # mutation, and must invalidate all of their name indexes when renamed.
+
+    #: (Array[bool]) -> void
+    def track_name_index(token) # :nodoc:
+      tokens = (@name_index_tokens ||= [])
+      tokens.reject! { |existing| !existing[0] }
+      tokens << token unless tokens.any? { |existing| existing.equal? token }
+    end
+
+    #: () -> void
+    def invalidate_name_indexes # :nodoc:
+      @name_index_tokens&.each { |token| token[0] = false }
+      @name_index_tokens = nil
+    end
 
     ##
     # public, protected, private
@@ -95,6 +119,7 @@ module RDoc
 
     def initialize_copy(other) # :nodoc:
       @full_name = nil
+      @name_index_tokens = nil
     end
 
     def initialize_visibility # :nodoc:
