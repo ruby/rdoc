@@ -134,7 +134,7 @@ module RDoc
     # Sets the defaults for methods and so-forth
 
     def initialize_methods_etc
-      @method_list = []
+      @method_list = MethodList.new
       @attributes  = []
       @aliases     = []
       @requires    = []
@@ -768,7 +768,7 @@ module RDoc
     # Finds a class method with +name+ in this context
 
     def find_class_method_named(name)
-      @method_list.find { |meth| meth.singleton && meth.name == name }
+      @method_list.find_named(name) { |meth| meth.singleton }
     end
 
     ##
@@ -815,7 +815,7 @@ module RDoc
     # Finds an instance method with +name+ in this context
 
     def find_instance_method_named(name)
-      @method_list.find { |meth| !meth.singleton && meth.name == name }
+      @method_list.find_named(name) { |meth| !meth.singleton }
     end
 
     ##
@@ -835,13 +835,7 @@ module RDoc
     # Finds a method named +name+ with singleton value +singleton+.
 
     def find_method(name, singleton)
-      @method_list.find { |m|
-        if m.singleton
-          m.name == name && m.singleton == singleton
-        else
-          m.name == name && !m.singleton && !singleton
-        end
-      }
+      @method_list.find_named(name) { |m| m.singleton ? m.singleton == singleton : !singleton }
     end
 
     ##
@@ -854,7 +848,7 @@ module RDoc
       when /\A::/
         find_method name[2..-1], true
       else
-        @method_list.find { |meth| meth.name == name }
+        @method_list.find_named(name)
       end
     end
 

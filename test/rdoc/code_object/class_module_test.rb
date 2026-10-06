@@ -159,6 +159,21 @@ class RDocClassModuleTest < XrefTestCase
     assert_equal({ tl => ['really a class'] }, klass.comment_location)
   end
 
+  def test_from_module_method_lookup
+    method = @m1.add_method RDoc::AnyMethod.new('indexed')
+    assert_same method, @m1.find_method_named('indexed')
+
+    klass = RDoc::ClassModule.from_module RDoc::NormalClass, @m1
+    assert_same method, klass.find_method_named('indexed')
+
+    method.name = 'renamed'
+
+    assert_nil @m1.find_method_named('indexed')
+    assert_nil klass.find_method_named('indexed')
+    assert_same method, @m1.find_method_named('renamed')
+    assert_same method, klass.find_method_named('renamed')
+  end
+
   def test_marshal_dump
     @store.path = Dir.tmpdir
     tl = @store.add_file 'file.rb'
@@ -1045,7 +1060,14 @@ class RDocClassModuleTest < XrefTestCase
     meth = cm2.add_method RDoc::AnyMethod.new('m4')
     meth.record_location tl1
 
+    old_method = cm1.find_method_named('m3')
+    assert_nil cm1.find_method_named('m2')
+
     cm1.merge cm2
+
+    assert_nil cm1.find_method_named('m1')
+    assert_same meth, cm1.find_method_named('m4')
+    assert_not_same old_method, cm1.find_method_named('m3')
 
     expected = [
       RDoc::AnyMethod.new('m2'),

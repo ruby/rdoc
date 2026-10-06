@@ -392,7 +392,15 @@ class RDocStoreTest < XrefTestCase
 
     s = RDoc::Store.new(RDoc::Options.new, path: @tmpdir)
 
+    loaded_class = s.load_class @klass.full_name
+    placeholder = loaded_class.find_method_named(@meth.name)
+    assert_not_nil placeholder
+
     s.load_all
+
+    loaded_method = loaded_class.find_method_named @meth.name
+    assert_not_same placeholder, loaded_method
+    assert_equal @meth_comment.parse, loaded_method.comment.parse
 
     assert_equal [@klass, @nest_klass], s.all_classes.sort
     assert_equal [@mod],                s.all_modules.sort
@@ -1159,7 +1167,13 @@ class RDocStoreTest < XrefTestCase
     klass.add_comment 'comment from a', file_a
     klass.add_comment 'comment from b', file_b
 
+    assert_same meth_a, klass.find_method_named('from_a')
+    assert_same meth_b, klass.find_method_named('from_b')
+
     @s.clear_file_contributions 'a.rb'
+
+    assert_nil klass.find_method_named('from_a')
+    assert_same meth_b, klass.find_method_named('from_b')
 
     # Class is preserved because file_b still contributes
     assert_includes @s.classes_hash, 'MultiFileClass'
@@ -1172,6 +1186,11 @@ class RDocStoreTest < XrefTestCase
     # Comment from a.rb is removed, comment from b.rb remains
     assert_not_include klass.comment_location.keys, file_a
     assert_includes klass.comment_location.keys, file_b
+
+    replacement = RDoc::AnyMethod.new 'from_a'
+    replacement.record_location file_a
+    klass.add_method replacement
+    assert_same replacement, klass.find_method_named('from_a')
   end
 
   def test_clear_file_contributions_cleans_methods_and_constants

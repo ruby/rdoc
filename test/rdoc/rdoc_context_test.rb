@@ -588,6 +588,340 @@ class RDocContextTest < XrefTestCase
     assert_equal true, @c1.find_method_named('m').singleton
   end
 
+  def test_find_method_named_order
+    instance = @context.add_method RDoc::AnyMethod.new('m')
+    singleton = @context.add_method RDoc::AnyMethod.new('m', singleton: true)
+
+    assert_same instance, @context.find_method_named('m')
+    assert_same instance, @context.find_method_named('#m')
+    assert_same singleton, @context.find_method_named('::m')
+
+    @context.method_list.reverse!
+
+    assert_same singleton, @context.find_method_named('m')
+    assert_same instance, @context.find_method_named('#m')
+    assert_same singleton, @context.find_method_named('::m')
+  end
+
+  def test_find_method_named_excludes_attributes
+    @context.add_attribute RDoc::Attr.new('attr', 'RW', '')
+
+    %w[attr attr= #attr #attr= ::attr].each do |name|
+      assert_nil @context.find_method_named(name)
+    end
+  end
+
+  def test_find_method_named_does_not_rescan
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    assert_same method, @context.find_method_named('m')
+
+    def method.name
+      raise 'method list was scanned again'
+    end
+
+    assert_same method, @context.find_method_named('m')
+    assert_same method, @context.find_method_named('#m')
+    assert_same method, @context.find_instance_method_named('m')
+    assert_nil @context.find_method_named('missing')
+    assert_nil @context.find_method_named('::missing')
+    assert_nil @context.find_class_method_named('missing')
+  end
+
+  def test_find_method_named_after_addition
+    assert_nil @context.find_method_named('m')
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    assert_same method, @context.find_method_named('m')
+  end
+
+  def test_find_method_named_appends_without_rescanning
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    assert_same method, @context.find_method_named('m')
+
+    def method.name
+      raise 'existing methods were rescanned after an append'
+    end
+
+    added = @context.add_method RDoc::AnyMethod.new('added')
+    assert_same added, @context.find_method_named('added')
+    assert_same method, @context.find_method_named('m')
+
+    @context.add_alias RDoc::Alias.new('m', 'aliased', '')
+
+    assert_same method, @context.find_method_named('aliased').is_alias_for
+    assert_same method, @context.find_method_named('m')
+  end
+
+  def test_find_method_named_after_alias
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    assert_nil @context.find_method_named('alias')
+
+    @context.add_alias RDoc::Alias.new('m', 'alias', '')
+
+    aliased = @context.find_method_named('alias')
+    assert_same method, aliased.is_alias_for
+  end
+
+  def test_find_method_named_after_unmatched_alias
+    @context.add_alias RDoc::Alias.new('m', 'alias', '')
+    assert_nil @context.find_method_named('alias')
+
+    method = @context.add_method RDoc::AnyMethod.new('m')
+
+    assert_same method, @context.find_method_named('alias').is_alias_for
+  end
+
+  def test_find_method_named_after_visibility_filter
+    util_visibilities
+    assert_same @priv, @vis.find_method_named('priv')
+    assert_same @prot, @vis.find_method_named('#prot')
+
+    @vis.remove_invisible :public
+
+    assert_nil @vis.find_method_named('priv')
+    assert_nil @vis.find_method_named('#prot')
+    assert_same @pub, @vis.find_method_named('pub')
+    assert_same @priv, @vis.methods_hash['#priv']
+  end
+
+  def test_find_method_named_after_rename
+    method = @context.add_method RDoc::AnyMethod.new('old')
+    assert_same method, @context.find_method_named('old')
+    assert_nil @context.find_method_named('new')
+
+    method.name = 'new'
+
+    assert_nil @context.find_method_named('old')
+    assert_same method, @context.find_method_named('new')
+    assert_same method, @context.find_method_named('#new')
+  end
+
+  def test_find_method_named_after_singleton_change
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    assert_same method, @context.find_method_named('#m')
+
+    method.singleton = true
+
+    assert_nil @context.find_method_named('#m')
+    assert_same method, @context.find_method_named('::m')
+    assert_same method, @context.find_class_method_named('m')
+    assert_nil @context.find_instance_method_named('m')
+  end
+
+  def test_find_method_nil_singleton
+    method = @context.add_method RDoc::AnyMethod.new('m', singleton: nil)
+
+    assert_same method, @context.find_method('m', nil)
+    assert_same method, @context.find_method('m', false)
+    assert_same method, @context.find_method_named('#m')
+    assert_nil @context.find_method('m', true)
+  end
+
+  def test_find_method_named_shared_list
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    copy = @context.dup
+    assert_same method, @context.find_method_named('m')
+    assert_same method, copy.find_method_named('m')
+
+    added = copy.add_method RDoc::AnyMethod.new('new')
+    assert_same added, @context.find_method_named('new')
+
+    method.name = 'renamed'
+    assert_nil @context.find_method_named('m')
+    assert_nil copy.find_method_named('m')
+    assert_same method, copy.find_method_named('renamed')
+
+    copy.method_list.clear
+    assert_nil @context.find_method_named('renamed')
+  end
+
+  def test_find_method_named_after_list_mutation
+    mutations = [
+      ->(list, method) { list << method },
+      ->(list, method) { list.push method },
+      ->(list, method) { list.append method },
+      ->(list, method) { list.unshift method },
+      ->(list, method) { list.prepend method },
+      ->(list, method) { list.concat [method] },
+      ->(list, method) { list.insert 0, method },
+      ->(list, method) { list[0] = method },
+      ->(list, method) { list.replace [method] },
+      ->(list, method) { list.fill method },
+      ->(list, method) { list.map! { method } },
+      ->(list, method) { list.collect! { method } },
+    ]
+
+    mutations.each do |mutate|
+      context = RDoc::Context.new
+      old = context.add_method RDoc::AnyMethod.new('old')
+      list = context.method_list
+      assert_same old, context.find_method_named('old')
+      assert_nil context.find_method_named('new')
+
+      method = RDoc::AnyMethod.new 'new'
+      mutate.call list, method
+
+      assert_same method, context.find_method_named('new')
+      method.name = 'renamed'
+      assert_nil context.find_method_named('new')
+      assert_same method, context.find_method_named('renamed')
+    end
+  end
+
+  def test_find_method_named_after_list_removal
+    mutations = [
+      ->(list) { list.clear },
+      ->(list) { list.delete list.first },
+      ->(list) { list.delete_at 0 },
+      ->(list) { list.delete_if { true } },
+      ->(list) { list.keep_if { false } },
+      ->(list) { list.reject! { true } },
+      ->(list) { list.select! { false } },
+      ->(list) { list.filter! { false } },
+      ->(list) { list.shift },
+      ->(list) { list.pop },
+      ->(list) { list.slice! 0 },
+    ]
+
+    mutations.each do |mutate|
+      context = RDoc::Context.new
+      method = context.add_method RDoc::AnyMethod.new('m')
+      list = context.method_list
+      assert_same method, context.find_method_named('m')
+
+      mutate.call list
+
+      assert_nil context.find_method_named('m')
+    end
+  end
+
+  def test_find_method_named_after_mutating_enumerator
+    method = @context.add_method RDoc::AnyMethod.new('old')
+    enumerator = @context.method_list.map!
+    assert_same method, @context.find_method_named('old')
+
+    replacement = RDoc::AnyMethod.new 'new'
+    enumerator.each { replacement }
+
+    assert_nil @context.find_method_named('old')
+    assert_same replacement, @context.find_method_named('new')
+  end
+
+  def test_find_method_named_during_list_mutation
+    @context.add_method RDoc::AnyMethod.new('first')
+    @context.add_method RDoc::AnyMethod.new('second')
+    replacement = RDoc::AnyMethod.new 'new'
+
+    @context.method_list.map! do |method|
+      expected = @context.method_list.find { |entry| entry.name == 'new' }
+      assert_same expected, @context.find_method_named('new')
+      method.name == 'first' ? replacement : method
+    end
+
+    assert_same replacement, @context.find_method_named('new')
+  end
+
+  def test_find_method_named_after_interrupted_mutation
+    @context.add_method RDoc::AnyMethod.new('first')
+    @context.add_method RDoc::AnyMethod.new('second')
+    replacement = RDoc::AnyMethod.new 'new'
+
+    assert_raise RuntimeError do
+      @context.method_list.map! do |method|
+        @context.find_method_named('first')
+        raise 'interrupted' if method.name == 'second'
+        replacement
+      end
+    end
+
+    assert_nil @context.find_method_named('first')
+    assert_same replacement, @context.find_method_named('new')
+  end
+
+  def test_find_method_named_after_list_reordering
+    mutations = [
+      ->(list) { list.reverse! },
+      ->(list) { list.rotate! },
+      ->(list) { list.sort! },
+      ->(list) { list.sort_by! { |method| method.singleton ? 0 : 1 } },
+      ->(list) { list.shuffle!(random: Random.new(1)) },
+      ->(list) { list.uniq!(&:name) },
+    ]
+
+    mutations.each do |mutate|
+      context = RDoc::Context.new
+      method = context.add_method RDoc::AnyMethod.new('m')
+      context.add_method RDoc::AnyMethod.new('m', singleton: true)
+      list = context.method_list
+      assert_same method, context.find_method_named('m')
+
+      mutate.call list
+
+      %w[m #m ::m].each do |name|
+        expected = list.find { |entry|
+          entry.name == 'm' && (name == 'm' || entry.singleton == (name == '::m'))
+        }
+        assert_same expected, context.find_method_named(name)
+      end
+    end
+  end
+
+  def test_find_method_named_after_list_copy
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    assert_same method, @context.find_method_named('m')
+
+    list = @context.method_list.dup
+    list.clear
+
+    assert_same method, @context.find_method_named('m')
+  end
+
+  def test_find_method_named_frozen_list
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    @context.method_list.freeze
+    assert_same method, @context.find_method_named('m')
+
+    method.name = 'renamed'
+
+    assert_nil @context.find_method_named('m')
+    assert_same method, @context.find_method_named('renamed')
+  end
+
+  def test_find_method_named_frozen_method
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    method.freeze
+
+    assert_same method, @context.find_method_named('m')
+    assert_nil @context.find_method_named('missing')
+  end
+
+  def test_find_method_named_after_frozen_list_noop
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    assert_same method, @context.find_method_named('m')
+    @context.method_list.freeze
+
+    assert_nil @context.method_list.delete(RDoc::AnyMethod.new('missing'))
+    assert_same method, @context.find_method_named('m')
+  end
+
+  def test_find_method_named_from_call_seq
+    method = RDoc::AnyMethod.new nil
+    @context.method_list << method
+    assert_nil @context.find_method_named('m')
+
+    method.call_seq = 'object.m()'
+
+    assert_same method, @context.find_method_named('m')
+  end
+
+  def test_find_method_named_after_reset
+    method = @context.add_method RDoc::AnyMethod.new('m')
+    assert_same method, @context.find_method_named('m')
+
+    @context.initialize_methods_etc
+
+    assert_nil @context.find_method_named('m')
+  end
+
   def test_find_module_named
     assert_equal @c2_c3, @c2.find_module_named('C3')
     assert_equal @c2,    @c2.find_module_named('C2')

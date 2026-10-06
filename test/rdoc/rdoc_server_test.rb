@@ -120,6 +120,50 @@ class RDocServerTest < RDoc::TestCase
     end
   end
 
+  def test_check_for_changes_invalidates_method_lookup
+    other_file = File.join @dir, 'other.rb'
+    File.write other_file, "class Example\n  def retained; end\nend\n"
+    capture_output { @rdoc.parse_files [other_file] }
+    @rdoc.store.complete @options.visibility
+
+    example = @rdoc.store.find_class_or_module 'Example'
+    greet = example.find_method_named 'greet'
+    retained = example.find_method_named 'retained'
+    assert_not_nil greet
+    assert_not_nil retained
+    assert_nil example.find_method_named('farewell')
+
+    with_running_server do |port|
+      assert_equal '200', get(port, '/Example.html').code
+
+      File.write File.join(@dir, 'example.rb'), <<~RUBY
+        # Updated class
+        class Example
+          def farewell
+          end
+        end
+      RUBY
+
+      wait_for('updated method to appear in the class page') do
+        get(port, '/Example.html').body.include?('method-i-farewell')
+      end
+
+      assert_same example, @rdoc.store.find_class_or_module('Example')
+      assert_nil example.find_method_named('greet')
+      assert_not_nil example.find_method_named('farewell')
+      assert_same retained, example.find_method_named('retained')
+
+      File.delete other_file
+
+      wait_for('deleted file contributions to disappear') do
+        !get(port, '/Example.html').body.include?('method-i-retained')
+      end
+
+      assert_nil example.find_method_named('retained')
+      assert_not_nil example.find_method_named('farewell')
+    end
+  end
+
   def test_current_watch_files_deduplicates_symlinked_source_tree
     source_dir = File.join @dir, 'gem'
     symlink_dir = File.join @dir, 'docs', 'gem'
