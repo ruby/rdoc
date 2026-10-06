@@ -695,20 +695,11 @@ class RDocContextTest < XrefTestCase
     assert_same added, @context.find_method_named('added')
     assert_same method, @context.find_method_named('m')
 
+    assert_nil @context.find_method_named('aliased')
     @context.add_alias RDoc::Alias.new('m', 'aliased', '')
 
     assert_same method, @context.find_method_named('aliased').is_alias_for
     assert_same method, @context.find_method_named('m')
-  end
-
-  def test_find_method_named_after_alias
-    method = @context.add_method RDoc::AnyMethod.new('m')
-    assert_nil @context.find_method_named('alias')
-
-    @context.add_alias RDoc::Alias.new('m', 'alias', '')
-
-    aliased = @context.find_method_named('alias')
-    assert_same method, aliased.is_alias_for
   end
 
   def test_find_method_named_after_unmatched_alias
@@ -738,7 +729,7 @@ class RDocContextTest < XrefTestCase
     assert_same method, @context.find_method_named('old')
     assert_nil @context.find_method_named('new')
 
-    method.name = 'new'
+    @context.method_list.first.name = 'new'
 
     assert_nil @context.find_method_named('old')
     assert_same method, @context.find_method_named('new')
@@ -792,17 +783,6 @@ class RDocContextTest < XrefTestCase
     list.clear
 
     assert_same method, @context.find_method_named('m')
-  end
-
-  def test_method_list_does_not_freeze_methods
-    method = @context.add_method RDoc::AnyMethod.new('m')
-    snapshot = @context.method_list
-    assert_same method, @context.find_method_named('m')
-
-    snapshot.first.name = 'renamed'
-
-    assert_nil @context.find_method_named('m')
-    assert_same method, @context.find_method_named('renamed')
   end
 
   def test_find_method_named_frozen_method
