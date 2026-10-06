@@ -20,8 +20,8 @@ module RDoc
     end
 
     # Track only validity tokens, not the indexes or lists themselves. A method
-    # can appear in more than one list after module promotion or a public Array
-    # mutation, and must invalidate all of their name indexes when renamed.
+    # can appear in more than one list after module promotion or bulk replacement,
+    # and must invalidate all of their name indexes when renamed.
 
     #: (Array[bool]) -> void
     def track_name_index(token) # :nodoc:

@@ -49,22 +49,4 @@ class RDocContextMethodListTest < RDoc::TestCase
     assert_same method, @list.find_named('renamed')
   end
 
-  def test_marshal_discards_name_index
-    file = @store.add_file('file.rb')
-    @list.each do |method|
-      method.record_location file
-      file.add_method method
-    end
-    assert_same @instance, @list.find_named('m')
-
-    loaded = Marshal.load Marshal.dump(@list)
-    assert_nil loaded.instance_variable_get(:@name_index)
-    loaded.each { |method| method.name.freeze }
-    method = loaded.find_named('m')
-    method.name = 'renamed'
-
-    assert_same loaded.last, loaded.find_named('m')
-    assert_same method, loaded.find_named('renamed')
-  end
-
 end

@@ -63,9 +63,12 @@ module RDoc
     attr_reader :extends
 
     ##
-    # Methods defined in this context
-
-    attr_reader :method_list
+    # A frozen snapshot of the methods defined in this context.
+    # Use #add_method, #remove_method or #replace_methods to change the list.
+    #: () -> Array[AnyMethod]
+    def method_list
+      @method_list.to_a.freeze
+    end
 
     ##
     # Name of this class excluding namespace.  See also full_name
@@ -1043,7 +1046,9 @@ module RDoc
 
     def remove_invisible(min_visibility)
       return if [:private, :nodoc].include? min_visibility
-      remove_invisible_in @method_list, min_visibility
+      methods = method_list.dup
+      remove_invisible_in methods, min_visibility
+      replace_methods methods
       remove_invisible_in @attributes, min_visibility
       remove_invisible_in @constants, min_visibility
     end
@@ -1061,6 +1066,24 @@ module RDoc
           e.visibility == :private and not e.force_documentation
         }
       end
+    end
+
+    ##
+    # Removes +method+ from the documentation list and method registrations.
+    #: (AnyMethod) -> void
+    def remove_method(method)
+      @method_list.delete method
+      @method_list.invalidate_name_index
+      @methods_hash.delete method.pretty_name
+    end
+
+    ##
+    # Replaces the documentation method list with +methods+.
+    # Registrations in #methods_hash are unchanged, including filtered methods.
+    #: (Array[AnyMethod]) -> void
+    def replace_methods(methods)
+      @method_list.replace methods
+      @method_list.invalidate_name_index
     end
 
     ##

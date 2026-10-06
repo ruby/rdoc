@@ -70,7 +70,7 @@ module RDoc
       klass.section = mod.section
 
       klass.attributes.concat mod.attributes
-      klass.method_list.concat mod.method_list
+      klass.replace_methods mod.method_list
       klass.aliases.concat mod.aliases
       klass.external_aliases.concat mod.external_aliases
       klass.constants.concat mod.constants
@@ -541,8 +541,7 @@ module RDoc
         if add
           add_method meth
         else
-          @method_list.delete meth
-          @methods_hash.delete meth.pretty_name
+          remove_method meth
         end
       end
 

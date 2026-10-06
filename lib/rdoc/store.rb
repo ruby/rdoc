@@ -219,7 +219,7 @@ module RDoc
 
       top_level.classes_or_modules.each do |cm|
         # Remove methods and attributes contributed by this file
-        cm.method_list.reject! { |m| m.file == top_level }
+        cm.replace_methods cm.method_list.reject { |m| m.file == top_level }
         cm.attributes.reject! { |a| a.file == top_level }
 
         # Rebuild methods_hash from remaining methods and attributes
@@ -706,7 +706,7 @@ module RDoc
           load_method module_name, method.full_name
         end
 
-        mod.method_list.replace loaded_methods
+        mod.replace_methods loaded_methods
 
         loaded_attributes = mod.attributes.map do |attribute|
           load_method module_name, attribute.full_name
