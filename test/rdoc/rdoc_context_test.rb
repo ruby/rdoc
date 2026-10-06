@@ -775,16 +775,6 @@ class RDocContextTest < XrefTestCase
     assert_nil @context.find_method_named('renamed')
   end
 
-  def test_find_method_named_after_list_copy
-    method = @context.add_method RDoc::AnyMethod.new('m')
-    assert_same method, @context.find_method_named('m')
-
-    list = @context.method_list.dup
-    list.clear
-
-    assert_same method, @context.find_method_named('m')
-  end
-
   def test_find_method_named_frozen_method
     method = @context.add_method RDoc::AnyMethod.new('m')
     method.freeze

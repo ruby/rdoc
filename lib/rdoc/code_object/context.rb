@@ -1046,9 +1046,8 @@ module RDoc
 
     def remove_invisible(min_visibility)
       return if [:private, :nodoc].include? min_visibility
-      methods = method_list.dup
-      remove_invisible_in methods, min_visibility
-      replace_methods methods
+      remove_invisible_in @method_list, min_visibility
+      @method_list.invalidate_name_index
       remove_invisible_in @attributes, min_visibility
       remove_invisible_in @constants, min_visibility
     end
