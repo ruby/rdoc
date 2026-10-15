@@ -78,6 +78,28 @@ class RDocGeneratorAlikiTest < RDoc::TestCase
     assert_equal(%w[Klass Klass::A Object], @g.classes.map(&:full_name).sort)
   end
 
+  def test_class_section_heading_levels
+    @klass.add_constant RDoc::Constant.new('DEFAULT', '1', '')
+    @klass.add_attribute RDoc::Attr.new('default_attr', 'R', '')
+
+    @klass.set_current_section 'Utilities', nil
+    @klass.add_constant RDoc::Constant.new('NAMED', '2', '')
+    @klass.add_attribute RDoc::Attr.new('named_attr', 'R', '')
+    @klass.add_method RDoc::AnyMethod.new('named_method')
+
+    @g.generate
+
+    content = File.binread('Klass.html')
+
+    assert_include content, '<h2 id="untitled-constants">'
+    assert_include content, '<h2 id="untitled-attributes">'
+    assert_include content, '<h2 id="public-instance-untitled-methods">'
+    assert_include content, '<h2 id="utilities">'
+    assert_include content, '<h3 id="utilities-constants">'
+    assert_include content, '<h3 id="utilities-attributes">'
+    assert_include content, '<h3 id="public-instance-utilities-methods">'
+  end
+
   def test_write_style_sheet_copies_css_and_js_only
     @g.generate
 

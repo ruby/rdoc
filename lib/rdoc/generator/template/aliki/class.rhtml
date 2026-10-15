@@ -59,7 +59,11 @@
     <%- unless constants.empty? %>
     <section class="constants-list">
       <header>
+        <%- if section.title %>
         <h3 id="<%= section.aref %>-constants"><a href="#<%= section.aref %>-constants">Constants</a></h3>
+        <%- else %>
+        <h2 id="<%= section.aref %>-constants"><a href="#<%= section.aref %>-constants">Constants</a></h2>
+        <%- end %>
       </header>
       <dl>
       <%- constants.each do |const| %>
@@ -84,7 +88,11 @@
     <%- unless attributes.empty? %>
     <section class="attribute-method-details method-section">
       <header>
+        <%- if section.title %>
         <h3 id="<%= section.aref %>-attributes"><a href="#<%= section.aref %>-attributes">Attributes</a></h3>
+        <%- else %>
+        <h2 id="<%= section.aref %>-attributes"><a href="#<%= section.aref %>-attributes">Attributes</a></h2>
+        <%- end %>
       </header>
 
       <%- attributes.each do |attrib| %>
@@ -122,7 +130,11 @@
     <%- next if methods.empty? %>
      <section id="<%= visibility %>-<%= type %>-<%= section.aref %>-method-details" class="method-section anchor-link">
        <header>
+         <%- if section.title %>
          <h3 id="<%= visibility %>-<%= type %>-<%= section.aref %>-methods"><a href="#<%= visibility %>-<%= type %>-<%= section.aref %>-methods"><%= visibility.to_s.capitalize %> <%= type.capitalize %> Methods</a></h3>
+         <%- else %>
+         <h2 id="<%= visibility %>-<%= type %>-<%= section.aref %>-methods"><a href="#<%= visibility %>-<%= type %>-<%= section.aref %>-methods"><%= visibility.to_s.capitalize %> <%= type.capitalize %> Methods</a></h2>
+         <%- end %>
        </header>
 
     <%- methods.each do |method| %>
