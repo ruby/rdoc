@@ -302,6 +302,19 @@ One search form and one result list serve both header layouts. CSS changes the p
 | Type badge (`.search-type-*`)    | inline-block, `space-0 space-2` pad, `xs`, weight 500, `radius-sm`, colors per §2 |
 | Matched term (`li em`)           | `search-highlight-bg`, `font-style: normal`                 |
 
+The desktop field has a `/` keycap and an adjacent **Search shortcuts** button
+with a keyboard icon. On compact screens, the keycap and adjacent button are
+hidden. The same help is available below the search results, outside their
+scroll area.
+
+The help uses one native dialog: a 376 px panel below the desktop button and a
+compact sheet aligned with the search surface. Pressing `?` outside an input,
+text area, select, or editable content opens help. It lists this shortcut and
+the existing `/`, arrow, `Enter`, and `Esc` actions, grouped by context. Close and Escape dismiss
+help and restore the previous focus without clearing the search. Pressing `/`
+in help closes the dialog and focuses the search field. Colors, keycaps,
+borders, and focus indicators use the shared light and dark tokens.
+
 ### Right TOC (`#table-of-contents`)
 
 | Property      | Value                                                          |
