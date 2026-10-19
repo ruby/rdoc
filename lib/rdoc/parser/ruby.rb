@@ -133,8 +133,12 @@ module RDoc
       # Matches an RBS inline type annotation line: #: followed by whitespace
       RBS_SIG_LINE = /\A#:\s/ # :nodoc:
 
-      attr_accessor :visibility, :module_function_mode
+      attr_writer :visibility
       attr_reader :container, :singleton, :in_proc_block
+
+      def visibility
+        @visibility == :module_function ? :private : @visibility
+      end
 
       def initialize(top_level, content, options, stats)
         super
@@ -153,7 +157,6 @@ module RDoc
         @module_nesting = [[top_level, false]]
         @container = top_level
         @visibility = :public
-        @module_function_mode = false
         @singleton = false
         @in_proc_block = false
         @doc_state = :startdoc
@@ -221,12 +224,10 @@ module RDoc
       def with_container(container, singleton: false)
         old_container = @container
         old_visibility = @visibility
-        old_module_function_mode = @module_function_mode
         old_singleton = @singleton
         old_in_proc_block = @in_proc_block
         old_doc_state = @doc_state
         @visibility = :public
-        @module_function_mode = false
         @container = container
         @singleton = singleton
         @in_proc_block = false
@@ -235,7 +236,6 @@ module RDoc
       ensure
         @container = old_container
         @visibility = old_visibility
-        @module_function_mode = old_module_function_mode
         @singleton = old_singleton
         @in_proc_block = old_in_proc_block
         @doc_state = old_doc_state
@@ -418,7 +418,7 @@ module RDoc
         handle_code_object_directives(@container, directives)
         is_call_node = node.is_a?(Prism::CallNode)
         singleton_method = false
-        visibility = @visibility
+        visibility = self.visibility
         attributes = rw = line_no = method_name = nil
         directives.each do |directive, (param, line)|
           case directive
@@ -593,23 +593,22 @@ module RDoc
         # changes but the singleton method copies must not be documented
         return if document_suppressed?
 
-        new_methods = []
-        @container.methods_matching(names) do |m|
-          s_m = m.dup
-          record_location(s_m)
-          s_m.singleton = true
-          new_methods << s_m
-        end
-        new_methods.each do |method|
-          method.visibility = :public
-          case method
-          when AnyMethod
-            @container.add_method(method)
-          when Attr
-            @container.add_attribute(method)
-          end
-        end
+        methods = @container.to_enum(:methods_matching, names).to_a
+        methods.each { |method| add_module_function_copy(method) }
       end
+
+    private def add_module_function_copy(method) # :nodoc:
+      method = method.dup
+      record_location(method)
+      method.singleton = true
+      method.visibility = :public
+      case method
+      when AnyMethod
+        @container.add_method(method)
+      when Attr
+        @container.add_attribute(method)
+      end
+    end
 
       def handle_code_object_directives(code_object, directives) # :nodoc:
         directives.each do |directive, (param)|
@@ -722,7 +721,7 @@ module RDoc
       end
 
     private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, node_id:, type_signature_lines: nil) # :nodoc:
-      module_function = @module_function_mode && !singleton && container.equal?(@container)
+      module_function = @visibility == :module_function && !singleton && container.equal?(@container)
       meth = AnyMethod.new(method_name, singleton: singleton)
       meth.comment = comment
       handle_code_object_directives(meth, directives) if directives
@@ -763,12 +762,7 @@ module RDoc
       token_stream_loader = @colorizer_context.token_stream_loader(node_id) if node_id
       meth.start_collecting_tokens(:ruby, loader: token_stream_loader)
 
-      if module_function
-        singleton_method = meth.dup
-        singleton_method.singleton = true
-        singleton_method.visibility = :public
-        container.add_method(singleton_method)
-      end
+      add_module_function_copy(meth) if module_function
     end
 
       # Find or create module or class from a given module name using Ruby lexical
@@ -1290,8 +1284,7 @@ module RDoc
         def _visit_call_module_function(call_node)
           return if @scanner.in_proc_block || @scanner.singleton
           if call_node.arguments.nil?
-            @scanner.visibility = :private
-            @scanner.module_function_mode = true
+            @scanner.visibility = :module_function
           else
             names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
             @scanner.change_method_to_module_function(names) if names
@@ -1309,7 +1302,6 @@ module RDoc
           arguments_node = call_node.arguments
           if arguments_node.nil? # `public` `private`
             @scanner.visibility = visibility
-            @scanner.module_function_mode = false
           else # `public :foo, :bar`, `private def foo; end`
             names = visibility_method_arguments(call_node, singleton: false)
             @scanner.change_method_visibility(names, visibility) if names
