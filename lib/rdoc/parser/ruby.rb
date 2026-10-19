@@ -133,7 +133,7 @@ module RDoc
       # Matches an RBS inline type annotation line: #: followed by whitespace
       RBS_SIG_LINE = /\A#:\s/ # :nodoc:
 
-      attr_accessor :visibility
+      attr_accessor :visibility, :module_function_mode
       attr_reader :container, :singleton, :in_proc_block
 
       def initialize(top_level, content, options, stats)
@@ -153,6 +153,7 @@ module RDoc
         @module_nesting = [[top_level, false]]
         @container = top_level
         @visibility = :public
+        @module_function_mode = false
         @singleton = false
         @in_proc_block = false
         @doc_state = :startdoc
@@ -220,10 +221,12 @@ module RDoc
       def with_container(container, singleton: false)
         old_container = @container
         old_visibility = @visibility
+        old_module_function_mode = @module_function_mode
         old_singleton = @singleton
         old_in_proc_block = @in_proc_block
         old_doc_state = @doc_state
         @visibility = :public
+        @module_function_mode = false
         @container = container
         @singleton = singleton
         @in_proc_block = false
@@ -232,6 +235,7 @@ module RDoc
       ensure
         @container = old_container
         @visibility = old_visibility
+        @module_function_mode = old_module_function_mode
         @singleton = old_singleton
         @in_proc_block = old_in_proc_block
         @doc_state = old_doc_state
@@ -718,6 +722,7 @@ module RDoc
       end
 
     private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, node_id:, type_signature_lines: nil) # :nodoc:
+      module_function = @module_function_mode && !singleton && container.equal?(@container)
       meth = AnyMethod.new(method_name, singleton: singleton)
       meth.comment = comment
       handle_code_object_directives(meth, directives) if directives
@@ -743,7 +748,7 @@ module RDoc
       meth.type_signature_lines = type_signature_lines
       # An instance method `initialize` is documented as `::new` unless the
       # :notnew: directive is given
-      if method_name == 'initialize' && !singleton
+      if method_name == 'initialize' && !singleton && !module_function
         if meth.dont_rename_initialize
           meth.visibility = :protected
         else
@@ -757,6 +762,13 @@ module RDoc
       container.add_method(meth)
       token_stream_loader = @colorizer_context.token_stream_loader(node_id) if node_id
       meth.start_collecting_tokens(:ruby, loader: token_stream_loader)
+
+      if module_function
+        singleton_method = meth.dup
+        singleton_method.singleton = true
+        singleton_method.visibility = :public
+        container.add_method(singleton_method)
+      end
     end
 
       # Find or create module or class from a given module name using Ruby lexical
@@ -1277,8 +1289,13 @@ module RDoc
 
         def _visit_call_module_function(call_node)
           return if @scanner.in_proc_block || @scanner.singleton
-          names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
-          @scanner.change_method_to_module_function(names) if names
+          if call_node.arguments.nil?
+            @scanner.visibility = :private
+            @scanner.module_function_mode = true
+          else
+            names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
+            @scanner.change_method_to_module_function(names) if names
+          end
         end
 
         def _visit_call_public_private_class_method(call_node, visibility)
@@ -1292,6 +1309,7 @@ module RDoc
           arguments_node = call_node.arguments
           if arguments_node.nil? # `public` `private`
             @scanner.visibility = visibility
+            @scanner.module_function_mode = false
           else # `public :foo, :bar`, `private def foo; end`
             names = visibility_method_arguments(call_node, singleton: false)
             @scanner.change_method_visibility(names, visibility) if names
