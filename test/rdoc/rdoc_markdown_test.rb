@@ -813,6 +813,23 @@ This is [an example][] reference-style link.
     assert_equal expected, doc
   end
 
+  def test_parse_link_reference_case_insensitive
+    doc = parse <<-MD
+This is [an example][ID] reference-style link.
+
+And [Another Example][] and [ANOTHER EXAMPLE].
+
+[id]: http://example.com
+[another example]: http://example.org
+    MD
+
+    expected = doc(
+      para("This is {an example}[http://example.com] reference-style link."),
+      para("And {Another Example}[http://example.org] and {ANOTHER EXAMPLE}[http://example.org]."))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_list_bullet
     doc = parse <<-MD
 * one

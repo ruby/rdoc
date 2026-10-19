@@ -754,7 +754,7 @@ class RDoc::Markdown
     raise ParseError, 'enable notes extension' if
       content.start_with? '^' and label.equal? content
 
-    if ref = @references[label] then
+    if ref = @references[reference_key(label)] then
       "{#{content}}[#{ref}]"
     elsif label.equal? content then
       "[#{content}]#{text}"
@@ -875,11 +875,20 @@ class RDoc::Markdown
   # link references.
 
   def reference label, link
-    if ref = @unlinked_references.delete(label) then
+    key = reference_key label
+
+    if ref = @unlinked_references.delete(key) then
       ref.replace link
     end
 
-    @references[label] = link
+    @references[key] = link
+  end
+
+  ##
+  # Link reference labels are matched case-insensitively.
+
+  def reference_key label
+    label.downcase
   end
 
   ##
