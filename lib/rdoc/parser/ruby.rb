@@ -593,8 +593,7 @@ module RDoc
         # changes but the singleton method copies must not be documented
         return if document_suppressed?
 
-        methods = @container.to_enum(:methods_matching, names).to_a
-        methods.each { |method| add_module_function_copy(method) }
+        @container.methods_matching(names) { |method| add_module_function_copy(method) }
       end
 
     private def add_module_function_copy(method) # :nodoc:

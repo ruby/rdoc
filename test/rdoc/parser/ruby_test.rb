@@ -1418,8 +1418,7 @@ end
       end
     RUBY
     mod = @store.find_module_named 'JSON'
-    instance_methods = mod.method_list.reject(&:singleton)
-    singleton_methods = mod.method_list.select(&:singleton)
+    singleton_methods, instance_methods = mod.method_list.partition(&:singleton)
 
     assert_equal ['before', 'parse', 'generate'], instance_methods.map(&:name)
     assert_equal [:public, :private, :private], instance_methods.map(&:visibility)
@@ -1553,25 +1552,11 @@ end
     assert_equal [:public], nil_class.method_list.map(&:visibility)
   end
 
-  def test_module_function_without_arguments_initialize
+  def test_module_function_without_arguments_initialize_and_documentation_directives
     util_parser <<~RUBY
       module M
         module_function
         def initialize(value); end
-      end
-    RUBY
-    mod = @store.find_module_named 'M'
-
-    assert_equal ['initialize', 'initialize'], mod.method_list.map(&:name)
-    assert_equal [false, true], mod.method_list.map(&:singleton)
-    assert_equal [:private, :public], mod.method_list.map(&:visibility)
-  end
-
-  def test_module_function_without_arguments_respects_documentation_directives
-    util_parser <<~RUBY
-      module M
-        module_function
-        def visible; end
         def omitted; end # :nodoc:
         # :stopdoc:
         def hidden; end
@@ -1583,7 +1568,7 @@ end
     RUBY
     mod = @store.find_module_named 'M'
 
-    assert_equal ['visible', 'visible', 'resumed', 'resumed'], mod.method_list.map(&:name)
+    assert_equal ['initialize', 'initialize', 'resumed', 'resumed'], mod.method_list.map(&:name)
     assert_equal [false, true, false, true], mod.method_list.map(&:singleton)
     assert_equal [:private, :public, :private, :public], mod.method_list.map(&:visibility)
   end
