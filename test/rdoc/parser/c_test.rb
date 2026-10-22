@@ -497,6 +497,47 @@ class RDocParserCTest < RDoc::TestCase
     assert_equal 'this is Kernel::Foo < A::B', klass.comment.text
   end
 
+  def test_do_classes_class_under_rb_const_get
+    content = <<~C
+      VALUE mExample = rb_define_module("Example");
+      VALUE cSocket = rb_const_get(rb_cObject, rb_intern("Socket"));
+      cSocket = rb_define_class_under(mExample, "Socket", cSocket);
+    C
+
+    klass = util_get_class content, 'cSocket'
+
+    assert_equal 'Example::Socket', klass.full_name
+    assert_equal 'Socket', klass.superclass
+  end
+
+  def test_do_classes_class_rb_const_get_under_module
+    content = <<~C
+      VALUE mNet = rb_define_module("Net");
+      VALUE cProtocol = rb_const_get(mNet, rb_intern("Protocol"));
+      VALUE cFoo = rb_define_class("Foo", cProtocol);
+    C
+
+    klass = util_get_class content, 'cFoo'
+
+    assert_equal 'Foo', klass.full_name
+    assert_equal 'Net::Protocol', klass.superclass
+  end
+
+  def test_do_classes_class_rb_const_get_reassigned
+    content = <<~C
+      VALUE mA = rb_define_module("A");
+      VALUE klass = rb_const_get(rb_cObject, rb_intern("IO"));
+      VALUE cX = rb_define_class_under(mA, "X", klass);
+      klass = rb_const_get(rb_cObject, rb_intern("String"));
+      VALUE cY = rb_define_class_under(mA, "Y", klass);
+    C
+
+    klass = util_get_class content, 'cY'
+
+    assert_equal 'A::Y', klass.full_name
+    assert_equal 'klass', klass.superclass
+  end
+
   def test_do_classes_singleton
     content = <<~C
       VALUE cFoo = rb_define_class("Foo", rb_cObject);
