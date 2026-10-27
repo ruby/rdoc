@@ -198,6 +198,7 @@ module RDoc
         @rdoc.options = parse_options
         @rdoc.store = Store.new(parse_options)
         @rdoc.parse_files parse_options.files
+        @rdoc.store.complete parse_options.visibility
       end
 
       document 'ri',       options, @ri_dir if
