@@ -469,13 +469,35 @@ module RDoc
 
       return 0, [] if params.empty?
 
-      document = parse method.comment
+      document = parse documenting_comment(method)
 
       tts = document.accept @formatter
 
       undoc = params - tts
 
       [params.length, undoc]
+    end
+
+    ##
+    # Returns the comment documenting +method+.  A method without a comment of
+    # its own is documented by the method it aliases or, failing that, by the
+    # method it overrides (see MethodAttr#documented?), so this follows that
+    # chain until it reaches a method with a comment.
+    #
+    #: (MethodAttr) -> (Comment | Markup::Document | String)
+    def documenting_comment(method) # :nodoc:
+      seen = []
+
+      while method.comment.empty?
+        seen << method
+        documenting = method.is_alias_for || method.see
+        break unless MethodAttr === documenting
+        break if seen.any? { |m| m.equal? documenting }
+
+        method = documenting
+      end
+
+      method.comment
     end
 
     autoload :Quiet,   "#{__dir__}/stats/quiet"
