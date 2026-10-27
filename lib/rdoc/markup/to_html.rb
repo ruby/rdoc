@@ -300,9 +300,10 @@ module RDoc
         if label_part.size == 1 && String === label_part[0]
           raw_label = label_part[0]
 
+          in_tidylink_label = @in_tidylink_label
           @in_tidylink_label = true
           special = apply_tidylink_label_special_handling(raw_label, url)
-          @in_tidylink_label = false
+          @in_tidylink_label = in_tidylink_label
 
           if special
             tag = gen_url(CGI.escapeHTML(url), special)
@@ -317,9 +318,10 @@ module RDoc
         open_tag, close_tag = tag.split(/(?=<\/a>)/, 2)
         valid_tag = open_tag && close_tag
         emit_inline(open_tag) if valid_tag
+        in_tidylink_label = @in_tidylink_label
         @in_tidylink_label = true
         traverse_inline_nodes(label_part)
-        @in_tidylink_label = false
+        @in_tidylink_label = in_tidylink_label
         emit_inline(close_tag) if valid_tag
       end
 
@@ -544,7 +546,12 @@ module RDoc
         if @pipe
           @res << to_html(heading.text)
         else
-          @res << "<a href=\"##{label}\">#{to_html(heading.text)}</a>"
+          # The heading text is the label of the heading's own link, so it must
+          # not contain links itself (nested <a> tags are invalid HTML).
+          @in_tidylink_label = true
+          text = to_html(heading.text)
+          @in_tidylink_label = false
+          @res << "<a href=\"##{label}\">#{text}</a>"
         end
 
         @res << "</h#{level}>\n"
