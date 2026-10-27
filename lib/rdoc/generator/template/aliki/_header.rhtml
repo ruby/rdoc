@@ -15,9 +15,10 @@
         <span class="search-icon" aria-hidden="true">🔍</span>
         <input id="search-field" role="combobox" aria-label="Search"
                aria-autocomplete="list" aria-controls="search-results"
-               type="text" name="search" placeholder="Search (/) for a class, method..."
+               type="text" name="search" placeholder="Search documentation…"
                spellcheck="false" autocomplete="off"
                title="Type to search, Up and Down to navigate, Enter to load">
+        <kbd class="search-shortcut-hint" aria-hidden="true">/</kbd>
         <button type="button" class="search-close" aria-label="Close search" data-search-close>
           <span aria-hidden="true">esc</span>
         </button>
@@ -31,7 +32,22 @@
           <p>No recent searches</p>
         </div>
       </div>
+      <div class="search-shortcuts-footer">
+        <button type="button" class="search-shortcuts-toggle" data-search-shortcuts
+                aria-haspopup="dialog" aria-controls="search-shortcuts" aria-expanded="false">
+          <svg aria-hidden="true"><use href="#icon-keyboard"></use></svg>
+          Search shortcuts
+        </button>
+      </div>
     </div>
+
+    <button type="button" class="search-shortcuts-toggle search-shortcuts-desktop" data-search-shortcuts
+            aria-haspopup="dialog" aria-controls="search-shortcuts" aria-expanded="false">
+      <svg aria-hidden="true"><use href="#icon-keyboard"></use></svg>
+      Search shortcuts
+    </button>
+
+    <%= render '_search_shortcuts.rhtml' %>
   </div>
 
   <!-- Theme toggle button -->
