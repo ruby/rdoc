@@ -115,6 +115,40 @@ class RDocMethodAttrTest < XrefTestCase
     assert_nil @m1_m.find_method_or_attribute 'm'
   end
 
+  def test_documented_eh_cyclic_include
+    meth_a, meth_b = util_cyclic_include_methods
+
+    assert_same meth_b, meth_a.see
+    assert_same meth_a, meth_b.see
+
+    refute meth_a.documented?
+    refute meth_b.documented?
+  end
+
+  def test_documented_eh_cyclic_include_documented
+    meth_a, meth_b = util_cyclic_include_methods
+    meth_b.comment = 'documented'
+
+    assert meth_a.documented?
+    assert meth_b.documented?
+
+    # a repeated check gives the same answer
+    assert meth_a.documented?
+  end
+
+  def test_documented_eh_superclass_cycle
+    klass_a = @top_level.add_class RDoc::NormalClass, 'CycleA'
+    klass_b = @top_level.add_class RDoc::NormalClass, 'CycleB'
+    klass_a.superclass = klass_b
+    klass_b.superclass = klass_a
+
+    meth_a = klass_a.add_method RDoc::AnyMethod.new('m')
+    meth_b = klass_b.add_method RDoc::AnyMethod.new('m')
+
+    refute meth_a.documented?
+    refute meth_b.documented?
+  end
+
   def test_full_name
     assert_equal 'C1#m',  @c1_m.full_name
     assert_equal 'C1::m', @c1__m.full_name
@@ -229,6 +263,19 @@ class RDocMethodAttrTest < XrefTestCase
     assert_equal 'RDoc::AnyMethod: C1#m',  @c1_m.to_s
     assert_equal 'RDoc::AnyMethod: C2#b',  @c2_b.to_s
     assert_equal 'RDoc::AnyMethod: C1::m', @c1__m.to_s
+  end
+
+  # Two modules that include each other, each with an undocumented method +m+
+  def util_cyclic_include_methods
+    mod_a = @top_level.add_module RDoc::NormalModule, 'CycleA'
+    mod_b = @top_level.add_module RDoc::NormalModule, 'CycleB'
+    mod_a.add_include RDoc::Include.new('CycleB', '')
+    mod_b.add_include RDoc::Include.new('CycleA', '')
+
+    [
+      mod_a.add_method(RDoc::AnyMethod.new('m')),
+      mod_b.add_method(RDoc::AnyMethod.new('m')),
+    ]
   end
 
 end
