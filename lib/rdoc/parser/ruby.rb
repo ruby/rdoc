@@ -133,11 +133,22 @@ module RDoc
       # Matches an RBS inline type annotation line: #: followed by whitespace
       RBS_SIG_LINE = /\A#:\s/ # :nodoc:
 
-      attr_writer :visibility
-      attr_reader :container, :singleton, :in_proc_block
+      attr_reader :visibility, :container, :singleton, :in_proc_block
 
-      def visibility
-        @visibility == :module_function ? :private : @visibility
+      # Sets the default visibility for methods defined after this point.
+      # This ends a bare `module_function` region, as in Ruby.
+
+      def visibility=(visibility)
+        @visibility = visibility
+        @module_function = false
+      end
+
+      # Handles bare `module_function`. Methods defined after this point
+      # become private instance methods with public singleton copies.
+
+      def start_module_function
+        @visibility = :private
+        @module_function = true
       end
 
       def initialize(top_level, content, options, stats)
@@ -157,6 +168,7 @@ module RDoc
         @module_nesting = [[top_level, false]]
         @container = top_level
         @visibility = :public
+        @module_function = false
         @singleton = false
         @in_proc_block = false
         @doc_state = :startdoc
@@ -224,10 +236,12 @@ module RDoc
       def with_container(container, singleton: false)
         old_container = @container
         old_visibility = @visibility
+        old_module_function = @module_function
         old_singleton = @singleton
         old_in_proc_block = @in_proc_block
         old_doc_state = @doc_state
         @visibility = :public
+        @module_function = false
         @container = container
         @singleton = singleton
         @in_proc_block = false
@@ -236,6 +250,7 @@ module RDoc
       ensure
         @container = old_container
         @visibility = old_visibility
+        @module_function = old_module_function
         @singleton = old_singleton
         @in_proc_block = old_in_proc_block
         @doc_state = old_doc_state
@@ -418,7 +433,7 @@ module RDoc
         handle_code_object_directives(@container, directives)
         is_call_node = node.is_a?(Prism::CallNode)
         singleton_method = false
-        visibility = self.visibility
+        visibility = @visibility
         attributes = rw = line_no = method_name = nil
         directives.each do |directive, (param, line)|
           case directive
@@ -720,7 +735,7 @@ module RDoc
       end
 
     private def internal_add_method(method_name, container, comment:, directives:, modifier_comment_lines: nil, line_no:, visibility:, singleton:, params:, calls_super:, block_params:, node_id:, type_signature_lines: nil) # :nodoc:
-      module_function = @visibility == :module_function && !singleton && container.equal?(@container)
+      module_function = @module_function && !singleton && container.equal?(@container)
       meth = AnyMethod.new(method_name, singleton: singleton)
       meth.comment = comment
       handle_code_object_directives(meth, directives) if directives
@@ -1283,7 +1298,7 @@ module RDoc
         def _visit_call_module_function(call_node)
           return if @scanner.in_proc_block || @scanner.singleton
           if call_node.arguments.nil?
-            @scanner.visibility = :module_function
+            @scanner.start_module_function
           else
             names = visibility_method_arguments(call_node, singleton: false)&.map(&:to_s)
             @scanner.change_method_to_module_function(names) if names
