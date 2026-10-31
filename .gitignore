@@ -15,3 +15,4 @@ Gemfile.lock
 
 # Playwright MCP uses this folder to store screenshots
 .playwright-mcp/
+config.bat

@@ -903,6 +903,22 @@ EXPECTED
     assert_equal expected, result
   end
 
+  def test_convert_TIDYLINK_image_external_with_port
+    result =
+      @to.convert '{rdoc-image:http://example.com:8080/path/to/image.jpg:alt text}[http://example.com]'
+
+    expected =
+      "\n<p><a href=\"http://example.com\"><img src=\"http://example.com:8080/path/to/image.jpg\" alt=\"alt text\"></a></p>\n"
+
+    assert_equal expected, result
+  end
+
+  def test_convert_RDOCLINK_image_external_with_port_without_alt
+    result = @to.convert 'rdoc-image:http://localhost:8080/image.png'
+
+    assert_equal "\n<p><img src=\"http://localhost:8080/image.png\"></p>\n", result
+  end
+
   def test_convert_TIDYLINK_image_external_with_alt
     result =
       @to.convert '{rdoc-image:http://example.com/path/to/image.jpg:alt text}[http://example.com]'
