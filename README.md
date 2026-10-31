@@ -221,6 +221,17 @@ rake rdoc:server
 - **Full cache invalidation.** Any file change clears all cached pages. This is simple and correct — rendering is fast (~ms per page), parsing is the expensive part and is done incrementally.
 - **No HTTPS or HTTP/2.** The server is intended for local development preview only.
 
+## Security
+
+Do not run RDoc on a codebase that you do not trust. RDoc is not designed to process untrusted input safely. Some RDoc features can run code:
+
+- RDoc loads plugins from installed gems that provide `rdoc/discover.rb`. A plugin can run any Ruby code when RDoc starts.
+- `rake rdoc` and other `RDoc::Task` tasks run the project's `Rakefile`, which is Ruby code.
+
+If you must generate documentation for an untrusted codebase, run RDoc in an isolated environment, such as a container with no access to secrets.
+
+This applies to embedding RDoc as a library too. The markup formatters (such as `RDoc::Markup::ToHtml`) are not guaranteed to be safe on untrusted text, and raw HTML in the input is passed through without filtering. If your application renders markup submitted by untrusted users, sanitize the generated HTML and do not treat RDoc markup as a safe-by-default rendering path.
+
 ## Bugs
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information on filing a bug report.  It's OK to file a bug report for anything you're having a problem with.  If you can't figure out how to make RDoc produce the output you like that is probably a documentation bug.
