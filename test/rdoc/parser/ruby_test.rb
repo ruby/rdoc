@@ -1403,6 +1403,176 @@ end
     assert_equal [:public, :public, :public], singleton_methods.map(&:visibility)
   end
 
+  def test_module_function_without_arguments
+    util_parser <<~RUBY
+      module JSON
+        def before; end
+        module_function
+
+        # :call-seq:
+        #   JSON.parse(source, opts = {}) -> object
+        #
+        # Parses a source.
+        def parse(source, opts = {}); end
+        def generate(object); end
+      end
+    RUBY
+    mod = @store.find_module_named 'JSON'
+    singleton_methods, instance_methods = mod.method_list.partition(&:singleton)
+
+    assert_equal ['before', 'parse', 'generate'], instance_methods.map(&:name)
+    assert_equal [:public, :private, :private], instance_methods.map(&:visibility)
+    assert_equal ['parse', 'generate'], singleton_methods.map(&:name)
+    assert_equal [:public, :public], singleton_methods.map(&:visibility)
+
+    parse = mod.find_method('parse', false)
+    singleton_parse = mod.find_method('parse', true)
+    assert_not_same parse, singleton_parse
+    assert_equal '(source, opts = {})', singleton_parse.params
+    assert_equal 'Parses a source.', singleton_parse.comment.text.strip
+    assert_equal 'JSON.parse(source, opts = {}) -> object', singleton_parse.call_seq
+    assert_equal 'JSON::parse', singleton_parse.full_name
+    assert_equal 'method-c-parse', singleton_parse.aref
+    assert_equal parse.token_stream, singleton_parse.token_stream
+  end
+
+  def test_module_function_without_arguments_reset_by_visibility
+    util_parser <<~RUBY
+      module M
+        module_function
+        def first; end
+        public
+        def pub; end
+        module_function
+        def second; end
+        private
+        def pri; end
+        module_function
+        def third; end
+        protected
+        def pro; end
+      end
+    RUBY
+    mod = @store.find_module_named 'M'
+    instance_methods = mod.method_list.reject(&:singleton)
+
+    assert_equal ['first', 'pub', 'second', 'pri', 'third', 'pro'], instance_methods.map(&:name)
+    assert_equal [:private, :public, :private, :private, :private, :protected], instance_methods.map(&:visibility)
+    assert_equal ['first', 'second', 'third'], mod.class_method_list.map(&:name)
+  end
+
+  def test_module_function_without_arguments_preserved_by_named_visibility
+    util_parser <<~RUBY
+      module M
+        def before; end
+        module_function
+        def first; end
+        public :first
+        private :before
+        def second; end
+        module_function :before
+        public def third; end
+        def fourth; end
+      end
+    RUBY
+    mod = @store.find_module_named 'M'
+    instance_methods = mod.method_list.reject(&:singleton)
+
+    assert_equal ['before', 'first', 'second', 'third', 'fourth'], instance_methods.map(&:name)
+    assert_equal [:private, :public, :private, :public, :private], instance_methods.map(&:visibility)
+    assert_equal ['first', 'second', 'before', 'third', 'fourth'], mod.class_method_list.map(&:name)
+    assert_equal [:public] * 5, mod.class_method_list.map(&:visibility)
+  end
+
+  def test_module_function_without_arguments_scoped
+    util_parser <<~RUBY
+      module M
+        module_function
+        module Nested
+          def ordinary; end
+          module_function
+          def nested; end
+        end
+        class C
+          def ordinary; end
+        end
+        class << self
+          private
+          def singleton; end
+        end
+        def outer; end
+      end
+      module M
+        def reopened; end
+      end
+      module Other
+        def ordinary; end
+      end
+    RUBY
+    mod = @store.find_module_named 'M'
+    nested = @store.find_module_named 'M::Nested'
+    klass = @store.find_class_named 'M::C'
+    other = @store.find_module_named 'Other'
+
+    assert_equal ['singleton', 'outer'], mod.class_method_list.map(&:name)
+    assert_equal [:private, :public], mod.class_method_list.map(&:visibility)
+    assert_equal :private, mod.find_method('outer', false).visibility
+    assert_equal :public, mod.find_method('reopened', false).visibility
+    assert_equal ['nested'], nested.class_method_list.map(&:name)
+    assert_equal :public, nested.find_method('ordinary', false).visibility
+    assert_equal :private, nested.find_method('nested', false).visibility
+    assert_equal [false], klass.method_list.map(&:singleton)
+    assert_equal [:public], klass.method_list.map(&:visibility)
+    assert_equal [false], other.method_list.map(&:singleton)
+    assert_equal [:public], other.method_list.map(&:visibility)
+  end
+
+  def test_module_function_without_arguments_explicit_receivers_and_attributes
+    util_parser <<~RUBY
+      class NilClass; end
+      module M
+        module_function
+        def self.explicit; end
+        def M.named; end
+        def nil.literal; end
+        attr_reader :reader
+        def implicit; end
+      end
+    RUBY
+    mod = @store.find_module_named 'M'
+    nil_class = @store.find_class_named 'NilClass'
+
+    assert_equal ['explicit', 'named', 'implicit'], mod.class_method_list.map(&:name)
+    assert_equal [:public] * 3, mod.class_method_list.map(&:visibility)
+    assert_equal ['implicit'], mod.method_list.reject(&:singleton).map(&:name)
+    assert_equal ['reader'], mod.attributes.map(&:name)
+    assert_equal [false], mod.attributes.map(&:singleton)
+    assert_equal [:private], mod.attributes.map(&:visibility)
+    assert_equal [false], nil_class.method_list.map(&:singleton)
+    assert_equal [:public], nil_class.method_list.map(&:visibility)
+  end
+
+  def test_module_function_without_arguments_initialize_and_documentation_directives
+    util_parser <<~RUBY
+      module M
+        module_function
+        def initialize(value); end
+        def omitted; end # :nodoc:
+        # :stopdoc:
+        def hidden; end
+        # :startdoc:
+        def resumed; end
+        # :enddoc:
+        def ended; end
+      end
+    RUBY
+    mod = @store.find_module_named 'M'
+
+    assert_equal ['initialize', 'initialize', 'resumed', 'resumed'], mod.method_list.map(&:name)
+    assert_equal [false, true, false, true], mod.method_list.map(&:singleton)
+    assert_equal [:private, :public, :private, :public], mod.method_list.map(&:visibility)
+  end
+
   def test_class_method_visibility
     util_parser <<~RUBY
       class A
@@ -2729,6 +2899,7 @@ end
           tap do end
           def foo; end
           module_function :foo
+          module_function
           def foo; end
         end
         def bar; end
