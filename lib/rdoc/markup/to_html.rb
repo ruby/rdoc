@@ -154,6 +154,13 @@ module RDoc
 
       UNSAFE_URL_SCHEME_REGEXP = /\A(?:javascript|vbscript|data|file):/i
 
+      ##
+      # Splits the part of an rdoc-image link after "rdoc-image:" into the
+      # image URL and the alt text.  A port number after the host is part of
+      # the URL.
+
+      IMAGE_URL_AND_ALT_REGEXP = %r{\A((?:[A-Za-z][A-Za-z0-9+.\-]*://[^/:?#]*(?::\d+(?=[/?#:]|\z))?)?[^:]*)(?::(.*))?\z}m
+
       # :nodoc:
       URL_CHARACTERS_REGEXP_STR = /[A-Za-z0-9\-._~:\/\?#\[\]@!$&'\(\)*+,;%=]/.source
 
@@ -203,7 +210,8 @@ module RDoc
           # Split the string after "rdoc-image:" into url and alt.
           #   "path/to/image.jpg:alt text" => ["path/to/image.jpg", "alt text"]
           #   "http://example.com/path/to/image.jpg:alt text" => ["http://example.com/path/to/image.jpg", "alt text"]
-          url, alt = $'.split(/:(?!\/)/, 2)
+          #   "http://example.com:8080/image.jpg:alt text" => ["http://example.com:8080/image.jpg", "alt text"]
+          url, alt = $'.match(IMAGE_URL_AND_ALT_REGEXP).captures
           if alt && !alt.empty?
             %[<img src="#{CGI.escapeHTML(url)}" alt="#{CGI.escapeHTML(alt)}">]
           else
