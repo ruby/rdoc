@@ -213,4 +213,115 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
 
     assert_equal %i[name full_name type path].sort, entry.keys.sort
   end
+
+  def test_write_search_index_matches_array_serialization
+    klass = @top_level.add_class RDoc::NormalClass, 'Outer'
+    klass.add_comment "Quotes \" and \\, café 日本語, <tags> & links.\n", @top_level
+    klass.add_class RDoc::NormalClass, 'Inner'
+    klass.add_constant RDoc::Constant.new('VALUE', '1', 'A constant')
+    klass.add_method RDoc::AnyMethod.new('[]')
+    method = RDoc::AnyMethod.new('build')
+    method.singleton = true
+    klass.add_method method
+    @store.complete :private
+    expected = "var search_data = #{JSON.generate(index: @g.build_search_index)};"
+
+    @g.write_search_index
+
+    assert_equal expected, File.read('js/search_data.js')
+    assert_equal ['search_data.js'], Dir.children('js')
+  end
+
+  def test_write_search_index_empty
+    @g.write_search_index
+
+    assert_equal 'var search_data = {"index":[]};', File.read('js/search_data.js')
+  end
+
+  def test_write_search_index_serializes_before_building_next_entry
+    @top_level.add_class RDoc::NormalClass, 'First'
+    @top_level.add_class RDoc::NormalClass, 'Second'
+    @store.complete :private
+    built = []
+    serialized = []
+    @g.define_singleton_method(:build_class_module_entry) do |klass|
+      raise 'Previous entries have not been serialized' unless built == serialized
+
+      built << klass.name
+      entry = super(klass)
+      snippet = Object.new
+      snippet.define_singleton_method(:to_json) do |*|
+        serialized << klass.name
+        JSON.generate('A snippet')
+      end
+      entry[:snippet] = snippet
+      entry
+    end
+
+    @g.write_search_index
+
+    assert_equal ['First', 'Second'], serialized
+    assert_equal built, serialized
+  end
+
+  def test_write_search_index_preserves_existing_file_on_serialization_error
+    @top_level.add_class RDoc::NormalClass, 'First'
+    @top_level.add_class RDoc::NormalClass, 'Second'
+    @store.complete :private
+    @g.define_singleton_method(:build_class_module_entry) do |klass|
+      entry = super(klass)
+      entry[:snippet] = "\xFF" if klass.name == 'Second'
+      entry
+    end
+    FileUtils.mkdir_p 'js'
+    File.write 'js/search_data.js', 'previous index'
+
+    assert_raise JSON::GeneratorError do
+      @g.write_search_index
+    end
+
+    assert_equal 'previous index', File.read('js/search_data.js')
+    assert_equal ['search_data.js'], Dir.children('js')
+  end
+
+  def test_write_search_index_preserves_permissions
+    omit 'assumes UNIX permission model' if /mswin|mingw/ =~ RUBY_PLATFORM
+
+    FileUtils.mkdir_p 'js'
+    File.write 'js/search_data.js', 'previous index'
+    File.chmod 0640, 'js/search_data.js'
+
+    @g.write_search_index
+
+    assert_equal 0640, File.stat('js/search_data.js').mode & 0777
+  end
+
+  def test_write_search_index_uses_default_permissions
+    omit 'assumes UNIX permission model' if /mswin|mingw/ =~ RUBY_PLATFORM
+
+    old_umask = File.umask 0027
+
+    @g.write_search_index
+
+    assert_equal 0640, File.stat('js/search_data.js').mode & 0777
+  ensure
+    File.umask old_umask if old_umask
+  end
+
+  def test_write_search_index_dry_run
+    @g.dry_run = true
+
+    @g.write_search_index
+
+    assert_equal [], Dir.children(@tmpdir)
+  end
+
+  def test_write_search_index_uses_overridden_builder
+    entries = [{ name: 'Custom entry' }]
+    @g.define_singleton_method(:build_search_index) { entries }
+
+    @g.write_search_index
+
+    assert_equal "var search_data = #{JSON.generate(index: entries)};", File.read('js/search_data.js')
+  end
 end

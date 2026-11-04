@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'uri'
+require 'tempfile'
 
 module RDoc
   module Generator
@@ -74,29 +75,7 @@ module RDoc
       # Build a search index array for Aliki's searcher.
 
       def build_search_index
-        setup
-
-        index = []
-
-        @classes.each do |klass|
-          next unless klass.display?
-
-          index << build_class_module_entry(klass)
-
-          klass.constants.each do |const|
-            next unless const.display?
-
-            index << build_constant_entry(const, klass)
-          end
-        end
-
-        @methods.each do |method|
-          next unless method.display?
-
-          index << build_method_entry(method)
-        end
-
-        index
+        enum_for(:each_search_index_entry).to_a
       end
 
       ##
@@ -110,15 +89,31 @@ module RDoc
       def write_search_index
         debug_msg "Writing Aliki search index"
 
-        index = build_search_index
+        if @dry_run
+          build_search_index
+          return
+        end
 
-        FileUtils.mkdir_p 'js' unless @dry_run
+        entries = if method(:build_search_index).owner == Aliki
+                    enum_for(:each_search_index_entry)
+                  else
+                    build_search_index
+                  end
 
-        search_index_path = 'js/search_data.js'
-        return if @dry_run
-
-        data = { index: index }
-        File.write search_index_path, "var search_data = #{JSON.generate(data)};"
+        FileUtils.mkdir_p 'js'
+        # Finish serialization before opening the destination, preserving an existing index on failure.
+        Tempfile.create('rdoc-search', 'js') do |file|
+          file.write 'var search_data = {"index":['
+          separator = ''
+          entries.each do |entry|
+            file.write separator
+            file.write JSON.generate(entry)
+            separator = ','
+          end
+          file.write ']};'
+          file.rewind
+          IO.copy_stream file, 'js/search_data.js'
+        end
       end
 
       ##
@@ -152,6 +147,28 @@ module RDoc
       end
 
     private
+
+      def each_search_index_entry
+        setup
+
+        @classes.each do |klass|
+          next unless klass.display?
+
+          yield build_class_module_entry(klass)
+
+          klass.constants.each do |const|
+            next unless const.display?
+
+            yield build_constant_entry(const, klass)
+          end
+        end
+
+        @methods.each do |method|
+          next unless method.display?
+
+          yield build_method_entry(method)
+        end
+      end
 
       def template_encoding
         ::Encoding::UTF_8
