@@ -248,13 +248,11 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
       raise 'Previous entries have not been serialized' unless built == serialized
 
       built << klass.name
-      entry = super(klass)
-      snippet = Object.new
-      snippet.define_singleton_method(:to_json) do |*|
+      entry = Object.new
+      entry.define_singleton_method(:to_json) do |*|
         serialized << klass.name
-        JSON.generate('A snippet')
+        JSON.generate(name: klass.name)
       end
-      entry[:snippet] = snippet
       entry
     end
 

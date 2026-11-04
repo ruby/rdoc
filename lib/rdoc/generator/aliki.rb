@@ -116,8 +116,7 @@ module RDoc
           file.write 'var search_data = {"index":['
           separator = ''
           entries.each do |entry|
-            file.write separator
-            file.write JSON.generate(entry)
+            file.write separator, JSON.generate(entry)
             separator = ','
           end
           file.write ']};'
