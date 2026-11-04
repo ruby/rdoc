@@ -284,6 +284,71 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
     assert_equal ['search_data.js'], Dir.children('js')
   end
 
+  def test_write_search_index_replaces_existing_file
+    omit 'open files cannot always be replaced on Windows' if /mswin|mingw/ =~ RUBY_PLATFORM
+
+    FileUtils.mkdir_p 'js'
+    File.write 'js/search_data.js', 'previous index'
+
+    File.open 'js/search_data.js' do |previous|
+      @g.write_search_index
+
+      assert_equal 'previous index', previous.read
+    end
+
+    assert_equal 'var search_data = {"index":[]};', File.read('js/search_data.js')
+    assert_equal ['search_data.js'], Dir.children('js')
+  end
+
+  def test_write_search_index_preserves_existing_file_on_publication_error
+    original = File.method :rename
+    FileUtils.mkdir_p 'js'
+    File.write 'js/search_data.js', 'previous index'
+    File.singleton_class.remove_method :rename
+    File.define_singleton_method(:rename) { |*| raise Errno::ENOSPC }
+
+    assert_raise Errno::ENOSPC do
+      @g.write_search_index
+    end
+
+    assert_equal 'previous index', File.read('js/search_data.js')
+    assert_equal ['search_data.js'], Dir.children('js')
+  ensure
+    File.singleton_class.remove_method :rename
+    File.define_singleton_method :rename, original
+  end
+
+  def test_write_search_index_preserves_symlink
+    FileUtils.mkdir_p %w[js target]
+    File.write 'target/search_data.js', 'previous index'
+    begin
+      File.symlink '../target/search_data.js', 'js/search_data.js'
+    rescue NotImplementedError, Errno::EACCES, Errno::EPERM
+      omit 'symlinks are not supported'
+    end
+
+    @g.write_search_index
+
+    assert File.symlink?('js/search_data.js')
+    assert_equal 'var search_data = {"index":[]};', File.read('target/search_data.js')
+    assert_equal ['search_data.js'], Dir.children('target')
+  end
+
+  def test_write_search_index_follows_dangling_symlink
+    FileUtils.mkdir_p %w[js target]
+    begin
+      File.symlink '../target/search_data.js', 'js/search_data.js'
+    rescue NotImplementedError, Errno::EACCES, Errno::EPERM
+      omit 'symlinks are not supported'
+    end
+
+    @g.write_search_index
+
+    assert File.symlink?('js/search_data.js')
+    assert_equal 'var search_data = {"index":[]};', File.read('target/search_data.js')
+    assert_equal ['search_data.js'], Dir.children('target')
+  end
+
   def test_write_search_index_preserves_permissions
     omit 'assumes UNIX permission model' if /mswin|mingw/ =~ RUBY_PLATFORM
 

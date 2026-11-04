@@ -104,8 +104,15 @@ module RDoc
                   end
 
         FileUtils.mkdir_p 'js'
-        # Finish serialization before opening the destination, preserving an existing index on failure.
-        Tempfile.create('rdoc-search', 'js') do |file|
+        # Follow symlinks, but replace the target inode rather than updating other hard links.
+        search_index_path = File.realdirpath 'js/search_data.js'
+        mode = begin
+          File.stat(search_index_path).mode & 0777
+        rescue Errno::ENOENT
+          0666 & ~File.umask
+        end
+
+        Tempfile.create('rdoc-search', File.dirname(search_index_path)) do |file|
           file.write 'var search_data = {"index":['
           separator = ''
           entries.each do |entry|
@@ -114,8 +121,9 @@ module RDoc
             separator = ','
           end
           file.write ']};'
-          file.rewind
-          IO.copy_stream file, 'js/search_data.js'
+          file.chmod mode
+          file.close
+          File.rename file.path, search_index_path
         end
       end
 
