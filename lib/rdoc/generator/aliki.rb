@@ -78,6 +78,9 @@ module RDoc
         enum_for(:each_search_index_entry).to_a
       end
 
+      DEFAULT_SEARCH_INDEX_BUILDER = instance_method :build_search_index
+      private_constant :DEFAULT_SEARCH_INDEX_BUILDER
+
       ##
       # Write the search index as a JavaScript file
       # Format: var search_data = { index: [...] }
@@ -94,7 +97,7 @@ module RDoc
           return
         end
 
-        entries = if method(:build_search_index).owner == Aliki
+        entries = if method(:build_search_index).unbind == DEFAULT_SEARCH_INDEX_BUILDER
                     enum_for(:each_search_index_entry)
                   else
                     build_search_index

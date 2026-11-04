@@ -324,4 +324,19 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
 
     assert_equal "var search_data = #{JSON.generate(index: entries)};", File.read('js/search_data.js')
   end
+
+  def test_write_search_index_uses_redefined_builder
+    generator = RDoc::Generator::Aliki
+    original = generator.instance_method :build_search_index
+    entries = [{ name: 'Custom entry' }]
+    generator.remove_method :build_search_index
+    generator.define_method(:build_search_index) { entries }
+
+    @g.write_search_index
+
+    assert_equal "var search_data = #{JSON.generate(index: entries)};", File.read('js/search_data.js')
+  ensure
+    generator.remove_method :build_search_index
+    generator.define_method :build_search_index, original
+  end
 end
