@@ -106,11 +106,12 @@ module RDoc
         FileUtils.mkdir_p 'js'
         # Follow symlinks, but replace the target inode rather than updating other hard links.
         search_index_path = File.realdirpath 'js/search_data.js'
-        mode = begin
-          File.stat(search_index_path).mode & 0777
+        stat = begin
+          File.stat search_index_path
         rescue Errno::ENOENT
-          0666 & ~File.umask
+          nil
         end
+        mode = stat ? stat.mode & 0777 : 0666 & ~File.umask
 
         Tempfile.create('rdoc-search', File.dirname(search_index_path)) do |file|
           file.write 'var search_data = {"index":['
@@ -120,6 +121,11 @@ module RDoc
             separator = ','
           end
           file.write ']};'
+          if stat
+            tempfile_stat = file.stat
+            file.chown stat.uid, stat.gid if stat.uid != tempfile_stat.uid || stat.gid != tempfile_stat.gid
+          end
+          # shortcut: extended ACLs are not copied; add platform-specific support if indexes need ACL-based access.
           file.chmod mode
           file.close
           File.rename file.path, search_index_path

@@ -359,6 +359,52 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
     assert_equal 0640, File.stat('js/search_data.js').mode & 0777
   end
 
+  def test_write_search_index_preserves_ownership
+    omit 'assumes UNIX ownership model' if /mswin|mingw/ =~ RUBY_PLATFORM
+
+    FileUtils.mkdir_p 'js'
+    File.write 'js/search_data.js', 'previous index'
+    previous_stat = File.stat 'js/search_data.js'
+    group = Process.groups.find { |gid| gid != previous_stat.gid }
+    omit 'requires a secondary group' unless group
+    File.chown nil, group, 'js/search_data.js'
+    File.chmod 0640, 'js/search_data.js'
+
+    @g.write_search_index
+
+    stat = File.stat 'js/search_data.js'
+    assert_equal previous_stat.uid, stat.uid
+    assert_equal group, stat.gid
+    assert_equal 0640, stat.mode & 0777
+  end
+
+  def test_write_search_index_preserves_existing_file_on_ownership_error
+    original = Tempfile.method :create
+    FileUtils.mkdir_p 'js'
+    File.write 'js/search_data.js', 'previous index'
+    different_owner = File.stat 'js/search_data.js'
+    uid = different_owner.uid + 1
+    different_owner.define_singleton_method(:uid) { uid }
+    Tempfile.singleton_class.remove_method :create
+    Tempfile.define_singleton_method(:create) do |*args, &block|
+      original.call(*args) do |file|
+        file.define_singleton_method(:stat) { different_owner }
+        file.define_singleton_method(:chown) { |*| raise Errno::EPERM }
+        block.call(file)
+      end
+    end
+
+    assert_raise Errno::EPERM do
+      @g.write_search_index
+    end
+
+    assert_equal 'previous index', File.read('js/search_data.js')
+    assert_equal ['search_data.js'], Dir.children('js')
+  ensure
+    Tempfile.singleton_class.remove_method :create
+    Tempfile.define_singleton_method :create, original
+  end
+
   def test_write_search_index_uses_default_permissions
     omit 'assumes UNIX permission model' if /mswin|mingw/ =~ RUBY_PLATFORM
 
