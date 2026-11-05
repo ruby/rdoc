@@ -969,7 +969,7 @@ or the PAGER environment variable.
 
       def expand_class(klass)
         class_names = classes.keys
-        ary = class_names.grep(Regexp.new("\\A#{klass.gsub(/(?=::|\z)/, '[^:]*')}\\z"))
+        ary = class_names.grep(%r{\A#{Regexp.escape(klass).gsub(/(?=::|\z)/, '[^:]*')}\z})
         if ary.length != 1 && ary.first != klass
           if check_did_you_mean
             suggestion_proc = -> { DidYouMean::SpellChecker.new(dictionary: class_names).correct(klass) }
