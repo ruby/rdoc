@@ -419,33 +419,23 @@ class RDocGeneratorAlikiSearchIndexTest < RDoc::TestCase
 
   def test_write_search_index_dry_run
     @g.dry_run = true
+    @g.define_singleton_method(:build_search_index) { raise 'must not build an array' }
 
     @g.write_search_index
 
     assert_equal [], Dir.children(@tmpdir)
   end
 
-  def test_write_search_index_uses_overridden_builder
+  def test_write_search_index_uses_shared_entry_iterator
     entries = [{ name: 'Custom entry' }]
-    @g.define_singleton_method(:build_search_index) { entries }
+    @g.define_singleton_method(:each_search_index_entry) do |&block|
+      entries.each(&block)
+    end
+    assert_equal entries, @g.build_search_index
+    @g.define_singleton_method(:build_search_index) { raise 'must not build an array' }
 
     @g.write_search_index
 
     assert_equal "var search_data = #{JSON.generate(index: entries)};", File.read('js/search_data.js')
-  end
-
-  def test_write_search_index_uses_redefined_builder
-    generator = RDoc::Generator::Aliki
-    original = generator.instance_method :build_search_index
-    entries = [{ name: 'Custom entry' }]
-    generator.remove_method :build_search_index
-    generator.define_method(:build_search_index) { entries }
-
-    @g.write_search_index
-
-    assert_equal "var search_data = #{JSON.generate(index: entries)};", File.read('js/search_data.js')
-  ensure
-    generator.remove_method :build_search_index
-    generator.define_method :build_search_index, original
   end
 end

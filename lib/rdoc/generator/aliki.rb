@@ -78,9 +78,6 @@ module RDoc
         enum_for(:each_search_index_entry).to_a
       end
 
-      DEFAULT_SEARCH_INDEX_BUILDER = instance_method :build_search_index
-      private_constant :DEFAULT_SEARCH_INDEX_BUILDER
-
       ##
       # Write the search index as a JavaScript file
       # Format: var search_data = { index: [...] }
@@ -93,15 +90,9 @@ module RDoc
         debug_msg "Writing Aliki search index"
 
         if @dry_run
-          build_search_index
+          each_search_index_entry {}
           return
         end
-
-        entries = if method(:build_search_index).unbind == DEFAULT_SEARCH_INDEX_BUILDER
-                    enum_for(:each_search_index_entry)
-                  else
-                    build_search_index
-                  end
 
         FileUtils.mkdir_p 'js'
         # Follow symlinks, but replace the target inode rather than updating other hard links.
@@ -116,7 +107,7 @@ module RDoc
         Tempfile.create('rdoc-search', File.dirname(search_index_path)) do |file|
           file.write 'var search_data = {"index":['
           separator = ''
-          entries.each do |entry|
+          each_search_index_entry do |entry|
             file.write separator, JSON.generate(entry)
             separator = ','
           end
