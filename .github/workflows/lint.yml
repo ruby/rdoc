@@ -35,3 +35,5 @@ jobs:
       run: npm ci
     - name: Run stylelint
       run: npm run lint:css
+    - name: Run JS tests
+      run: npm run test:js
