@@ -862,7 +862,7 @@ module RDoc
       # named +class_name+ in +parent+ which was assigned to the C +var_name+.
 
       def handle_class_module(var_name, type, class_name, parent, in_module)
-        parent_name = @known_classes[parent] || parent
+        parent_name = @known_classes[parent] || const_get_name(parent) || parent
 
         if in_module
           enclosure = @classes[in_module] || @store.find_c_enclosure(in_module)
@@ -915,6 +915,35 @@ module RDoc
         @classes[var_name] = cm
         @known_classes[var_name] = cm.full_name
         @store.add_c_enclosure var_name, cm
+      end
+
+      ##
+      # Returns the name of the class or module the C variable +var_name+ was
+      # assigned from <tt>rb_const_get(under, rb_intern("Name"))</tt>, or +nil+
+      # if there is no such assignment, +under+ is unknown, or +var_name+ is
+      # assigned different constants in different places.
+      #
+      #: (String?) -> String?
+      def const_get_name(var_name)
+        return unless var_name
+
+        names = @content.scan(%r%
+          \b#{Regexp.escape var_name}\s*=
+          \s*rb_const_get(?:_at)?\s*\(
+            \s*(\w+)\s*,
+            \s*rb_intern(?:_const)?\s*\(\s*"(\w+)"\s*\)
+          \s*\)
+        %x).uniq
+
+        return unless names.length == 1
+
+        under, name = names.first
+        under_name = @known_classes[under]
+
+        return unless under_name
+        return name if under_name == 'Object'
+
+        "#{under_name}::#{name}"
       end
 
       ##
