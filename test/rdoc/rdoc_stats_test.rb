@@ -335,6 +335,68 @@ class RDocStatsTest < RDoc::TestCase
     assert_match "100% documentation!\nGreat Job!\n", @s.report
   end
 
+  def test_report_method_parameters_alias
+    c = @tl.add_class RDoc::NormalClass, 'C'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    m = RDoc::AnyMethod.new 'm'
+    m.record_location @tl
+    m.params = '(p1, &block)'
+    m.comment = 'Stuff with +p1+ and +block+'
+    c.add_method m
+
+    a1 = RDoc::Alias.new 'm', 'a1', ''
+    a1.record_location @tl
+    c.add_alias a1
+
+    a2 = RDoc::Alias.new 'a1', 'a2', ''
+    a2.record_location @tl
+    c.add_alias a2
+
+    @store.complete :public
+
+    @s.coverage_level = 1
+
+    assert_match "100% documentation!\nGreat Job!\n", @s.report
+  end
+
+  def test_report_method_parameters_override
+    a = @tl.add_class RDoc::NormalClass, 'A'
+    a.record_location @tl
+    a.add_comment 'A', @tl
+
+    m = RDoc::AnyMethod.new 'm'
+    m.record_location @tl
+    m.params = '(p1)'
+    m.comment = 'Stuff with +p1+'
+    a.add_method m
+
+    b = @tl.add_class RDoc::NormalClass, 'B', 'A'
+    b.record_location @tl
+    b.add_comment 'B', @tl
+
+    b_m = RDoc::AnyMethod.new 'm'
+    b_m.record_location @tl
+    b_m.params = '(p1)'
+    b.add_method b_m
+
+    c = @tl.add_class RDoc::NormalClass, 'C', 'B'
+    c.record_location @tl
+    c.add_comment 'C', @tl
+
+    c_m = RDoc::AnyMethod.new 'm'
+    c_m.record_location @tl
+    c_m.params = '(p1)'
+    c.add_method c_m
+
+    @store.complete :public
+
+    @s.coverage_level = 1
+
+    assert_match "100% documentation!\nGreat Job!\n", @s.report
+  end
+
   def test_report_method_parameters_yield
     c = @tl.add_class RDoc::NormalClass, 'C'
     c.record_location @tl
@@ -681,6 +743,46 @@ m(a, b) { |c, d| ... }
 
     assert_equal 1, total
     assert_empty    undoc
+  end
+
+  def test_undoc_params_alias
+    method = RDoc::AnyMethod.new 'm'
+    method.params = '(a)'
+    method.comment = comment '+a+'
+
+    an_alias = method.add_alias RDoc::Alias.new('m', 'n', ''), nil
+
+    total, undoc = @s.undoc_params an_alias
+
+    assert_equal 1, total
+    assert_empty    undoc
+  end
+
+  def test_undoc_params_alias_chain
+    method = RDoc::AnyMethod.new 'm'
+    method.params = '(a)'
+    method.comment = comment '+a+'
+
+    an_alias = method.add_alias RDoc::Alias.new('m', 'n', ''), nil
+    alias_of_alias = an_alias.add_alias RDoc::Alias.new('n', 'o', ''), nil
+
+    total, undoc = @s.undoc_params alias_of_alias
+
+    assert_equal 1, total
+    assert_empty    undoc
+  end
+
+  def test_undoc_params_alias_undocumented
+    method = RDoc::AnyMethod.new 'm'
+    method.params = '(a)'
+    method.comment = comment 'comment'
+
+    an_alias = method.add_alias RDoc::Alias.new('m', 'n', ''), nil
+
+    total, undoc = @s.undoc_params an_alias
+
+    assert_equal 1,     total
+    assert_equal %w[a], undoc
   end
 
   def test_undoc_params_keywords
