@@ -33,8 +33,10 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     loaders = nodes.drop(1).map { |node| context.token_stream_loader(node.node_id) }
     parse_lex_calls = partial_colorize_calls = 0
     parse_lex = Prism.method(:parse_lex)
+    Prism.singleton_class.remove_method(:parse_lex)
     colorizer = RDoc::Parser::RubyColorizer
     partial_colorize = colorizer.method(:partial_colorize)
+    colorizer.singleton_class.remove_method(:partial_colorize)
 
     Prism.define_singleton_method(:parse_lex) do |*arguments|
       parse_lex_calls += 1
@@ -48,7 +50,9 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     begin
       assert_equal %w[first second], loaders.map { |loader| loader.call.map(&:text).join }
     ensure
+      Prism.singleton_class.remove_method(:parse_lex)
       Prism.define_singleton_method(:parse_lex, parse_lex)
+      colorizer.singleton_class.remove_method(:partial_colorize)
       colorizer.define_singleton_method(:partial_colorize, partial_colorize)
     end
     assert_equal 1, parse_lex_calls
@@ -75,6 +79,7 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     loaders = nodes.map { |node| context.token_stream_loader(node.node_id) }
     colorizer = RDoc::Parser::RubyColorizer
     partial_colorize = colorizer.method(:partial_colorize)
+    colorizer.singleton_class.remove_method(:partial_colorize)
     calls = 0
 
     colorizer.define_singleton_method(:partial_colorize) do |*arguments|
@@ -86,6 +91,7 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     begin
       assert_raise(RuntimeError) { loaders.first.call }
     ensure
+      colorizer.singleton_class.remove_method(:partial_colorize)
       colorizer.define_singleton_method(:partial_colorize, partial_colorize)
     end
 
