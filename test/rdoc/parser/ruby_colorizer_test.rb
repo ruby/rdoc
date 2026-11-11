@@ -32,11 +32,20 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     context = RDoc::Parser::RubyColorizer::DeferredContext.new(code)
     loaders = nodes.drop(1).map { |node| context.token_stream_loader(node.node_id) }
     parse_lex_calls = partial_colorize_calls = 0
-    count_parse_lex = ->(original, *arguments) { parse_lex_calls += 1; original.call(*arguments) }
-    count_partial_colorize = ->(original, *arguments) { partial_colorize_calls += 1; original.call(*arguments) }
+    colorizer = RDoc::Parser::RubyColorizer
 
-    stub_singleton_method(Prism, :parse_lex, count_parse_lex) do
-      stub_singleton_method(RDoc::Parser::RubyColorizer, :partial_colorize, count_partial_colorize) do
+    without_singleton_method(Prism, :parse_lex) do |parse_lex|
+      Prism.define_singleton_method(:parse_lex) do |*arguments|
+        parse_lex_calls += 1
+        parse_lex.call(*arguments)
+      end
+
+      without_singleton_method(colorizer, :partial_colorize) do |partial_colorize|
+        colorizer.define_singleton_method(:partial_colorize) do |*arguments|
+          partial_colorize_calls += 1
+          partial_colorize.call(*arguments)
+        end
+
         assert_equal %w[first second], loaders.map { |loader| loader.call.map(&:text).join }
       end
     end
@@ -62,15 +71,17 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
     nodes = Prism.parse(code).value.statements.body
     context = RDoc::Parser::RubyColorizer::DeferredContext.new(code)
     loaders = nodes.map { |node| context.token_stream_loader(node.node_id) }
+    colorizer = RDoc::Parser::RubyColorizer
     calls = 0
-    fail_second_call = lambda do |original, *arguments|
-      calls += 1
-      raise 'colorization failed' if calls == 2
 
-      original.call(*arguments)
-    end
+    without_singleton_method(colorizer, :partial_colorize) do |partial_colorize|
+      colorizer.define_singleton_method(:partial_colorize) do |*arguments|
+        calls += 1
+        raise 'colorization failed' if calls == 2
 
-    stub_singleton_method(RDoc::Parser::RubyColorizer, :partial_colorize, fail_second_call) do
+        partial_colorize.call(*arguments)
+      end
+
       assert_raise(RuntimeError) { loaders.first.call }
     end
 
@@ -314,18 +325,16 @@ class RDocParserRubyColorizerTest < RDoc::TestCase
 
   private
 
-  # Replaces +object+.+name+ with +replacement+ while the block runs.
-  # +replacement+ receives the original method as its first argument.
-  # The original is removed before each redefinition to avoid method
-  # redefinition warnings.
-  def stub_singleton_method(object, name, replacement)
+  # Removes the singleton method +name+ from +object+ and yields the
+  # original method. The block can define a replacement without a method
+  # redefinition warning. The original method is restored after the block.
+  def without_singleton_method(object, name)
     original = object.method(name)
     object.singleton_class.remove_method(name)
-    object.define_singleton_method(name) { |*arguments| replacement.call(original, *arguments) }
-    begin
-      yield
-    ensure
-      object.singleton_class.remove_method(name)
+    yield original
+  ensure
+    if original
+      object.singleton_class.remove_method(name) if object.singleton_class.method_defined?(name, false)
       object.define_singleton_method(name, original)
     end
   end
