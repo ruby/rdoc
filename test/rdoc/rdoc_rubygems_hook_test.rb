@@ -146,6 +146,25 @@ class RDocRubyGemsHookTest < Test::Unit::TestCase
     assert_equal 'MyTitle', rdoc.store.main
   end
 
+  def test_generate_completes_store
+    File.write File.join(@a.gem_dir, 'lib', 'a.rb'), <<~RUBY
+      class A
+        def public_method; end
+
+        private def private_method; end
+      end
+
+      class Hidden # :nodoc:
+      end
+    RUBY
+
+    @hook.generate
+
+    store = @hook.instance_variable_get(:@rdoc).store
+    assert_equal %w[public_method], store.find_class_named('A').method_list.map(&:name)
+    assert_nil store.find_class_named('Hidden')
+  end
+
   def test_generate_rdoc_with_page_cross_reference
     @hook.generate_rdoc = true
     @hook.generate_ri = false
