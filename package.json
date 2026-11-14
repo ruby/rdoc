@@ -2,7 +2,8 @@
   "name": "rdoc",
   "private": true,
   "scripts": {
-    "lint:css": "stylelint 'lib/rdoc/generator/template/**/*.css'"
+    "lint:css": "stylelint 'lib/rdoc/generator/template/**/*.css'",
+    "test:js": "node --test test/js/*/*.test.js"
   },
   "devDependencies": {
     "stylelint": "^16.25.0",
