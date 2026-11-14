@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'uri'
+require 'tempfile'
 
 module RDoc
   module Generator
@@ -74,29 +75,7 @@ module RDoc
       # Build a search index array for Aliki's searcher.
 
       def build_search_index
-        setup
-
-        index = []
-
-        @classes.each do |klass|
-          next unless klass.display?
-
-          index << build_class_module_entry(klass)
-
-          klass.constants.each do |const|
-            next unless const.display?
-
-            index << build_constant_entry(const, klass)
-          end
-        end
-
-        @methods.each do |method|
-          next unless method.display?
-
-          index << build_method_entry(method)
-        end
-
-        index
+        enum_for(:each_search_index_entry).to_a
       end
 
       ##
@@ -110,15 +89,38 @@ module RDoc
       def write_search_index
         debug_msg "Writing Aliki search index"
 
-        index = build_search_index
+        if @dry_run
+          each_search_index_entry {}
+          return
+        end
 
-        FileUtils.mkdir_p 'js' unless @dry_run
+        FileUtils.mkdir_p 'js'
+        # Follow symlinks, but replace the target inode rather than updating other hard links.
+        search_index_path = File.realdirpath 'js/search_data.js'
+        stat = begin
+          File.stat search_index_path
+        rescue Errno::ENOENT
+          nil
+        end
+        mode = stat ? stat.mode & 0777 : 0666 & ~File.umask
 
-        search_index_path = 'js/search_data.js'
-        return if @dry_run
-
-        data = { index: index }
-        File.write search_index_path, "var search_data = #{JSON.generate(data)};"
+        Tempfile.create('rdoc-search', File.dirname(search_index_path)) do |file|
+          file.write 'var search_data = {"index":['
+          separator = ''
+          each_search_index_entry do |entry|
+            file.write separator, JSON.generate(entry)
+            separator = ','
+          end
+          file.write ']};'
+          if stat
+            tempfile_stat = file.stat
+            file.chown stat.uid, stat.gid if stat.uid != tempfile_stat.uid || stat.gid != tempfile_stat.gid
+          end
+          # shortcut: extended ACLs are not copied; add platform-specific support if indexes need ACL-based access.
+          file.chmod mode
+          file.close
+          File.rename file.path, search_index_path
+        end
       end
 
       ##
@@ -152,6 +154,28 @@ module RDoc
       end
 
     private
+
+      def each_search_index_entry
+        setup
+
+        @classes.each do |klass|
+          next unless klass.display?
+
+          yield build_class_module_entry(klass)
+
+          klass.constants.each do |const|
+            next unless const.display?
+
+            yield build_constant_entry(const, klass)
+          end
+        end
+
+        @methods.each do |method|
+          next unless method.display?
+
+          yield build_method_entry(method)
+        end
+      end
 
       def template_encoding
         ::Encoding::UTF_8
