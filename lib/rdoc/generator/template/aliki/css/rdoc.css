@@ -468,6 +468,9 @@ header.top-navbar .navbar-brand {
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   text-decoration: none;
+  max-width: calc(100% - var(--space-6));
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -597,9 +600,6 @@ header.top-navbar .navbar-search form {
     margin-left: 2.5rem;
     flex: 1;
     font-size: var(--font-size-lg);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .theme-toggle {
