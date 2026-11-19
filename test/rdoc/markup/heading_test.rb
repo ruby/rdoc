@@ -27,6 +27,12 @@ class RDocMarkupHeadingTest < RDoc::TestCase
     assert_equal 'label-Hello+Friend-21', @h.legacy_aref
   end
 
+  def test_legacy_aref_ignores_image_braces
+    h = RDoc::Markup::Heading.new 1, '{rdoc-image:foo.png:Hello World}'
+
+    assert_equal 'label-rdoc-image-3Afoo.png-3AHello+World', h.legacy_aref
+  end
+
   def test_legacy_label
     assert_equal 'label-Hello+Friend-21', @h.legacy_label
     assert_equal 'label-Hello+Friend-21', @h.legacy_label(nil)
@@ -53,6 +59,12 @@ class RDocMarkupHeadingTest < RDoc::TestCase
 
   def test_plain_html_using_image_alt_as_text
     h = RDoc::Markup::Heading.new 1, 'rdoc-image:foo.png:Hello World'
+
+    assert_equal 'Hello World', h.plain_html
+  end
+
+  def test_plain_html_using_braced_image_alt_as_text
+    h = RDoc::Markup::Heading.new 1, '{rdoc-image:foo.png:Hello World}'
 
     assert_equal 'Hello World', h.plain_html
   end
