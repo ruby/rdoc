@@ -99,7 +99,7 @@ module RDoc
       #
       #: () -> String?
       def legacy_aref
-        "label-#{self.class.to_label.convert_legacy text.dup}"
+        "label-#{self.class.to_label.convert_legacy unbraced_text}"
       end
 
       # Creates a fully-qualified label (GitHub-style) which includes the context's aref prefix.
@@ -149,7 +149,7 @@ module RDoc
       # HTML markup of the text of this label without the surrounding header element.
       #: () -> String
       def plain_html
-        no_image_text = text
+        no_image_text = unbraced_text
 
         if matched = no_image_text.match(/rdoc-image:[^:]+:(.*)/)
           no_image_text = matched[1]
@@ -164,6 +164,16 @@ module RDoc
         q.group 2, "[head: #{level} ", ']' do
           q.pp text
         end
+      end
+
+      private
+
+      # The text with the braces around rdoc-image links removed.  The braces
+      # only delimit an image whose alt text contains whitespace, so they are
+      # not part of the heading's plain text or legacy label.
+      #: () -> String
+      def unbraced_text
+        text.gsub(/\{(rdoc-image:[^{}]+)\}/, '\1')
       end
     end
   end

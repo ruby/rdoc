@@ -719,15 +719,41 @@ heading
   def test_parse_image
     doc = parse "image ![alt text](path/to/image.jpg)"
 
-    expected = doc(para("image rdoc-image:path/to/image.jpg:alt text"))
+    expected = doc(para("image {rdoc-image:path/to/image.jpg:alt text}"))
 
     assert_equal expected, doc
+  end
+
+  def test_parse_image_alt_with_braces
+    doc = parse "![alt {text}](path/to/image.jpg)"
+
+    expected = doc(para("rdoc-image:path/to/image.jpg:alt {text}"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_image_to_html_alt_with_spaces
+    doc = parse "image ![alt text](path/to/image.jpg) after"
+
+    expected = "\n<p>image <img src=\"path/to/image.jpg\" alt=\"alt text\"> after</p>\n"
+
+    assert_equal expected, @to_html.convert(doc)
   end
 
   def test_parse_image_link
     @parser.html = true
 
     doc = parse "[![alt text](path/to/image.jpg)](http://example.com)"
+
+    expected =
+      doc(
+        para('{rdoc-image:path/to/image.jpg:alt text}[http://example.com]'))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_image_reference_link
+    doc = parse "[![alt text](path/to/image.jpg)][ref]\n\n[ref]: http://example.com\n"
 
     expected =
       doc(

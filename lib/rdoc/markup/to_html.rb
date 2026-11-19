@@ -382,7 +382,7 @@ module RDoc
       # when creating a link.  All other contents will be linked verbatim.
 
       def handle_regexp_RDOCLINK(text)
-        handle_RDOCLINK text
+        handle_RDOCLINK unwrap_rdoc_link(text)
       end
 
       # :section: Visitor

@@ -211,7 +211,7 @@ module RDoc
       # Converts the rdoc-...: links into a Markdown.style links.
 
       def handle_regexp_RDOCLINK(text)
-        handle_rdoc_link text
+        handle_rdoc_link unwrap_rdoc_link(text)
       end
 
     end

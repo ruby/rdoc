@@ -360,6 +360,31 @@
   end
 
   ##
+  # Creates an rdoc-image link to `url` with `alt` text for rdoc inline
+  # formatting.  A bare rdoc-image link ends at the first whitespace, so the
+  # link is wrapped in braces when `alt` contains whitespace.  The braced form
+  # cannot hold braces, so such `alt` text keeps the bare form.
+
+  def image url, alt
+    link = "rdoc-image:#{url}:#{alt}"
+
+    if alt =~ /\s/ and alt !~ /[{}]/ then
+      "{#{link}}"
+    else
+      link
+    end
+  end
+
+  ##
+  # Returns `label` for use as the label of an rdoc tidy link.  A label that
+  # is a single rdoc-image link may already contain whitespace, so the braces
+  # added by #image are removed.
+
+  def tidy_link_label label
+    label[/\A\{(rdoc-image:[^{}]+)\}\z/, 1] || label
+  end
+
+  ##
   # Finds a link reference for `label` and creates a new link to it with
   # `content` as the link text.  If `label` was not encountered in the
   # reference-gathering parser pass the label and content are reconstructed
@@ -370,7 +395,7 @@
       content.start_with? '^' and label.equal? content
 
     if ref = @references[label] then
-      "{#{content}}[#{ref}]"
+      "{#{tidy_link_label content}}[#{ref}]"
     elsif label.equal? content then
       "[#{content}]#{text}"
     else
@@ -1063,7 +1088,7 @@ Strike = &{ strike? }
          { strike a.join }
 
 Image = "!" ExplicitLinkWithLabel:a
-        { "rdoc-image:#{a[:link]}:#{a[:label]}" }
+        { image a[:link], a[:label] }
 
 Link =  ExplicitLink | ReferenceLink | AutoLink
 
@@ -1076,7 +1101,7 @@ ReferenceLinkSingle = Label:content < (Spnl "[]")? >
                       { link_to content, content, text }
 
 ExplicitLink = ExplicitLinkWithLabel:a
-               { "{#{a[:label]}}[#{rdoc_link_url_escape(a[:link])}]" }
+               { "{#{tidy_link_label a[:label]}}[#{rdoc_link_url_escape(a[:link])}]" }
 
 ExplicitLinkWithLabel = Label:label "(" @Sp Source:link Spnl Title @Sp ")"
                         { { label: label, link: link } }

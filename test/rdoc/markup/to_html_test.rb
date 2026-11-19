@@ -793,8 +793,15 @@ EXPECTED
     assert_equal "\n<p>C</p>\n", result
   end
 
+  def test_convert_RDOCLINK_image_braced_alt_with_spaces
+    result = @to.convert 'see {rdoc-image:path/to/image.jpg:alt text} here'
+
+    assert_equal "\n<p>see <img src=\"path/to/image.jpg\" alt=\"alt text\"> here</p>\n", result
+  end
+
   def test_convert_RDOCLINK_escape_image
     assert_escaped '<script>', 'rdoc-image:"><script>alert(`rdoc-image`)</script>"'
+    assert_escaped '<script>', '{rdoc-image:image.png:"><script>alert(`rdoc image`)</script>}'
   end
 
   def test_convert_RDOCLINK_escape_label_id

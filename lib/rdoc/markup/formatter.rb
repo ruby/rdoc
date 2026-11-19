@@ -65,9 +65,25 @@ module RDoc
 
       ##
       # Adds a regexp handling for links of the form rdoc-...:
+      #
+      # A bare link ends at the first whitespace, so an rdoc-image link whose
+      # alt text contains spaces is wrapped in braces instead:
+      #
+      #   {rdoc-image:path/to/image.png:alt text}
+      #
+      # Handlers receive the braced form as matched. Use #unwrap_rdoc_link to
+      # get the link itself.
 
       def add_regexp_handling_RDOCLINK
-        @markup.add_regexp_handling(/rdoc-[a-z]+:[^\s\]]+/, :RDOCLINK)
+        @markup.add_regexp_handling(/\{rdoc-image:[^{}]+\}|rdoc-[a-z]+:[^\s\]]+/, :RDOCLINK)
+      end
+
+      ##
+      # Returns +link+ without the braces that may wrap an rdoc-image link
+      # matched by #add_regexp_handling_RDOCLINK.
+
+      def unwrap_rdoc_link(link)
+        link.start_with?('{') ? link[1...-1] : link
       end
 
       ##
