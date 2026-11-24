@@ -299,6 +299,17 @@ class RDocStoreTest < XrefTestCase
     assert_equal(parent, @s.classes_hash['Child'].superclass)
   end
 
+  def test_resolve_c_superclasses_self
+    c_file = @s.add_file 'ext.c'
+    klass = c_file.add_class RDoc::NormalClass, 'Socket', 'cSocket'
+
+    @s.add_c_enclosure('cSocket', klass)
+
+    @s.resolve_c_superclasses
+
+    assert_equal 'cSocket', @s.classes_hash['Socket'].superclass
+  end
+
   def test_find_class_named
     assert_equal @c1, @store.find_class_named('C1')
 

@@ -307,7 +307,8 @@ module RDoc
 
     def resolve_c_superclasses
       @classes_hash.each_value do |klass|
-        if klass.superclass.is_a?(String) && (candidate = find_c_enclosure(klass.superclass))
+        if klass.superclass.is_a?(String) && (candidate = find_c_enclosure(klass.superclass)) &&
+           !candidate.equal?(klass)
           klass.superclass = candidate
         end
       end
