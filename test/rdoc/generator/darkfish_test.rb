@@ -581,6 +581,49 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     )
   end
 
+  def test_meta_tags_for_markdown_links
+    top_level = @store.add_file("file.rb")
+    klass = top_level.add_class(RDoc::NormalClass, "Linked")
+    comment = RDoc::Comment.new(<<~MARKDOWN, top_level)
+      Foo.
+
+      [Example Link](https://example.com) and ![Badge](https://example.com/badge.svg)
+    MARKDOWN
+    comment.format = "markdown"
+    klass.add_comment(comment, top_level)
+
+    @g.generate
+
+    content = File.binread("Linked.html")
+    assert_include(content, '<meta name="description" content="class Linked: Foo.">')
+  end
+
+  def test_meta_tags_for_rdoc_links
+    top_level = @store.add_file("file.rb")
+    klass = top_level.add_class(RDoc::NormalClass, "Linked")
+    klass.add_comment(<<~RDOC, top_level)
+      See {the docs}[https://example.com/docs.html] or RDoc[https://ruby.github.io/rdoc/] for more.
+    RDOC
+
+    @g.generate
+
+    content = File.binread("Linked.html")
+    assert_include(content, '<meta name="description" content="class Linked: See the docs or RDoc for more.">')
+  end
+
+  def test_meta_tags_for_bare_urls
+    top_level = @store.add_file("file.rb")
+    klass = top_level.add_class(RDoc::NormalClass, "Linked")
+    klass.add_comment(<<~RDOC, top_level)
+      Details are at https://example.com/docs. Use it.
+    RDOC
+
+    @g.generate
+
+    content = File.binread("Linked.html")
+    assert_include(content, '<meta name="description" content="class Linked: Details are at . Use it.">')
+  end
+
   def test_meta_tags_for_raw_pages
     top_level = @store.add_file("MyPage", parser: RDoc::Parser::Simple)
     comment = RDoc::Comment.new('this is a comment')

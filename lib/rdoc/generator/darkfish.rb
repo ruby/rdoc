@@ -714,6 +714,17 @@ module RDoc
       ParagraphExcerptRegexpOther = %r[\b\w[^./:]++\.]
       # use \p/\P{letter} instead of \w/\W in Unicode
       ParagraphExcerptRegexpUnicode = %r[\b\p{letter}[^./:]++\.]
+
+      # Link markup to replace with its text (or remove) before taking an excerpt
+      ExcerptMarkdownLinks = [
+        [/(?<![\w`])!\[[^\]]*\]\([^)]*\)/, ''],    # ![alt](image)
+        [/(?<![\w`])\[([^\]]*)\]\([^)]*\)/, '\\1'], # [text](url)
+      ]
+      ExcerptRDocLinks = [
+        [/\{([^}]*)\}\[[^\]]*\]/, '\\1'],  # {text}[url]
+        [/(\S+)\[(?:https?|ftp|mailto|irc|www|link|rdoc-[a-z]+):[^\]]*\]/, '\\1'], # text[url]
+      ]
+      ExcerptURL = %r[<?\b(?:https?|ftp)://[^\s>]*[^\s>.,;:!?)]>?]
       # :startdoc:
 
       # Returns an excerpt of the comment for usage in meta description tags
@@ -724,6 +735,8 @@ module RDoc
         else
           comment
         end
+
+        text = strip_links(text, comment.respond_to?(:format) ? comment.format : nil)
 
         # Match from a capital letter to the first period, discarding any links, so
         # that we don't end up matching badges in the README
@@ -743,6 +756,15 @@ module RDoc
         extracted_text << " " << second_paragraph[0] if second_paragraph
 
         extracted_text[0...150].tr_s("\n", " ").squeeze(" ")
+      end
+
+      # Replaces links in +text+ written in +format+ markup with their text, and
+      # removes images and bare URLs, so that link targets don't end up in excerpts
+      def strip_links(text, format) # :nodoc:
+        links = format == 'markdown' ? ExcerptMarkdownLinks : ExcerptRDocLinks
+
+        text = links.inject(text) { |t, (regexp, replacement)| t.gsub(regexp, replacement) }
+        text.gsub(ExcerptURL, '')
       end
 
       def generate_ancestor_list(ancestors, klass)
