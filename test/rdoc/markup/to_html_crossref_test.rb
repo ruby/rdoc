@@ -32,6 +32,21 @@ class RDocMarkupToHtmlCrossrefTest < XrefTestCase
     assert_equal para("<code># :stopdoc:</code>:"), result
   end
 
+  def test_convert_CROSSREF_in_heading
+    result = @to.convert "= C1 and EXAMPLE.md\n\nC1"
+
+    assert_equal "\n<span id=\"label-C1+and+EXAMPLE.md\" class=\"legacy-anchor\"></span>" \
+                 "\n<h1 id=\"c1-and-examplemd\"><a href=\"#c1-and-examplemd\">C1 and EXAMPLE.md</a></h1>\n" +
+                 para("<a href=\"C1.html\"><code>C1</code></a>"), result
+  end
+
+  def test_convert_CROSSREF_in_heading_after_tidylink
+    result = @to.convert "= {Foo}[https://example.com] C1"
+
+    assert_include result, '<a href="https://example.com">Foo</a>'
+    assert_not_include result, 'C1.html'
+  end
+
   def test_convert_CROSSREF_backslash_in_tt
     formatter = RDoc::Markup::ToHtmlCrossref.new('C9.html', @c9_b)
 
