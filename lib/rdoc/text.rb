@@ -3,6 +3,7 @@
 ##
 # For RDoc::Text#to_html
 
+require 'cgi/escape'
 require 'strscan'
 
 module RDoc
@@ -210,13 +211,21 @@ module RDoc
   # - Remove characters that aren't alphanumeric, space, or hyphen
   # - Replace spaces with hyphens
   #
+  # If nothing is left, for example because +text+ only contains symbols
+  # or non-ASCII characters, falls back to the legacy label format so the
+  # anchor is never empty.
+  #
   # Examples:
   #   "Hello World"  -> "hello-world"
   #   "Foo::Bar"     -> "foobar"
   #   "What's New?"  -> "whats-new"
+  #   "$="           -> "label-24-3D"
 
   module_function def to_anchor(text)
-    text.downcase.gsub(/[^a-z0-9 \-]/, '').gsub(' ', '-')
+    anchor = text.downcase.gsub(/[^a-z0-9 \-]/, '').gsub(' ', '-')
+    return anchor unless anchor.empty?
+
+    "label-#{CGI.escape(text).gsub('%', '-').sub(/^-/, '')}"
   end
 
   ##

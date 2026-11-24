@@ -105,6 +105,16 @@ The comments associated with
     assert_equal Encoding::US_ASCII, result.encoding
   end
 
+  def test_to_anchor
+    assert_equal 'hello-world', to_anchor('Hello World')
+    assert_equal 'whats-new', to_anchor("What's New?")
+  end
+
+  def test_to_anchor_without_alphanumerics
+    assert_equal 'label-24-3D', to_anchor('$=')
+    assert_equal 'label-E6-97-A5-E6-9C-AC-E8-AA-9E', to_anchor('日本語')
+  end
+
   def test_markup_string
     out = markup('hi').gsub("\n", '')
 

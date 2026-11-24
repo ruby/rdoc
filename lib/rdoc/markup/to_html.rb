@@ -526,12 +526,16 @@ module RDoc
       def accept_heading(heading)
         level = [6, heading.level].min
 
-        label = deduplicate_heading_id(heading.label(@code_object))
-        legacy_label = deduplicate_heading_id(heading.legacy_label(@code_object))
+        raw_label = heading.label(@code_object)
+        raw_legacy_label = heading.legacy_label(@code_object)
+        label = deduplicate_heading_id(raw_label)
+        # No legacy anchor is needed when the heading's own id already uses
+        # the legacy format (see RDoc::Text.to_anchor).
+        legacy_label = deduplicate_heading_id(raw_legacy_label) unless raw_legacy_label == raw_label
 
         # Add legacy anchor before the heading for backward compatibility.
         # This allows old links with label- prefix to still work.
-        if @output_decoration && !@pipe
+        if @output_decoration && !@pipe && legacy_label
           @res << "\n<span id=\"#{legacy_label}\" class=\"legacy-anchor\"></span>"
         end
 
