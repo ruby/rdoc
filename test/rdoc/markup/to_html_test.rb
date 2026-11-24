@@ -384,6 +384,26 @@ class RDocMarkupToHtmlTest < RDoc::Markup::FormatterTestCase
     assert_match(/<h2 id="method-match-1">/, result)
   end
 
+  def test_accept_heading_symbols_only
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(3, '$=')
+
+    assert_equal "\n<h3 id=\"label-24-3D\"><a href=\"#label-24-3D\">$=</a></h3>\n", @to.res.join
+  end
+
+  def test_accept_heading_symbols_only_duplicate
+    @to.start_accepting
+
+    @to.accept_heading @RM::Heading.new(3, '$=')
+    @to.accept_heading @RM::Heading.new(3, '$=')
+
+    result = @to.res.join
+    assert_match(/<h3 id="label-24-3D">/, result)
+    assert_match(/<h3 id="label-24-3D-1">/, result)
+    refute_match(/id=""/, result)
+  end
+
   def test_accept_heading_three_duplicates
     @to.start_accepting
 
