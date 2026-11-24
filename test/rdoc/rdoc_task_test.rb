@@ -36,6 +36,36 @@ class RDocTaskTest < RDoc::TestCase
     assert_equal ["html/created.rid"], Rake::Task[:rdoc].prerequisites
   end
 
+  def test_rdoc_target_needed_when_options_change
+    temp_dir do
+      Rake::Task.clear
+      FileUtils.mkdir_p 'html'
+      FileUtils.touch '.rdoc_options', mtime: Time.at(0)
+      FileUtils.touch 'html/created.rid', mtime: Time.at(1)
+
+      RDoc::Task.new
+      target = Rake::Task['html/created.rid']
+
+      refute target.needed?
+
+      FileUtils.touch '.rdoc_options', mtime: Time.at(2)
+
+      assert target.needed?
+    end
+  end
+
+  def test_rdoc_target_without_options_file
+    temp_dir do
+      Rake::Task.clear
+      FileUtils.mkdir_p 'html'
+      FileUtils.touch 'html/created.rid'
+
+      RDoc::Task.new
+
+      refute Rake::Task['html/created.rid'].needed?
+    end
+  end
+
   def test_tasks_creation_with_custom_name_symbol
     rd = RDoc::Task.new(:rdoc_dev)
     assert Rake::Task[:rdoc_dev]
