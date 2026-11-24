@@ -52,6 +52,17 @@ bundle exec rake verify_generated
 - **Test Location:** `test/` directory
 - **Test Helper:** `test/lib/helper.rb`
 
+### JavaScript Tests
+
+The template JavaScript is tested with Node's built-in test runner. It needs Node 20 or later and no npm packages.
+
+```bash
+npm run test:js
+```
+
+- **Test Location:** `test/js/` directory
+- **Test Helper:** `test/js/helper.js`
+
 ## Linting
 
 ### RuboCop (Ruby Code)

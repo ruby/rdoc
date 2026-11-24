@@ -16,7 +16,3 @@ if ENV['PRISM_VERSION'] == 'head'
 elsif ENV['PRISM_VERSION']
   gem 'prism', ENV['PRISM_VERSION']
 end
-
-platforms :ruby do
-  gem 'mini_racer' # For testing the searcher.js file
-end
