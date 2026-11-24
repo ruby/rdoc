@@ -155,6 +155,21 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     )
   end
 
+  def test_generate_no_duplicate_legacy_anchor_ids
+    fatal = @top_level.add_class RDoc::NormalClass, 'fatal'
+    fatal.add_comment "Fatal error", @top_level
+    fatal.add_section 'foo', comment('Foo section', @top_level)
+    @store.complete :private
+
+    @g.generate
+
+    html = File.binread('fatal.html')
+    ids = html.scan(/\bid="([^"]+)"/).flatten
+    assert_include ids, 'class-fatal'
+    assert_include ids, 'foo'
+    assert_equal [], ids.select { |id| ids.count(id) > 1 }.uniq
+  end
+
   def test_generate_index_with_main_page
     top_level = @store.add_file 'file.rb'
     top_level.comment = <<~RDOC
