@@ -155,6 +155,29 @@ class RDocGeneratorDarkfishTest < RDoc::TestCase
     )
   end
 
+  def test_generate_method_source_ids_distinguish_class_and_instance_methods
+    klass = @top_level.add_class RDoc::NormalClass, 'Twins'
+
+    [true, false].each do |singleton|
+      meth = RDoc::AnyMethod.new 'parse', singleton: singleton
+      meth.collect_tokens(:ruby)
+      meth.add_token({ line_no: 1, char_no: 0, kind: :on_ident, text: 'parse' })
+      meth.record_location @top_level
+      klass.add_method meth
+    end
+
+    @store.complete :private
+    @g.generate
+
+    content = File.binread('Twins.html')
+
+    assert_include content, 'id="method-c-parse-source"'
+    assert_include content, 'id="method-i-parse-source"'
+
+    ids = content.scan(/\sid="([^"]*)"/).flatten
+    assert_empty ids.tally.select { |_, count| count > 1 }.keys
+  end
+
   def test_generate_index_with_main_page
     top_level = @store.add_file 'file.rb'
     top_level.comment = <<~RDOC
