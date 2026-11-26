@@ -696,6 +696,41 @@ heading
     assert_equal expected, doc
   end
 
+  def test_parse_html_details
+    @parser.html = true
+
+    doc = parse <<-MD
+<details>
+<summary>More</summary>
+
+Hidden text.
+
+</details>
+    MD
+
+    expected = doc(
+      raw("<details>\n<summary>More</summary>\n\nHidden text.\n\n</details>"))
+
+    assert_equal expected, doc
+  end
+
+  def test_parse_html_details_nested
+    @parser.html = true
+
+    doc = parse <<-MD
+<details open>
+<summary>Outer</summary>
+<details><summary>Inner</summary>text</details>
+</details>
+    MD
+
+    expected = doc(
+      raw("<details open>\n<summary>Outer</summary>\n" \
+          "<details><summary>Inner</summary>text</details>\n</details>"))
+
+    assert_equal expected, doc
+  end
+
   def test_parse_html_hr
     @parser.html = true
 
